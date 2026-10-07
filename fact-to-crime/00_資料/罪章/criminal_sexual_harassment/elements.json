@@ -1,0 +1,191 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_sexual_harassment",
+  "chapter_name": "性騷擾防治法 §25 + 性別平等工作法 §12 + 性別平等教育法",
+  "processing_modes": [
+    "筆錄",
+    "陳報"
+  ],
+  "special_law_references": [
+    {
+      "name": "性騷擾防治法",
+      "verified": true,
+      "note": "行政申訴為主軌；涉刑事時雙軌"
+    },
+    {
+      "name": "性別平等工作法",
+      "verified": true
+    },
+    {
+      "name": "性別平等教育法",
+      "verified": true
+    }
+  ],
+  "elements": [
+    {
+      "id": "E-SH-001",
+      "name": "性騷擾行為",
+      "type": "行為",
+      "semantic": "性侵害犯罪以外，對他人實施違反其意願而與性或性別有關之行為",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "性騷法第2條、第3條",
+      "law_category": "特別法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-SH-002",
+      "name": "違反意願",
+      "type": "主觀",
+      "semantic": "被害人明確表示不願意（包括口頭、動作、當時情況推論）",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "性騷法第2條",
+      "law_category": "特別法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-SH-003",
+      "name": "與性或性別有關",
+      "type": "狀態",
+      "semantic": "行為與性或性別有關（性暗示、性別歧視、性騷擾言語）",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "性騷法第3條",
+      "law_category": "特別法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-SH-004",
+      "name": "趁人不及抗拒",
+      "type": "行為",
+      "semantic": "趁人不及抗拒而為親吻、擁抱或觸摸隱私部位之行為（刑事罰構成要件）",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "性騷法第25條",
+      "law_category": "特別法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-SH-005",
+      "name": "性騷擾罪之故意",
+      "type": "主觀",
+      "semantic": "意圖性騷擾，乘人不及抗拒而為親吻、擁抱或觸摸",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "直接故意",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "性騷法第25條",
+      "law_category": "特別法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "subjective_group": "mens_rea_sh_offense"
+    },
+    {
+      "id": "E-SH-006",
+      "name": "職場性騷擾",
+      "type": "狀態",
+      "semantic": "被害人與行為人具雇佣、從屬、監督或其他權力不對等之權勢關係",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "性別平等工作法第12條",
+      "law_category": "特別法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "aggravator_for": "charge_sh_workplace"
+    },
+    {
+      "id": "E-SH-007",
+      "name": "教育機構性騷擾",
+      "type": "狀態",
+      "semantic": "被害人與行為人具教育機構之監督、教學等關係",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "性別平等教育法",
+      "law_category": "特別法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "aggravator_for": "charge_sh_education"
+    }
+  ]
+}

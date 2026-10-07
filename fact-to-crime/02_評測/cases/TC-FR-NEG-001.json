@@ -1,0 +1,55 @@
+{
+  "case_id": "TC-FR-NEG-001",
+  "case_type": "反例",
+  "description": "騙人但未取得財物：E-FR-004 資料不足",
+  "state_map": {
+    "E-FR-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-FR-002": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-FR-003": {
+      "status": "符合",
+      "source_raw": [
+        "行為人陳述"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-FR-004": {
+      "status": "資料不足",
+      "source_raw": [
+        "被害人筆錄：未匯款"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [],
+    "charge_states": {
+      "charge_fraud": "資料不足",
+      "charge_fraud_group": "資料不足",
+      "charge_fraud_computer": "資料不足",
+      "charge_fraud_special_high": "資料不足"
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_intimidation",
+  "charges": [
+    {
+      "id": "charge_threat",
+      "name": "恐嚇危害安全",
+      "article": "刑法第305條",
+      "base_penalty": "二年以下有期徒刑、拘役或三百萬元以下罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-IN-001",
+        "E-IN-003"
+      ],
+      "requires_one_of": {
+        "mens_rea_intimidate": [
+          "E-IN-002"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_threat_extortion",
+      "name": "恐嚇取財",
+      "article": "刑法第346條第1項",
+      "base_penalty": "六月以上五年以下有期徒刑，得併科三萬元以下罰金",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-IN-001",
+        "E-IN-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_intimidate": [
+          "E-IN-002"
+        ]
+      },
+      "supersedes": [
+        "charge_threat"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_coercion",
+      "name": "強制罪",
+      "article": "刑法第304條",
+      "base_penalty": "三年以下有期徒刑、拘役或九萬元以下罰金",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-IN-005"
+      ],
+      "requires_one_of": {
+        "mens_rea_intimidate": [
+          "E-IN-002"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_unlawful_detention",
+      "name": "私行拘禁",
+      "article": "刑法第302條第1項",
+      "base_penalty": "五年以下有期徒刑、拘役或九萬元以下罰金",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-IN-006"
+      ],
+      "requires_one_of": {
+        "mens_rea_intimidate": [
+          "E-IN-002"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    }
+  ]
+}

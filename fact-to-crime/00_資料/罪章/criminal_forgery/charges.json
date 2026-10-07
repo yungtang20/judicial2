@@ -1,0 +1,107 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_forgery",
+  "charges": [
+    {
+      "id": "charge_forgery_private",
+      "name": "偽造私文書",
+      "article": "刑法第210條",
+      "base_penalty": "五年以下有期徒刑",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_one_of": {
+        "forgery_type": [
+          "E-FG-001",
+          "E-FG-002"
+        ]
+      },
+      "requires_elements": [
+        "E-FG-004"
+      ],
+      "requires_one_of_extra": {
+        "mens_rea_forgery": [
+          "E-FG-005"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_forgery_seal",
+      "name": "偽造印章",
+      "article": "刑法第217條",
+      "base_penalty": "三年以下有期徒刑",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-FG-003",
+        "E-FG-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_forgery": [
+          "E-FG-005"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_exercise_forgery",
+      "name": "行使偽造文書",
+      "article": "刑法第216條",
+      "base_penalty": "同§210/§217",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-FG-006",
+        "E-FG-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_forgery": [
+          "E-FG-005"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_forgery_public",
+      "name": "偽造公印",
+      "article": "刑法第218條",
+      "base_penalty": "五年以下有期徒刑",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-FG-008"
+      ],
+      "requires_one_of": {
+        "mens_rea_forgery": [
+          "E-FG-005"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_false_entry",
+      "name": "使公務員登載不實",
+      "article": "刑法第214條",
+      "base_penalty": "三年以下有期徒刑、拘役或罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-FG-007",
+        "E-FG-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_forgery": [
+          "E-FG-005"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "unverified",
+      "warning": "⚠️ §214 現行條文與「明知為不實」門檻需查證"
+    }
+  ]
+}

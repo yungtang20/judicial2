@@ -1,0 +1,28 @@
+{
+  "case_id": "TC-TR-POS-001",
+  "case_type": "正例",
+  "description": "道交法行政罰：酒精濃度達行政罰門檻（0.15~0.25）",
+  "state_map": {
+    "E-TR-001": {
+      "status": "符合",
+      "source_raw": [
+        "酒測單：0.18 mg/L"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_admin_alcohol"
+    ],
+    "charge_states": {
+      "charge_admin_alcohol": "可能涉及",
+      "charge_dangerous_drive": "資料不足",
+      "charge_hit_and_run": "資料不足",
+      "charge_refuse_test": "資料不足"
+    }
+  }
+}

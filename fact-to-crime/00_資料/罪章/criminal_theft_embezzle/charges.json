@@ -1,0 +1,116 @@
+{
+  "version": "1.1",
+  "spec_version": "v15",
+  "chapter_id": "criminal_theft_embezzle",
+  "charges": [
+    {
+      "id": "charge_theft",
+      "name": "竊盜罪",
+      "article": "刑法第320條第1項",
+      "base_penalty": "五年以下有期徒刑、拘役或罰金",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-TE-001",
+        "E-TE-002"
+      ],
+      "requires_one_of": {
+        "mens_rea_theft": [
+          "E-TE-003"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_theft_attempt",
+      "name": "竊盜未遂",
+      "article": "刑法第14條、§25②、§320",
+      "base_penalty": "未遂刑（減輕）",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_one_of": {
+        "mens_rea_theft": [
+          "E-TE-003"
+        ]
+      },
+      "requires_all_optional": [
+        "E-TE-009"
+      ],
+      "requires_not_all": [
+        "E-TE-001"
+      ],
+      "is_variant_of": "charge_theft",
+      "variant_type": "未遂",
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_embezzle",
+      "name": "侵占罪",
+      "article": "刑法第335條",
+      "base_penalty": "五年以下有期徒刑",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_one_of": {
+        "embezzle_type": [
+          "E-TE-004",
+          "E-TE-005"
+        ],
+        "mens_rea_embezzle": [
+          "E-TE-006"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_lost_property",
+      "name": "侵占遺失物",
+      "article": "刑法第337條",
+      "base_penalty": "六月以下有期徒刑、拘役或罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-TE-007"
+      ],
+      "requires_one_of": {
+        "mens_rea_lost": [
+          "E-TE-008"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_theft_aggravated",
+      "name": "加重竊盜罪",
+      "article": "刑法第321條第1項",
+      "base_penalty": "六月以上五年以下有期徒刑，得併科五十萬元以下罰金",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-TE-001",
+        "E-TE-002"
+      ],
+      "requires_one_of": {
+        "mens_rea_theft": [
+          "E-TE-003"
+        ],
+        "aggravator_321": [
+          "E-TE-010",
+          "E-TE-011",
+          "E-TE-012",
+          "E-TE-013",
+          "E-TE-014",
+          "E-TE-015"
+        ]
+      },
+      "supersedes": [
+        "charge_theft"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    }
+  ]
+}

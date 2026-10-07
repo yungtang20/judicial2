@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "note": "LLM 生成器配置（llm_generator.js 讀取）。API key 由環境變數 AGNES_API_KEY 注入；未配置時走 stub。",
+  "llm_endpoint": "https://apihub.agnes-ai.com/v1/chat/completions",
+  "llm_model": "agnes-2.5-flash",
+  "max_tokens": 500,
+  "temperature": 0.3,
+  "system_prompt": "你是台灣警詢筆錄問句生成助理。依 v15 第九節規則生成問句：措辭中立（R33）、追問引用原話（R34）、問句目的為取得準確資訊（R35）。",
+  "r30_guard": {
+    "note": "R30: LLM 不得直接輸出罪名；罪名由 rule_engine.js 規則計算",
+    "llm_must_not_do": [
+      "直接輸出罪名（R30）",
+      "修改 candidate_charges（R30）",
+      "在對話中下判定「構成 XX 罪」"
+    ]
+  },
+  "llm_api_key_env": "AGNES_API_KEY"
+}

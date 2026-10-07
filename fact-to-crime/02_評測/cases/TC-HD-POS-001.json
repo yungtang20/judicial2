@@ -1,0 +1,51 @@
+{
+  "case_id": "TC-HD-POS-001",
+  "case_type": "正例",
+  "description": "傷害罪：傷害行為+傷害結果+故意",
+  "state_map": {
+    "E-HD-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：被掌摑"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-HD-002": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄+行為人陳述"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-HD-003": {
+      "status": "符合",
+      "source_raw": [
+        "驗傷單：瘀傷"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_harm"
+    ],
+    "charge_states": {
+      "charge_harm": "可能涉及",
+      "charge_harm_aggravated": "資料不足",
+      "charge_harm_death": "資料不足",
+      "charge_negligent_harm": "資料不足",
+      "charge_negligent_harm_aggravated": "資料不足",
+      "charge_negligent_death": "資料不足",
+      "charge_harm_dv": "資料不足"
+    }
+  }
+}

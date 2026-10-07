@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_public_danger",
+  "exclusions": [
+    {
+      "id": "EX-PD-001",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_dui_danger",
+        "charge_dui"
+      ],
+      "special_over_general": "charge_dui_danger",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-PD-002",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_dui_death",
+        "charge_dui",
+        "charge_dui_danger"
+      ],
+      "special_over_general": "charge_dui_death",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-PD-003",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_dui",
+        "外法:道路交通管理處罰條例"
+      ],
+      "note": "行政罰與刑罰並存；行政罰不阻卻刑事追訴",
+      "verification": "verified"
+    }
+  ]
+}

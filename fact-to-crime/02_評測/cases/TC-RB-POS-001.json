@@ -1,0 +1,39 @@
+{
+  "case_id": "TC-RB-POS-001",
+  "case_type": "正例",
+  "description": "搶奪罪（§325）",
+  "state_map": {
+    "E-RB-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：被搶走包包"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-RB-002": {
+      "status": "符合",
+      "source_raw": [
+        "行為人陳述"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_snatching"
+    ],
+    "charge_states": {
+      "charge_snatching": "可能涉及",
+      "charge_robbery": "資料不足",
+      "charge_robbery_death": "資料不足",
+      "charge_kidnap_ransom": "資料不足",
+      "charge_quasi_robbery": "資料不足"
+    }
+  }
+}

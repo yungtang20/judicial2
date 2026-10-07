@@ -1,0 +1,184 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_defame",
+  "chapter_name": "刑法第309、310 妨害名譽族群",
+  "processing_modes": [
+    "筆錄",
+    "陳報"
+  ],
+  "special_law_references": [],
+  "elements": [
+    {
+      "id": "E-DF-011",
+      "name": "公然侮辱",
+      "type": "行為",
+      "semantic": "公然以言語或文字侮辱他人",
+      "mutually_exclusive": [],
+      "constitution_type": "開放",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第309條第1項",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "開放構成要件；6C 見解並列",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [
+        {
+          "source": "憲法法庭113年憲判字第3號",
+          "date": "2024",
+          "update": "2024",
+          "content": "限縮適用：須依表意脈絡、故意公然貶損他人名譽、逾越一般人可合理忍受範圍",
+          "effective": "生效中"
+        }
+      ],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-DF-012",
+      "name": "侮辱之故意",
+      "type": "主觀",
+      "semantic": "故意貶損他人名譽",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "直接故意",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第13條、第309條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "subjective_group": "mens_rea_insult"
+    },
+    {
+      "id": "E-DF-013",
+      "name": "公開性",
+      "type": "狀態",
+      "semantic": "行為具公然性（不特定或多數人得知）",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第309條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-DF-014",
+      "name": "誹謗",
+      "type": "行為",
+      "semantic": "意圖散布於眾而散布言語或文字致人名譽受損",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第310條第1項",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-DF-015",
+      "name": "誹謗之故意",
+      "type": "主觀",
+      "semantic": "意圖散布於眾",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "直接故意",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第13條、第310條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "subjective_group": "mens_rea_defame"
+    },
+    {
+      "id": "E-DF-016",
+      "name": "散布特定事實",
+      "type": "行為",
+      "semantic": "散布涉及被害人之特定事實",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第310條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-DF-017",
+      "name": "名譽受損",
+      "type": "結果",
+      "semantic": "致被害人名譽受損",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第309、310條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_defame",
+  "charges": [
+    {
+      "id": "charge_insult",
+      "name": "公然侮辱",
+      "article": "刑法第309條第1項",
+      "base_penalty": "六月以下有期徒刑、拘役或十萬元以下罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-DF-011",
+        "E-DF-013",
+        "E-DF-017"
+      ],
+      "requires_one_of": {
+        "mens_rea_insult": [
+          "E-DF-012"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "constitution_type": "開放",
+      "notes": "6C 見解分歧；開放構成要件標『待法官補充』",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_defame",
+      "name": "誹謗",
+      "article": "刑法第310條第1項",
+      "base_penalty": "二年以下有期徒刑、拘役或五百萬元以下罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-DF-014",
+        "E-DF-016",
+        "E-DF-017"
+      ],
+      "requires_one_of": {
+        "mens_rea_defame": [
+          "E-DF-015"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    }
+  ]
+}

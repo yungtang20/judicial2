@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_forgery",
+  "exclusions": [
+    {
+      "id": "EX-FG-001",
+      "type": "intra_chapter_mutual_exclusion",
+      "elements": [
+        "E-FG-001",
+        "E-FG-002"
+      ],
+      "note": "偽造 vs 變造互斥（偽造為新造，變造為修改）",
+      "verification": "verified",
+      "between_charges": [
+        "charge_forgery_private"
+      ]
+    },
+    {
+      "id": "EX-FG-002",
+      "type": "intra_chapter_mutual_exclusion",
+      "elements": [
+        "E-FG-003",
+        "E-FG-008"
+      ],
+      "note": "私印 vs 公印互斥",
+      "verification": "verified",
+      "between_charges": [
+        "charge_forgery_seal",
+        "charge_forgery_public"
+      ]
+    }
+  ]
+}

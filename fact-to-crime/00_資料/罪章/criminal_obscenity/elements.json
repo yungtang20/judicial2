@@ -1,0 +1,183 @@
+{
+  "version": "1.2",
+  "spec_version": "v15",
+  "chapter_id": "criminal_obscenity",
+  "chapter_name": "刑法第230、235、231 妨害風化族群（含兒少性交易）",
+  "processing_modes": [
+    "筆錄",
+    "陳報"
+  ],
+  "special_law_references": [
+    {
+      "name": "兒童及少年性交易防制條例",
+      "verified": false,
+      "note": "⚠️ 現行條文需查證"
+    }
+  ],
+  "elements": [
+    {
+      "id": "E-OB-001",
+      "name": "公然猥褻",
+      "type": "行為",
+      "semantic": "於公眾得出入之場所或公眾得出入之場所犯罪",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第231條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-OB-002",
+      "name": "猥褻之故意",
+      "type": "主觀",
+      "semantic": "意圖供人觀覽",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "直接故意",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第13條、第231條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "subjective_group": "mens_rea_obscenity"
+    },
+    {
+      "id": "E-OB-003",
+      "name": "散布販賣猥褻物品",
+      "type": "行為",
+      "semantic": "散布、販賣或公然陳列猥褻之文字、圖畫或其他物品",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第235條第1項",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-OB-004",
+      "name": "散布猥褻物品之故意",
+      "type": "主觀",
+      "semantic": "意圖散布、販賣",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "直接故意",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第13條、第235條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "subjective_group": "mens_rea_distribute"
+    },
+    {
+      "id": "E-OB-005",
+      "name": "兒少性剝削（§2 定義）",
+      "type": "行為",
+      "semantic": "使兒童或少年為有對價之性交或猥褻行為；利用為性交猥褻供人觀覽；拍攝製造重製持有散布播送交付公然陳列販賣兒少性影像；使坐檯陪酒或涉及色情之伴遊",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "兒童及少年性剝削防制條例第2條（113.08.07 修正）",
+      "law_category": "特別法",
+      "verification": "verified",
+      "note": "§2 已查證：四款行為定義；前身為兒童及少年性交易防制條例（2017 年改名、106.01.01 施行）",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-OB-006",
+      "name": "與性或性別有關",
+      "type": "狀態",
+      "semantic": "行為與性或性別有關",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第230、235、231條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-OB-007",
+      "name": "拍攝製造兒少性影像（§36）",
+      "type": "行為",
+      "semantic": "拍攝、製造、無故重製兒童或少年之性影像、與性相關而客觀上足以引起性慾或羞恥之圖畫、語音或其他物品",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": false,
+      "aggravator_for": "charge_minor_exploitation_36",
+      "source_types": [
+        "物證",
+        "電磁紀錄"
+      ],
+      "source_basis": "兒童及少年性剝削防制條例第36條第1項（113.08.07 修正）",
+      "law_category": "特別法",
+      "verification": "verified",
+      "note": "§36① 已查證：1年以上7年以下有期徒刑，得併科10萬以上100萬以下罰金",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    }
+  ]
+}

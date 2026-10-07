@@ -1,0 +1,72 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_traffic",
+  "charges": [
+    {
+      "id": "charge_admin_alcohol",
+      "name": "道交法§35 酒精駕駛（行政罰）",
+      "article": "道交法第35條第1項",
+      "base_penalty": "罰鍰 51000~153000 元、吊照",
+      "statute_of_limitations_years": null,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-TR-001"
+      ],
+      "not_applicable_if": [
+        "E-TR-002"
+      ],
+      "actor_subject_type_required": "自然人",
+      "cross_law_reference": true,
+      "law_category": "行政罰",
+      "verification": "verified",
+      "note": "行政罰區間；達刑罰門檻轉§185-3；v15 2A 分流"
+    },
+    {
+      "id": "charge_dangerous_drive",
+      "name": "危險駕駛公共危險",
+      "article": "刑法第185-4條",
+      "base_penalty": "五年以下有期徒刑",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-TR-004",
+        "E-TR-005"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_hit_and_run",
+      "name": "肇事逃逸",
+      "article": "刑法第185-6條",
+      "base_penalty": "1-10年（依死傷程度）",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-TR-006"
+      ],
+      "requires_any_result": [
+        "E-TR-007",
+        "E-TR-008"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_refuse_test",
+      "name": "拒測（行政罰）",
+      "article": "道交法第35條第1項第4款",
+      "base_penalty": "罰鍰、吊照",
+      "statute_of_limitations_years": null,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-TR-009"
+      ],
+      "actor_subject_type_required": "自然人",
+      "cross_law_reference": true,
+      "law_category": "行政罰",
+      "verification": "verified"
+    }
+  ]
+}

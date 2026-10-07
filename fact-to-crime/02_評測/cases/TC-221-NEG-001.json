@@ -1,0 +1,43 @@
+{
+  "case_id": "TC-221-NEG-001",
+  "case_type": "反例",
+  "description": "缺一必要元件：性交行為資料不足，不應浮現 charge_221",
+  "processing_mode": "陳報",
+  "stage": "警詢",
+  "inquired_party_identity": [
+    "被害人"
+  ],
+  "state_map": {
+    "E-221-001": {
+      "status": "資料不足",
+      "source_raw": [
+        "報案人陳述：『她今天回家時衣服亂七八糟』"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-221-006": {
+      "status": "資料不足",
+      "source_raw": [
+        "報案人陳述：『她說當時被打』"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [],
+    "charge_states": {
+      "charge_221": "資料不足",
+      "charge_221_aggravated": "資料不足",
+      "charge_221_result_death": "資料不足",
+      "charge_227_minor": "資料不足",
+      "charge_227_minor_16": "資料不足"
+    },
+    "counter_evidence_all_pass": true
+  }
+}

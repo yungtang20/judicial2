@@ -1,0 +1,85 @@
+{
+  "version": "1.0",
+  "case_types": [
+    {
+      "id": "sexual_image_suspect",
+      "name": "性影像嫌疑人",
+      "role_id": "suspect",
+      "template_id": "06-1",
+      "general_id": "suspect_general",
+      "special_law": "兒少性剝削防制條例"
+    },
+    {
+      "id": "sexual_image_victim",
+      "name": "性影像被害人",
+      "role_id": "victim",
+      "template_id": "06-2",
+      "general_id": "victim_general",
+      "special_law": "犯罪被害人權益保障法"
+    },
+    {
+      "id": "sexual_harassment_actor",
+      "name": "性騷擾行為人",
+      "role_id": "suspect",
+      "template_id": "06-3",
+      "general_id": "suspect_general",
+      "special_law": "性騷擾防治法"
+    },
+    {
+      "id": "sexual_harassment_victim",
+      "name": "性騷擾被害人",
+      "role_id": "victim",
+      "template_id": "06-4",
+      "general_id": "victim_general",
+      "special_law": "性平三法"
+    },
+    {
+      "id": "stalking_victim",
+      "name": "跟蹤騷擾被害人",
+      "role_id": "victim",
+      "template_id": "06-5",
+      "general_id": "victim_general",
+      "special_law": "跟蹤騷擾防制法"
+    },
+    {
+      "id": "protection_order_victim",
+      "name": "違反保護令被害人",
+      "role_id": "victim",
+      "template_id": "06-6",
+      "general_id": "victim_general",
+      "special_law": "家庭暴力防治法"
+    },
+    {
+      "id": "theft_suspect",
+      "name": "竊盜嫌疑人",
+      "role_id": "suspect",
+      "template_id": "06-7",
+      "general_id": "suspect_general",
+      "special_law": "刑法"
+    },
+    {
+      "id": "dui_suspect",
+      "name": "酒駕嫌疑人",
+      "role_id": "suspect",
+      "template_id": "06-8",
+      "general_id": "suspect_general",
+      "special_law": "刑法"
+    },
+    {
+      "id": "fraud_suspect",
+      "name": "詐欺嫌疑人",
+      "role_id": "suspect",
+      "template_id": "06-9",
+      "general_id": "suspect_general",
+      "special_law": "刑法"
+    },
+    {
+      "id": "drug_suspect",
+      "name": "毒品嫌疑人",
+      "role_id": "suspect",
+      "template_id": "06-10",
+      "general_id": "suspect_general",
+      "special_law": "毒品危害防制條例"
+    }
+  ]
+}

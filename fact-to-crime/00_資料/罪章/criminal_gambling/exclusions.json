@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_gambling",
+  "exclusions": [
+    {
+      "id": "EX-GB-001",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_gambling_operation",
+        "charge_gambling"
+      ],
+      "note": "經營者與參與者可並存（不同主體）",
+      "verification": "verified"
+    }
+  ]
+}

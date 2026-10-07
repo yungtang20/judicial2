@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_sexual_harassment",
+  "exclusions": [
+    {
+      "id": "EX-SH-001",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_sh_offense",
+        "charge_sh_admin"
+      ],
+      "note": "刑事罰成立時，行政申訴仍可並行（雙軌）",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-SH-002",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_sh_offense",
+        "外法:刑法§224 強制猥褻"
+      ],
+      "note": "§224 強制猥褻為§25 之加重特別關係（v15 13）",
+      "verification": "partial",
+      "warning": "⚠️ §224 現行條文需查證"
+    }
+  ]
+}

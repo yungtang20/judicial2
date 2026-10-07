@@ -1,0 +1,262 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_traffic",
+  "chapter_name": "道路交通管理處罰條例§35/§36 + 刑法§185-4 危險駕駛",
+  "processing_modes": [
+    "筆錄",
+    "陳報"
+  ],
+  "special_law_references": [
+    {
+      "name": "道路交通管理處罰條例",
+      "verified": true,
+      "note": "§35 行政罰；§36 肇事逃逸行政罰"
+    }
+  ],
+  "elements": [
+    {
+      "id": "E-TR-001",
+      "name": "酒精濃度達行政罰門檻（0.15~0.25 mg/L）",
+      "type": "結果",
+      "semantic": "吐氣酒精濃度達 0.15 但未達 0.25 mg/L，屬行政罰區間",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "道交法第35條第1項",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": {
+        "threshold": 0.15,
+        "unit": "mg/L",
+        "basis": "道交法第35條",
+        "status": "verified"
+      }
+    },
+    {
+      "id": "E-TR-002",
+      "name": "酒精濃度達刑罰門檻（≥0.25 mg/L）",
+      "type": "結果",
+      "semantic": "吐氣酒精濃度達 0.25 mg/L 以上，屬刑罰（§185-3）",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "道交法第35條第1項、刑法第185-3條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": {
+        "threshold": 0.25,
+        "unit": "mg/L",
+        "basis": "道交法第35條",
+        "status": "verified"
+      }
+    },
+    {
+      "id": "E-TR-003",
+      "name": "吸食毒品後駕駛",
+      "type": "行為",
+      "semantic": "吸食煙毒、毒品、麻醉藥品或服用管制藥品後駕駛",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "道交法第35條第1項第2款、§35-1",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-TR-004",
+      "name": "危險駕駛行為",
+      "type": "行為",
+      "semantic": "追越、強行、不依號誌、闖紅燈、逆道等危險駕駛行為",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-4條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-TR-005",
+      "name": "致生公共危險",
+      "type": "結果",
+      "semantic": "危險駕駛致生公共危險",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": true,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-4條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "aggravator_for": "charge_dangerous_drive"
+    },
+    {
+      "id": "E-TR-006",
+      "name": "肇事逃逸",
+      "type": "行為",
+      "semantic": "駕駛動力交通工具致人受傷或死亡後逃逸",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-6條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-TR-007",
+      "name": "肇事逃逸致傷",
+      "type": "結果",
+      "semantic": "肇事逃逸致人受傷",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": true,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-6條第2項",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "aggravator_for": "charge_hit_and_run"
+    },
+    {
+      "id": "E-TR-008",
+      "name": "肇事逃逸致死",
+      "type": "結果",
+      "semantic": "肇事逃逸致人於死",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": true,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-6條第3項",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "aggravator_for": "charge_hit_and_run"
+    },
+    {
+      "id": "E-TR-009",
+      "name": "拒測",
+      "type": "行為",
+      "semantic": "拒絕或不接受酒測",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "道交法第35條第1項第4款",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-TR-010",
+      "name": "無照駕駛",
+      "type": "行為",
+      "semantic": "未取得駕照駕駛動力交通工具",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "道交法第35條第2項",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "version": "1.1",
+  "spec_version": "v15",
+  "chapter_id": "criminal_221",
+  "exclusions": [
+    {
+      "id": "EX-221-001",
+      "type": "intra_chapter_mutual_exclusion",
+      "elements": [
+        "E-221-001",
+        "E-221-022"
+      ],
+      "between_charges": [
+        "charge_221"
+      ],
+      "note": "既遂與未遂互斥",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-221-002",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_221_aggravated",
+        "charge_221"
+      ],
+      "special_over_general": "charge_221_aggravated",
+      "note": "§222 加重強制性交為 §221 之加重特別關係",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-221-003",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_221_result_death",
+        "charge_221",
+        "charge_221_aggravated"
+      ],
+      "special_over_general": "charge_221_result_death",
+      "note": "§226 加重結果犯為 §221/§222 之特別關係",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-221-004",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_227_minor",
+        "charge_221"
+      ],
+      "special_over_general": "charge_227_minor",
+      "note": "§227 與幼年性交不要求『違反意願』；與 §221 為特別關係",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-221-005",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_221",
+        "外法:性侵害犯罪防治法通報程序"
+      ],
+      "note": "性侵害案件另走通報、減述、一站式服務程序（刑事與行政雙軌）",
+      "verification": "verified"
+    }
+  ]
+}

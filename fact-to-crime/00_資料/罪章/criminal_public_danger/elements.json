@@ -1,0 +1,195 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_public_danger",
+  "chapter_name": "刑法第185-3 公共危險族群（酒駕/毒駕）",
+  "processing_modes": [
+    "筆錄",
+    "陳報"
+  ],
+  "special_law_references": [
+    {
+      "name": "道路交通管理處罰條例",
+      "verified": true
+    },
+    {
+      "name": "毒品危害防制條例",
+      "verified": true
+    }
+  ],
+  "elements": [
+    {
+      "id": "E-PD-001",
+      "name": "吐氣酒精濃度達門檻",
+      "type": "結果",
+      "semantic": "吐氣酒精濃度達每公升0.25毫克以上",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-3條第1項第1款",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": {
+        "threshold": 0.25,
+        "unit": "mg/L",
+        "basis": "刑法第185-3條",
+        "status": "verified"
+      }
+    },
+    {
+      "id": "E-PD-002",
+      "name": "血液酒精濃度達門檻",
+      "type": "結果",
+      "semantic": "血液酒精濃度達每公升0.5毫克以上",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-3條第1項第2款",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": {
+        "threshold": 0.5,
+        "unit": "mg/L",
+        "basis": "刑法第185-3條",
+        "status": "verified"
+      }
+    },
+    {
+      "id": "E-PD-003",
+      "name": "服用管制藥品或毒品",
+      "type": "狀態",
+      "semantic": "服用毒品、管制藥品或其他有麻痺、影響判斷之物質",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-3條第1項第4款",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-PD-004",
+      "name": "駕駛動力交通工具",
+      "type": "行為",
+      "semantic": "駕駛動力交通工具",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-3條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-PD-005",
+      "name": "無故飲酒或服藥後駕駛",
+      "type": "行為",
+      "semantic": "無故飲酒或服用毒品後駕駛動力交通工具",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-3條第1項第5款",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-PD-006",
+      "name": "致生公共危險",
+      "type": "結果",
+      "semantic": "因飲酒駕車致生公共危險",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": true,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-3條第2項",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "aggravator_for": "charge_dui_danger"
+    },
+    {
+      "id": "E-PD-007",
+      "name": "致人死傷",
+      "type": "結果",
+      "semantic": "因飲酒駕車致人死傷",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": true,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第185-3條第3項",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "aggravator_for": "charge_dui_death"
+    }
+  ]
+}

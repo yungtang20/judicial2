@@ -1,0 +1,108 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_robbery",
+  "charges": [
+    {
+      "id": "charge_snatching",
+      "name": "搶奪罪",
+      "article": "刑法第325條第1項",
+      "base_penalty": "六月以上五年以下有期徒刑",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-RB-001"
+      ],
+      "requires_one_of": {
+        "mens_rea_robbery": [
+          "E-RB-002"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_robbery",
+      "name": "強盜罪",
+      "article": "刑法第328條第1項",
+      "base_penalty": "三年以上十年以下有期徒刑",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-RB-003"
+      ],
+      "requires_one_of": {
+        "mens_rea_robbery_strong": [
+          "E-RB-004"
+        ]
+      },
+      "supersedes": [
+        "charge_snatching"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_robbery_death",
+      "name": "強盜致死罪",
+      "article": "刑法第328條第3項",
+      "base_penalty": "死刑、無期徒刑或十年以上有期徒刑",
+      "statute_of_limitations_years": 20,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-RB-003",
+        "E-RB-009"
+      ],
+      "requires_one_of": {
+        "mens_rea_robbery_strong": [
+          "E-RB-004"
+        ]
+      },
+      "supersedes": [
+        "charge_robbery",
+        "charge_snatching"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_kidnap_ransom",
+      "name": "擄人勒贖罪",
+      "article": "刑法第347條第1項",
+      "base_penalty": "死刑、無期徒刑或十年以上有期徒刑",
+      "statute_of_limitations_years": 20,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-RB-005"
+      ],
+      "requires_one_of": {
+        "mens_rea_kidnap": [
+          "E-RB-006"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_quasi_robbery",
+      "name": "準強盜罪",
+      "article": "刑法第329條",
+      "base_penalty": "依§328（強盜罪）",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-RB-007"
+      ],
+      "requires_one_of": {
+        "mens_rea_robbery_strong": [
+          "E-RB-004"
+        ]
+      },
+      "supersedes": [
+        "charge_snatching"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    }
+  ]
+}

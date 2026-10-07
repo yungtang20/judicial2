@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_intimidation",
+  "exclusions": [
+    {
+      "id": "EX-IN-001",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_threat_extortion",
+        "charge_threat"
+      ],
+      "special_over_general": "charge_threat_extortion",
+      "verification": "verified"
+    }
+  ]
+}

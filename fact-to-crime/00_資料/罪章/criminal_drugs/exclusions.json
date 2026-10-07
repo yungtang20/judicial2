@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_drugs",
+  "exclusions": [
+    {
+      "id": "EX-DR-001",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_sell_tier1",
+        "charge_hold_tier1"
+      ],
+      "special_over_general": "charge_sell_tier1",
+      "verification": "verified",
+      "note": "販賣吸收持有"
+    },
+    {
+      "id": "EX-DR-002",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_sell_tier2",
+        "charge_hold_tier2"
+      ],
+      "special_over_general": "charge_sell_tier2",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-DR-003",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_use_tier1",
+        "外法:刑法第185-3 毒駕"
+      ],
+      "note": "施用與毒駕常見並存",
+      "verification": "verified"
+    }
+  ]
+}

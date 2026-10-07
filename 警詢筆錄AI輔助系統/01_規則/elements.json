@@ -1,0 +1,697 @@
+{
+  "version": "1.0",
+  "case_types": [
+    {
+      "case_type_id": "sexual_image_suspect",
+      "elements": [
+        {
+          "element_id": "SX-S-ELE-001",
+          "law": "兒少性剝削防制條例第36條",
+          "type": "客觀",
+          "name": "拍攝、製造兒少性影像",
+          "question_ids": [
+            "S-SX-S-TPL-010",
+            "S-SX-S-TPL-011",
+            "S-SX-S-TPL-032",
+            "ADD-SX-PER-002"
+          ],
+          "evidence_ids": [
+            "EV-SX-001"
+          ]
+        },
+        {
+          "element_id": "SX-S-ELE-002",
+          "law": "兒少性剝削防制條例第38條",
+          "type": "客觀",
+          "name": "散布、販賣兒少性影像",
+          "question_ids": [
+            "S-SX-S-TPL-013",
+            "S-SX-S-TPL-014",
+            "S-SX-S-TPL-015",
+            "S-SX-S-TPL-034",
+            "S-SX-S-TPL-053",
+            "ADD-SX-EVT-001"
+          ],
+          "evidence_ids": [
+            "EV-SX-002",
+            "EV-SX-003"
+          ]
+        },
+        {
+          "element_id": "SX-S-ELE-003",
+          "law": "刑法第235條",
+          "type": "客觀",
+          "name": "散布猥褻物品",
+          "question_ids": [
+            "S-SX-S-TPL-013",
+            "S-SX-S-TPL-014"
+          ],
+          "evidence_ids": [
+            "EV-SX-004"
+          ]
+        },
+        {
+          "element_id": "SX-S-ELE-004",
+          "law": "刑法第315-1條",
+          "type": "客觀",
+          "name": "無故竊錄",
+          "question_ids": [
+            "S-SX-S-TPL-011"
+          ],
+          "evidence_ids": [
+            "EV-SX-001"
+          ]
+        },
+        {
+          "element_id": "SX-S-ELE-005",
+          "law": "兒少性剝削防制條例第36條",
+          "type": "主觀",
+          "name": "知悉或可得而知為兒少",
+          "question_ids": [
+            "ADD-SX-PER-002"
+          ],
+          "evidence_ids": [
+            "EV-SX-005"
+          ]
+        },
+        {
+          "element_id": "SX-S-ELE-006",
+          "law": "兒少性剝削防制條例第38條",
+          "type": "主觀",
+          "name": "營利意圖",
+          "question_ids": [
+            "ADD-SX-MOT-001",
+            "ADD-SX-OBJ2-001"
+          ],
+          "evidence_ids": [
+            "EV-SX-003"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "sexual_image_victim",
+      "elements": [
+        {
+          "element_id": "SX-V-ELE-001",
+          "law": "兒少性剝削防制條例第36條",
+          "type": "客觀",
+          "name": "性影像遭拍攝、製造",
+          "question_ids": [
+            "V-SX-V-TPL-011"
+          ],
+          "evidence_ids": [
+            "EV-SX-001"
+          ]
+        },
+        {
+          "element_id": "SX-V-ELE-002",
+          "law": "兒少性剝削防制條例第38條",
+          "type": "客觀",
+          "name": "性影像遭散布、販賣",
+          "question_ids": [
+            "V-SX-V-TPL-011",
+            "V-SX-V-TPL-013"
+          ],
+          "evidence_ids": [
+            "EV-SX-002"
+          ]
+        },
+        {
+          "element_id": "SX-V-ELE-003",
+          "law": "刑法第304條",
+          "type": "客觀",
+          "name": "強制",
+          "question_ids": [
+            "V-SX-V-TPL-012"
+          ],
+          "evidence_ids": [
+            "EV-SX-006"
+          ]
+        },
+        {
+          "element_id": "SX-V-ELE-004",
+          "law": "刑法第305條",
+          "type": "客觀",
+          "name": "恐嚇",
+          "question_ids": [
+            "V-SX-V-TPL-012"
+          ],
+          "evidence_ids": [
+            "EV-SX-006"
+          ]
+        },
+        {
+          "element_id": "SX-V-ELE-005",
+          "law": "刑法第346條",
+          "type": "客觀",
+          "name": "恐嚇取財",
+          "question_ids": [
+            "V-SX-V-TPL-012"
+          ],
+          "evidence_ids": [
+            "EV-SX-006"
+          ]
+        },
+        {
+          "element_id": "SX-V-ELE-006",
+          "law": "刑法第235條",
+          "type": "客觀",
+          "name": "散布猥褻物品",
+          "question_ids": [
+            "V-SX-V-TPL-011"
+          ],
+          "evidence_ids": [
+            "EV-SX-004"
+          ]
+        },
+        {
+          "element_id": "SX-V-ELE-007",
+          "law": "刑法第315-1條",
+          "type": "客觀",
+          "name": "無故竊錄",
+          "question_ids": [
+            "V-SX-V-TPL-011"
+          ],
+          "evidence_ids": [
+            "EV-SX-001"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "sexual_harassment_actor",
+      "elements": [
+        {
+          "element_id": "SH-A-ELE-001",
+          "law": "性騷擾防治法第25條",
+          "type": "客觀",
+          "name": "意圖性騷擾，乘人不及抗拒而為親吻、擁抱或觸摸",
+          "question_ids": [
+            "S-SH-A-TPL-011",
+            "ADD-SH-EVT-001",
+            "ADD-SH-EVT-002"
+          ],
+          "evidence_ids": [
+            "EV-SH-001"
+          ]
+        },
+        {
+          "element_id": "SH-A-ELE-002",
+          "law": "性別平等工作法第12條",
+          "type": "客觀",
+          "name": "職場性騷擾",
+          "question_ids": [
+            "S-SH-A-TPL-004",
+            "S-SH-A-TPL-015",
+            "ADD-SH-PER-001",
+            "ADD-SH-PER-002"
+          ],
+          "evidence_ids": [
+            "EV-SH-002"
+          ]
+        },
+        {
+          "element_id": "SH-A-ELE-003",
+          "law": "刑法第224條",
+          "type": "客觀",
+          "name": "強制猥褻",
+          "question_ids": [
+            "ADD-SH-OBJ2-002"
+          ],
+          "evidence_ids": [
+            "EV-SH-003"
+          ]
+        },
+        {
+          "element_id": "SH-A-ELE-004",
+          "law": "性騷擾防治法第25條",
+          "type": "主觀",
+          "name": "意圖性騷擾",
+          "question_ids": [
+            "ADD-SH-INT-001",
+            "ADD-SH-INT-002"
+          ],
+          "evidence_ids": [
+            "EV-SH-001"
+          ]
+        },
+        {
+          "element_id": "SH-A-ELE-005",
+          "law": "性別平等工作法第12條",
+          "type": "主觀",
+          "name": "利用權勢或機會",
+          "question_ids": [
+            "ADD-SH-OBJ2-002"
+          ],
+          "evidence_ids": [
+            "EV-SH-002"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "sexual_harassment_victim",
+      "elements": [
+        {
+          "element_id": "SH-V-ELE-001",
+          "law": "性騷擾防治法第25條",
+          "type": "客觀",
+          "name": "意圖性騷擾，乘人不及抗拒而為親吻、擁抱或觸摸",
+          "question_ids": [
+            "V-SH-V-TPL-007",
+            "ADD-SH-EVT-001"
+          ],
+          "evidence_ids": [
+            "EV-SH-001"
+          ]
+        },
+        {
+          "element_id": "SH-V-ELE-002",
+          "law": "性別平等工作法第12條",
+          "type": "客觀",
+          "name": "職場性騷擾",
+          "question_ids": [
+            "V-SH-V-TPL-004",
+            "V-SH-V-TPL-008",
+            "V-SH-V-TPL-011"
+          ],
+          "evidence_ids": [
+            "EV-SH-002"
+          ]
+        },
+        {
+          "element_id": "SH-V-ELE-003",
+          "law": "性別平等工作法第12條第3項",
+          "type": "客觀",
+          "name": "非工作時間持續性性騷擾",
+          "question_ids": [
+            "V-SH-V-TPL-010"
+          ],
+          "evidence_ids": [
+            "EV-SH-002"
+          ]
+        },
+        {
+          "element_id": "SH-V-ELE-004",
+          "law": "性騷擾防治法第25條",
+          "type": "主觀",
+          "name": "違反意願",
+          "question_ids": [
+            "V-SH-V-TPL-016",
+            "ADD-SH-SUB-001"
+          ],
+          "evidence_ids": [
+            "EV-SH-001"
+          ]
+        },
+        {
+          "element_id": "SH-V-ELE-005",
+          "law": "性別平等工作法第12條",
+          "type": "主觀",
+          "name": "權勢關係",
+          "question_ids": [
+            "V-SH-V-TPL-013",
+            "ADD-SH-PER-002"
+          ],
+          "evidence_ids": [
+            "EV-SH-002"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "stalking_victim",
+      "elements": [
+        {
+          "element_id": "ST-V-ELE-001",
+          "law": "跟蹤騷擾防制法第18條第1項",
+          "type": "客觀",
+          "name": "反覆或持续為跟蹤騷擾行為",
+          "question_ids": [
+            "V-ST-V-TPL-005",
+            "V-ST-V-TPL-006",
+            "V-ST-V-TPL-007",
+            "V-ST-V-TPL-008",
+            "V-ST-V-TPL-009",
+            "V-ST-V-TPL-010",
+            "V-ST-V-TPL-011",
+            "V-ST-V-TPL-012",
+            "V-ST-V-TPL-013",
+            "ADD-ST-TIM-002"
+          ],
+          "evidence_ids": [
+            "EV-ST-001"
+          ]
+        },
+        {
+          "element_id": "ST-V-ELE-002",
+          "law": "跟蹤騷擾防制法第18條第2項",
+          "type": "客觀",
+          "name": "違反書面告誡",
+          "question_ids": [
+            "V-ST-V-TPL-025",
+            "V-ST-V-TPL-029"
+          ],
+          "evidence_ids": [
+            "EV-ST-002"
+          ]
+        },
+        {
+          "element_id": "ST-V-ELE-003",
+          "law": "家庭暴力防治法",
+          "type": "客觀",
+          "name": "親密關係伴侶跟蹤騷擾",
+          "question_ids": [
+            "V-ST-V-TPL-028",
+            "ADD-ST-PER-001"
+          ],
+          "evidence_ids": [
+            "EV-ST-003"
+          ]
+        },
+        {
+          "element_id": "ST-V-ELE-004",
+          "law": "跟蹤騷擾防制法第18條",
+          "type": "主觀",
+          "name": "使被害人心生畏怖",
+          "question_ids": [
+            "V-ST-V-TPL-018",
+            "ADD-ST-SUB-002"
+          ],
+          "evidence_ids": [
+            "EV-ST-001"
+          ]
+        },
+        {
+          "element_id": "ST-V-ELE-005",
+          "law": "跟蹤騷擾防制法第18條",
+          "type": "客觀",
+          "name": "影響日常生活或社會活動",
+          "question_ids": [
+            "V-ST-V-TPL-019",
+            "ADD-ST-INT-001"
+          ],
+          "evidence_ids": [
+            "EV-ST-004"
+          ]
+        },
+        {
+          "element_id": "ST-V-ELE-006",
+          "law": "跟蹤騷擾防制法第18條",
+          "type": "主觀",
+          "name": "與性或性別有關",
+          "question_ids": [
+            "ADD-ST-OBJ2-001"
+          ],
+          "evidence_ids": [
+            "EV-ST-001"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "protection_order_victim",
+      "elements": [
+        {
+          "element_id": "PO-V-ELE-001",
+          "law": "家庭暴力防治法第61條",
+          "type": "客觀",
+          "name": "違反保護令",
+          "question_ids": [
+            "V-PO-V-TPL-005",
+            "V-PO-V-TPL-006"
+          ],
+          "evidence_ids": [
+            "EV-PO-001"
+          ]
+        },
+        {
+          "element_id": "PO-V-ELE-002",
+          "law": "家庭暴力防治法第61條",
+          "type": "客觀",
+          "name": "違反保護令之行為態樣",
+          "question_ids": [
+            "V-PO-V-TPL-006",
+            "ADD-PO-EVT-001"
+          ],
+          "evidence_ids": [
+            "EV-PO-002"
+          ]
+        },
+        {
+          "element_id": "PO-V-ELE-003",
+          "law": "家庭暴力防治法第61條",
+          "type": "主觀",
+          "name": "知悉保護令內容",
+          "question_ids": [
+            "ADD-PO-SUB-001"
+          ],
+          "evidence_ids": [
+            "EV-PO-001"
+          ]
+        },
+        {
+          "element_id": "PO-V-ELE-004",
+          "law": "家庭暴力防治法第61條",
+          "type": "客觀",
+          "name": "造成身體或精神上傷害",
+          "question_ids": [
+            "ADD-PO-EVT-001"
+          ],
+          "evidence_ids": [
+            "EV-PO-003"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "theft_suspect",
+      "elements": [
+        {
+          "element_id": "TH-S-ELE-001",
+          "law": "刑法第320條第1項",
+          "type": "主觀",
+          "name": "意圖為自己或第三人不法之所有",
+          "question_ids": [
+            "ADD-TH-INT-001",
+            "ADD-TH-MOT-001"
+          ],
+          "evidence_ids": [
+            "EV-TH-001"
+          ]
+        },
+        {
+          "element_id": "TH-S-ELE-002",
+          "law": "刑法第320條第1項",
+          "type": "客觀",
+          "name": "竊取他人之動產",
+          "question_ids": [
+            "S-TH-S-TPL-002",
+            "S-TH-S-TPL-003"
+          ],
+          "evidence_ids": [
+            "EV-TH-002"
+          ]
+        },
+        {
+          "element_id": "TH-S-ELE-003",
+          "law": "刑法第320條第1項",
+          "type": "客觀",
+          "name": "破壞持有人對物品之持有",
+          "question_ids": [
+            "S-TH-S-TPL-004",
+            "ADD-TH-OBJ2-001"
+          ],
+          "evidence_ids": [
+            "EV-TH-003"
+          ]
+        },
+        {
+          "element_id": "TH-S-ELE-004",
+          "law": "刑法第320條第1項",
+          "type": "主觀",
+          "name": "知悉為他人所有",
+          "question_ids": [
+            "S-TH-S-TPL-007",
+            "ADD-TH-SUB-001"
+          ],
+          "evidence_ids": [
+            "EV-TH-001"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "dui_suspect",
+      "elements": [
+        {
+          "element_id": "DU-S-ELE-001",
+          "law": "刑法第185條之3第1項第1款",
+          "type": "客觀",
+          "name": "吐氣所含酒精濃度達每公升零點二五毫克",
+          "question_ids": [
+            "S-DU-S-TPL-005",
+            "ADD-DU-EVT-003"
+          ],
+          "evidence_ids": [
+            "EV-DU-001"
+          ]
+        },
+        {
+          "element_id": "DU-S-ELE-002",
+          "law": "刑法第185條之3第1項第1款",
+          "type": "客觀",
+          "name": "駕駛動力交通工具",
+          "question_ids": [
+            "S-DU-S-TPL-003",
+            "S-DU-S-TPL-004"
+          ],
+          "evidence_ids": [
+            "EV-DU-002"
+          ]
+        },
+        {
+          "element_id": "DU-S-ELE-003",
+          "law": "刑法第185條之3第1項第1款",
+          "type": "客觀",
+          "name": "飲酒後駕車",
+          "question_ids": [
+            "S-DU-S-TPL-002",
+            "ADD-DU-TIM-001",
+            "ADD-DU-TIM-002"
+          ],
+          "evidence_ids": [
+            "EV-DU-001"
+          ]
+        },
+        {
+          "element_id": "DU-S-ELE-004",
+          "law": "刑法第185條之3",
+          "type": "主觀",
+          "name": "知悉飲酒後不得駕駛",
+          "question_ids": [
+            "ADD-DU-SUB-001"
+          ],
+          "evidence_ids": [
+            "EV-DU-001"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "fraud_suspect",
+      "elements": [
+        {
+          "element_id": "FR-S-ELE-001",
+          "law": "刑法第339條",
+          "type": "主觀",
+          "name": "意圖為自己或第三人不法之所有",
+          "question_ids": [
+            "ADD-FR-INT-001"
+          ],
+          "evidence_ids": [
+            "EV-FR-001"
+          ]
+        },
+        {
+          "element_id": "FR-S-ELE-002",
+          "law": "刑法第339條",
+          "type": "客觀",
+          "name": "以詐術使人將本人或第三人之物交付",
+          "question_ids": [
+            "S-FR-S-TPL-003",
+            "ADD-FR-EVT-001"
+          ],
+          "evidence_ids": [
+            "EV-FR-002"
+          ]
+        },
+        {
+          "element_id": "FR-S-ELE-003",
+          "law": "刑法第339條之4",
+          "type": "客觀",
+          "name": "三人以上共同犯之",
+          "question_ids": [
+            "S-FR-S-TPL-004",
+            "ADD-FR-EVT-002"
+          ],
+          "evidence_ids": [
+            "EV-FR-003"
+          ]
+        },
+        {
+          "element_id": "FR-S-ELE-004",
+          "law": "刑法第339條",
+          "type": "客觀",
+          "name": "使用金融帳戶",
+          "question_ids": [
+            "S-FR-S-TPL-002",
+            "ADD-FR-OBJ-001"
+          ],
+          "evidence_ids": [
+            "EV-FR-001"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "drug_suspect",
+      "elements": [
+        {
+          "element_id": "DR-S-ELE-001",
+          "law": "毒品危害防制條例第10條",
+          "type": "客觀",
+          "name": "施用毒品",
+          "question_ids": [
+            "S-DR-S-TPL-003",
+            "S-DR-S-TPL-004",
+            "ADD-DR-EVT-001"
+          ],
+          "evidence_ids": [
+            "EV-DR-001"
+          ]
+        },
+        {
+          "element_id": "DR-S-ELE-002",
+          "law": "毒品危害防制條例第11條",
+          "type": "客觀",
+          "name": "持有毒品",
+          "question_ids": [
+            "S-DR-S-TPL-002",
+            "ADD-DR-OBJ-001"
+          ],
+          "evidence_ids": [
+            "EV-DR-002"
+          ]
+        },
+        {
+          "element_id": "DR-S-ELE-003",
+          "law": "毒品危害防制條例第17條",
+          "type": "客觀",
+          "name": "供出毒品來源",
+          "question_ids": [
+            "S-DR-S-TPL-005",
+            "ADD-DR-PER-002"
+          ],
+          "evidence_ids": [
+            "EV-DR-003"
+          ]
+        },
+        {
+          "element_id": "DR-S-ELE-004",
+          "law": "毒品危害防制條例",
+          "type": "主觀",
+          "name": "知悉施用毒品之法律後果",
+          "question_ids": [
+            "S-DR-S-TPL-007",
+            "ADD-DR-SUB-001"
+          ],
+          "evidence_ids": [
+            "EV-DR-001"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "case_id": "TC-221-POS-001",
+  "case_type": "正例",
+  "description": "強制性交罪要件齊備：性交行為+強暴方法+違反意願+故意（單一來源）",
+  "processing_mode": "筆錄",
+  "stage": "警詢",
+  "inquired_party_identity": [
+    "被害人"
+  ],
+  "case_date": "2024-06-15",
+  "state_map": {
+    "E-221-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：『他那天晚上跟我做那件事』"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-221-002": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：『他用手勒住我，壓著我按在沙發上』"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-221-006": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：『我根本動不了』"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-221-007": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：『他明明知道我不同意，還一直做』"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_221"
+    ],
+    "charge_states": {
+      "charge_221": "可能涉及",
+      "charge_221_aggravated": "資料不足",
+      "charge_221_result_death": "資料不足",
+      "charge_227_minor": "資料不足",
+      "charge_227_minor_16": "資料不足"
+    },
+    "counter_evidence_all_pass": true
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "case_id": "TC-DF-POS-001",
+  "case_type": "正例",
+  "description": "公然侮辱：公然行為 + 名譽受損 + 侮辱故意（開放構成要件，6C 見解）",
+  "state_map": {
+    "E-DF-011": {
+      "status": "符合",
+      "source_raw": [
+        "現場證人筆錄：當眾罵『白目』"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-DF-012": {
+      "status": "符合",
+      "source_raw": [
+        "現場證人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-DF-013": {
+      "status": "符合",
+      "source_raw": [
+        "現場 20 人見聞"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-DF-017": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_insult"
+    ],
+    "charge_states": {
+      "charge_insult": "可能涉及",
+      "charge_defame": "資料不足"
+    }
+  }
+}

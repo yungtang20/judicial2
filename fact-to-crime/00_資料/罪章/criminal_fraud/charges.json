@@ -1,0 +1,148 @@
+{
+  "version": "1.2",
+  "spec_version": "v15",
+  "chapter_id": "criminal_fraud",
+  "charges": [
+    {
+      "id": "charge_fraud",
+      "name": "詐欺取財",
+      "article": "刑法第339條",
+      "base_penalty": "七年以下有期徒刑",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-FR-001",
+        "E-FR-002",
+        "E-FR-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_fraud": [
+          "E-FR-003"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_fraud_group",
+      "name": "三人以上共同詐欺",
+      "article": "刑法第339-3條",
+      "base_penalty": "一年以上七年以下有期徒刑",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-FR-001",
+        "E-FR-002",
+        "E-FR-004",
+        "E-FR-005"
+      ],
+      "requires_one_of": {
+        "mens_rea_fraud": [
+          "E-FR-003"
+        ]
+      },
+      "supersedes": [
+        "charge_fraud"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "partial",
+      "warning": "⚠️ 條文需查證"
+    },
+    {
+      "id": "charge_fraud_computer",
+      "name": "加重詐欺罪（§339-4）",
+      "article": "刑法第339-4條",
+      "base_penalty": "依條文",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-FR-007",
+        "E-FR-002",
+        "E-FR-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_fraud": [
+          "E-FR-003"
+        ]
+      },
+      "supersedes": [
+        "charge_fraud"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "warning": "⚠️ 條文需查證"
+    },
+    {
+      "id": "charge_fraud_special_high",
+      "name": "詐欺犯罪危害防制條例高額詐欺（§43 三級化）",
+      "article": "詐欺犯罪危害防制條例§43、§44",
+      "base_penalty": "①100萬↑：3~10年+3000萬罰金 ②1000萬↑：5~12年+3億罰金 ③1億↑：7年↑或無期+5億罰金",
+      "statute_of_limitations_years": "依現行條文",
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-FR-001",
+        "E-FR-002",
+        "E-FR-004"
+      ],
+      "requires_any_result": [
+        "E-FR-006",
+        "E-FR-008"
+      ],
+      "supersedes": [
+        "charge_fraud",
+        "charge_fraud_group",
+        "charge_fraud_computer"
+      ],
+      "cross_law_reference": true,
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "warning": "⚠️ 現行數額級距、刑度與施行日需查證（115年1月21日修正公布）",
+      "note": "115.01.23 施行"
+    },
+    {
+      "id": "charge_quasi_fraud",
+      "name": "準詐欺",
+      "article": "刑法第339-1條",
+      "base_penalty": "七年以下有期徒刑",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-FR-009",
+        "E-FR-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_quasi_fraud": [
+          "E-FR-010"
+        ]
+      },
+      "supersedes": [
+        "charge_fraud"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_fraud_attempt",
+      "name": "詐欺未遂",
+      "article": "刑法第14條、§25②、§41",
+      "base_penalty": "未遂刑（減輕）",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_one_of": {
+        "mens_rea_fraud": [
+          "E-FR-003"
+        ]
+      },
+      "requires_all_optional": [
+        "E-FR-011"
+      ],
+      "requires_not_all": [
+        "E-FR-004"
+      ],
+      "is_variant_of": "charge_fraud",
+      "variant_type": "未遂",
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    }
+  ]
+}

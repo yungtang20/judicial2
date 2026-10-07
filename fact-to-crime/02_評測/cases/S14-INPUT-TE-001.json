@@ -1,0 +1,54 @@
+{
+  "chapter_id": "criminal_theft_embezzle",
+  "raw_text": "報案人稱於超商內，發現一名男子將貨架上之商品放入自己背包，未結帳即離開。現場監視器已調閱。處理員警依規定製作筆錄。",
+  "case_type": "竊盜案",
+  "declared_role": "被害人",
+  "inquired_identity": "被害人",
+  "case_date": "2024-06-15",
+  "message_date": {
+    "year": 2024,
+    "month": 6,
+    "day": 15
+  },
+  "article": "刑法第320條第1項",
+  "max_penalty": "五年以下有期徒刑、拘役或罰金",
+  "fields": {
+    "occurred": "2024-06-15T10:00:00",
+    "reported": "2024-06-15T11:00:00"
+  },
+  "evidence": {
+    "E-TE-001": {
+      "evidence_admissibility": "可採"
+    },
+    "E-TE-002": {
+      "evidence_admissibility": "可採"
+    }
+  },
+  "state_map": {
+    "E-TE-001": {
+      "status": "符合",
+      "source_raw": [
+        "監視器畫面：行為人取走商品"
+      ],
+      "source_type": "物證",
+      "source_count": 1,
+      "evidence_admissibility": "可採"
+    },
+    "E-TE-002": {
+      "status": "符合",
+      "source_raw": [
+        "監視器畫面"
+      ],
+      "source_type": "物證",
+      "source_count": 1,
+      "evidence_admissibility": "可採"
+    },
+    "E-TE-003": {
+      "status": "資料不足",
+      "source_raw": [],
+      "source_type": "行為人陳述",
+      "source_count": 0,
+      "evidence_admissibility": "可採"
+    }
+  }
+}

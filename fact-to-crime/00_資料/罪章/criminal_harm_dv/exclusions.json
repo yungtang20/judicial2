@@ -1,0 +1,59 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_harm_dv",
+  "exclusions": [
+    {
+      "id": "EX-HD-001",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_harm_aggravated",
+        "charge_harm"
+      ],
+      "special_over_general": "charge_harm_aggravated",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-HD-002",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_harm_death",
+        "charge_harm",
+        "charge_harm_aggravated"
+      ],
+      "special_over_general": "charge_harm_death",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-HD-003",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_negligent_harm_aggravated",
+        "charge_negligent_harm"
+      ],
+      "special_over_general": "charge_negligent_harm_aggravated",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-HD-004",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_harm_dv",
+        "外法:家庭暴力防治法保護令"
+      ],
+      "note": "家暴情境傷害與保護令程序並存",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-HD-005",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_harm_dv",
+        "charge_harm"
+      ],
+      "special_over_general": "charge_harm_dv",
+      "note": "家暴情境傷害（§277+§3）為§277 之加重特別關係",
+      "verification": "verified"
+    }
+  ]
+}

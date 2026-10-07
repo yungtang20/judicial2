@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "roles": [
+    {
+      "id": "suspect",
+      "name": "涉嫌人",
+      "version": "涉嫌人版",
+      "aliases": [
+        "行為人"
+      ]
+    },
+    {
+      "id": "victim",
+      "name": "被害人",
+      "version": "被害人版",
+      "aliases": [
+        "告訴人"
+      ]
+    },
+    {
+      "id": "witness",
+      "name": "證人",
+      "version": "證人版",
+      "aliases": [
+        "告發人",
+        "關係人"
+      ]
+    }
+  ]
+}

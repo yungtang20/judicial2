@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_robbery",
+  "exclusions": [
+    {
+      "id": "EX-RB-001",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_robbery",
+        "charge_snatching"
+      ],
+      "special_over_general": "charge_robbery",
+      "note": "強盜為搶奪之加重特別關係",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-RB-002",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_robbery_death",
+        "charge_robbery",
+        "charge_snatching"
+      ],
+      "special_over_general": "charge_robbery_death",
+      "note": "加重結果犯為強盜之特別關係",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-RB-003",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_kidnap_ransom",
+        "外章:§302 私行拘禁"
+      ],
+      "note": "擄人勒贖與私行拘禁為想像競合",
+      "verification": "verified"
+    }
+  ]
+}

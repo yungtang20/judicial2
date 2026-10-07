@@ -1,0 +1,37 @@
+{
+  "case_id": "TC-PD-POS-001",
+  "case_type": "正例",
+  "description": "酒駕：駕駛動力交通工具 + 吐氣酒精達門檻",
+  "state_map": {
+    "E-PD-001": {
+      "status": "符合",
+      "source_raw": [
+        "酒測單：0.25 mg/L"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-PD-004": {
+      "status": "符合",
+      "source_raw": [
+        "查獲紀錄：駕駛機車"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_dui"
+    ],
+    "charge_states": {
+      "charge_dui": "可能涉及",
+      "charge_dui_danger": "資料不足",
+      "charge_dui_death": "資料不足"
+    }
+  }
+}

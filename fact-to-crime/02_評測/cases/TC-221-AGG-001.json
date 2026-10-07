@@ -1,0 +1,75 @@
+{
+  "case_id": "TC-221-AGG-001",
+  "case_type": "加重版",
+  "description": "加重強制性交：§222 攜帶兇器（E-221-015），應浮現 charge_221_aggravated 且剔除 charge_221",
+  "processing_mode": "筆錄",
+  "stage": "警詢",
+  "inquired_party_identity": [
+    "被害人"
+  ],
+  "state_map": {
+    "E-221-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-221-003": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：『他拔出一把水果刀指著我，叫我不要動』"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-221-006": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：『我不敢動』"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-221-007": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-221-015": {
+      "status": "符合",
+      "source_raw": [
+        "扣押刀一柄、被害人筆錄"
+      ],
+      "source_type": "物證+被害人陳述",
+      "source_count": 2,
+      "single_source": false,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_221_aggravated"
+    ],
+    "charge_states": {
+      "charge_221": "可能涉及",
+      "charge_221_aggravated": "可能涉及",
+      "charge_221_result_death": "資料不足",
+      "charge_227_minor": "資料不足",
+      "charge_227_minor_16": "資料不足"
+    },
+    "counter_evidence_all_pass": true
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_drugs",
+  "charges": [
+    {
+      "id": "charge_use_tier1",
+      "name": "施用第一級毒品",
+      "article": "毒條第10條",
+      "base_penalty": "一年以上七年以下有期徒刑",
+      "statute_of_limitations_years": 7,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-DR-001"
+      ],
+      "requires_one_of": {
+        "mens_rea_use": [
+          "E-DR-013"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    },
+    {
+      "id": "charge_use_tier2",
+      "name": "施用第二級毒品",
+      "article": "毒條第12條",
+      "base_penalty": "二年以下有期徒刑",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-DR-002"
+      ],
+      "requires_one_of": {
+        "mens_rea_use": [
+          "E-DR-013"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    },
+    {
+      "id": "charge_use_tier3",
+      "name": "施用第三級毒品",
+      "article": "毒條第13條",
+      "base_penalty": "六月以下有期徒刑、拘役或十萬元以下罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-DR-003"
+      ],
+      "requires_one_of": {
+        "mens_rea_use": [
+          "E-DR-013"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    },
+    {
+      "id": "charge_use_tier4",
+      "name": "施用第四級毒品",
+      "article": "毒條第13條",
+      "base_penalty": "六月以下有期徒刑、拘役或十萬元以下罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-DR-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_use": [
+          "E-DR-013"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    },
+    {
+      "id": "charge_hold_tier1",
+      "name": "持有第一級毒品",
+      "article": "毒條第11條",
+      "base_penalty": "六月以上五年以下有期徒刑",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-DR-005"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    },
+    {
+      "id": "charge_hold_tier2",
+      "name": "持有第二級毒品",
+      "article": "毒條第11條",
+      "base_penalty": "六月以上五年以下有期徒刑",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-DR-006"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    },
+    {
+      "id": "charge_sell_tier1",
+      "name": "販賣第一級毒品",
+      "article": "毒條第4條",
+      "base_penalty": "死刑或無期徒刑",
+      "statute_of_limitations_years": null,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-DR-007"
+      ],
+      "requires_one_of": {
+        "mens_rea_sell": [
+          "E-DR-011"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    },
+    {
+      "id": "charge_sell_tier2",
+      "name": "販賣第二級毒品",
+      "article": "毒條第5條",
+      "base_penalty": "七年以上有期徒刑",
+      "statute_of_limitations_years": 20,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-DR-008"
+      ],
+      "requires_one_of": {
+        "mens_rea_sell": [
+          "E-DR-011"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    },
+    {
+      "id": "charge_sell_tier3",
+      "name": "販賣第三級毒品",
+      "article": "毒條第6條",
+      "base_penalty": "三年以上十年以下有期徒刑",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-DR-009"
+      ],
+      "requires_one_of": {
+        "mens_rea_sell": [
+          "E-DR-011"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    },
+    {
+      "id": "charge_sell_tier4",
+      "name": "販賣第四級毒品",
+      "article": "毒條第7條",
+      "base_penalty": "一年以上七年以下有期徒刑",
+      "statute_of_limitations_years": 7,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-DR-010"
+      ],
+      "requires_one_of": {
+        "mens_rea_sell": [
+          "E-DR-011"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    }
+  ]
+}

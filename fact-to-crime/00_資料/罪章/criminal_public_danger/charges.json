@@ -1,0 +1,79 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_public_danger",
+  "charges": [
+    {
+      "id": "charge_dui",
+      "name": "飲酒或服藥後駕駛動力交通工具",
+      "article": "刑法第185-3條第1項",
+      "base_penalty": "三年以下有期徒刑",
+      "statute_of_limitations_years": 7,
+      "private_prosecution": false,
+      "requires_one_of": {
+        "dui_means": [
+          "E-PD-001",
+          "E-PD-002",
+          "E-PD-003",
+          "E-PD-005"
+        ]
+      },
+      "requires_elements": [
+        "E-PD-004"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_dui_danger",
+      "name": "飲酒駕車致生公共危險",
+      "article": "刑法第185-3條第2項",
+      "base_penalty": "一年以上七年以下有期徒刑",
+      "statute_of_limitations_years": 7,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-PD-004",
+        "E-PD-006"
+      ],
+      "requires_one_of": {
+        "dui_means": [
+          "E-PD-001",
+          "E-PD-002",
+          "E-PD-003",
+          "E-PD-005"
+        ]
+      },
+      "supersedes": [
+        "charge_dui"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_dui_death",
+      "name": "飲酒駕車致人死傷",
+      "article": "刑法第185-3條第3項",
+      "base_penalty": "一年以上十二年以下有期徒刑",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-PD-004",
+        "E-PD-007"
+      ],
+      "requires_one_of": {
+        "dui_means": [
+          "E-PD-001",
+          "E-PD-002",
+          "E-PD-003",
+          "E-PD-005"
+        ]
+      },
+      "supersedes": [
+        "charge_dui",
+        "charge_dui_danger"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    }
+  ]
+}

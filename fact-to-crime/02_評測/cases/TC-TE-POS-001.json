@@ -1,0 +1,47 @@
+{
+  "case_id": "TC-TE-POS-001",
+  "case_type": "正例",
+  "description": "竊盜罪：竊取+破壞持有+不法所有意圖",
+  "state_map": {
+    "E-TE-001": {
+      "status": "符合",
+      "source_raw": [
+        "監視器：行為人取走手機"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-TE-002": {
+      "status": "符合",
+      "source_raw": [
+        "監視器"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-TE-003": {
+      "status": "符合",
+      "source_raw": [
+        "行為人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_theft"
+    ],
+    "charge_states": {
+      "charge_theft": "可能涉及",
+      "charge_embezzle": "資料不足",
+      "charge_lost_property": "資料不足"
+    }
+  }
+}

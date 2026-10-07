@@ -1,0 +1,93 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_sexual_harassment",
+  "charges": [
+    {
+      "id": "charge_sh_admin",
+      "name": "性騷擾行政申訴",
+      "article": "性騷擾防治法（行政申訴軌）",
+      "base_penalty": "行政罰",
+      "statute_of_limitations_years": null,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-SH-001",
+        "E-SH-002",
+        "E-SH-003"
+      ],
+      "not_applicable_if": [
+        "E-SH-004"
+      ],
+      "actor_subject_type_required": "自然人",
+      "cross_law_reference": true,
+      "law_category": "行政罰",
+      "verification": "verified",
+      "note": "v15 2A/2B 分流；涉刑事（E-SH-004）時雙軌"
+    },
+    {
+      "id": "charge_sh_offense",
+      "name": "性騷擾罪",
+      "article": "性騷擾防治法第25條",
+      "base_penalty": "二年以下有期徒刑、拘役或科或併科十萬元以下罰金",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-SH-001",
+        "E-SH-002",
+        "E-SH-003",
+        "E-SH-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_sh_offense": [
+          "E-SH-005"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "law_category": "特別法"
+    },
+    {
+      "id": "charge_sh_workplace",
+      "name": "職場性騷擾（性工法）",
+      "article": "性別平等工作法第12條",
+      "base_penalty": "行政罰（雇主罰鍰）",
+      "statute_of_limitations_years": null,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-SH-001",
+        "E-SH-002",
+        "E-SH-003",
+        "E-SH-006"
+      ],
+      "not_applicable_if": [
+        "E-SH-004"
+      ],
+      "actor_subject_type_required": "自然人或法人",
+      "cross_law_reference": true,
+      "law_category": "行政罰",
+      "verification": "verified",
+      "note": "v15 4A 主體類型：雇主可為法人（R43 ⚠️）"
+    },
+    {
+      "id": "charge_sh_education",
+      "name": "教育機構性騷擾（性別平等教育法）",
+      "article": "性別平等教育法",
+      "base_penalty": "行政罰（學校罰鍰）",
+      "statute_of_limitations_years": null,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-SH-001",
+        "E-SH-002",
+        "E-SH-003",
+        "E-SH-007"
+      ],
+      "not_applicable_if": [
+        "E-SH-004"
+      ],
+      "actor_subject_type_required": "自然人或法人",
+      "cross_law_reference": true,
+      "law_category": "行政罰",
+      "verification": "verified"
+    }
+  ]
+}

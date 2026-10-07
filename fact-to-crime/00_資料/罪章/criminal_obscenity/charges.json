@@ -1,0 +1,65 @@
+{
+  "version": "1.2",
+  "spec_version": "v15",
+  "chapter_id": "criminal_obscenity",
+  "charges": [
+    {
+      "id": "charge_public_obscenity",
+      "name": "公然猥褻",
+      "article": "刑法第231條",
+      "base_penalty": "一年以下有期徒刑、拘役或三萬元以下罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-OB-001",
+        "E-OB-006"
+      ],
+      "requires_one_of": {
+        "mens_rea_obscenity": [
+          "E-OB-002"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_distribute_obscenity",
+      "name": "散布販賣猥褻物品",
+      "article": "刑法第235條第1項",
+      "base_penalty": "二年以下有期徒刑、拘役或科或併科九萬元以下罰金",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-OB-003",
+        "E-OB-006"
+      ],
+      "requires_one_of": {
+        "mens_rea_distribute": [
+          "E-OB-004"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_minor_sex_trade",
+      "name": "兒少性剝削（拍攝製造性影像）",
+      "article": "兒童及少年性剝削防制條例第36條第1項",
+      "base_penalty": "一年以上七年以下有期徒刑，得併科十萬元以上一百萬元以下罰金",
+      "statute_of_limitations_years": "依特別法定",
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-OB-007"
+      ],
+      "requires_one_of": {
+        "mens_rea_obscenity": [
+          "E-OB-002"
+        ]
+      },
+      "cross_law_reference": true,
+      "actor_subject_type_required": "自然人",
+      "verification": "verified",
+      "note": "§36① 已查證；113.08.07 修正"
+    }
+  ]
+}

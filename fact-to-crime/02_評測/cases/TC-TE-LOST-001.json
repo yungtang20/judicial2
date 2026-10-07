@@ -1,0 +1,43 @@
+{
+  "case_id": "TC-TE-LOST-001",
+  "case_type": "互斥對測試",
+  "description": "侵占遺失物：放置物非遺失物，E-TE-001 不應符合；E-TE-007 符合",
+  "state_map": {
+    "E-TE-001": {
+      "status": "資料不足",
+      "source_raw": [],
+      "source_type": "被害人陳述",
+      "source_count": 0,
+      "evidence_admissibility": "可採"
+    },
+    "E-TE-007": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：手機落在超商廁所"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-TE-008": {
+      "status": "符合",
+      "source_raw": [
+        "行為人陳述：拿走"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_lost_property"
+    ],
+    "charge_states": {
+      "charge_theft": "資料不足",
+      "charge_lost_property": "可能涉及"
+    }
+  }
+}

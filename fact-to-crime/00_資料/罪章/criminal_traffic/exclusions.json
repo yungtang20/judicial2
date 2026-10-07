@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_traffic",
+  "exclusions": [
+    {
+      "id": "EX-TR-001",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_admin_alcohol",
+        "外法:刑§185-3 酒駕"
+      ],
+      "note": "行政罰與刑罰並存；達刑罰門檻以刑罰為主（§185-3 已於 criminal_public_danger）",
+      "verification": "verified"
+    },
+    {
+      "id": "EX-TR-002",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_hit_and_run",
+        "外法:道交法§36 行政罰"
+      ],
+      "note": "§185-6 與道交法§36 並存",
+      "verification": "verified"
+    }
+  ]
+}

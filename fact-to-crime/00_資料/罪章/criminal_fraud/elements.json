@@ -1,0 +1,303 @@
+{
+  "version": "1.2",
+  "spec_version": "v15",
+  "chapter_id": "criminal_fraud",
+  "chapter_name": "刑法第339條詐欺罪族群（含特別法）",
+  "processing_modes": [
+    "筆錄",
+    "陳報"
+  ],
+  "special_law_references": [
+    {
+      "name": "詐欺犯罪危害防制條例",
+      "verified": false,
+      "note": "⚠️ 115年1月21日修正公布；現行數額級距與施行日需查證"
+    }
+  ],
+  "elements": [
+    {
+      "id": "E-FR-001",
+      "name": "施用詐術",
+      "type": "行為",
+      "semantic": "以詐術使人陷於錯誤",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第339條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-FR-002",
+      "name": "使人陷於錯誤並交付",
+      "type": "結果",
+      "semantic": "被害人因陷於錯誤而將財物交付",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第339條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-FR-003",
+      "name": "不法所有意圖",
+      "type": "主觀",
+      "semantic": "意圖為自己或第三人不法之所有",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "直接故意",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第13條、第339條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "subjective_group": "mens_rea_fraud"
+    },
+    {
+      "id": "E-FR-004",
+      "name": "取得財物",
+      "type": "結果",
+      "semantic": "行為人取得財物",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第339條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-FR-005",
+      "name": "違法製作財產權紀錄（§339-3）",
+      "type": "狀態",
+      "semantic": "意圖為自己或第三人不法之所有，以不正方法將虛偽資料或不正指令輸入電腦或其相關設備，製作財產權之得喪、變更紀錄，而取得他人之財產",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第339-3條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "§339-3 已查證：7年以下有期徒刑+70萬以下罰金；未遂犯罰之；不需證明對方陷於錯誤",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "aggravator_for": "charge_computer_record_fraud"
+    },
+    {
+      "id": "E-FR-006",
+      "name": "高額詐欺門檻（§43 三級化）",
+      "type": "結果",
+      "semantic": "犯刑法§339-4 之罪，使人交付之財物達門檻（100萬/1000萬/1億三級）",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": true,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "詐欺犯罪危害防制條例§43",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "115.01.21 公布、115.01.23 施行；三級化重懲",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": {
+        "tiers": [
+          {
+            "threshold": 1000000,
+            "penalty": "三年以上十年以下有期徒刑",
+            "fine": "併科三千萬元以下罰金"
+          },
+          {
+            "threshold": 10000000,
+            "penalty": "五年以上十二年以下有期徒刑",
+            "fine": "併科三億元以下罰金"
+          },
+          {
+            "threshold": 100000000,
+            "penalty": "七年以上有期徒刑或無期徒刑",
+            "fine": "得併科五億元以下罰金"
+          }
+        ],
+        "basis": "詐欺犯罪危害防制條例§43（115.01.23 施行）",
+        "status": "verified"
+      },
+      "aggravator_for": "charge_fraud_special_high"
+    },
+    {
+      "id": "E-FR-007",
+      "name": "加重詐欺（§339-4 四款）",
+      "type": "行為",
+      "semantic": "犯§339 詐欺罪而有下列情形之一：①冒用政府機關或公務員名義 ②三人以上共同犯之 ③以傳播工具對公眾散布 ④以電腦合成或其他科技方法製作不實影像聲音",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第339-4條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "§339-4：1~7 年有期徒刑 + 100 萬以下罰金；②為三人以上共同",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-FR-008",
+      "name": "複合型態加重詐欺（§44）",
+      "type": "結果",
+      "semantic": "犯§339-4①② 之罪，並犯①③④之一或境外犯案或教唆幫助利用未滿18/滿80/非本國籍人士（加重 1/2）",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": true,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "詐欺犯罪危害防制條例§44",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "§44：加重二分之一；最高度及最低度同加",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": {
+        "threshold": null,
+        "unit": "元",
+        "status": "unverified"
+      },
+      "aggravator_for": "charge_fraud_special_high"
+    },
+    {
+      "id": "E-FR-009",
+      "name": "準詐欺（利用文書或電磁紀錄）",
+      "type": "行為",
+      "semantic": "意圖為自己或第三人不法之所有，以不正方法由收費設備取得他人之物",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第339-1條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null
+    },
+    {
+      "id": "E-FR-010",
+      "name": "準詐欺之故意",
+      "type": "主觀",
+      "semantic": "意圖為自己或第三人不法之所有",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "直接故意",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第13條、第339-1條",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "subjective_group": "mens_rea_quasi_fraud"
+    },
+    {
+      "id": "E-FR-011",
+      "name": "未遂-詐欺",
+      "type": "形態",
+      "semantic": "已著手詐欺但未取得財物",
+      "mutually_exclusive": [],
+      "constitution_type": "封閉",
+      "objective_penalty_condition": false,
+      "aggravated_result": false,
+      "subjective_level": "不適用",
+      "necessary": true,
+      "source_types": [
+        "被害人陳述",
+        "行為人陳述"
+      ],
+      "source_basis": "刑法第14條、§25②、§41 詐欺未遂",
+      "law_category": "刑法",
+      "verification": "verified",
+      "note": "",
+      "actor_subject_type": "自然人",
+      "key_doctrines": [],
+      "amount_threshold": null,
+      "attacker_for": "charge_fraud",
+      "attacker_variant": "未遂"
+    }
+  ]
+}

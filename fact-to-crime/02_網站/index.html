@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>警詢筆錄 AI 輔助產出系統</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, "Microsoft JhengHei", sans-serif; background: #f5f5f5; color: #2c3e50; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  header { background: #2c3e50; color: #fff; padding: 18px 24px; border-radius: 10px; margin-bottom: 20px; }
+  header h1 { font-size: 22px; font-weight: 600; }
+  header .sub { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+  .card { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .card h2 { font-size: 16px; margin-bottom: 12px; color: #2c3e50; border-left: 4px solid #2c3e50; padding-left: 10px; }
+  .radio-group { display: flex; flex-wrap: wrap; gap: 10px; }
+  .radio-group label { background: #f0f3f6; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; border: 1px solid transparent; }
+  .radio-group label:has(input:checked) { background: #2c3e50; color: #fff; border-color: #2c3e50; }
+  .radio-group input { margin-right: 6px; }
+  textarea { width: 100%; min-height: 120px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical; }
+  textarea:focus { outline: 2px solid #2c3e50; }
+  .btn { background: #2c3e50; color: #fff; border: none; padding: 10px 22px; border-radius: 8px; font-size: 15px; cursor: pointer; margin-right: 10px; margin-top: 12px; }
+  .btn:hover { background: #34495e; }
+  .btn.secondary { background: #7f8c8d; }
+  .btn:disabled { background: #bdc3c7; cursor: not-allowed; }
+  #loading { text-align: center; padding: 20px; color: #7f8c8d; display: none; }
+  #error-box { background: #fdecea; color: #c0392b; border: 1px solid #e74c3c; border-radius: 8px; padding: 12px; margin-bottom: 14px; display: none; font-size: 14px; }
+  .section-title { font-size: 15px; font-weight: 600; margin: 16px 0 8px; color: #2c3e50; }
+  .q-item { background: #fafbfc; border: 1px solid #e8ecf0; border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; font-size: 14px; }
+  .q-item .q { font-weight: 500; }
+  .q-item .a { color: #95a5a6; margin-top: 4px; min-height: 18px; border-top: 1px dashed #e0e5e9; padding-top: 4px; }
+  .q-item .meta { font-size: 11px; color: #95a5a6; margin-top: 4px; }
+  .q-item.optional .q::before { content: "[可選] "; color: #e67e22; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  th, td { border: 1px solid #e0e5e9; padding: 7px 10px; text-align: left; }
+  th { background: #f0f3f6; }
+  .badge { display: inline-block; background: #eaf2f8; color: #2c3e50; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 4px; }
+  .badge.warn { background: #fef5e7; color: #d35400; }
+  .badge.err { background: #fdecea; color: #c0392b; }
+  ul.warnings { font-size: 13px; margin-left: 20px; }
+  ul.warnings li { margin-bottom: 4px; }
+  .stage-label { display: inline-block; font-size: 11px; background: #2c3e50; color: #fff; padding: 1px 7px; border-radius: 4px; margin-right: 6px; }
+  .export-area { display: none; }
+  @media (max-width: 768px) {
+    .container { padding: 10px; }
+    .card { padding: 14px; }
+    header h1 { font-size: 18px; }
+  }
+  @media print {
+    body { background: #fff; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+    .btn, #step1, #step2, #step3 { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>警詢筆錄 AI 輔助產出系統</h1>
+    <div class="sub">事實→元件→罪名 比對引擎（v15，17 層）｜LLM 不直接輸出罪名（R30）｜問句僅供偵查參考</div>
+  </header>
+
+  <div id="error-box"></div>
+  <div id="loading">載入中……（讀取 15 個罪章資料）</div>
+
+  <div id="main" style="display:none;">
+    <!-- 步驟一：選角色 -->
+    <div class="card" id="step1">
+      <h2>步驟一：選受詢問人身分</h2>
+      <div class="radio-group" id="role-group"></div>
+    </div>
+
+    <!-- 步驟二：選罪章 -->
+    <div class="card" id="step2">
+      <h2>步驟二：選罪章族群</h2>
+      <div class="radio-group" id="chapter-group"></div>
+    </div>
+
+    <!-- 步驟三：輸入案情 -->
+    <div class="card" id="step3">
+      <h2>步驟三：輸入案情（LINE 陳報文本）</h2>
+      <textarea id="case-text" placeholder="貼上 LINE 陳報檔文本或輸入案情摘要……&#10;&#10;例：報案人稱於超商內發現一名男子將商品放入背包未結帳即離開，現場監視器已調閱。"></textarea>
+      <button class="btn" id="btn-run">產出問句（Ctrl+Enter）</button>
+      <button class="btn secondary" id="btn-clear">清空</button>
+    </div>
+
+    <!-- 步驟四：產出結果 -->
+    <div class="card" id="step4" style="display:none;">
+      <h2>步驟四：產出結果</h2>
+
+      <div id="result-summary"></div>
+      <div id="result-layers"></div>
+      <div id="result-charges"></div>
+      <div id="result-questions"></div>
+
+      <button class="btn" id="btn-copy">複製全文</button>
+      <button class="btn secondary" id="btn-export">匯出 .txt</button>
+      <button class="btn secondary" id="btn-print">列印</button>
+      <pre id="export-area" class="export-area"></pre>
+    </div>
+  </div>
+</div>
+
+<script src="../01_規則/layers.js"></script>
+<script src="../01_規則/layers_detail.js"></script>
+<script src="../01_規則/laws_7_9.js"></script>
+<script src="../01_規則/criminal_form.js"></script>
+<script src="../01_規則/justifications.js"></script>
+<script src="../01_規則/question_library.js"></script>
+<script src="../01_規則/llm_generator.js"></script>
+<script>
+// 瀏覽器環境適配：Node require → window 載入
+// layers.js 等用 module.exports，瀏覽器載入需轉換
+</script>
+<script>
+(function() {
+  'use strict';
+  // ===== 狀態 =====
+  const state = {
+    chapters: {},       // chapter_id -> {elements, charges, exclusions}
+    role: null,
+    chapter: null,
+    lastOutput: null,
+  };
+  const ROLES = ['被害人', '被告', '證人', '關係人'];
+
+  // ===== 工具 =====
+  function $(id) { return document.getElementById(id); }
+  function showError(msg) {
+    const box = $('error-box');
+    box.textContent = msg;
+    box.style.display = 'block';
+    $('main').style.display = 'none';
+  }
+  function clearError() { $('error-box').style.display = 'none'; }
+
+  // ===== 載入全部罪章 =====
+  async function loadAll() {
+    try {
+      const res = await fetch('../00_資料/罪章/');
+      // fetch 目錄清單不一定可用；改用已知 15 章
+      const known = ['criminal_221','criminal_computer','criminal_defame','criminal_drugs','criminal_forgery','criminal_fraud','criminal_gambling','criminal_harm_dv','criminal_intimidation','criminal_obscenity','criminal_public_danger','criminal_robbery','criminal_sexual_harassment','criminal_theft_embezzle','criminal_traffic'];
+      for (const ch of known) {
+        const [els, chs, exs] = await Promise.all([
+          fetch(`../00_資料/罪章/${ch}/elements.json`).then(r => r.json()),
+          fetch(`../00_資料/罪章/${ch}/charges.json`).then(r => r.json()),
+          fetch(`../00_資料/罪章/${ch}/exclusions.json`).then(r => r.json()),
+        ]);
+        state.chapters[ch] = { elements: els, charges: chs, exclusions: exs };
+      }
+      $('loading').style.display = 'none';
+      $('main').style.display = 'block';
+      renderRoles();
+    } catch (e) {
+      $('loading').style.display = 'none';
+      showError('載入失敗：' + e.message + '。請用本地伺服器開啟（bash 03_轉換工具/serve.sh），或將 JSON 改為內嵌。');
+    }
+  }
+
+  // ===== 渲染 =====
+  function renderRoles() {
+    const g = $('role-group');
+    g.innerHTML = ROLES.map(r =>
+      `<label><input type="radio" name="role" value="${r}">${r}</label>`).join('');
+    g.addEventListener('change', e => {
+      state.role = e.target.value;
+      renderChapters();
+    });
+  }
+
+  function renderChapters() {
+    const g = $('chapter-group');
+    const names = Object.entries(state.chapters).map(([id, d]) => [id, d.elements.chapter_name || id]);
+    g.innerHTML = names.map(([id, name]) =>
+      `<label><input type="radio" name="chapter" value="${id}">${name.replace('族群', '')}</label>`).join('');
+    g.addEventListener('change', e => { state.chapter = e.target.value; });
+  }
+
+  // ===== 核心：跑 17 層 =====
+  async function run() {
+    if (!state.role) { alert('請先選受詢問人身分'); return; }
+    if (!state.chapter) { alert('請先選罪章族群'); return; }
+    const text = $('case-text').value.trim();
+    if (!text) { alert('請輸入案情'); return; }
+
+    clearError();
+    const ch = state.chapters[state.chapter];
+
+    // 1A 身分判定 + 2A 分流（簡化：前端不跑 layers.js，直接用選擇值）
+    const primaryIdentity = state.role;
+
+    // 12/13 層：罪名比對（複製 rule_engine 核心邏輯，純前端）
+    const ruleResult = window.__ruleEngineRun(state.chapter, ch, text);
+
+    // 16 層：問句（混合方案 C）
+    const questions = window.__questionEngineRun(state.chapter, ch, text, primaryIdentity);
+
+    // 輸出
+    state.lastOutput = { ruleResult, questions, chapter: state.chapter, role: primaryIdentity, text };
+    renderResult();
+  }
+
+  function renderResult() {
+    const { ruleResult, questions, chapter, role, text } = state.lastOutput;
+    const ch = state.chapters[chapter];
+
+    // 摘要
+    $('result-summary').innerHTML = `
+      <div><span class="badge">角色：${role}</span><span class="badge">罪章：${ch.elements.chapter_name || chapter}</span></div>`;
+
+    // 罪名浮現
+    const cs = ruleResult.charge_states || {};
+    const cands = ruleResult.candidate_charges || [];
+    let chargesHtml = '<div class="section-title">罪名浮現（12A+12B，R30：由規則計算）</div>';
+    chargesHtml += '<table><tr><th>罪名</th><th>條號</th><th>狀態</th></tr>';
+    for (const c of ch.charges.charges) {
+      if (c.is_variant_of) continue;
+      const st = cs[c.id] || '資料不足';
+      const cls = st === '可能涉及' ? '' : (st === '資料不足' ? 'warn' : 'err');
+      chargesHtml += `<tr><td>${c.name}</td><td>${c.article}</td><td><span class="badge ${cls}">${st}</span></td></tr>`;
+    }
+    chargesHtml += '</table>';
+    if (ruleResult.open_constitution?.length > 0) {
+      chargesHtml += '<div class="section-title">開放構成要件（6C/R21）</div><ul class="warnings">';
+      for (const oc of ruleResult.open_constitution) {
+        chargesHtml += `<li>${oc.element_name}：${oc.message}</li>`;
+      }
+      chargesHtml += '</ul>';
+    }
+    if (ruleResult.actor_warnings?.length > 0) {
+      chargesHtml += '<div class="section-title">R43 法人警告</div><ul class="warnings">';
+      for (const aw of ruleResult.actor_warnings) chargesHtml += `<li>${aw.message}</li>`;
+      chargesHtml += '</ul>';
+    }
+    $('result-charges').innerHTML = chargesHtml;
+
+    // 問句（三段結構）
+    const stageNames = { A: '自由陳述段', E: '證據保全段', B: '缺口聚焦段', C: '結尾開放段' };
+    let qHtml = `<div class="section-title">S-11 問句佇列（${questions.length} 題，混合方案 C）</div>`;
+    let lastStage = null;
+    for (const q of questions) {
+      if (q.stage !== lastStage) {
+        qHtml += `<div class="section-title"><span class="stage-label">${stageNames[q.stage] || q.stage}</span></div>`;
+        lastStage = q.stage;
+      }
+      const opt = q.generated_by === 'llm' ? 'optional' : '';
+      qHtml += `<div class="q-item ${opt}">
+        <div class="q">${q.type === '封閉' ? '〔確認〕' : ''}${q.text}</div>
+        <div class="a">答：</div>
+        <div class="meta">${q.generated_by === 'llm' ? '[LLM 生成，可調整]' : '[規則庫]'} ${q.bound_element ? '綁定 ' + q.bound_element : ''}</div>
+      </div>`;
+    }
+    $('result-questions').innerHTML = qHtml;
+
+    $('step4').style.display = 'block';
+    $('step4').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ===== 匯出/複製 =====
+  function buildText() {
+    const { ruleResult, questions, chapter, role, text } = state.lastOutput;
+    const ch = state.chapters[chapter];
+    const lines = [];
+    lines.push('一、案件內容');
+    lines.push(text);
+    lines.push('');
+    lines.push('二、角色與版本');
+    lines.push(`角色：${role}`);
+    lines.push(`罪章：${ch.elements.chapter_name || chapter}`);
+    lines.push('');
+    lines.push('三、罪名浮現（R30：由規則計算）');
+    for (const c of ch.charges.charges) {
+      if (c.is_variant_of) continue;
+      lines.push(`- ${c.name}（${c.article}）：${ruleResult.charge_states?.[c.id] || '資料不足'}`);
+    }
+    lines.push('');
+    lines.push('四、S-11 問句佇列');
+    const stageNames = { A: 'A 自由陳述段', E: 'E 證據保全段', B: 'B 缺口聚焦段', C: 'C 結尾開放段' };
+    let lastStage = null;
+    for (const q of questions) {
+      if (q.stage !== lastStage) { lines.push(''); lines.push(`─── ${stageNames[q.stage] || q.stage} ───`); lines.push(''); lastStage = q.stage; }
+      lines.push(`問：${q.text}`);
+      lines.push('答：');
+      if (q.generated_by === 'llm') lines.push('[LLM 生成，可調整]');
+    }
+    return lines.join('\n');
+  }
+
+  // ===== 事件綁定 =====
+  $('btn-run').addEventListener('click', run);
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'Enter') run();
+  });
+  $('btn-clear').addEventListener('click', () => { $('case-text').value = ''; });
+  $('btn-copy').addEventListener('click', async () => {
+    const t = buildText();
+    try { await navigator.clipboard.writeText(t); alert('已複製'); }
+    catch (e) { $('export-area').textContent = t; $('export-area').style.display = 'block'; alert('剪貼簿不可用，已顯示全文請手動複製'); }
+  });
+  $('btn-export').addEventListener('click', () => {
+    const t = buildText();
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const fname = `筆錄問句_${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}.txt`;
+    const blob = new Blob([t], { type: 'text/plain;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fname;
+    a.click();
+  });
+  $('btn-print').addEventListener('click', () => window.print());
+
+  // ===== 啟動 =====
+  loadAll();
+})();
+</script>
+</body>
+</html>

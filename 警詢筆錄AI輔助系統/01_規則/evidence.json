@@ -1,0 +1,808 @@
+{
+  "version": "1.0",
+  "case_types": [
+    {
+      "case_type_id": "sexual_image_suspect",
+      "evidences": [
+        {
+          "evidence_id": "EV-SX-001",
+          "name": "扣案手機、電腦",
+          "type": "物證",
+          "question_ids": [
+            "S-SX-S-TPL-010",
+            "S-SX-S-TPL-028",
+            "S-SX-S-TPL-029",
+            "V-SX-V-TPL-011",
+            "V-SX-V-TPL-013"
+          ],
+          "element_ids": [
+            "SX-S-ELE-001",
+            "SX-S-ELE-004",
+            "SX-V-ELE-001",
+            "SX-V-ELE-007"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-002",
+          "name": "通訊軟體對話紀錄、群組紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SX-S-TPL-014",
+            "S-SX-S-TPL-015",
+            "S-SX-S-TPL-050",
+            "S-SX-S-TPL-051",
+            "V-SX-V-TPL-011"
+          ],
+          "element_ids": [
+            "SX-S-ELE-002",
+            "SX-V-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-003",
+          "name": "金融帳戶交易紀錄",
+          "type": "書證",
+          "question_ids": [
+            "S-SX-S-TPL-016",
+            "S-SX-S-TPL-017",
+            "S-SX-S-TPL-018",
+            "ADD-SX-OBJ2-001"
+          ],
+          "element_ids": [
+            "SX-S-ELE-002",
+            "SX-S-ELE-006"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-004",
+          "name": "性影像截圖、猥褻物品",
+          "type": "物證",
+          "question_ids": [
+            "S-SX-S-TPL-013",
+            "V-SX-V-TPL-011"
+          ],
+          "element_ids": [
+            "SX-S-ELE-003",
+            "SX-V-ELE-006"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-005",
+          "name": "被害人年齡證明（身分證、學生證）",
+          "type": "書證",
+          "question_ids": [
+            "S-SX-S-TPL-019",
+            "S-SX-S-TPL-020",
+            "S-SX-S-TPL-032",
+            "ADD-SX-PER-002"
+          ],
+          "element_ids": [
+            "SX-S-ELE-005"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-006",
+          "name": "恐嚇、威脅對話紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SX-S-TPL-012",
+            "V-SX-V-TPL-012"
+          ],
+          "element_ids": [
+            "SX-V-ELE-003",
+            "SX-V-ELE-004",
+            "SX-V-ELE-005"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-007",
+          "name": "雲端硬碟、雲端帳號",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SX-S-TPL-030",
+            "S-SX-S-TPL-031",
+            "ADD-SX-OBJ-002"
+          ],
+          "element_ids": [
+            "SX-S-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-008",
+          "name": "監視器畫面",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SX-S-TPL-014"
+          ],
+          "element_ids": [
+            "SX-S-ELE-002"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "sexual_image_victim",
+      "evidences": [
+        {
+          "evidence_id": "EV-SX-001",
+          "name": "扣案手機、電腦",
+          "type": "物證",
+          "question_ids": [
+            "S-SX-S-TPL-010",
+            "S-SX-S-TPL-028",
+            "S-SX-S-TPL-029",
+            "V-SX-V-TPL-011",
+            "V-SX-V-TPL-013"
+          ],
+          "element_ids": [
+            "SX-S-ELE-001",
+            "SX-S-ELE-004",
+            "SX-V-ELE-001",
+            "SX-V-ELE-007"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-002",
+          "name": "通訊軟體對話紀錄、群組紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SX-S-TPL-014",
+            "S-SX-S-TPL-015",
+            "S-SX-S-TPL-050",
+            "S-SX-S-TPL-051",
+            "V-SX-V-TPL-011"
+          ],
+          "element_ids": [
+            "SX-S-ELE-002",
+            "SX-V-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-003",
+          "name": "金融帳戶交易紀錄",
+          "type": "書證",
+          "question_ids": [
+            "S-SX-S-TPL-016",
+            "S-SX-S-TPL-017",
+            "S-SX-S-TPL-018",
+            "ADD-SX-OBJ2-001"
+          ],
+          "element_ids": [
+            "SX-S-ELE-002",
+            "SX-S-ELE-006"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-004",
+          "name": "性影像截圖、猥褻物品",
+          "type": "物證",
+          "question_ids": [
+            "S-SX-S-TPL-013",
+            "V-SX-V-TPL-011"
+          ],
+          "element_ids": [
+            "SX-S-ELE-003",
+            "SX-V-ELE-006"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-005",
+          "name": "被害人年齡證明（身分證、學生證）",
+          "type": "書證",
+          "question_ids": [
+            "S-SX-S-TPL-019",
+            "S-SX-S-TPL-020",
+            "S-SX-S-TPL-032",
+            "ADD-SX-PER-002"
+          ],
+          "element_ids": [
+            "SX-S-ELE-005"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-006",
+          "name": "恐嚇、威脅對話紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SX-S-TPL-012",
+            "V-SX-V-TPL-012"
+          ],
+          "element_ids": [
+            "SX-V-ELE-003",
+            "SX-V-ELE-004",
+            "SX-V-ELE-005"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-007",
+          "name": "雲端硬碟、雲端帳號",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SX-S-TPL-030",
+            "S-SX-S-TPL-031",
+            "ADD-SX-OBJ-002"
+          ],
+          "element_ids": [
+            "SX-S-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-SX-008",
+          "name": "監視器畫面",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SX-S-TPL-014"
+          ],
+          "element_ids": [
+            "SX-S-ELE-002"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "sexual_harassment_actor",
+      "evidences": [
+        {
+          "evidence_id": "EV-SH-001",
+          "name": "監視器畫面",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SH-A-TPL-011",
+            "S-SH-A-TPL-013",
+            "V-SH-V-TPL-007",
+            "V-SH-V-TPL-020",
+            "ADD-SH-OBJ-001"
+          ],
+          "element_ids": [
+            "SH-A-ELE-001",
+            "SH-A-ELE-004",
+            "SH-V-ELE-001",
+            "SH-V-ELE-004"
+          ]
+        },
+        {
+          "evidence_id": "EV-SH-002",
+          "name": "公司組織圖、任職資料",
+          "type": "書證",
+          "question_ids": [
+            "S-SH-A-TPL-004",
+            "S-SH-A-TPL-015",
+            "ADD-SH-PER-001",
+            "ADD-SH-PER-002",
+            "V-SH-V-TPL-004",
+            "V-SH-V-TPL-011",
+            "V-SH-V-TPL-013"
+          ],
+          "element_ids": [
+            "SH-A-ELE-002",
+            "SH-A-ELE-005",
+            "SH-V-ELE-002",
+            "SH-V-ELE-003",
+            "SH-V-ELE-005"
+          ]
+        },
+        {
+          "evidence_id": "EV-SH-003",
+          "name": "被害人指述",
+          "type": "供述",
+          "question_ids": [
+            "S-SH-A-TPL-006",
+            "ADD-SH-OBJ2-002"
+          ],
+          "element_ids": [
+            "SH-A-ELE-003"
+          ]
+        },
+        {
+          "evidence_id": "EV-SH-004",
+          "name": "通訊紀錄、對話紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SH-A-TPL-008",
+            "ADD-SH-OBJ-002",
+            "V-SH-V-TPL-021"
+          ],
+          "element_ids": [
+            "SH-A-ELE-001",
+            "SH-V-ELE-001"
+          ]
+        },
+        {
+          "evidence_id": "EV-SH-005",
+          "name": "性別平等教育訓練紀錄",
+          "type": "書證",
+          "question_ids": [
+            "ADD-SH-OBJ2-001"
+          ],
+          "element_ids": [
+            "SH-V-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-SH-006",
+          "name": "證人指述",
+          "type": "供述",
+          "question_ids": [
+            "ADD-SH-OBJ2-002"
+          ],
+          "element_ids": [
+            "SH-V-ELE-002"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "sexual_harassment_victim",
+      "evidences": [
+        {
+          "evidence_id": "EV-SH-001",
+          "name": "監視器畫面",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SH-A-TPL-011",
+            "S-SH-A-TPL-013",
+            "V-SH-V-TPL-007",
+            "V-SH-V-TPL-020",
+            "ADD-SH-OBJ-001"
+          ],
+          "element_ids": [
+            "SH-A-ELE-001",
+            "SH-A-ELE-004",
+            "SH-V-ELE-001",
+            "SH-V-ELE-004"
+          ]
+        },
+        {
+          "evidence_id": "EV-SH-002",
+          "name": "公司組織圖、任職資料",
+          "type": "書證",
+          "question_ids": [
+            "S-SH-A-TPL-004",
+            "S-SH-A-TPL-015",
+            "ADD-SH-PER-001",
+            "ADD-SH-PER-002",
+            "V-SH-V-TPL-004",
+            "V-SH-V-TPL-011",
+            "V-SH-V-TPL-013"
+          ],
+          "element_ids": [
+            "SH-A-ELE-002",
+            "SH-A-ELE-005",
+            "SH-V-ELE-002",
+            "SH-V-ELE-003",
+            "SH-V-ELE-005"
+          ]
+        },
+        {
+          "evidence_id": "EV-SH-003",
+          "name": "被害人指述",
+          "type": "供述",
+          "question_ids": [
+            "S-SH-A-TPL-006",
+            "ADD-SH-OBJ2-002"
+          ],
+          "element_ids": [
+            "SH-A-ELE-003"
+          ]
+        },
+        {
+          "evidence_id": "EV-SH-004",
+          "name": "通訊紀錄、對話紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-SH-A-TPL-008",
+            "ADD-SH-OBJ-002",
+            "V-SH-V-TPL-021"
+          ],
+          "element_ids": [
+            "SH-A-ELE-001",
+            "SH-V-ELE-001"
+          ]
+        },
+        {
+          "evidence_id": "EV-SH-005",
+          "name": "性別平等教育訓練紀錄",
+          "type": "書證",
+          "question_ids": [
+            "ADD-SH-OBJ2-001"
+          ],
+          "element_ids": [
+            "SH-V-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-SH-006",
+          "name": "證人指述",
+          "type": "供述",
+          "question_ids": [
+            "ADD-SH-OBJ2-002"
+          ],
+          "element_ids": [
+            "SH-V-ELE-002"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "stalking_victim",
+      "evidences": [
+        {
+          "evidence_id": "EV-ST-001",
+          "name": "通訊紀錄、對話紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "V-ST-V-TPL-009",
+            "ADD-ST-EVT-005",
+            "ADD-ST-EVT-006"
+          ],
+          "element_ids": [
+            "ST-V-ELE-001",
+            "ST-V-ELE-004",
+            "ST-V-ELE-006"
+          ]
+        },
+        {
+          "evidence_id": "EV-ST-002",
+          "name": "書面告誡",
+          "type": "書證",
+          "question_ids": [
+            "V-ST-V-TPL-025",
+            "V-ST-V-TPL-029"
+          ],
+          "element_ids": [
+            "ST-V-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-ST-003",
+          "name": "交往紀錄、戶籍資料",
+          "type": "書證",
+          "question_ids": [
+            "V-ST-V-TPL-028",
+            "ADD-ST-PER-001"
+          ],
+          "element_ids": [
+            "ST-V-ELE-003"
+          ]
+        },
+        {
+          "evidence_id": "EV-ST-004",
+          "name": "日記、就醫紀錄、心理諮商紀錄",
+          "type": "書證",
+          "question_ids": [
+            "V-ST-V-TPL-019",
+            "ADD-ST-OBJ-003"
+          ],
+          "element_ids": [
+            "ST-V-ELE-005"
+          ]
+        },
+        {
+          "evidence_id": "EV-ST-005",
+          "name": "監視器畫面",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "V-ST-V-TPL-006",
+            "V-ST-V-TPL-007",
+            "ADD-ST-LOC-003"
+          ],
+          "element_ids": [
+            "ST-V-ELE-001"
+          ]
+        },
+        {
+          "evidence_id": "EV-ST-006",
+          "name": "被害人指述",
+          "type": "供述",
+          "question_ids": [
+            "V-ST-V-TPL-005",
+            "V-ST-V-TPL-018"
+          ],
+          "element_ids": [
+            "ST-V-ELE-001"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "protection_order_victim",
+      "evidences": [
+        {
+          "evidence_id": "EV-PO-001",
+          "name": "保護令",
+          "type": "書證",
+          "question_ids": [
+            "V-PO-V-TPL-003",
+            "V-PO-V-TPL-004",
+            "ADD-PO-SUB-001"
+          ],
+          "element_ids": [
+            "PO-V-ELE-001",
+            "PO-V-ELE-003"
+          ]
+        },
+        {
+          "evidence_id": "EV-PO-002",
+          "name": "監視器畫面、對話紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "V-PO-V-TPL-005",
+            "V-PO-V-TPL-006",
+            "ADD-PO-EVT-002"
+          ],
+          "element_ids": [
+            "PO-V-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-PO-003",
+          "name": "驗傷單、就醫紀錄",
+          "type": "書證",
+          "question_ids": [
+            "ADD-PO-EVT-001"
+          ],
+          "element_ids": [
+            "PO-V-ELE-004"
+          ]
+        },
+        {
+          "evidence_id": "EV-PO-004",
+          "name": "前案紀錄",
+          "type": "書證",
+          "question_ids": [
+            "ADD-PO-EVT-003"
+          ],
+          "element_ids": [
+            "PO-V-ELE-001"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "theft_suspect",
+      "evidences": [
+        {
+          "evidence_id": "EV-TH-001",
+          "name": "嫌疑人指述",
+          "type": "供述",
+          "question_ids": [
+            "S-TH-S-TPL-005",
+            "ADD-TH-INT-001",
+            "ADD-TH-SUB-001"
+          ],
+          "element_ids": [
+            "TH-S-ELE-001",
+            "TH-S-ELE-004"
+          ]
+        },
+        {
+          "evidence_id": "EV-TH-002",
+          "name": "監視器畫面、贓物",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-TH-S-TPL-002",
+            "S-TH-S-TPL-006"
+          ],
+          "element_ids": [
+            "TH-S-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-TH-003",
+          "name": "工具、現場照片",
+          "type": "物證",
+          "question_ids": [
+            "S-TH-S-TPL-004"
+          ],
+          "element_ids": [
+            "TH-S-ELE-003"
+          ]
+        },
+        {
+          "evidence_id": "EV-TH-004",
+          "name": "被害人指述",
+          "type": "供述",
+          "question_ids": [
+            "S-TH-S-TPL-002"
+          ],
+          "element_ids": [
+            "TH-S-ELE-002"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "dui_suspect",
+      "evidences": [
+        {
+          "evidence_id": "EV-DU-001",
+          "name": "酒測單",
+          "type": "書證",
+          "question_ids": [
+            "S-DU-S-TPL-005",
+            "ADD-DU-EVT-003"
+          ],
+          "element_ids": [
+            "DU-S-ELE-001",
+            "DU-S-ELE-003",
+            "DU-S-ELE-004"
+          ]
+        },
+        {
+          "evidence_id": "EV-DU-002",
+          "name": "車籍資料",
+          "type": "書證",
+          "question_ids": [
+            "S-DU-S-TPL-003",
+            "S-DU-S-TPL-007"
+          ],
+          "element_ids": [
+            "DU-S-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-DU-003",
+          "name": "酒測器檢定合格證書",
+          "type": "書證",
+          "question_ids": [
+            "S-DU-S-TPL-006"
+          ],
+          "element_ids": [
+            "DU-S-ELE-001"
+          ]
+        },
+        {
+          "evidence_id": "EV-DU-004",
+          "name": "監視器畫面",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-DU-S-TPL-004"
+          ],
+          "element_ids": [
+            "DU-S-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-DU-005",
+          "name": "嫌疑人指述",
+          "type": "供述",
+          "question_ids": [
+            "S-DU-S-TPL-002"
+          ],
+          "element_ids": [
+            "DU-S-ELE-003"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "fraud_suspect",
+      "evidences": [
+        {
+          "evidence_id": "EV-FR-001",
+          "name": "金融帳戶交易紀錄",
+          "type": "書證",
+          "question_ids": [
+            "S-FR-S-TPL-002",
+            "ADD-FR-OBJ-001"
+          ],
+          "element_ids": [
+            "FR-S-ELE-001",
+            "FR-S-ELE-004"
+          ]
+        },
+        {
+          "evidence_id": "EV-FR-002",
+          "name": "對話紀錄、匯款紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-FR-S-TPL-003",
+            "ADD-FR-EVT-001"
+          ],
+          "element_ids": [
+            "FR-S-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-FR-003",
+          "name": "共犯通聯紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-FR-S-TPL-004",
+            "ADD-FR-EVT-002"
+          ],
+          "element_ids": [
+            "FR-S-ELE-003"
+          ]
+        },
+        {
+          "evidence_id": "EV-FR-004",
+          "name": "被害人指述",
+          "type": "供述",
+          "question_ids": [
+            "S-FR-S-TPL-003"
+          ],
+          "element_ids": [
+            "FR-S-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-FR-005",
+          "name": "匯款紀錄",
+          "type": "書證",
+          "question_ids": [
+            "ADD-FR-OBJ-002"
+          ],
+          "element_ids": [
+            "FR-S-ELE-002"
+          ]
+        }
+      ]
+    },
+    {
+      "case_type_id": "drug_suspect",
+      "evidences": [
+        {
+          "evidence_id": "EV-DR-001",
+          "name": "尿液檢驗報告",
+          "type": "書證",
+          "question_ids": [
+            "S-DR-S-TPL-003",
+            "S-DR-S-TPL-004",
+            "ADD-DR-EVT-001"
+          ],
+          "element_ids": [
+            "DR-S-ELE-001",
+            "DR-S-ELE-004"
+          ]
+        },
+        {
+          "evidence_id": "EV-DR-002",
+          "name": "扣案毒品",
+          "type": "物證",
+          "question_ids": [
+            "S-DR-S-TPL-002",
+            "ADD-DR-OBJ-001"
+          ],
+          "element_ids": [
+            "DR-S-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-DR-003",
+          "name": "通聯紀錄",
+          "type": "電磁紀錄",
+          "question_ids": [
+            "S-DR-S-TPL-005",
+            "ADD-DR-PER-002"
+          ],
+          "element_ids": [
+            "DR-S-ELE-003"
+          ]
+        },
+        {
+          "evidence_id": "EV-DR-004",
+          "name": "搜索扣押筆錄",
+          "type": "書證",
+          "question_ids": [
+            "S-DR-S-TPL-006"
+          ],
+          "element_ids": [
+            "DR-S-ELE-002"
+          ]
+        },
+        {
+          "evidence_id": "EV-DR-005",
+          "name": "嫌疑人指述",
+          "type": "供述",
+          "question_ids": [
+            "S-DR-S-TPL-003"
+          ],
+          "element_ids": [
+            "DR-S-ELE-001"
+          ]
+        }
+      ]
+    }
+  ]
+}

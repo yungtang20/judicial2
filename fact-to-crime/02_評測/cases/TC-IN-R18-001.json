@@ -1,0 +1,43 @@
+{
+  "case_id": "TC-IN-R18-001",
+  "case_type": "R18 反證自檢測試",
+  "description": "12B 反證自檢：移除 E-IN-001 後 charge_threat 應降級為 not_charged；R18 應確保該罪名不輸出為 candidate_charges",
+  "state_map": {
+    "E-IN-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：恐嚇"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "evidence_admissibility": "可採"
+    },
+    "E-IN-002": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "evidence_admissibility": "可採"
+    },
+    "E-IN-003": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：心生畏怖"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_threat"
+    ],
+    "charge_states": {
+      "charge_threat": "可能涉及"
+    },
+    "counter_evidence_all_pass": true
+  }
+}

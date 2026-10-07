@@ -1,0 +1,45 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_gambling",
+  "charges": [
+    {
+      "id": "charge_gambling",
+      "name": "賭博罪",
+      "article": "刑法第266條第1項",
+      "base_penalty": "五年以下有期徒刑、拘役或十萬元以下罰金",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-GB-001",
+        "E-GB-003"
+      ],
+      "requires_one_of": {
+        "mens_rea_gambling": [
+          "E-GB-002"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_gambling_operation",
+      "name": "供給賭博場所",
+      "article": "刑法第268條",
+      "base_penalty": "三年以下有期徒刑，得併科九萬元以下罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": false,
+      "requires_one_of": {
+        "gambling_op_type": [
+          "E-GB-005",
+          "E-GB-006"
+        ],
+        "mens_rea_operate": [
+          "E-GB-007"
+        ]
+      },
+      "actor_subject_type_required": "自然人或法人",
+      "verification": "verified"
+    }
+  ]
+}

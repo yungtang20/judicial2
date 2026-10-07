@@ -1,0 +1,341 @@
+{
+  "version": "1.0",
+  "groups": [
+    {
+      "group_id": "victim_general",
+      "name": "被害人通用",
+      "role_id": "victim",
+      "questions": [
+        {
+          "id": "V-GEN-001",
+          "source": "general",
+          "source_ref": "被害人通用第1題",
+          "text": "你今（□）日因何事接受警方製作筆錄？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-002",
+          "source": "general",
+          "source_ref": "被害人通用第2題",
+          "text": "是否知悉該犯罪嫌疑人（被告）的長相？穿著特徵？及其身分資料？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-003",
+          "source": "general",
+          "source_ref": "被害人通用第3題",
+          "text": "警方提供指認犯罪嫌疑人紀錄，編號一至六號中，何者為○○案的犯嫌？（犯嫌可能不在指認表中）",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-004",
+          "source": "general",
+          "source_ref": "被害人通用第4題",
+          "text": "對於特定或不特定人士做不實指控或謊報、隱匿實情，致使公務人員於文書登載不實必須擔負法律責任，是否清楚？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-005",
+          "source": "general",
+          "source_ref": "被害人通用第5題",
+          "text": "現場有無裝設監視器或其他人見聞？時間有無誤差？有無聯絡方式？有無佐證資料可提供警方？或有利事證須請警方協助攻查？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-006",
+          "source": "general",
+          "source_ref": "被害人通用第6題",
+          "text": "你是否知悉依刑訴法第237條告訴期為六個月？是否曾經提告此案過？或是否曾經撤回告訴過？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-007",
+          "source": "general",
+          "source_ref": "被害人通用第7題",
+          "text": "你是否要提出告訴？提出何種告訴？是否曾向其他警察單位報案？是否附帶民事求償？有無與嫌犯和解或調解之意願？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-008",
+          "source": "general",
+          "source_ref": "被害人通用第8題",
+          "text": "你是否知悉依刑事訴訟法第238條，告訴乃論之罪，告訴人於第一審辯論終結前，得撤回其告訴。撤回告訴之人，不得再為同一件事提出告訴？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-009",
+          "source": "general",
+          "source_ref": "被害人通用第9題",
+          "text": "如警方通知涉嫌人後，你是否同意與對方和解？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-010",
+          "source": "general",
+          "source_ref": "被害人通用第10題",
+          "text": "你是否需要鑑識小隊採證？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-011",
+          "source": "general",
+          "source_ref": "被害人通用第11題",
+          "text": "案件後續司法文書有無指定收件之處所？是否能提供聲請變更送達處所狀？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-012",
+          "source": "general",
+          "source_ref": "被害人通用第12題",
+          "text": "你是否確定要撤回告訴？為何你要撤回告訴？請詳述原因。撤回告訴狀與和解書是否由你親自填寫？是否能提供給警方？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-013",
+          "source": "general",
+          "source_ref": "被害人通用第13題",
+          "text": "你於○○年○○月○○日第一次警詢筆錄的陳述是否實在？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-014",
+          "source": "general",
+          "source_ref": "被害人通用第14題",
+          "text": "警方於○○年○○月○○日在約談涉嫌人來所說明案情，筆錄期間涉嫌人主動交付贓證物，是否為妳遭○○之物品？是否由你領回？贓物認領保管單是否為妳本人確認無誤後親自簽名？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-015",
+          "source": "general",
+          "source_ref": "被害人通用第15題",
+          "text": "警方於發現贓證物，是否為妳遭○○之物品？是否由你領回？贓物認領保管單是否為妳本人確認無誤後親自簽名？",
+          "locked": true
+        },
+        {
+          "id": "V-GEN-016",
+          "source": "general",
+          "source_ref": "被害人通用第16題",
+          "text": "因為警方通知我在○○年○○月○○日至所報○○案，證明單號為○○，有循線通知嫌疑人到案說明，所以今日請我至貴派出所製作第二次筆錄以及領回贓證物。",
+          "locked": true
+        }
+      ]
+    },
+    {
+      "group_id": "suspect_general",
+      "name": "涉嫌人通用",
+      "role_id": "suspect",
+      "questions": [
+        {
+          "id": "S-GEN-001",
+          "source": "general",
+          "source_ref": "涉嫌人通用第1題",
+          "text": "警方所告知之罪名及權利你是否清楚？你有無刑案紀錄？",
+          "locked": true
+        },
+        {
+          "id": "S-GEN-002",
+          "source": "general",
+          "source_ref": "涉嫌人通用第2題",
+          "text": "你是否具有低收入戶、中低收入戶、原住民或其他依法令得請求法律扶助者的身分？妳是否需要通知親屬、法扶或委任律師陪同到場？",
+          "locked": true
+        },
+        {
+          "id": "S-GEN-003",
+          "source": "general",
+          "source_ref": "涉嫌人通用第3題",
+          "text": "依據提審法第1條之規定，人民被法院以外之任何機關逮捕、拘禁時，其本人或他人得向逮捕、拘禁地之地方法院聲請提審。但其他法律規定得聲請及時由法院審查者，依其規定。前項聲請及第10條之抗告，免徵費用，你是否清楚此規定？是否需要聲請提審？",
+          "locked": true
+        },
+        {
+          "id": "S-GEN-004",
+          "source": "general",
+          "source_ref": "涉嫌人通用第4題",
+          "text": "現在時間○○時○○分許，依刑事訴訟法為夜間偵訊時間，你是否同意接受製作夜間警詢筆錄？目前精神狀況是否良好？意識是否清醒？",
+          "locked": true
+        },
+        {
+          "id": "S-GEN-005",
+          "source": "general",
+          "source_ref": "涉嫌人通用第5題",
+          "text": "現在時間○○時○○分許，依刑事訴訟法為夜間偵訊時間，警方不得對你詢問製作筆錄，你是否知悉？",
+          "locked": true
+        },
+        {
+          "id": "S-GEN-006",
+          "source": "general",
+          "source_ref": "涉嫌人通用第6題",
+          "text": "妳今（□）日因何事接受警方製作筆錄？",
+          "locked": true
+        },
+        {
+          "id": "S-GEN-007",
+          "source": "general",
+          "source_ref": "涉嫌人通用第7題",
+          "text": "你是否知悉於警詢筆錄中做不實陳述須負法律責任？",
+          "locked": true
+        },
+        {
+          "id": "S-GEN-008",
+          "source": "general",
+          "source_ref": "涉嫌人通用第8題",
+          "text": "你有無為自己或他人推卸刑責而向警方為不實陳述？",
+          "locked": true
+        },
+        {
+          "id": "S-GEN-009",
+          "source": "general",
+          "source_ref": "涉嫌人通用第9題",
+          "text": "警方製作警詢筆錄時，有無全程錄音錄影？",
+          "locked": true
+        },
+        {
+          "id": "S-GEN-010",
+          "source": "general",
+          "source_ref": "涉嫌人通用第10題",
+          "text": "警方於偵訊時你所陳述之事實是否為你自由意識下所陳述？警方有無以強暴脅迫等不正方法對你取供？警方在逮捕你時，有無使你受傷？",
+          "locked": true
+        },
+        {
+          "id": "S-GEN-011",
+          "source": "general",
+          "source_ref": "涉嫌人通用第11題",
+          "text": "物品是否為你同意並主動交付？且搜索扣押筆錄是否由你親自審視後，並簽名捺印？",
+          "locked": true
+        }
+      ]
+    },
+    {
+      "group_id": "witness_general",
+      "name": "證人通用",
+      "role_id": "witness",
+      "questions": [
+        {
+          "id": "W-GEN-001",
+          "source": "general",
+          "source_ref": "證人通用第1題",
+          "text": "你向警方表示你係為美國人士，請問你的中文聽、說、讀、寫能力如何？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-002",
+          "source": "general",
+          "source_ref": "證人通用第2題",
+          "text": "你上述年籍資料是否正確？是否為你本人？有無攜帶身分證明文件？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-003",
+          "source": "general",
+          "source_ref": "證人通用第3題",
+          "text": "是否知道對方年籍資料、聯絡方式？與對方是否認識？有無仇恨或糾紛？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-004",
+          "source": "general",
+          "source_ref": "證人通用第4題",
+          "text": "上述所說是否實在？有無其他意見補充？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-005",
+          "source": "general",
+          "source_ref": "證人通用第5題",
+          "text": "公司地址為何？現任何職？是否有公司授權委託書？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-006",
+          "source": "general",
+          "source_ref": "證人通用第6題",
+          "text": "你於○○年○○月○○日第一次警詢筆錄的陳述是否實在？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-007",
+          "source": "general",
+          "source_ref": "證人通用第7題",
+          "text": "你與被害人為何種關係？如何認識？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-008",
+          "source": "general",
+          "source_ref": "證人通用第8題",
+          "text": "當被害人遭○○時，你是否在場？請說明事情過程？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-009",
+          "source": "general",
+          "source_ref": "證人通用第9題",
+          "text": "你今（□）日因何事接受警方製作筆錄？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-010",
+          "source": "general",
+          "source_ref": "證人通用第10題",
+          "text": "妳與涉嫌人是否認識？何種關係？有無任何仇恨、糾紛？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-011",
+          "source": "general",
+          "source_ref": "證人通用第11題",
+          "text": "你是否知悉使公務員登載不實須負相關責任？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-012",
+          "source": "general",
+          "source_ref": "證人通用第12題",
+          "text": "對於特定或不特定人士做不實指控或謊報、隱匿實情，致使公務人員於文書登載不實必須擔負法律責任，是否清楚？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-013",
+          "source": "general",
+          "source_ref": "證人通用第13題",
+          "text": "請問你是否現為或曾為犯罪嫌疑人之配偶、直系血親、三親等內之旁系血親、二親等內之姻親或家長、家屬者？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-014",
+          "source": "general",
+          "source_ref": "證人通用第14題",
+          "text": "請問你是否與犯罪嫌疑人訂有婚約者？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-015",
+          "source": "general",
+          "source_ref": "證人通用第15題",
+          "text": "請問你是否現為或曾為犯罪嫌疑人之法定代理人或現由或曾由犯罪嫌疑人為其法定代理人者？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-016",
+          "source": "general",
+          "source_ref": "證人通用第16題",
+          "text": "你現在精神狀況如何？是否可以製作筆錄？是否需要家屬或社工到場陪同？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-017",
+          "source": "general",
+          "source_ref": "證人通用第17題",
+          "text": "是否領有身心障礙證明或經醫囑使用精神藥物？類別、鑑定向度及障礙程度為何？",
+          "locked": true
+        },
+        {
+          "id": "W-GEN-018",
+          "source": "general",
+          "source_ref": "證人通用第18題",
+          "text": "你的文書送達地址為何？",
+          "locked": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "case_id": "TC-DR2-POS-001",
+  "case_type": "正例",
+  "description": "施用第二級毒品（愷他命）",
+  "state_map": {
+    "E-DR-002": {
+      "status": "符合",
+      "source_raw": [
+        "尿液檢驗：愷他命陽性"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-DR-013": {
+      "status": "符合",
+      "source_raw": [
+        "行為人陳述"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_use_tier2"
+    ],
+    "charge_states": {
+      "charge_use_tier1": "資料不足",
+      "charge_use_tier2": "可能涉及",
+      "charge_use_tier3": "資料不足",
+      "charge_use_tier4": "資料不足"
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "case_id": "TC-IN-POS-001",
+  "case_type": "正例",
+  "description": "恐嚇危害安全：恐嚇行為+心生畏怖+故意",
+  "state_map": {
+    "E-IN-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：對方說要讓我出不了門"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-IN-002": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-IN-003": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：我很害怕"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_threat"
+    ],
+    "charge_states": {
+      "charge_threat": "可能涉及",
+      "charge_threat_extortion": "資料不足",
+      "charge_coercion": "資料不足",
+      "charge_unlawful_detention": "資料不足"
+    }
+  }
+}

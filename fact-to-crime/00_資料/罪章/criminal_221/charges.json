@@ -1,0 +1,148 @@
+{
+  "version": "1.1",
+  "spec_version": "v15",
+  "chapter_id": "criminal_221",
+  "charges": [
+    {
+      "id": "charge_221",
+      "name": "強制性交罪",
+      "article": "刑法第221條第1項",
+      "base_penalty": "三年以上十年以下有期徒刑",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-221-001",
+        "E-221-006"
+      ],
+      "requires_one_of": {
+        "means_221": [
+          "E-221-002",
+          "E-221-003",
+          "E-221-004",
+          "E-221-005"
+        ],
+        "mens_rea_221": [
+          "E-221-007"
+        ]
+      },
+      "not_applicable_if": [
+        "E-221-023"
+      ],
+      "actor_subject_type_required": "自然人",
+      "notes": "§221② 未遂犯罰之；對配偶犯 §221 依 §229-1 須告訴乃論",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_221_aggravated",
+      "name": "加重強制性交罪",
+      "article": "刑法第222條第1項",
+      "base_penalty": "七年以上有期徒刑",
+      "statute_of_limitations_years": 20,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-221-001",
+        "E-221-006"
+      ],
+      "requires_one_of": {
+        "means_221": [
+          "E-221-002",
+          "E-221-003",
+          "E-221-004",
+          "E-221-005"
+        ],
+        "mens_rea_221": [
+          "E-221-007"
+        ],
+        "aggravator_222": [
+          "E-221-008",
+          "E-221-009",
+          "E-221-010",
+          "E-221-011",
+          "E-221-012",
+          "E-221-013",
+          "E-221-014",
+          "E-221-015",
+          "E-221-016"
+        ]
+      },
+      "not_applicable_if": [],
+      "supersedes": [
+        "charge_221"
+      ],
+      "actor_subject_type_required": "自然人",
+      "notes": "§222② 未遂犯罰之；正確條號 §222（原誤用 §221-1）",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_221_result_death",
+      "name": "強制性交猥褻罪之加重結果犯",
+      "article": "刑法第226條",
+      "base_penalty": "致於死：無期或十年以上；致重傷：十年以上；致羞忿自殺/意圖自殺致重傷：十年以上",
+      "statute_of_limitations_years": 20,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-221-001",
+        "E-221-006"
+      ],
+      "requires_one_of": {
+        "means_221": [
+          "E-221-002",
+          "E-221-003",
+          "E-221-004",
+          "E-221-005"
+        ],
+        "mens_rea_221": [
+          "E-221-007"
+        ]
+      },
+      "requires_any_result": [
+        "E-221-017",
+        "E-221-018",
+        "E-221-019"
+      ],
+      "supersedes": [
+        "charge_221",
+        "charge_221_aggravated"
+      ],
+      "actor_subject_type_required": "自然人",
+      "notes": "§226 加重結果犯；刑§17 已查證（需可預見）",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_227_minor",
+      "name": "與未滿十四歲男女性交罪",
+      "article": "刑法第227條第1項",
+      "base_penalty": "三年以上十年以下有期徒刑",
+      "statute_of_limitations_years": 10,
+      "private_prosecution": "conditional",
+      "requires_elements": [
+        "E-221-001",
+        "E-221-020"
+      ],
+      "not_applicable_if": [
+        "E-221-006"
+      ],
+      "actor_subject_type_required": "自然人",
+      "notes": "§227⑤ 未遂犯罰之；§227-1 十八歲以下犯之減輕或免除其刑；§229-1 未滿十八犯之須告訴乃論",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_227_minor_16",
+      "name": "與十四歲以上未滿十六歲男女性交罪",
+      "article": "刑法第227條第3項",
+      "base_penalty": "七年以下有期徒刑",
+      "statute_of_limitations_years": 7,
+      "private_prosecution": "conditional",
+      "requires_elements": [
+        "E-221-001",
+        "E-221-021"
+      ],
+      "not_applicable_if": [
+        "E-221-006"
+      ],
+      "actor_subject_type_required": "自然人",
+      "notes": "§227⑤ 未遂犯罰之；§229-1 未滿十八犯之須告訴乃論",
+      "verification": "verified"
+    }
+  ]
+}

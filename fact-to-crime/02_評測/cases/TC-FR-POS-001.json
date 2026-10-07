@@ -1,0 +1,59 @@
+{
+  "case_id": "TC-FR-POS-001",
+  "case_type": "正例",
+  "description": "一般詐欺：詐術+陷於錯誤+交付+取得+故意",
+  "state_map": {
+    "E-FR-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：被告知是投資顧問"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-FR-002": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：匯款 50 萬"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-FR-003": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄+行為人陳述"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-FR-004": {
+      "status": "符合",
+      "source_raw": [
+        "金融紀錄：50 萬已到帳"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_fraud"
+    ],
+    "charge_states": {
+      "charge_fraud": "可能涉及",
+      "charge_fraud_group": "資料不足",
+      "charge_fraud_computer": "資料不足",
+      "charge_fraud_special_high": "資料不足"
+    },
+    "counter_evidence_all_pass": true
+  }
+}

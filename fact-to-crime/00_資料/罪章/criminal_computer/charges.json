@@ -1,0 +1,68 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_computer",
+  "charges": [
+    {
+      "id": "charge_hack",
+      "name": "無故入侵電腦",
+      "article": "刑法第358條",
+      "base_penalty": "三年以下有期徒刑、拘役或三十萬元以下罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-CP-001",
+        "E-CP-004"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_alter_record",
+      "name": "無故取得刪除變更電磁紀錄",
+      "article": "刑法第359條",
+      "base_penalty": "五年以下有期徒刑、拘役或科或併科六十萬元以下罰金",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-CP-002",
+        "E-CP-004"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_interfere_system",
+      "name": "無故干擾電腦系統",
+      "article": "刑法第360條",
+      "base_penalty": "三年以下有期徒刑、拘役或三十萬元以下罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-CP-003",
+        "E-CP-004"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_making_virus",
+      "name": "製作電腦病毒",
+      "article": "刑法第362條",
+      "base_penalty": "三年以下有期徒刑、拘役或三十萬元以下罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-CP-006",
+        "E-CP-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_computer": [
+          "E-CP-005"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    }
+  ]
+}

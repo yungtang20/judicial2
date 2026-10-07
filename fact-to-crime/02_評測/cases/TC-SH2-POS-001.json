@@ -1,0 +1,68 @@
+{
+  "case_id": "TC-SH2-POS-001",
+  "case_type": "正例",
+  "description": "性騷擾罪（§25 趁人不及抗拒）",
+  "state_map": {
+    "E-SH-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：被摸肩膀"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-SH-002": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：有說不要"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-SH-003": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-SH-004": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：來不及反應"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-SH-005": {
+      "status": "符合",
+      "source_raw": [
+        "行為人陳述"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_sh_offense"
+    ],
+    "charge_states": {
+      "charge_sh_admin": "not_charged",
+      "charge_sh_offense": "可能涉及",
+      "charge_sh_workplace": "資料不足",
+      "charge_sh_education": "資料不足"
+    }
+  }
+}

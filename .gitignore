@@ -1,0 +1,20 @@
+# 機密檔案（API key、真實案件資料）— 切勿提交
+.env
+.env.*
+*.env
+
+# 含真實 API key 的測試殘留
+**/*sk-*.txt
+
+# 節點與快取
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+
+# 暫存
+*.tmp
+*.log
+cli_out.json
+/tmp/

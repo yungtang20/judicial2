@@ -1,0 +1,197 @@
+{
+  "version": "1.1",
+  "spec_version": "v15",
+  "chapter_id": "criminal_harm_dv",
+  "charges": [
+    {
+      "id": "charge_harm",
+      "name": "傷害罪",
+      "article": "刑法第277條第1項",
+      "base_penalty": "三年以下有期徒刑、拘役或一萬元以下罰金",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-HD-001",
+        "E-HD-003"
+      ],
+      "requires_one_of": {
+        "mens_rea_harm": [
+          "E-HD-002"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_harm_attempt",
+      "name": "傷害未遂",
+      "article": "刑法第14條、§25②、§277",
+      "base_penalty": "未遂刑（減輕）",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_one_of": {
+        "mens_rea_harm": [
+          "E-HD-002"
+        ]
+      },
+      "requires_all_optional": [
+        "E-HD-013"
+      ],
+      "requires_not_all": [
+        "E-HD-001",
+        "E-HD-003"
+      ],
+      "is_variant_of": "charge_harm",
+      "variant_type": "未遂",
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_harm_aggravated",
+      "name": "重傷害",
+      "article": "刑法第277條第2項",
+      "base_penalty": "一年以上七年以下有期徒刑",
+      "statute_of_limitations_years": 7,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-HD-001",
+        "E-HD-004"
+      ],
+      "requires_one_of": {
+        "mens_rea_harm": [
+          "E-HD-002"
+        ]
+      },
+      "supersedes": [
+        "charge_harm"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_harm_death",
+      "name": "加功用力致死",
+      "article": "刑法第277條第3項",
+      "base_penalty": "七年以上有期徒刑",
+      "statute_of_limitations_years": 20,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-HD-001",
+        "E-HD-005"
+      ],
+      "requires_one_of": {
+        "mens_rea_harm": [
+          "E-HD-002"
+        ]
+      },
+      "requires_any_result": [
+        "E-HD-006"
+      ],
+      "supersedes": [
+        "charge_harm",
+        "charge_harm_aggravated"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_negligent_harm",
+      "name": "過失傷害",
+      "article": "刑法第284條前段",
+      "base_penalty": "一年以下有期徒刑、拘役或罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-HD-007",
+        "E-HD-003"
+      ],
+      "requires_one_of": {
+        "mens_rea_negligence": [
+          "E-HD-008"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "notes": "§287 過失傷害須告訴乃論",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_negligent_harm_aggravated",
+      "name": "過失致重傷害",
+      "article": "刑法第284條後段",
+      "base_penalty": "二年以下有期徒刑、拘役或罰金",
+      "statute_of_limitations_years": 3,
+      "private_prosecution": true,
+      "requires_elements": [
+        "E-HD-007",
+        "E-HD-009"
+      ],
+      "requires_one_of": {
+        "mens_rea_negligence": [
+          "E-HD-008"
+        ]
+      },
+      "supersedes": [
+        "charge_negligent_harm"
+      ],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_negligent_death",
+      "name": "過失致死",
+      "article": "刑法第287條前段",
+      "base_penalty": "五年以下有期徒刑",
+      "statute_of_limitations_years": 7,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-HD-010"
+      ],
+      "requires_one_of": {
+        "mens_rea_negligence_death": [
+          "E-HD-011"
+        ]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_harm_dv",
+      "name": "家暴情境傷害（§277+§3 身分）",
+      "article": "刑法第277條、家庭暴力防治法第3條",
+      "base_penalty": "同§277（另含保護令程序）",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-HD-001",
+        "E-HD-003",
+        "E-HD-012"
+      ],
+      "requires_one_of": {
+        "mens_rea_harm": [
+          "E-HD-002"
+        ]
+      },
+      "supersedes": [
+        "charge_harm"
+      ],
+      "cross_law_reference": true,
+      "actor_subject_type_required": "自然人",
+      "notes": "涉家暴時走保護令程序；第13層跨法律競合",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_dv_protection_order_violation",
+      "name": "違反保護令罪",
+      "article": "家庭暴力防治法第61條",
+      "base_penalty": "三年以下有期徒刑、拘役或科或併科十萬元以下罰金",
+      "statute_of_limitations_years": 5,
+      "private_prosecution": false,
+      "requires_elements": [
+        "E-HD-014"
+      ],
+      "cross_law_reference": true,
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    }
+  ]
+}

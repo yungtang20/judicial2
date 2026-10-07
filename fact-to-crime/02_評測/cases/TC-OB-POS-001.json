@@ -1,0 +1,47 @@
+{
+  "case_id": "TC-OB-POS-001",
+  "case_type": "正例",
+  "description": "散布販賣猥褻物品（§235）",
+  "state_map": {
+    "E-OB-003": {
+      "status": "符合",
+      "source_raw": [
+        "行為人筆錄：在群組傳給30人"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-OB-004": {
+      "status": "符合",
+      "source_raw": [
+        "行為人陳述"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-OB-006": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_distribute_obscenity"
+    ],
+    "charge_states": {
+      "charge_public_obscenity": "資料不足",
+      "charge_distribute_obscenity": "可能涉及",
+      "charge_minor_sex_trade": "資料不足"
+    }
+  }
+}

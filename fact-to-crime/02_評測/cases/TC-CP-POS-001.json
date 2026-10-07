@@ -1,0 +1,38 @@
+{
+  "case_id": "TC-CP-POS-001",
+  "case_type": "正例",
+  "description": "無故取得刪除變更電磁紀錄",
+  "state_map": {
+    "E-CP-002": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：帳號被刪除"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-CP-004": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：造成損害"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_alter_record"
+    ],
+    "charge_states": {
+      "charge_hack": "資料不足",
+      "charge_alter_record": "可能涉及",
+      "charge_interfere_system": "資料不足",
+      "charge_making_virus": "資料不足"
+    }
+  }
+}

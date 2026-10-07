@@ -1,0 +1,45 @@
+{
+  "version": "1.1",
+  "spec_version": "v15",
+  "chapter_id": "criminal_theft_embezzle",
+  "exclusions": [
+    {
+      "id": "EX-TE-001",
+      "type": "intra_chapter_mutual_exclusion",
+      "elements": [
+        "E-TE-001",
+        "E-TE-007"
+      ],
+      "note": "竊盜與侵占遺失物互斥：放置物 vs 遺失物，需區辨問句",
+      "verification": "verified",
+      "between_charges": [
+        "charge_theft",
+        "charge_lost_property"
+      ]
+    },
+    {
+      "id": "EX-TE-002",
+      "type": "intra_chapter_mutual_exclusion",
+      "elements": [
+        "E-TE-004",
+        "E-TE-005"
+      ],
+      "note": "§335① 受託物 vs §335② 業務上持有",
+      "verification": "verified",
+      "between_charges": [
+        "charge_embezzle"
+      ]
+    },
+    {
+      "id": "EX-TE-003",
+      "type": "statute_competition_special_general",
+      "between_charges": [
+        "charge_theft_aggravated",
+        "charge_theft"
+      ],
+      "special_over_general": "charge_theft_aggravated",
+      "note": "§321 加重竊盜為 §320 之加重特別關係",
+      "verification": "verified"
+    }
+  ]
+}

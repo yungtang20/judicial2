@@ -1,0 +1,46 @@
+{
+  "case_id": "TC-GB-POS-001",
+  "case_type": "正例",
+  "description": "賭博罪：賭博行為+賭博財物+故意",
+  "state_map": {
+    "E-GB-001": {
+      "status": "符合",
+      "source_raw": [
+        "監視器：多人賭麻將金錢往來"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-GB-002": {
+      "status": "符合",
+      "source_raw": [
+        "行為人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-GB-003": {
+      "status": "符合",
+      "source_raw": [
+        "扣押現金"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_gambling"
+    ],
+    "charge_states": {
+      "charge_gambling": "可能涉及",
+      "charge_gambling_operation": "資料不足"
+    }
+  }
+}

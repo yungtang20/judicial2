@@ -1,0 +1,56 @@
+{
+  "case_id": "TC-HD-DV-001",
+  "case_type": "家暴情境",
+  "description": "家暴情境傷害：一般傷害要件 + 家暴身分（§3）",
+  "state_map": {
+    "E-HD-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：被丈夫推倒"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-HD-002": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-HD-003": {
+      "status": "符合",
+      "source_raw": [
+        "驗傷單"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-HD-012": {
+      "status": "符合",
+      "source_raw": [
+        "戶籍資料：配偶關係"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_harm_dv"
+    ],
+    "charge_states": {
+      "charge_harm": "可能涉及",
+      "charge_harm_dv": "可能涉及"
+    }
+  }
+}

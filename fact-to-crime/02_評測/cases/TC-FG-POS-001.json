@@ -1,0 +1,49 @@
+{
+  "case_id": "TC-FG-POS-001",
+  "case_type": "正例",
+  "description": "偽造私文書：偽造+足以生損害+故意",
+  "state_map": {
+    "E-FG-001": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：偽造簽名"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-FG-004": {
+      "status": "符合",
+      "source_raw": [
+        "被害人筆錄：已用它去借錢"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    },
+    "E-FG-005": {
+      "status": "符合",
+      "source_raw": [
+        "行為人陳述"
+      ],
+      "source_type": "被害人陳述",
+      "source_count": 1,
+      "single_source": true,
+      "evidence_admissibility": "可採"
+    }
+  },
+  "expected": {
+    "candidate_charges": [
+      "charge_forgery_private"
+    ],
+    "charge_states": {
+      "charge_forgery_private": "可能涉及",
+      "charge_forgery_seal": "資料不足",
+      "charge_exercise_forgery": "資料不足",
+      "charge_forgery_public": "資料不足",
+      "charge_false_entry": "資料不足"
+    }
+  }
+}

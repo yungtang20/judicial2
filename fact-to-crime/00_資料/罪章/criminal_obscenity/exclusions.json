@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_obscenity",
+  "exclusions": [
+    {
+      "id": "EX-OB-001",
+      "type": "intra_chapter_mutual_exclusion",
+      "elements": [
+        "E-OB-001",
+        "E-OB-003"
+      ],
+      "note": "公然猥褻 vs 散布猥褻物品互斥",
+      "verification": "verified",
+      "between_charges": [
+        "charge_public_obscenity",
+        "charge_distribute_obscenity"
+      ]
+    },
+    {
+      "id": "EX-OB-002",
+      "type": "cross_law_ideal_competition",
+      "between_charges": [
+        "charge_minor_sex_trade",
+        "charge_public_obscenity",
+        "charge_distribute_obscenity"
+      ],
+      "special_over_general": "charge_minor_sex_trade",
+      "note": "兒少性交易為特別法，優先適用",
+      "verification": "unverified",
+      "warning": "⚠️ 特別法關係需查證"
+    }
+  ]
+}

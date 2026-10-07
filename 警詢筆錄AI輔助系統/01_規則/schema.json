@@ -1,0 +1,582 @@
+{
+  "version": "1.0",
+  "schemas": {
+    "roles": {
+      "type": "object",
+      "required": [
+        "version",
+        "roles"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "version",
+              "aliases"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "enum": [
+                  "suspect",
+                  "victim",
+                  "witness"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "aliases": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "case_types": {
+      "type": "object",
+      "required": [
+        "version",
+        "case_types"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "case_types": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "role_id",
+              "template_id",
+              "general_id",
+              "special_law"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "role_id": {
+                "type": "string",
+                "enum": [
+                  "suspect",
+                  "victim",
+                  "witness"
+                ]
+              },
+              "template_id": {
+                "type": "string"
+              },
+              "general_id": {
+                "type": "string"
+              },
+              "special_law": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "questions_general": {
+      "type": "object",
+      "required": [
+        "version",
+        "groups"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "groups": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": [
+              "group_id",
+              "name",
+              "role_id",
+              "questions"
+            ],
+            "properties": {
+              "group_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "role_id": {
+                "type": "string",
+                "enum": [
+                  "suspect",
+                  "victim",
+                  "witness"
+                ]
+              },
+              "questions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/schemas/question_general_item"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "question_general_item": {
+      "type": "object",
+      "required": [
+        "id",
+        "source",
+        "source_ref",
+        "text",
+        "locked"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[VSW]-GEN-[0-9]{3}$"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "general"
+          ]
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locked": {
+          "type": "boolean",
+          "enum": [
+            true
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "questions_templates": {
+      "type": "object",
+      "required": [
+        "version",
+        "templates"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "templates": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "template_id",
+              "name",
+              "role_id",
+              "case_type_id",
+              "questions"
+            ],
+            "properties": {
+              "template_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "role_id": {
+                "type": "string",
+                "enum": [
+                  "suspect",
+                  "victim",
+                  "witness"
+                ]
+              },
+              "case_type_id": {
+                "type": "string"
+              },
+              "questions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/schemas/question_template_item"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "question_template_item": {
+      "type": "object",
+      "required": [
+        "id",
+        "source",
+        "source_ref",
+        "text",
+        "locked"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[VSW]-[A-Z]{2}-[A-Z]-TPL-[0-9]{3}$"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "template"
+          ]
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locked": {
+          "type": "boolean",
+          "enum": [
+            true
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "questions_add": {
+      "type": "object",
+      "required": [
+        "version",
+        "groups"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "groups": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "group_id",
+              "name",
+              "case_type_id",
+              "elements"
+            ],
+            "properties": {
+              "group_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "case_type_id": {
+                "type": "string"
+              },
+              "elements": {
+                "type": "array",
+                "minItems": 9,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "element_id",
+                    "element_name",
+                    "questions"
+                  ],
+                  "properties": {
+                    "element_id": {
+                      "type": "string",
+                      "enum": [
+                        "PER",
+                        "EVT",
+                        "TIM",
+                        "LOC",
+                        "OBJ",
+                        "SUB",
+                        "OBJ2",
+                        "MOT",
+                        "INT"
+                      ]
+                    },
+                    "element_name": {
+                      "type": "string"
+                    },
+                    "questions": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/schemas/question_add_item"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "question_add_item": {
+      "type": "object",
+      "required": [
+        "id",
+        "source",
+        "source_ref",
+        "text",
+        "locked"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^ADD-[A-Z]{2}-[A-Z]-[A-Z0-9]{2,4}-[0-9]{3}$"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "add"
+          ]
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locked": {
+          "type": "boolean",
+          "enum": [
+            false
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "elements": {
+      "type": "object",
+      "required": [
+        "version",
+        "case_types"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "case_types": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "case_type_id",
+              "elements"
+            ],
+            "properties": {
+              "case_type_id": {
+                "type": "string"
+              },
+              "elements": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "element_id",
+                    "law",
+                    "type",
+                    "name",
+                    "question_ids",
+                    "evidence_ids"
+                  ],
+                  "properties": {
+                    "element_id": {
+                      "type": "string"
+                    },
+                    "law": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "主觀",
+                        "客觀",
+                        "客體"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "question_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "evidence_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "version",
+        "case_types"
+      ],
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "case_types": {
+          "type": "array",
+          "minItems": 10,
+          "items": {
+            "type": "object",
+            "required": [
+              "case_type_id",
+              "evidences"
+            ],
+            "properties": {
+              "case_type_id": {
+                "type": "string"
+              },
+              "evidences": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "evidence_id",
+                    "name",
+                    "type",
+                    "question_ids",
+                    "element_ids"
+                  ],
+                  "properties": {
+                    "evidence_id": {
+                      "type": "string",
+                      "pattern": "^EV-[A-Z]{2}-[0-9]{3}$"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "物證",
+                        "書證",
+                        "電磁紀錄",
+                        "供述"
+                      ]
+                    },
+                    "question_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "element_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "rules": {
+    "utf8": true,
+    "no_comments": true,
+    "no_trailing_comma": true,
+    "indent": 2,
+    "additional_properties": false,
+    "id_uniqueness": {
+      "questions_general": true,
+      "questions_templates": true,
+      "questions_add": true,
+      "elements": true,
+      "evidence": true
+    },
+    "cross_reference": {
+      "case_types.role_id": "roles.roles[].id",
+      "case_types.template_id": "questions_templates.templates[].template_id",
+      "case_types.general_id": "questions_general.groups[].group_id",
+      "elements.question_ids": "questions_*.questions[].id",
+      "elements.evidence_ids": "evidence.evidences[].evidence_id",
+      "evidence.question_ids": "questions_*.questions[].id",
+      "evidence.element_ids": "elements.elements[].element_id"
+    },
+    "locked": {
+      "general": true,
+      "template": true,
+      "add": false
+    },
+    "validation_timing": {
+      "on_load": true,
+      "on_generate": true,
+      "on_export": true
+    },
+    "on_error": {
+      "stop": true,
+      "show_message": true,
+      "log_console": true
+    }
+  }
+}

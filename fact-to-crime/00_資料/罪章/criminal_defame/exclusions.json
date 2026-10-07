@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_defame",
+  "exclusions": [
+    {
+      "id": "EX-DF-001",
+      "type": "intra_chapter_mutual_exclusion",
+      "elements": [
+        "E-DF-011",
+        "E-DF-014"
+      ],
+      "note": "侮辱 vs 誹謗：侮辱為抽象貶損，誹謗為具體事實散布",
+      "verification": "verified",
+      "between_charges": [
+        "charge_insult",
+        "charge_defame"
+      ]
+    }
+  ]
+}
