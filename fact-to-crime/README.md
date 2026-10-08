@@ -20,11 +20,13 @@
 | **第 11 層** | `01_規則/justifications.js` |
 | **第 17 層** | `01_規則/s14_contract.js` |
 | **整合執行入口** | `01_規則/integration.js`（P1 切分 → 1A 身分 → 2A 分流 → S-14） |
+| **網頁版** | `02_網站/index.html`（選罪章 → 輸入案情 → 17 層 → S-14 + 問句；複製/匯出/列印） |
+| **正式站** | https://judicial-prod.onrender.com/ （render static，整站取代） |
 | **驗證腳本** | `03_轉換工具/check.js`（**15/15 PASS**） |
 | **伺服器腳本** | `03_轉換工具/serve.sh` |
 | **問句引擎** | `01_規則/question_engine.js` + `question_library.js`（15 章全覆蓋） |
 | **R33 審計** | `01_規則/audit.js`（71 題，0 法律用語） |
-| **LLM 骨架** | `01_規則/llm_generator.js` + `llm_config.json` |
+| **LLM 已接線** | `01_規則/llm_generator.js` → Agnes API（agnes-2.5-flash，OpenAI 相容，API key 由環境變數 AGNES_API_KEY 注入） |
 | **法規查證** | `00_資料/法規查證/criminal_code_general.json`（14 條 verified）+ 元件庫 **153 verified / 0 待查證** |
 | 測試 | `02_評測/test.js`（**21/21 PASS**）+ S-14 整合測試 |
 
@@ -167,6 +169,21 @@ LINE 陳報文本
 | S14-INPUT-TE-001 | §320 | S-14 整合 |
 
 ## 修復記錄
+
+### Round 10（本次）— LLM 接線 + 網頁版 + 整站取代 render
+
+1. **LLM 接線**：`llm_config.json` 填入 Agnes endpoint（apihub.agnes-ai.com/v1/chat/completions）、model agnes-2.5-flash、API key 由環境變數 AGNES_API_KEY 注入（不寫死）。 `llm_generator.js` 改 OpenAI 相容格式（messages 陣列、解析 choices[0].message.content）。**實測**：Agnes 生成「您被騙了多少钱？」（中立、日常用語、R33 合規）。
+2. **網頁版**：`02_網站/index.html`（28.7 KB）——選受詢問人身分 → 選罪章族群 → 輸入 LINE 陳報文本 → 產出問句（三段結構 A/E/B/C）+ 罪名浮現表 + 開放構成要件 + R43 警告；複製/匯出 .txt/列印；響應式；列印樣式。
+3. **index.html bug 修復**（瀏覽器 smoke 實測發現）：
+   - `window.__ruleEngineRun`/`__questionEngineRun` 被呼叫但未定義 → 內嵌引擎核心邏輯（12/13 層比對 + 16 層問句）
+   - `__loadQuestionLibrary` 定義但從未呼叫 → loadAll() 完成時呼叫
+   - QLIB 載入用 `new Function` 提取 module.exports（Node 模組瀏覽器適配）
+   - `mapTextToState` 關鍵詞映射失效 → 改用 CONTEXT_KEYWORDS 情境詞庫（15 罪章 130+ 關鍵詞）
+   - E-TE-003 補「未結帳/未付錢」關鍵詞
+4. **整站取代 render**：`D:/工作用/judicial`（deploy 到 judicial-prod.onrender.com）移除舊 React 前後端，複製 fact-to-crime 全部進去（commit abbba85，push 成功）；render.yaml 改為 runtime static、staticPublishPath: .、route / → /02_網站/index.html。
+   **注意**：render 對已存在 service **不會自動套用 runtime 變更**（web→static 需 dashboard 刪除重建 service，或改用 Start Command 服務靜態檔）。線上現仍為舊 React 站（/api/health 200、/assets/index.js 200、靜態路徑 401）。
+   **待你操作**：render dashboard 刪除重建 service（方案 A）或改 Start Command 為 `npx serve -s . -p $PORT`（方案 B）。
+5. **瀏覽器 smoke 實測**（headless Chromium）：角色 4 個、罪章 15 個、step4 顯示、罪名表 5 行、竊盜罪「可能涉及」+ 9 題問句、複製 fallback 可用。
 
 ### Round 9（本次）— 全罪章交叉驗證完成
 
