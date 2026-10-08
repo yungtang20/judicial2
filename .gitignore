@@ -18,3 +18,4 @@ Thumbs.db
 *.log
 cli_out.json
 /tmp/
+.omo/
