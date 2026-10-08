@@ -1,6 +1,7 @@
 // s14_contract.js
 // v15 第 17 層：S-14 輸出契約整合
 // 整合全部 17 層輸出為一份 S-14 JSON
+// State Engine 邊界：彙整各層結果輸出；不解釋法律、不產生問句、不執行 LLM 推理。
 
 const fs = require('fs');
 const path = require('path');

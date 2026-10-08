@@ -8,7 +8,7 @@
       "name": "賭博罪",
       "article": "刑法第266條第1項",
       "base_penalty": "五年以下有期徒刑、拘役或十萬元以下罰金",
-      "statute_of_limitations_years": 5,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_elements": [
         "E-GB-001",
@@ -27,7 +27,7 @@
       "name": "供給賭博場所",
       "article": "刑法第268條",
       "base_penalty": "三年以下有期徒刑，得併科九萬元以下罰金",
-      "statute_of_limitations_years": 3,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_one_of": {
         "gambling_op_type": [

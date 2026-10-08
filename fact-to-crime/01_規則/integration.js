@@ -1,13 +1,30 @@
 // integration.js — 全 17 層整合執行入口
 // 讀取陳報檔（LINE 文本或 CSV）→ 跑全部 17 層 → 輸出 S-14 契約 JSON
 // 用法：node 01_規則/integration.js <input.json>
+// State Engine 邊界：控制流程、Queue、Revision、增量更新；不解釋法律、不自產問句、不執行 LLM 推理。
 
 const fs = require('fs');
 const path = require('path');
+const { analyzeImpact } = require('./impact_analyzer.js');
 const { runS14 } = require('./s14_contract.js');
 const { splitCases, normalizeDate, determineIdentity, classifyCase } = require('./layers.js');
 
 const ROOT = path.resolve(__dirname, '..');
+
+const RUNTIME_LIMITS = {
+  maxAnalysisRounds: 10,
+  maxLLMCalls: 20,
+  maxCaseTokens: 8000,
+  maxLatencyMs: 30000,
+};
+
+function checkRuntimeGuard(runtime) {
+  if (runtime.analysisRounds > RUNTIME_LIMITS.maxAnalysisRounds) return 'BUDGET_EXCEEDED';
+  if (runtime.llmCalls > RUNTIME_LIMITS.maxLLMCalls) return 'BUDGET_EXCEEDED';
+  if (runtime.caseTokens > RUNTIME_LIMITS.maxCaseTokens) return 'BUDGET_EXCEEDED';
+  if (runtime.latencyMs > RUNTIME_LIMITS.maxLatencyMs) return 'BUDGET_EXCEEDED';
+  return null;
+}
 
 // ============================================================
 // 從陳報檔文本抽取欄位（LLM 責任，本函數為骨架）
@@ -60,6 +77,8 @@ function extractFields(rawText) {
 // ============================================================
 function runIntegration(input) {
   const warnings = [];
+  const runtime = { analysisRounds: 1, llmCalls: 0, caseTokens: 0, latencyMs: 0 };
+  const t0 = Date.now();
 
   // P1 案件切分
   const cases = splitCases(input.raw_text || '');
@@ -69,6 +88,7 @@ function runIntegration(input) {
 
   // 抽取欄位（若未由 LLM 提供）
   const extractedFields = input.fields || extractFields(input.raw_text || '');
+  runtime.caseTokens = Math.ceil((input.raw_text || '').length / 4);
 
   // P2 日期正規化
   if (extractedFields.occurred_raw && !extractedFields.occurred) {
@@ -116,6 +136,22 @@ function runIntegration(input) {
     inquired_identity: identity.primary || input.inquired_identity || '被害人',
   });
 
+  runtime.latencyMs = Date.now() - t0;
+  const guard = checkRuntimeGuard(runtime);
+  if (guard) warnings.push(`Runtime Guard: ${guard}，請人工審查（NEED_REVIEW）`);
+
+  let impact = null;
+  if (input.changedElementIds && Array.isArray(input.changedElementIds)) {
+    // 增量更新：只對變動的 Element 所在 Candidate 做局部重算
+    const elementIndex = {};
+    for (const grp of Object.values(s14.s14_contract?.L7?.result || {})) {
+      for (const el of grp) {
+        elementIndex[el.id] = el;
+      }
+    }
+    impact = analyzeImpact(input.changedElementIds, elementIndex, s14.s14_contract?.L12?.charge_states || {});
+  }
+
   return {
     integration: {
       spec_version: 'v15',
@@ -124,11 +160,17 @@ function runIntegration(input) {
       mode: mode.mode,
       warnings: [...warnings, ...(s14.s14_contract?.warnings || [])],
       s14_contract: s14.s14_contract,
+      runtime,
+      impact,
+      input: {
+        raw_text: input.raw_text || '',
+        fields: extractedFields,
+      },
     },
   };
 }
 
-module.exports = { runIntegration, extractFields };
+module.exports = { runIntegration, extractFields, checkRuntimeGuard, analyzeImpact, RUNTIME_LIMITS };
 
 // CLI
 if (require.main === module) {

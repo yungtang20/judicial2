@@ -8,7 +8,7 @@
       "name": "強制性交罪",
       "article": "刑法第221條第1項",
       "base_penalty": "三年以上十年以下有期徒刑",
-      "statute_of_limitations_years": 10,
+      "statute_of_limitations_years": 30,
       "private_prosecution": false,
       "requires_elements": [
         "E-221-001",
@@ -78,7 +78,7 @@
       "name": "強制性交猥褻罪之加重結果犯",
       "article": "刑法第226條",
       "base_penalty": "致於死：無期或十年以上；致重傷：十年以上；致羞忿自殺/意圖自殺致重傷：十年以上",
-      "statute_of_limitations_years": 20,
+      "statute_of_limitations_years": 30,
       "private_prosecution": false,
       "requires_elements": [
         "E-221-001",
@@ -113,7 +113,7 @@
       "name": "與未滿十四歲男女性交罪",
       "article": "刑法第227條第1項",
       "base_penalty": "三年以上十年以下有期徒刑",
-      "statute_of_limitations_years": 10,
+      "statute_of_limitations_years": 30,
       "private_prosecution": "conditional",
       "requires_elements": [
         "E-221-001",
@@ -131,7 +131,7 @@
       "name": "與十四歲以上未滿十六歲男女性交罪",
       "article": "刑法第227條第3項",
       "base_penalty": "七年以下有期徒刑",
-      "statute_of_limitations_years": 7,
+      "statute_of_limitations_years": 20,
       "private_prosecution": "conditional",
       "requires_elements": [
         "E-221-001",

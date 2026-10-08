@@ -8,7 +8,7 @@
       "name": "搶奪罪",
       "article": "刑法第325條第1項",
       "base_penalty": "六月以上五年以下有期徒刑",
-      "statute_of_limitations_years": 5,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_elements": [
         "E-RB-001"
@@ -26,7 +26,7 @@
       "name": "強盜罪",
       "article": "刑法第328條第1項",
       "base_penalty": "三年以上十年以下有期徒刑",
-      "statute_of_limitations_years": 10,
+      "statute_of_limitations_years": 30,
       "private_prosecution": false,
       "requires_elements": [
         "E-RB-003"
@@ -47,7 +47,7 @@
       "name": "強盜致死罪",
       "article": "刑法第328條第3項",
       "base_penalty": "死刑、無期徒刑或十年以上有期徒刑",
-      "statute_of_limitations_years": 20,
+      "statute_of_limitations_years": 30,
       "private_prosecution": false,
       "requires_elements": [
         "E-RB-003",
@@ -70,7 +70,7 @@
       "name": "擄人勒贖罪",
       "article": "刑法第347條第1項",
       "base_penalty": "死刑、無期徒刑或十年以上有期徒刑",
-      "statute_of_limitations_years": 20,
+      "statute_of_limitations_years": 30,
       "private_prosecution": false,
       "requires_elements": [
         "E-RB-005"

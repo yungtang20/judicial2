@@ -86,9 +86,185 @@ node 01_規則/llm_generator.js
 bash 03_轉換工具/serve.sh 8000
 ```
 
+## 4 層架構
+
+```text
+┌──────────────────────────────┐
+│ UI / Human                   │
+│ 看問題、回答、查看候選法條     │
+└──────────────┬───────────────┘
+               ↓
+┌──────────────────────────────┐
+│ Workflow / State Engine      │
+│ 控制流程、Queue、Revision     │
+└───────┬──────────────┬───────┘
+        ↓              ↓
+┌──────────────┐ ┌──────────────┐
+│ LLM Engine   │ │ Legal Engine │
+│ 理解/推理/問句 │ │ 法源/要件/排序 │
+└──────────────┘ └──────────────┘
+        ↓              ↓
+┌──────────────────────────────┐
+│ Fact Graph / Evidence / DB   │
+│ 保存狀態與歷史               │
+└──────────────────────────────┘
+```
+
+**規則：**
+- Workflow Engine 才能決定下一步。
+- LLM 不能自行決定流程。
+- LLM 不得直接修改 Candidate Status。
+- Legal Engine 不得自行產生自然語言 Question。
+- DB 保存狀態與歷史。
+- Human 是輸入與審查來源之一。
+
+## 8 個 Stage Pipeline
+
+```text
+S1 INGEST
+原始案情 → Claims/Facts/Evidence
+
+S2 ANALYZE
+Fact → Behavior → LegalNorm → Element → Candidate
+
+S3 PLAN
+Candidate → UNKNOWN → CoreIssue → Question Queue
+
+S4 ASK
+Queue → Question → Human
+
+S5 ANSWER
+Human Answer → LLM Extraction → Claims/Facts
+
+S6 UPDATE
+Fact Graph → 找受影響 Behavior/Element/Candidate
+
+S7 DECIDE
+State Engine 判斷：
+├─ 已解決 → 下一題
+├─ 新 UNKNOWN → Question
+├─ Evidence Required → Evidence Request
+├─ Legal Review → NEED_REVIEW
+└─ 無重大變化 → 不重跑
+
+S8 OUTPUT
+Current State → Summary / 條陳 / Full Transcript
+```
+
+**唯一允許重新進行完整 Analysis 的情況：**
+
+```text
+1. 新增重大 Behavior
+2. 新增可能適用的法律領域
+3. 法律版本發生變化
+4. 原 Candidate 被新事實根本推翻
+5. 人工要求重新分析
+```
+
+其他答案只做局部更新。
+
+## Module Capability Boundaries
+
+| 模組 | 可以 | 不可以 |
+|---|---|---|
+| LLM Extraction | 抽取 Claim/Fact | 判定真偽 |
+| LLM Legal | 提出法律分析 | 自創法條 |
+| LLM Question | 產生中立問題 | 決定犯罪成立 |
+| State Engine | 更新狀態/Queue | 自己解釋法律 |
+| Legal Validator | 驗證法源 | 自創法源 |
+| Candidate Engine | 計算排序 | 用 keyword 決定罪名 |
+| Human | 回答/審查 | 不應被系統偽造為 Evidence |
+| DB | 保存狀態 | 不執行 LLM 推理 |
+
+## Question Queue System
+
+每個 Question：
+
+```text
+questionId
+coreIssueId
+elementIds
+candidateIds
+priority
+status
+```
+
+狀態：
+
+```text
+PENDING
+ASKED
+ANSWERED
+OBSOLETE
+NEED_REVIEW
+```
+
+Answer 後，如果該問題已解決：
+
+```text
+Q1 → ANSWERED
+```
+
+如果其他問題因此失效：
+
+```text
+Q2 → OBSOLETE
+```
+
+**禁止重複詢問已經取得且沒有矛盾的資訊。**
+
+## Incremental Updates via Event Triggers
+
+```text
+FactChanged
+     ↓
+Impact Analyzer
+     ↓
+哪些 Element 受影響？
+     ↓
+哪些 Candidate 受影響？
+     ↓
+只更新那些項目
+```
+
+例如：
+
+```text
+sky6619 = 被害人账号
+```
+
+只影響：
+
+```text
+Account Ownership
+Identifiability
+相關 Candidate Elements
+```
+
+不需要重新分析整份案件。
+
+## Runtime Guards
+
+```text
+MAX_ANALYSIS_ROUNDS
+MAX_LLM_CALLS
+MAX_CASE_TOKENS
+MAX_LATENCY
+```
+
+任何一項超過：
+
+```text
+→ STOP
+→ BUDGET_EXCEEDED
+→ NEED_REVIEW
+```
+
+**不能讓 Agent 自己無限 Loop。**
+
 ## 整合執行入口（`01_規則/integration.js`）
 
-從陳報檔（LINE 文本或 CSV）到 S-14 契約的完整流程：
+從陳報檔（LINE 文本或 CSV）到 S-14 契約的完整流程（Full Re-analysis only）：
 
 ```text
 LINE 陳報文本
@@ -101,6 +277,8 @@ LINE 陳報文本
   ↓ S-14 契約（全 17 層）
   ↓ 輸出 JSON
 ```
+
+> ⚠️ 以上為 Full Re-analysis 流程。日常 Answer 後的增量更新請參照上方 8 Stage Pipeline 的 S6/S7。
 
 ## 17 層覆蓋
 

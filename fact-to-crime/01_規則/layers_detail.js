@@ -1,6 +1,7 @@
 // layers_detail.js
 // v15 第 1~6 層細項 + 第 8、14、15 層細項
 // 補足 layers.js 未涵蓋的細項檢查
+// Legal Engine 邊界：執行細項法律檢查；不產生問句、不執行 LLM、不判罪。
 
 const fs = require('fs');
 const path = require('path');

@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "spec_version": "v15",
+  "chapter_id": "criminal_privacy",
+  "charges": [
+    {
+      "id": "charge_peeping_record",
+      "name": "窺視竊錄罪",
+      "article": "刑法第315條之1",
+      "base_penalty": "三年以下有期徒刑、拘役或三十萬元以下罰金",
+      "statute_of_limitations_years": 20,
+      "private_prosecution": true,
+      "requires_elements": ["E-PR-001", "E-PR-006"],
+      "requires_one_of": {
+        "privacy_method": ["E-PR-002"]
+      },
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_sexual_image_recording",
+      "name": "未經同意攝錄性影像罪",
+      "article": "刑法第319條之1",
+      "base_penalty": "三年以下有期徒刑",
+      "statute_of_limitations_years": 20,
+      "private_prosecution": true,
+      "requires_elements": ["E-PR-003", "E-PR-006"],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_sexual_image_distribute",
+      "name": "散布播送性影像罪",
+      "article": "刑法第319條之2、第319條之3",
+      "base_penalty": "五年以下有期徒刑，得併科五十萬元以下罰金",
+      "statute_of_limitations_years": 20,
+      "private_prosecution": true,
+      "requires_elements": ["E-PR-004", "E-PR-006"],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    },
+    {
+      "id": "charge_false_sexual_image",
+      "name": "不實性影像罪",
+      "article": "刑法第319條之4",
+      "base_penalty": "五年以下有期徒刑、拘役或科或併科五十萬元以下罰金",
+      "statute_of_limitations_years": 20,
+      "private_prosecution": true,
+      "requires_elements": ["E-PR-005", "E-PR-006"],
+      "actor_subject_type_required": "自然人",
+      "verification": "verified"
+    }
+  ]
+}

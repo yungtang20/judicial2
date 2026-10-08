@@ -3,6 +3,25 @@
 // 核心要件由 rule_library 處理（question_library.js）
 // 非核心缺口（requires_all_optional、requires_any_result、欄位矛盾、時點空白）由 LLM 生成
 // 本檔為「LLM 生成骨架」，實際 LLM 調用由外部（如 omp eval）注入 prompt 並回傳結果
+// LLM Engine 邊界：可抽取 Claim/Fact、提出分析建議、產生中立問句；不判定真偽、不自創法條、不直接輸出罪名（R30）、不決定流程。API key 由環境變數 AGNES_API_KEY 注入。
+// ===== MODULE: LLM Engine =====
+// 可以 (Can):
+// - 抽取 Claim/Fact（S1/S5）
+// - 結構化事實（4A）
+// - 產生非核心缺口問句（B 階段，依 v15 措辭規則）
+// - 提出法律分析建議（供 Legal Engine 參考）
+//
+// 不可以 (Cannot):
+// - 判定真偽
+// - 自創法條
+// - 直接輸出罪名（R30：由 llm_guard 強制）
+// - 修改 Candidate Status
+// - 決定流程（由 State Engine 控制）
+// - 產生非中立問題（須遵循 R33）
+//
+// 必須由 State Engine 在 S1/S5/S16 階段呼叫
+// API key 由環境變數 AGNES_API_KEY 注入
+// =================================
 
 const fs = require('fs');
 const path = require('path');

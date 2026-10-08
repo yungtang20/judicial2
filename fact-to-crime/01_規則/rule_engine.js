@@ -1,6 +1,24 @@
 // rule_engine.js
 // Implements v14 layers 12 (12A rule calc + 12B counter-evidence) and 13 (exclusions).
 // Pure data + rules, no LLM.
+// 
+// ===== MODULE: Legal Engine =====
+// 可以 (Can):
+// - 計算罪名浮現（12A）
+// - 反證自檢（12B）
+// - 應用互斥/競合規則（13）
+// - 正規化狀態（INFERRED 檢查）
+// - 評估罪名是否成立
+//
+// 不可以 (Cannot):
+// - 直接輸出罪名（R30 由外層強制）
+// - 產生自然語言問題
+// - 修改狀態（僅讀取 stateMap）
+// - 自行決定流程
+// - 接收人類輸入
+//
+// 必須由 State Engine 呼叫，且只能作為 Legal Engine 使用
+// =================================
 
 const fs = require('fs');
 const path = require('path');

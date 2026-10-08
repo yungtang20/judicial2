@@ -145,185 +145,114 @@
 
   // 案情→stateMap 映射（前端骨架：關鍵詞情境比對；正式抽取由 LLM 責任）
   // 情境詞庫：依元件 id 比對案情中的關鍵詞
-  const CONTEXT_KEYWORDS = {
-    'E-221-001': ['性交', '性行為', '做那件事', '性關係', '姦'],
-    'E-221-002': ['強暴', '暴力', '勒住', '壓', '打', '毆'],
-    'E-221-003': ['脅迫', '恐嚇', '威脅', '叫我不', '逼'],
-    'E-221-004': ['恐嚇', '威脅', '警告'],
-    'E-221-005': ['催眠', '麻醉', '下藥', '藥劑', '迷姦'],
-    'E-221-006': ['不同意', '不願意', '違反', '拒絕', '不敢', '不能抗拒', '動不了', '無法抗拒'],
-    'E-221-007': ['故意', '明知', '知道'],
-    'E-TE-001': ['竊取', '偷', '拿走', '取走', '未結帳', '順手'],
-    'E-TE-002': ['離開', '消失', '不見', '短少', '遺失'],
-    'E-TE-003': ['故意', '打算', '意圖', '為了', '未結帳', '未付錢', '沒付'],
-    'E-TE-004': ['受託', '保管', '託付', '交給我'],
-    'E-TE-005': ['業務', '職務'],
-    'E-TE-006': ['故意', '打算', '意圖'],
-    'E-TE-007': ['遺失物', '拾得', '撿到', '撿'],
-    'E-TE-008': ['據為己有', '拿走'],
-    'E-TE-009': ['未遂', '還沒'],
-    'E-TE-010': ['侵入住宅', '闖入', '潛入'],
-    'E-TE-011': ['毀越', '破壞門', '撬開'],
-    'E-TE-012': ['兇器', '刀', '武器'],
-    'E-TE-013': ['結夥', '三人以上', '共同'],
-    'E-TE-014': ['災害', '火災', '水災'],
-    'E-TE-015': ['車站', '機場', '公共場所'],
-    'E-FR-001': ['詐', '騙', '假', '冒'],
-    'E-FR-002': ['交付', '匯款', '轉帳', '付款', '給錢'],
-    'E-FR-003': ['意圖', '故意', '打算'],
-    'E-FR-004': ['取得', '到帳', '收', '收到'],
-    'E-FR-005': ['不正方法', '虛偽資料', '輸入'],
-    'E-FR-006': ['100萬', '一百萬', '高額', '級距'],
-    'E-FR-007': ['冒用', '公務員', '三人以上', '傳播', '散布', '電腦合成', 'deepfake'],
-    'E-FR-008': ['複合', '加重二分之一', '境外'],
-    'E-HD-001': ['傷害', '打', '毆', '推', '掌摑', '撞'],
-    'E-HD-002': ['故意', '明知'],
-    'E-HD-003': ['傷', '瘀', '骨折', '就醫', '驗傷'],
-    'E-HD-004': ['重傷', '殘廢', '機能'],
-    'E-HD-005': ['死亡', '死了', '身亡'],
-    'E-HD-006': ['以物', '藥', '電', '光', '熱氣'],
-    'E-HD-007': ['過失', '不小心', '疏忽'],
-    'E-HD-008': ['過失', '注意'],
-    'E-HD-009': ['重傷', '過失'],
-    'E-HD-010': ['死亡', '過失致死'],
-    'E-HD-011': ['過失', '注意'],
-    'E-HD-012': ['家暴', '家庭暴力', '夫妻', '配偶', '家庭成員'],
-    'E-HD-013': ['未遂'],
-    'E-HD-014': ['保護令', '違反保護令'],
-    'E-HD-015': ['緊急安置', '安置'],
-    'E-HD-016': ['通報'],
-    'E-DF-011': ['侮辱', '罵', '白目', '羞辱', '公然'],
-    'E-DF-012': ['故意', '明知'],
-    'E-DF-013': ['公然', '公開', '眾人', '多人', '在場'],
-    'E-DF-014': ['誹謗', '散布', '指摘', '傳述'],
-    'E-DF-015': ['意圖散布', '故意'],
-    'E-DF-016': ['事實', '具體', '指摘'],
-    'E-DF-017': ['名譽', '受損', '影響'],
-    'E-PD-001': ['吐氣', '酒測', '0.25', '酒精濃度'],
-    'E-PD-002': ['血液', '0.5', '酒精濃度'],
-    'E-PD-003': ['毒品', '愷他命', '安非他命', '服藥', '管制'],
-    'E-PD-004': ['駕駛', '騎', '開車', '動力交通'],
-    'E-PD-005': ['飲酒', '喝酒', '服藥'],
-    'E-PD-006': ['公共危險', '事故', '肇事'],
-    'E-PD-007': ['死傷', '死亡', '受傷'],
-    'E-TR-001': ['0.15', '0.18', '0.2', '酒測'],
-    'E-TR-002': ['0.25', '0.5', '酒測'],
-    'E-TR-003': ['毒品', '服藥'],
-    'E-TR-004': ['追越', '闖紅燈', '逆道', '危險駕駛', '蛇行'],
-    'E-TR-005': ['公共危險'],
-    'E-TR-006': ['逃逸', '離開現場', '未停'],
-    'E-TR-007': ['受傷'],
-    'E-TR-008': ['死亡'],
-    'E-TR-009': ['拒測', '拒絕'],
-    'E-TR-010': ['無照', '未取得駕照'],
-    'E-DR-001': ['海洛因', '鴉片', '嗎啡'],
-    'E-DR-002': ['甲基安非他命', 'LSD', '愷他命', '搖頭丸'],
-    'E-DR-003': ['安非他命', '安非他酮'],
-    'E-DR-004': ['第四級', 'FM2'],
-    'E-DR-005': ['持有', '第一級'],
-    'E-DR-006': ['持有', '第二級'],
-    'E-DR-007': ['販賣', '賣', '第一級'],
-    'E-DR-008': ['販賣', '賣', '第二級'],
-    'E-DR-009': ['販賣', '賣', '第三級'],
-    'E-DR-010': ['販賣', '賣', '第四級'],
-    'E-DR-011': ['意圖販賣', '賣'],
-    'E-DR-012': ['數量', '公克'],
-    'E-DR-013': ['知道', '知道在用'],
-    'E-SH-001': ['性騷擾', '摸', '觸摸', '襲胸', '親', '抱'],
-    'E-SH-002': ['不願意', '不要', '拒絕', '不爽'],
-    'E-SH-003': ['性', '性別', '性暗示'],
-    'E-SH-004': ['不及抗拒', '來不及', '親吻', '擁抱', '觸摸'],
-    'E-SH-005': ['意圖', '故意'],
-    'E-SH-006': ['職場', '公司', '同事', '主管', '僱傭'],
-    'E-SH-007': ['學校', '老師', '學生', '教育'],
-    'E-FG-001': ['偽造', '假造', '製作假'],
-    'E-FG-002': ['變造', '修改'],
-    'E-FG-003': ['印章', '印文', '署押', '簽名'],
-    'E-FG-004': ['損害', '損失', '去借'],
-    'E-FG-005': ['故意', '明知'],
-    'E-FG-006': ['行使', '使用'],
-    'E-FG-007': ['公務員', '登載', '明知不實'],
-    'E-FG-008': ['公印', '政府'],
-    'E-GB-001': ['賭博', '賭', '麻將', '撲克', '簽賭'],
-    'E-GB-002': ['意圖', '想贏'],
-    'E-GB-003': ['財物', '現金', '錢', '籌碼'],
-    'E-GB-004': ['公眾', '場所', '店'],
-    'E-GB-005': ['供給場所', '場所', '租'],
-    'E-GB-006': ['聚眾', '多人'],
-    'E-GB-007': ['意圖營利', '營利'],
-    'E-IN-001': ['恐嚇', '威脅', '警告', '讓我出不了'],
-    'E-IN-002': ['意圖', '故意'],
-    'E-IN-003': ['害怕', '畏怖', '恐懼', '不安'],
-    'E-IN-004': ['交付', '給錢', '錢'],
-    'E-IN-005': ['強制', '強暴', '脅迫'],
-    'E-IN-006': ['拘禁', '關', '鎖', '不准離開'],
-    'E-CP-001': ['入侵', '駭', '破解', '盜用帳號', '登入'],
-    'E-CP-002': ['刪除', '變更', '取得', '電磁紀錄', '帳號資料'],
-    'E-CP-003': ['干擾', '當機', '癱瘓'],
-    'E-CP-004': ['損害', '損失'],
-    'E-CP-005': ['營利', '意圖'],
-    'E-CP-006': ['病毒', '程式', '木馬'],
-    'E-OB-001': ['公然', '猥褻', '裸露'],
-    'E-OB-002': ['意圖', '供人觀覽', '故意'],
-    'E-OB-003': ['散布', '販賣', '陳列', '傳給'],
-    'E-OB-004': ['意圖', '故意'],
-    'E-OB-005': ['兒少', '未滿十八', '性剝削', '性交易'],
-    'E-OB-006': ['性', '性別'],
-    'E-OB-007': ['拍攝', '製造', '重製', '性影像'],
-    'E-RB-001': ['搶奪', '搶'],
-    'E-RB-002': ['意圖', '故意'],
-    'E-RB-003': ['強暴', '脅迫', '藥劑', '催眠'],
-    'E-RB-004': ['意圖', '故意'],
-    'E-RB-005': ['擄人', '勒贖', '綁架'],
-    'E-RB-006': ['勒贖', '意圖'],
-    'E-RB-007': ['防護贓物', '脫免逮捕', '湮滅', '當場施以'],
-    'E-RB-008': ['兇器', '侵入'],
-    'E-RB-009': ['死亡', '重傷'],
-  };
-
+  // 案情→stateMap 映射（R5/8A 修正版）
+  // 前端不做關鍵詞判定——案情文本不是證據，沒有真實來源（筆錄/監視器/物證）一律「資料不足」。
+  // 正式映射由 LLM 依第 4 層抽取（附 source_raw）或人工提供 state_map。
   function mapTextToState(text, elements) {
     const stateMap = {};
     for (const el of (elements.elements || [])) {
-      const kws = CONTEXT_KEYWORDS[el.id] || [];
-      const matched = kws.some(k => text.includes(k));
       stateMap[el.id] = {
-        status: matched ? '推論符合' : '資料不足',
-        source_raw: matched ? ['案情摘要'] : [],
+        status: '資料不足',
+        source_raw: [],
         source_type: '被害人陳述',
-        source_count: matched ? 1 : 0,
+        source_count: 0,
       };
     }
     return stateMap;
   }
 
   window.__ruleEngineRun = function(chapterId, ch, text) {
-    const stateMap = mapTextToState(text, ch.elements);
+    let stateMap = mapTextToState(text, ch.elements);
+
+    // R24/限制14：計算前剔除無證據能力的來源（evidence_admissibility === '排除' 或未審查者）
+    const evidenceWarnings = [];
+    for (const [eid, ev] of Object.entries(stateMap)) {
+      const adm = ev.evidence_admissibility;
+      if (adm === '排除' || !adm) {
+        evidenceWarnings.push({ element: eid, message: '⚠️ R24：證據能力未審查或被排除，不得作為判斷依據（刑訴§155②）' });
+        stateMap[eid] = { status: '資料不足', source_raw: [], source_type: ev.source_type, source_count: 0 };
+      }
+    }
+
+    // 12A 候選罪名
     const candidates = [];
     for (const c of ch.charges.charges) {
       if (c.is_variant_of) continue;
       if (chargeHolds(c, stateMap)) candidates.push(c.id);
     }
+
+    // 12B 反證自檢（R18/R31）：逐一移除必要元件重算，未降級者移出候選
+    const verifiedCandidates = [];
+    const counterEvidence = {};
+    for (const cid of candidates) {
+      const charge = ch.charges.charges.find(c => c.id === cid);
+      const necessary = [...(charge.requires_elements || []), ...(charge.requires_all_optional || [])];
+      const failures = [];
+      for (const eid of necessary) {
+        const mutated = Object.assign({}, stateMap, { [eid]: { status: '不符合', source_raw: [], source_count: 0 } });
+        if (chargeHolds(charge, mutated)) failures.push(eid);
+      }
+      counterEvidence[cid] = { necessary_elements: necessary, failures, has_doubt: failures.length > 0 };
+      if (failures.length === 0) verifiedCandidates.push(cid);
+    }
+
     // 13 互斥：special_over_general
     for (const ex of (ch.exclusions.exclusions || [])) {
       if (ex.type !== 'statute_competition_special_general') continue;
       const special = ex.special_over_general;
-      if (candidates.includes(special)) {
+      if (verifiedCandidates.includes(special)) {
         const generals = (ex.between_charges || []).filter(id => id !== special);
         for (const g of generals) {
-          const idx = candidates.indexOf(g);
-          if (idx >= 0) candidates.splice(idx, 1);
+          const idx = verifiedCandidates.indexOf(g);
+          if (idx >= 0) verifiedCandidates.splice(idx, 1);
         }
       }
     }
+
+    // 8A 狀態判定：可能涉及 / 資料不足 / not_charged
     const chargeStates = {};
     for (const c of ch.charges.charges) {
       if (c.is_variant_of) continue;
-      chargeStates[c.id] = chargeHolds(c, stateMap) ? '可能涉及' : '資料不足';
+      if (chargeHolds(c, stateMap)) {
+        chargeStates[c.id] = '可能涉及';
+      } else {
+        // 檢查原因：必要元件有不符→not_charged；資料不足→資料不足
+        const required = [...(c.requires_elements || []), ...(c.requires_all_optional || [])];
+        let anyNeg = false, anyIns = false;
+        for (const eid of required) {
+          const st = normalizeStatus(stateMap[eid]);
+          if (st === '不符合') anyNeg = true;
+          if (st === '資料不足') anyIns = true;
+        }
+        for (const gid of Object.keys(c.requires_one_of || {})) {
+          const cands = c.requires_one_of[gid] || [];
+          if (!cands.some(eid => isPositive(normalizeStatus(stateMap[eid])))) {
+            if (cands.some(eid => normalizeStatus(stateMap[eid]) === '資料不足')) anyIns = true;
+          }
+        }
+        chargeStates[c.id] = anyNeg ? 'not_charged' : (anyIns ? '資料不足' : 'not_charged');
+      }
     }
+
+    // R43：法人警告（依 stateMap 的 actor_subject_type）
+    const actorWarnings = [];
+    for (const c of ch.charges.charges) {
+      if (!c.actor_subject_type_required) continue;
+      for (const eid of (c.requires_elements || [])) {
+        const el = (ch.elements.elements || []).find(e => e.id === eid);
+        const stateActor = stateMap[eid] && stateMap[eid].actor_subject_type;
+        const actorType = stateActor || (el && el.actor_subject_type);
+        if (actorType === '法人' && c.actor_subject_type_required === '自然人') {
+          actorWarnings.push({ charge: c.id, element: eid, message: '⚠️ R43：法人不得作為行為人元件，需追問實際行為之自然人' });
+        }
+      }
+    }
+
     const openConstitution = (ch.elements.elements || [])
       .filter(e => e.constitution_type === '開放')
-      .map(e => ({ element_id: e.id, element_name: e.name, message: '待法官補充（開放構成要件）' }));
-    return { candidate_charges: candidates, charge_states: chargeStates, open_constitution: openConstitution, actor_warnings: [] };
+      .map(e => ({ element_id: e.id, element_name: e.name, key_doctrines: e.key_doctrines || [], message: '待法官補充（開放構成要件）' }));
+
+    return { candidate_charges: verifiedCandidates, charge_states: chargeStates, counter_evidence: counterEvidence, open_constitution: openConstitution, actor_warnings: actorWarnings, evidence_warnings: evidenceWarnings };
   };
 
   // 16 層：問句（混合方案 C，內嵌 question_library）

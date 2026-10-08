@@ -2,6 +2,7 @@
 // v15 前 15 層（除第 12、13、16 層已在 rule_engine/question_engine 實作）
 // P1 案件切分、P2 日期正規化、1A 身分判定、2A 分流、2D 告訴乃論、
 // 4B 欄位一致性、5 證據能力、14 門檻時效、15 量刑、S-14 契約
+// Legal Engine 邊界：依規則檢查事實與程序要件；不產生問句、不執行 LLM、不判罪。
 
 const fs = require('fs');
 const path = require('path');
@@ -310,21 +311,70 @@ function evidenceAdmissibilityCheck(evidence) {
 // 14 階段門檻與追訴權時效（R25、R28）
 // ============================================================
 // 追訴權時效（刑§80，依最重本刑分級）⚠️ 條文需查證
+// 現行刑§80（民國 94 年 2 月 2 日修正公布、95 年 7 月 1 日施行）：
+// 追訴權，因下列期間內未起訴而消滅：
+// 一、犯最重本刑為死刑、無期徒刑或十年以上有期徒刑之罪者，三十年。但發生死亡結果者，不在此限。
+// 二、犯最重本刑為三年以上十年未滿有期徒刑之罪者，二十年。
+// 三、犯最重本刑為一年以上三年未滿有期徒刑之罪者，十年。
+// 四、犯最重本刑為一年未滿有期徒刑、拘役或罰金之罪者，五年。
+// 前項期間自犯罪成立之日起算。但犯罪行為有繼續之狀態者，自行為終了之日起算。
 const STATUTE_OF_LIMITATIONS_TIERS = [
-  { max_penalty: '死刑、無期徒刑或十年以上有期徒刑', years: 20, tier: 1 },
-  { max_penalty: '三年以上十年未滿有期徒刑', years: 10, tier: 2 },
-  { max_penalty: '一年以上三年未滿有期徒刑', years: 5, tier: 3 },
-  { max_penalty: '一年未滿有期徒刑', years: 3, tier: 4 },
+  { max_penalty: '死刑', years: 30, tier: 1, death_exception: true, note: '但發生死亡結果者，不在此限（無時效）' },
+  { max_penalty: '無期徒刑', years: 30, tier: 1, death_exception: true, note: '但發生死亡結果者，不在此限（無時效）' },
+  { max_penalty: '十年以上有期徒刑', years: 30, tier: 1, death_exception: true, note: '但發生死亡結果者，不在此限（無時效）' },
+  { max_penalty: '三年以上', years: 20, tier: 2, note: '十年未滿有期徒刑' },
+  { max_penalty: '一年以上', years: 10, tier: 3, note: '三年未滿有期徒刑' },
+  { max_penalty: '拘役', years: 5, tier: 4, note: '一年未滿有期徒刑' },
+  { max_penalty: '罰金', years: 5, tier: 4, note: '一年未滿有期徒刑' },
 ];
 
-function statuteOfLimitations(maxPenalty) {
+function statuteOfLimitations(maxPenalty, hasDeathResult = false) {
   if (!maxPenalty) return { years: null, warning: '⚠️ 資料不足' };
-  for (const tier of STATUTE_OF_LIMITATIONS_TIERS) {
-    if (maxPenalty.includes(tier.max_penalty.split('或')[0]) || maxPenalty.includes(tier.max_penalty)) {
-      return { years: tier.years, tier: tier.tier, warning: '' };
-    }
+  // 解析最高本刑年數（依刑§80 按最重本刑分級）
+  // 例：「三年以上十年以下有期徒刑」→ 最高 10 年；「五年以下有期徒刑」→ 最高 5 年
+  let maxYears = null;
+  const lifeImprison = /無期徒刑|死刑/.test(maxPenalty);
+  // 找所有「N 年」數字，取最大（有期徒刑的刑度上限）
+  const yearMatches = [...maxPenalty.matchAll(/(\d+|[一二三四五六七八九十]+)年以上|十年以上/g)];
+  // 中文數字解析
+  const cnNum = { '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9, '十': 10 };
+  function parseCn(s) {
+    if (/^\d+$/.test(s)) return parseInt(s);
+    if (s === '十') return 10;
+    const m = s.match(/^([一二三四五六七八九十])十([一二三四五六七八九十])?$/);
+    if (m) return (cnNum[m[1]] || 1) * 10 + (m[2] ? cnNum[m[2]] : 0);
+    return cnNum[s] || null;
   }
-  return { years: null, warning: '⚠️ 刑度級距未對應（刑§80 ⚠️ 需查證）' };
+  // 「十年以上」特別處理
+  if (/十年以上/.test(maxPenalty)) maxYears = 10;
+  for (const m of maxPenalty.matchAll(/([一二三四五六七八九十\d]+)年以上/g)) {
+    const v = parseCn(m[1]);
+    if (v !== null && (maxYears === null || v > maxYears)) maxYears = v;
+  }
+  // 「N 年以下」取上限
+  for (const m of maxPenalty.matchAll(/([一二三四五六七八九十\d]+)年以下/g)) {
+    const v = parseCn(m[1]);
+    if (v !== null && (maxYears === null || v > maxYears)) maxYears = v;
+  }
+
+  // 刑§80 分級（依最高本刑年數）
+  if (lifeImprison || (maxYears !== null && maxYears >= 10)) {
+    // 第 1 款：死刑、無期徒刑或十年以上有期徒刑 → 30 年
+    if (hasDeathResult) {
+      return { years: null, tier: 1, no_limitation: true, warning: '', note: '刑§80①但書：發生死亡結果者，追訴權不因時效消滅' };
+    }
+    return { years: 30, tier: 1, warning: '', note: '最重本刑死刑/無期/十年以上 → 30 年' };
+  }
+  if (maxYears !== null && maxYears >= 3 && maxYears < 10) {
+    return { years: 20, tier: 2, warning: '', note: '最重本刑三年以上十年未滿 → 20 年' };
+  }
+  if (maxYears !== null && maxYears >= 1 && maxYears < 3) {
+    return { years: 10, tier: 3, warning: '', note: '最重本刑一年以上三年未滿 → 10 年' };
+  }
+  if (maxYears !== null && maxYears < 1) {
+    return { years: 5, tier: 4, warning: '', note: '最重本刑一年未滿/拘役/罰金 → 5 年' };
+  }
+  return { years: null, warning: '⚠️ 刑度級距未對應（刑§80 現行：30/20/10/5 年）' };
 }
 
 // 告訴期間（刑訴§237：知悉犯人時起六個月）✓
@@ -432,6 +482,23 @@ function runAllLayers(input) {
     name: '量刑層（R11）',
     result: sentencingFactors(input.raw_text),
     warnings: [],
+    german_three_stage: {
+      name: '德日三階層審查（構成要件該當性 → 違法性 → 有責性）',
+      result: {
+        tatbestandsmassigkeit: '依 L7/L9 小前提推論',
+        rechtswidrigkeit: '依 L11 阻卻事由審查',
+        schuld: '依 L10 犯罪形態與刑訴§95 審查',
+        note: '三段階若缺任一階層，犯罪不成立'
+      }
+    },
+    causation: {
+      name: '因果論（相當因果 + 結果客觀歸責）',
+      result: {
+        adequate_causal: '依 L8E 因果 warning 推論',
+        objective_impute: '依結果發生之歸責判斷',
+        note: '無因果即未遂或無罪'
+      }
+    }
   };
 
   return out;

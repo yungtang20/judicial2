@@ -1,5 +1,6 @@
 // audit.js — v15 第十節指標自檢
 // 檢查 rule_library 問句的法律用語洩漏（R33）、誘導題（R33）、元件名稱洩漏
+// Verification 邊界：僅審計，不產生問句、不執行 LLM、不修改任何狀態。
 
 const fs = require('fs');
 const path = require('path');
@@ -24,8 +25,24 @@ const LEGAL_TERMS = [
   '依法逮捕', '依法拘提', '現行犯', '執行搜索',
 ];
 
-// 元件名稱黑名單（元件庫 element name 不應出現在問句中）
-const ELEMENT_NAMES = [];
+// 元件名稱黑名單（元件庫 element name 不應出現在問句中；R33）
+// 從 00_資料/罪章/*/elements.json 動態載入
+function loadElementNames() {
+  const names = [];
+  const base = path.join(__dirname, '..', '00_資料', '罪章');
+  try {
+    for (const chapter of fs.readdirSync(base)) {
+      const p = path.join(base, chapter, 'elements.json');
+      if (!fs.existsSync(p)) continue;
+      const data = JSON.parse(fs.readFileSync(p, 'utf-8'));
+      for (const el of (data.elements || [])) {
+        if (el.name && el.name.length >= 2) names.push(el.name);
+      }
+    }
+  } catch (e) { /* ignore */ }
+  return names;
+}
+const ELEMENT_NAMES = loadElementNames();
 
 // 誘導題黑名單（v15 第九節 5：禁止選項題、誘導題、預設答案題）
 const LEADING_PATTERNS = [
@@ -66,6 +83,18 @@ function audit() {
           term,
           text: q.text,
           message: `R33 問句含法律用語：${term}`
+        });
+      }
+    }
+    // R33：元件名稱不應出現在問句中
+    for (const name of ELEMENT_NAMES) {
+      if (q.text.includes(name)) {
+        issues.push({
+          type: 'element_name_leak',
+          section: q.section,
+          term: name,
+          text: q.text,
+          message: `R33 問句含元件名稱：${name}`
         });
       }
     }

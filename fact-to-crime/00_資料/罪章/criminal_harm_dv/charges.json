@@ -8,7 +8,7 @@
       "name": "傷害罪",
       "article": "刑法第277條第1項",
       "base_penalty": "三年以下有期徒刑、拘役或一萬元以下罰金",
-      "statute_of_limitations_years": 5,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_elements": [
         "E-HD-001",
@@ -51,7 +51,7 @@
       "name": "重傷害",
       "article": "刑法第277條第2項",
       "base_penalty": "一年以上七年以下有期徒刑",
-      "statute_of_limitations_years": 7,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_elements": [
         "E-HD-001",
@@ -99,7 +99,7 @@
       "name": "過失傷害",
       "article": "刑法第284條前段",
       "base_penalty": "一年以下有期徒刑、拘役或罰金",
-      "statute_of_limitations_years": 3,
+      "statute_of_limitations_years": 10,
       "private_prosecution": true,
       "requires_elements": [
         "E-HD-007",
@@ -119,7 +119,7 @@
       "name": "過失致重傷害",
       "article": "刑法第284條後段",
       "base_penalty": "二年以下有期徒刑、拘役或罰金",
-      "statute_of_limitations_years": 3,
+      "statute_of_limitations_years": 10,
       "private_prosecution": true,
       "requires_elements": [
         "E-HD-007",
@@ -141,7 +141,7 @@
       "name": "過失致死",
       "article": "刑法第287條前段",
       "base_penalty": "五年以下有期徒刑",
-      "statute_of_limitations_years": 7,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_elements": [
         "E-HD-010"
@@ -184,7 +184,7 @@
       "name": "違反保護令罪",
       "article": "家庭暴力防治法第61條",
       "base_penalty": "三年以下有期徒刑、拘役或科或併科十萬元以下罰金",
-      "statute_of_limitations_years": 5,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_elements": [
         "E-HD-014"

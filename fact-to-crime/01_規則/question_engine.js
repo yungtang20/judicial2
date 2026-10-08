@@ -1,7 +1,25 @@
 // question_engine.js
 // 混合問句方案（C）：引擎依 rule_engine 的缺口 + question_library 查表產出問句
 // 核心要件（necessary + requires_one_of 群組）→ 查表
-// 其他缺口 → 標 `generated_by: llm`，由 LLM 依 v15 第九節措辭規則生成
+// 其他缺口 → 標 `generated_by: llm`，由 LLM 依 v15 第九節措儀規則生成
+// 
+// ===== MODULE: LLM Question (rule-driven template) =====
+// 可以 (Can):
+// - 依 rule_engine 的缺口找出缺失元件
+// - 依 question_library 查表產出標準問句
+// - 標記非核心缺口由 LLM 生成
+// - 去重（v15 第九節 14）
+//
+// 不可以 (Cannot):
+// - 自行決定犯罪成立（僅標記缺口）
+// - 自創法條（僅引用既有元件/罪名）
+// - 產生非中立問題（須遵循 R33）
+// - 修改 Fact Graph 或 Candidate 狀態
+// - 決定流程（由 State Engine 控制）
+//
+// 必須由 State Engine 在 S3 PLAN / S16 階段呼叫
+// =================================
+
 
 const fs = require('fs');
 const path = require('path');
@@ -162,7 +180,33 @@ function generateQuestions(chapterId, stateMap, charges, elements, inquiredIdent
   return out;
 }
 
-module.exports = { generateQuestions, lookupQuestions, loadChapters };
+module.exports = { generateQuestions, lookupQuestions, loadChapters, buildQuestionQueue, updateQuestionStatus };
+
+const QUESTION_STATUS = ['PENDING', 'ASKED', 'ANSWERED', 'OBSOLETE', 'NEED_REVIEW'];
+
+function buildQuestionQueue(questions) {
+  return questions.map((q, idx) => ({
+    questionId: `Q${String(idx + 1).padStart(3, '0')}`,
+    coreIssueId: q.bound_element || q.bound_charge || null,
+    elementIds: q.bound_element ? [q.bound_element] : [],
+    candidateIds: q.bound_charge ? [q.bound_charge] : [],
+    priority: q.priority != null ? q.priority : 5,
+    status: 'PENDING',
+    text: q.text,
+    stage: q.stage,
+    generated_by: q.generated_by,
+    identity_sensitive: q.identity_sensitive,
+    neutral: q.neutral,
+  }));
+}
+
+function updateQuestionStatus(queue, questionId, newStatus) {
+  const q = queue.find(item => item.questionId === questionId);
+  if (!q) return false;
+  if (!QUESTION_STATUS.includes(newStatus)) return false;
+  q.status = newStatus;
+  return true;
+}
 
 // CLI: node question_engine.js <chapter_id> <state_map.json> [identity]
 if (require.main === module) {

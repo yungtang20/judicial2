@@ -27,7 +27,7 @@
       "name": "危險駕駛公共危險",
       "article": "刑法第185-4條",
       "base_penalty": "五年以下有期徒刑",
-      "statute_of_limitations_years": 5,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_elements": [
         "E-TR-004",

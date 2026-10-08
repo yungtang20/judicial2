@@ -8,7 +8,7 @@
       "name": "竊盜罪",
       "article": "刑法第320條第1項",
       "base_penalty": "五年以下有期徒刑、拘役或罰金",
-      "statute_of_limitations_years": 10,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_elements": [
         "E-TE-001",
@@ -50,7 +50,7 @@
       "name": "侵占罪",
       "article": "刑法第335條",
       "base_penalty": "五年以下有期徒刑",
-      "statute_of_limitations_years": 10,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_one_of": {
         "embezzle_type": [
@@ -69,7 +69,7 @@
       "name": "侵占遺失物",
       "article": "刑法第337條",
       "base_penalty": "六月以下有期徒刑、拘役或罰金",
-      "statute_of_limitations_years": 3,
+      "statute_of_limitations_years": 5,
       "private_prosecution": false,
       "requires_elements": [
         "E-TE-007"
@@ -87,7 +87,7 @@
       "name": "加重竊盜罪",
       "article": "刑法第321條第1項",
       "base_penalty": "六月以上五年以下有期徒刑，得併科五十萬元以下罰金",
-      "statute_of_limitations_years": 5,
+      "statute_of_limitations_years": 20,
       "private_prosecution": false,
       "requires_elements": [
         "E-TE-001",

@@ -29,7 +29,7 @@
       "name": "性騷擾罪",
       "article": "性騷擾防治法第25條",
       "base_penalty": "二年以下有期徒刑、拘役或科或併科十萬元以下罰金",
-      "statute_of_limitations_years": 5,
+      "statute_of_limitations_years": 10,
       "private_prosecution": true,
       "requires_elements": [
         "E-SH-001",
