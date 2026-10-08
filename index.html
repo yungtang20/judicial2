@@ -329,7 +329,7 @@
   // 16 層：問句（混合方案 C，內嵌 question_library）
   let QLIB = null;
   window.__loadQuestionLibrary = async function() {
-    const res = await fetch('01_規則/question_library.js');
+    const res = await fetch('fact-to-crime/01_規則/question_library.js');
     const src = await res.text();
     // 執行 module.exports → 提取物件
     const fn = new Function(src.replace(/module\.exports\s*=\s*/, 'return '));
@@ -412,14 +412,14 @@
   // ===== 載入全部罪章 =====
   async function loadAll() {
     try {
-      const res = await fetch('00_資料/罪章/');
+      const res = await fetch('fact-to-crime/00_資料/罪章/');
       // fetch 目錄清單不一定可用；改用已知 15 章
       const known = ['criminal_221','criminal_computer','criminal_defame','criminal_drugs','criminal_forgery','criminal_fraud','criminal_gambling','criminal_harm_dv','criminal_intimidation','criminal_obscenity','criminal_public_danger','criminal_robbery','criminal_sexual_harassment','criminal_theft_embezzle','criminal_traffic'];
       for (const ch of known) {
         const [els, chs, exs] = await Promise.all([
-          fetch(`00_資料/罪章/${ch}/elements.json`).then(r => r.json()),
-          fetch(`00_資料/罪章/${ch}/charges.json`).then(r => r.json()),
-          fetch(`00_資料/罪章/${ch}/exclusions.json`).then(r => r.json()),
+          fetch(`fact-to-crime/00_資料/罪章/${ch}/elements.json`).then(r => r.json()),
+          fetch(`fact-to-crime/00_資料/罪章/${ch}/charges.json`).then(r => r.json()),
+          fetch(`fact-to-crime/00_資料/罪章/${ch}/exclusions.json`).then(r => r.json()),
         ]);
         state.chapters[ch] = { elements: els, charges: chs, exclusions: exs };
       }
