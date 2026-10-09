@@ -1,5 +1,28 @@
 # 警詢筆錄 AI 輔助產出系統
 
+## JUDICIAL2 本機 Gate Pipeline
+
+案件資料預設只在本機處理。啟動方式：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start_web.ps1
+```
+
+網頁位址：`http://127.0.0.1:8787/`。Gate 1 可選擇連接本機
+OpenAI-compatible 模型，但 `JUDICIAL2_LOCAL_LLM_ENDPOINT` 只接受 loopback
+位址。非本機模型端點會被拒絕。
+
+公開法條資料可用 `twlegalrag` 建置：
+
+```powershell
+python law\import_laws.py
+python law\sync_twlegalrag.py
+```
+
+同步查詢只包含法規名稱與條次，不包含案件摘要、姓名、案號或其他偵查資料。
+同步取得的是現行整編版本，行為時法仍須另查。Gate 2 的所有候選維持
+`NEED_REVIEW`，不得視為犯罪成立或正式法律意見。
+
 **🌐 正式站（線上使用）：https://judicial-prod.onrender.com/**
 
 事實→元件→罪名比對引擎（v15，17 層）。LLM 抽取事實與映射元件；罪名由規則引擎計算；問句由缺口產生。**LLM 不直接輸出罪名**（R30）。輸出僅供偵查參考，最終認定屬檢察官與法官。

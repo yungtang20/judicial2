@@ -1,0 +1,215 @@
+{
+  "purpose": "synthetic test data only, not real records",
+  "samples": [
+    {
+      "id": "pii-id-card-positive-001",
+      "kind": "id_card",
+      "case_type": "positive",
+      "input": "身分證：A000000001",
+      "expected": "身分證：A*001"
+    },
+    {
+      "id": "pii-id-card-positive-002",
+      "kind": "id_card",
+      "case_type": "positive",
+      "input": "身分證：B000000002",
+      "expected": "身分證：B*002"
+    },
+    {
+      "id": "pii-id-card-positive-003",
+      "kind": "id_card",
+      "case_type": "positive",
+      "input": "身分證：C000000003",
+      "expected": "身分證：C*003"
+    },
+    {
+      "id": "pii-id-card-negative-001",
+      "kind": "id_card",
+      "case_type": "negative",
+      "input": "身分證測試：TEST-ID-001",
+      "expected": "身分證測試：TEST-ID-001"
+    },
+    {
+      "id": "pii-id-card-negative-002",
+      "kind": "id_card",
+      "case_type": "negative",
+      "input": "身分證測試：TEST-ID-002",
+      "expected": "身分證測試：TEST-ID-002"
+    },
+    {
+      "id": "pii-id-card-negative-003",
+      "kind": "id_card",
+      "case_type": "negative",
+      "input": "身分證測試：TEST-ID-003",
+      "expected": "身分證測試：TEST-ID-003"
+    },
+    {
+      "id": "pii-phone-positive-001",
+      "kind": "phone",
+      "case_type": "positive",
+      "input": "電話：0000-000-001",
+      "expected": "電話：*********001"
+    },
+    {
+      "id": "pii-phone-positive-002",
+      "kind": "phone",
+      "case_type": "positive",
+      "input": "電話：0000-000-002",
+      "expected": "電話：*********002"
+    },
+    {
+      "id": "pii-phone-positive-003",
+      "kind": "phone",
+      "case_type": "positive",
+      "input": "電話：0000-000-003",
+      "expected": "電話：*********003"
+    },
+    {
+      "id": "pii-phone-negative-001",
+      "kind": "phone",
+      "case_type": "negative",
+      "input": "電話測試：TEST-PHONE-001",
+      "expected": "電話測試：TEST-PHONE-001"
+    },
+    {
+      "id": "pii-phone-negative-002",
+      "kind": "phone",
+      "case_type": "negative",
+      "input": "電話測試：TEST-PHONE-002",
+      "expected": "電話測試：TEST-PHONE-002"
+    },
+    {
+      "id": "pii-phone-negative-003",
+      "kind": "phone",
+      "case_type": "negative",
+      "input": "電話測試：TEST-PHONE-003",
+      "expected": "電話測試：TEST-PHONE-003"
+    },
+    {
+      "id": "pii-passport-positive-001",
+      "kind": "passport",
+      "case_type": "positive",
+      "input": "護照：TESTPP001",
+      "expected": "護照：******001"
+    },
+    {
+      "id": "pii-passport-positive-002",
+      "kind": "passport",
+      "case_type": "positive",
+      "input": "護照：TESTPP002",
+      "expected": "護照：******002"
+    },
+    {
+      "id": "pii-passport-positive-003",
+      "kind": "passport",
+      "case_type": "positive",
+      "input": "護照：TESTPP003",
+      "expected": "護照：******003"
+    },
+    {
+      "id": "pii-passport-negative-001",
+      "kind": "passport",
+      "case_type": "negative",
+      "input": "護照測試：TEST-PASSPORT-001",
+      "expected": "護照測試：TEST-PASSPORT-001"
+    },
+    {
+      "id": "pii-passport-negative-002",
+      "kind": "passport",
+      "case_type": "negative",
+      "input": "護照測試：TEST-PASSPORT-002",
+      "expected": "護照測試：TEST-PASSPORT-002"
+    },
+    {
+      "id": "pii-passport-negative-003",
+      "kind": "passport",
+      "case_type": "negative",
+      "input": "護照測試：TEST-PASSPORT-003",
+      "expected": "護照測試：TEST-PASSPORT-003"
+    },
+    {
+      "id": "pii-plate-positive-001",
+      "kind": "plate",
+      "case_type": "positive",
+      "input": "車號：TST-0001",
+      "expected": "車號：*****001"
+    },
+    {
+      "id": "pii-plate-positive-002",
+      "kind": "plate",
+      "case_type": "positive",
+      "input": "車號：TST-0002",
+      "expected": "車號：*****002"
+    },
+    {
+      "id": "pii-plate-positive-003",
+      "kind": "plate",
+      "case_type": "positive",
+      "input": "車號：TST-0003",
+      "expected": "車號：*****003"
+    },
+    {
+      "id": "pii-plate-negative-001",
+      "kind": "plate",
+      "case_type": "negative",
+      "input": "車號測試：TEST-PLATE-001",
+      "expected": "車號測試：TEST-PLATE-001"
+    },
+    {
+      "id": "pii-plate-negative-002",
+      "kind": "plate",
+      "case_type": "negative",
+      "input": "車號測試：TEST-PLATE-002",
+      "expected": "車號測試：TEST-PLATE-002"
+    },
+    {
+      "id": "pii-plate-negative-003",
+      "kind": "plate",
+      "case_type": "negative",
+      "input": "車號測試：TEST-PLATE-003",
+      "expected": "車號測試：TEST-PLATE-003"
+    },
+    {
+      "id": "pii-plain-positive-001",
+      "kind": "plain",
+      "case_type": "positive",
+      "input": "一般測試文字一",
+      "expected": "一般測試文字一"
+    },
+    {
+      "id": "pii-plain-positive-002",
+      "kind": "plain",
+      "case_type": "positive",
+      "input": "一般測試文字二",
+      "expected": "一般測試文字二"
+    },
+    {
+      "id": "pii-plain-positive-003",
+      "kind": "plain",
+      "case_type": "positive",
+      "input": "一般測試文字三",
+      "expected": "一般測試文字三"
+    },
+    {
+      "id": "pii-plain-negative-001",
+      "kind": "plain",
+      "case_type": "negative",
+      "input": "格式邊界測試一",
+      "expected": "格式邊界測試一"
+    },
+    {
+      "id": "pii-plain-negative-002",
+      "kind": "plain",
+      "case_type": "negative",
+      "input": "格式邊界測試二",
+      "expected": "格式邊界測試二"
+    },
+    {
+      "id": "pii-plain-negative-003",
+      "kind": "plain",
+      "case_type": "negative",
+      "input": "格式邊界測試三",
+      "expected": "格式邊界測試三"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JUDICIAL2 Gate Pipeline</title>
+  <style>
+    body{font-family:system-ui,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;background:#f6f7f9;color:#17202a}
+    textarea,pre{width:100%;box-sizing:border-box;padding:1rem;border:1px solid #ccd1d1;border-radius:.5rem;background:white}
+    textarea{min-height:14rem} pre{white-space:pre-wrap;overflow-wrap:anywhere;min-height:8rem}
+    button{padding:.7rem 1.2rem;border:0;border-radius:.4rem;background:#174ea6;color:white;cursor:pointer}
+    .notice{padding:1rem;background:#fff4ce;border-radius:.5rem;margin:1rem 0}.row{display:flex;gap:1rem;align-items:center;margin:1rem 0}
+  </style>
+</head>
+<body>
+  <h1>JUDICIAL2 Gate Pipeline</h1>
+  <div class="notice">案件資料只送到本機服務。啟用模型時，模型端點必須是 127.0.0.1、localhost 或 ::1。</div>
+  <label for="source">去識別化案件文字</label>
+  <textarea id="source" autocomplete="off"></textarea>
+  <div class="row">
+    <label><input id="use-model" type="checkbox"> 使用本機 AI 抽取 Gate 1 欄位</label>
+    <button id="run" type="button">執行 Gate 1 → 2 → 3</button>
+  </div>
+  <pre id="result" aria-live="polite">尚未執行</pre>
+  <script>
+    document.getElementById('run').addEventListener('click', async () => {
+      const result = document.getElementById('result');
+      result.textContent = '執行中…';
+      try {
+        const response = await fetch('/api/gates', {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({source: document.getElementById('source').value, use_model: document.getElementById('use-model').checked})
+        });
+        const payload = await response.json();
+        result.textContent = JSON.stringify(payload, null, 2);
+      } catch (error) { result.textContent = String(error); }
+    });
+  </script>
+</body>
+</html>

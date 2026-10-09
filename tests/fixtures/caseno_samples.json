@@ -1,0 +1,221 @@
+{
+  "purpose": "synthetic test data only, not real records",
+  "samples": [
+    {
+      "id": "caseno-z-positive-001",
+      "kind": "z_e",
+      "case_type": "positive",
+      "input": "ZTEST00001",
+      "expected_kind": "Z字e化案號",
+      "expected_status": "符合",
+      "expected_normalized": "ZTEST00001"
+    },
+    {
+      "id": "caseno-z-positive-002",
+      "kind": "z_e",
+      "case_type": "positive",
+      "input": "Z TEST 00002",
+      "expected_kind": "Z字e化案號",
+      "expected_status": "符合",
+      "expected_normalized": "ZTEST00002"
+    },
+    {
+      "id": "caseno-z-positive-003",
+      "kind": "z_e",
+      "case_type": "positive",
+      "input": "ZTEST\n00003",
+      "expected_kind": "Z字e化案號",
+      "expected_status": "符合",
+      "expected_normalized": "ZTEST00003"
+    },
+    {
+      "id": "caseno-z-negative-001",
+      "kind": "z_e",
+      "case_type": "negative",
+      "input": "ZTEST01",
+      "expected_kind": "Z字e化案號",
+      "expected_status": "不符",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-z-negative-002",
+      "kind": "z_e",
+      "case_type": "negative",
+      "input": "ZTEST002",
+      "expected_kind": "Z字e化案號",
+      "expected_status": "不符",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-z-negative-003",
+      "kind": "z_e",
+      "case_type": "negative",
+      "input": "ZTEST000003",
+      "expected_kind": "Z字e化案號",
+      "expected_status": "不符",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-165-positive-001",
+      "kind": "165",
+      "case_type": "positive",
+      "input": "0000000001",
+      "expected_kind": "165案號",
+      "expected_status": "符合",
+      "expected_normalized": "0000000001"
+    },
+    {
+      "id": "caseno-165-positive-002",
+      "kind": "165",
+      "case_type": "positive",
+      "input": "00000 00002",
+      "expected_kind": "165案號",
+      "expected_status": "符合",
+      "expected_normalized": "0000000002"
+    },
+    {
+      "id": "caseno-165-positive-003",
+      "kind": "165",
+      "case_type": "positive",
+      "input": "00000\n00003",
+      "expected_kind": "165案號",
+      "expected_status": "符合",
+      "expected_normalized": "0000000003"
+    },
+    {
+      "id": "caseno-165-negative-001",
+      "kind": "165",
+      "case_type": "negative",
+      "input": "000000001",
+      "expected_kind": "165案號",
+      "expected_status": "不符",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-165-negative-002",
+      "kind": "165",
+      "case_type": "negative",
+      "input": "00000000001",
+      "expected_kind": "165案號",
+      "expected_status": "不符",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-165-negative-003",
+      "kind": "165",
+      "case_type": "negative",
+      "input": "00000001",
+      "expected_kind": "165案號",
+      "expected_status": "不符",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-women-children-positive-001",
+      "kind": "women_children",
+      "case_type": "positive",
+      "input": "TEST婦幼POS001",
+      "expected_kind": "婦幼案號",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-women-children-positive-002",
+      "kind": "women_children",
+      "case_type": "positive",
+      "input": "TEST 婦幼 POS 002",
+      "expected_kind": "婦幼案號",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-women-children-positive-003",
+      "kind": "women_children",
+      "case_type": "positive",
+      "input": "TEST婦幼\nPOS003",
+      "expected_kind": "婦幼案號",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-women-children-negative-001",
+      "kind": "women_children",
+      "case_type": "negative",
+      "input": "TEST婦幼NEG001",
+      "expected_kind": "婦幼案號",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-women-children-negative-002",
+      "kind": "women_children",
+      "case_type": "negative",
+      "input": "TEST 婦幼 NEG 002",
+      "expected_kind": "婦幼案號",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-women-children-negative-003",
+      "kind": "women_children",
+      "case_type": "negative",
+      "input": "TEST婦幼\nNEG003",
+      "expected_kind": "婦幼案號",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-unknown-positive-001",
+      "kind": "unknown",
+      "case_type": "positive",
+      "input": "TESTUNKNOWNPOS001",
+      "expected_kind": "未知",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-unknown-positive-002",
+      "kind": "unknown",
+      "case_type": "positive",
+      "input": "TEST UNKNOWN POS 002",
+      "expected_kind": "未知",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-unknown-positive-003",
+      "kind": "unknown",
+      "case_type": "positive",
+      "input": "TESTUNKNOWN\nPOS003",
+      "expected_kind": "未知",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-unknown-negative-001",
+      "kind": "unknown",
+      "case_type": "negative",
+      "input": "TESTUNKNOWNNEG001",
+      "expected_kind": "未知",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-unknown-negative-002",
+      "kind": "unknown",
+      "case_type": "negative",
+      "input": "TEST UNKNOWN NEG 002",
+      "expected_kind": "未知",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    },
+    {
+      "id": "caseno-unknown-negative-003",
+      "kind": "unknown",
+      "case_type": "negative",
+      "input": "TESTUNKNOWN\nNEG003",
+      "expected_kind": "未知",
+      "expected_status": "UNKNOWN",
+      "expected_normalized": null
+    }
+  ]
+}

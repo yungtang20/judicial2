@@ -48,7 +48,7 @@ function assertEq(actual, expected, label, path_so_far = '') {
 
 function runCase(casePath) {
   const tc = JSON.parse(fs.readFileSync(casePath, 'utf-8'));
-  if (!tc.case_id) return null; // skip S14 input files
+  if (!tc.case_id) return { skip: true, file: path.basename(casePath), reason: 'integration input; no rule-engine expected block' };
   const chapterName = inferChapter(tc.case_id);
   if (!chapterName) {
     return { case_id: tc.case_id, error: 'cannot infer chapter from case_id' };
@@ -81,11 +81,15 @@ function runCase(casePath) {
 
 function main() {
   const caseFiles = fs.readdirSync(CASES_DIR).filter(f => f.endsWith('.json')).sort();
-  let pass = 0, fail = 0;
+  let pass = 0, fail = 0, skip = 0;
   const failures = [];
   for (const f of caseFiles) {
     const r = runCase(path.join(CASES_DIR, f));
-    if (!r) continue; // skip S14 input files
+    if (r.skip) {
+      skip++;
+      console.log(`[SKIP] ${r.file}: ${r.reason}`);
+      continue;
+    }
     if (r.error) {
       fail++;
       failures.push(r);
@@ -107,7 +111,7 @@ function main() {
       }
     }
   }
-  console.log(`\n[SUMMARY] ${pass} passed, ${fail} failed out of ${caseFiles.length} cases`);
+  console.log(`\n[SUMMARY] ${pass} passed, ${fail} failed, ${skip} skipped out of ${caseFiles.length} files`);
   if (fail > 0) process.exit(1);
 }
 

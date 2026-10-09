@@ -1,0 +1,301 @@
+version: 2026-10-09-v19
+enums:
+  acceptance_type:
+  - value: 受理
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+    - section: '4.2'
+      source_text: |-
+        | 受理 | 依規定受理之刑事案件 | 可歸 A 或 B |
+  - value: 告訴
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+    - section: '4.2'
+      source_text: |-
+        | 告訴 | 告訴權人之告訴 | 可歸 A 或 B（見 4.3 第 5 點） |
+  - value: 告發
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+    - section: '4.2'
+      source_text: |-
+        | 告發 | 公務員或他人依職務或義務之告發 | 刑事內容可歸 A 或 B，告發人不視為被害人 |
+  - value: 報案
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+  - value: 備案
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+    - section: '4.2'
+      source_text: |-
+        | 備案 | 登記備查 | 無案號者排除於刑事流程，刑事內容列入待辦清單（見 G1-R22）；有案號者見 4.3 第 1 點 |
+  - value: 通報
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+  - value: 申訴
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+    - section: '4.2'
+      source_text: |-
+        | 申訴 | 4.2 申訴移出報案列，另列性騷擾申訴一列，依 G1-R24 |
+  - value: 函送
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+  - value: 移送
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+  - value: 查獲
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+    - section: '4.2'
+      source_text: |-
+        | 查獲 | 警方現行犯或通緝等之查獲 | 可歸 B（通緝查獲須附通緝書，見 G1-R14） |
+  - value: 保護令
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+    - section: '4.2'
+      source_text: |-
+        | 保護令 | 聲請保護令之紀錄 | 依 G1-R23，不視為告訴 |
+  - value: 受理（依案號推定）
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+    - section: '4.2'
+      source_text: |-
+        | 受理（依案號推定） | 報告文字非受理，但有案號且事實含刑事行為 | 依事實歸 A 或 B |
+  - value: 其他
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **受理性質**（決定路由與告訴狀態）值域：受理、告訴、告發、報案、備案、通報、申訴、函送、移送、查獲、保護令、受理（依案號推定）、其他。
+  route:
+  - value: A
+    source_refs:
+    - section: '4.3'
+      source_text: |-
+        | A | 事實含刑事行為，有被害人（依 4.1），受理性質為受理、告訴、告發或受理（依案號推定） | Gate 1 → Gate 2 → Gate 3 | 詐欺、竊盜、傷害、妨害性隱私、業務侵占、妨害電腦使用、信用卡盜刷已受理 |
+    - section: '6.6'
+      source_text: |2-
+          路由：A／B／C／D／E
+  - value: B
+    source_refs:
+    - section: '4.3'
+      source_text: |-
+        | B | 事實含刑事行為，無被害人（依 4.1），受理性質為受理、告訴、告發、查獲或受理（依案號推定） | Gate 1 → Gate 3（不經 Gate 2） | 通緝查獲（須附通緝書）、酒駕、毒駕、毒品（線上立破）、公共危險、無特定受害人之偽造文書告發、無特定受害人之告訴 |
+    - section: '6.6'
+      source_text: |2-
+          路由：A／B／C／D／E
+  - value: C
+    source_refs:
+    - section: '4.3'
+      source_text: |-
+        | C | 事實無刑事行為，或受理性質為備案且無刑事行為，有案號（如民事用途） | Gate 1 → 非罪受理紀錄 | 失蹤人口撤尋、非道路車禍報案證明、遺失物備案、車損備案、無刑事內容之備查 |
+    - section: '6.6'
+      source_text: |2-
+          路由：A／B／C／D／E
+  - value: D
+    source_refs:
+    - section: '4.3'
+      source_text: |-
+        | D | 無案號，且無刑事行為（或備案），非行政裁處 | 不進入流程，保留路由結果與 source_raw | 災害、死亡相驗、救護、糾紛、為民服務 |
+    - section: '6.6'
+      source_text: |2-
+          路由：A／B／C／D／E
+  - value: E
+    source_refs:
+    - section: '4.3'
+      source_text: |-
+        | E | 行政裁處案件（社會秩序維護法、道路交通管理處罰條例等） | Gate 1 → 移送裁罰紀錄（不進入 Gate 2、Gate 3） | 社維法違序、自行車酒駕行政裁罰 |
+    - section: '6.6'
+      source_text: |2-
+          路由：A／B／C／D／E
+  complaint_intent:
+  - value: 已提告
+    source_refs:
+    - section: '6.5'
+      source_text: |2-
+            告訴意思：已提告／未提告／拒絕告訴／撤回／保留／未定
+  - value: 未提告
+    source_refs:
+    - section: '6.5'
+      source_text: |2-
+            告訴意思：已提告／未提告／拒絕告訴／撤回／保留／未定
+  - value: 拒絕告訴
+    source_refs:
+    - section: '6.5'
+      source_text: |2-
+            告訴意思：已提告／未提告／拒絕告訴／撤回／保留／未定
+  - value: 撤回
+    source_refs:
+    - section: '6.5'
+      source_text: |2-
+            告訴意思：已提告／未提告／拒絕告訴／撤回／保留／未定
+  - value: 保留
+    source_refs:
+    - section: '6.5'
+      source_text: |2-
+            告訴意思：已提告／未提告／拒絕告訴／撤回／保留／未定
+  - value: 未定
+    source_refs:
+    - section: '6.5'
+      source_text: |2-
+            告訴意思：已提告／未提告／拒絕告訴／撤回／保留／未定
+  complaint_status:
+  - value: 已提告
+    source_refs:
+    - section: '7.3'
+      source_text: |2-
+            告訴狀態：已提告／告訴未成立／告訴意思未定／NOT_APPLICABLE／UNKNOWN
+  - value: 告訴未成立
+    source_refs:
+    - section: '7.3'
+      source_text: |2-
+            告訴狀態：已提告／告訴未成立／告訴意思未定／NOT_APPLICABLE／UNKNOWN
+    - section: G2-R09
+      source_text: |-
+        2. 告訴乃論之案類，若被害人表示不提告、不需協助、拒絕告訴或已撤回，標示「告訴未成立」，加 warning，強行通過。「不需警方協助」等同於不提告。
+    - section: G2-R09
+      source_text: |-
+        5. 告訴未成立後若被害人之後提告，依 G1-R09 重新判斷告訴期間。
+  - value: 告訴意思未定
+    source_refs:
+    - section: '7.3'
+      source_text: |2-
+            告訴狀態：已提告／告訴未成立／告訴意思未定／NOT_APPLICABLE／UNKNOWN
+    - section: G2-R09
+      source_text: |-
+        1. 僅適用於受理性質為受理、告訴之紀錄。備案、告發、查獲不適用。依案號推定之受理，告訴狀態依報告內容判定，無告訴意思表示者標「告訴意思未定」。
+    - section: G2-R09
+      source_text: |-
+        3. 告訴意思為「未定」或「保留」者，標示「告訴意思未定」，加 warning，強行通過。「保留告訴權益」屬保留。
+  - value: NOT_APPLICABLE
+    source_refs:
+    - section: '7.3'
+      source_text: |2-
+            告訴狀態：已提告／告訴未成立／告訴意思未定／NOT_APPLICABLE／UNKNOWN
+    - section: G2-R09
+      source_text: |-
+        6. 非告訴乃論之案類，告訴狀態標 NOT_APPLICABLE。
+  - value: UNKNOWN
+    source_refs:
+    - section: '7.3'
+      source_text: |2-
+            告訴狀態：已提告／告訴未成立／告訴意思未定／NOT_APPLICABLE／UNKNOWN
+  actor_type:
+  - value: 自然人
+    source_refs:
+    - section: '6.3'
+      source_text: |-
+        | 行為人類型 | 自然人／法人／機關（見 G1-R02） |
+    - section: G1-R02
+      source_text: |-
+        2. 行為單元須有涉嫌人欄位，並須標示行為人類型：自然人、法人或機關。
+    - section: '8.3'
+      source_text: |-
+        行為人類型：自然人／法人／機關
+  - value: 法人
+    source_refs:
+    - section: '6.3'
+      source_text: |-
+        | 行為人類型 | 自然人／法人／機關（見 G1-R02） |
+    - section: G1-R02
+      source_text: |-
+        2. 行為單元須有涉嫌人欄位，並須標示行為人類型：自然人、法人或機關。
+    - section: '8.3'
+      source_text: |-
+        行為人類型：自然人／法人／機關
+  - value: 機關
+    source_refs:
+    - section: '6.3'
+      source_text: |-
+        | 行為人類型 | 自然人／法人／機關（見 G1-R02） |
+    - section: G1-R02
+      source_text: |-
+        2. 行為單元須有涉嫌人欄位，並須標示行為人類型：自然人、法人或機關。
+    - section: '8.3'
+      source_text: |-
+        行為人類型：自然人／法人／機關
+  processing_result:
+  - value: 破獲
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **處理結果**（僅作記錄，不影響路由與告訴狀態）值域：破獲、線上立破、未破獲、結報、其他。
+    - section: '6.5'
+      source_text: |2-
+            處理結果：破獲／線上立破／未破獲／結報／其他（僅記錄）
+  - value: 線上立破
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **處理結果**（僅作記錄，不影響路由與告訴狀態）值域：破獲、線上立破、未破獲、結報、其他。
+    - section: '6.5'
+      source_text: |2-
+            處理結果：破獲／線上立破／未破獲／結報／其他（僅記錄）
+  - value: 未破獲
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **處理結果**（僅作記錄，不影響路由與告訴狀態）值域：破獲、線上立破、未破獲、結報、其他。
+    - section: '6.5'
+      source_text: |2-
+            處理結果：破獲／線上立破／未破獲／結報／其他（僅記錄）
+  - value: 結報
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **處理結果**（僅作記錄，不影響路由與告訴狀態）值域：破獲、線上立破、未破獲、結報、其他。
+    - section: '6.5'
+      source_text: |2-
+            處理結果：破獲／線上立破／未破獲／結報／其他（僅記錄）
+  - value: 其他
+    source_refs:
+    - section: '4.2'
+      source_text: |-
+        **處理結果**（僅作記錄，不影響路由與告訴狀態）值域：破獲、線上立破、未破獲、結報、其他。
+    - section: '6.5'
+      source_text: |2-
+            處理結果：破獲／線上立破／未破獲／結報／其他（僅記錄）
+  law_status:
+  - value: 已確認
+    source_refs:
+    - section: C-R22
+      source_text: |-
+        2. 狀態值域為：「已確認」（有條文原文，且來源可追溯至官方法規資料庫或同等來源）、「判決書引用」（判決書中引用之條文，待補原文）、「二手來源」（僅有第二手資料，須補查原文）、「待查」（尚未取得）。
+  - value: 判決書引用
+    source_refs:
+    - section: C-R22
+      source_text: |-
+        2. 狀態值域為：「已確認」（有條文原文，且來源可追溯至官方法規資料庫或同等來源）、「判決書引用」（判決書中引用之條文，待補原文）、「二手來源」（僅有第二手資料，須補查原文）、「待查」（尚未取得）。
+  - value: 二手來源
+    source_refs:
+    - section: C-R22
+      source_text: |-
+        2. 狀態值域為：「已確認」（有條文原文，且來源可追溯至官方法規資料庫或同等來源）、「判決書引用」（判決書中引用之條文，待補原文）、「二手來源」（僅有第二手資料，須補查原文）、「待查」（尚未取得）。
+  - value: 待查
+    source_refs:
+    - section: C-R22
+      source_text: |-
+        2. 狀態值域為：「已確認」（有條文原文，且來源可追溯至官方法規資料庫或同等來源）、「判決書引用」（判決書中引用之條文，待補原文）、「二手來源」（僅有第二手資料，須補查原文）、「待查」（尚未取得）。

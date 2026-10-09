@@ -19,3 +19,12 @@ Thumbs.db
 cli_out.json
 /tmp/
 .omo/
+.pytest_cache/
+
+# 原始／清洗案件資料不得提交
+/*LINE*.txt
+/data/cleaned/
+
+# 本機服務執行輸出
+/pipeline/web.stdout.log
+/pipeline/web.stderr.log
