@@ -1,0 +1,17 @@
+# 本檔為空白範本，不含任何罪章判斷，未經人工核定前不得用於 Gate 2 或 Gate 3。
+# entries 欄位結構：
+# - offense_name
+# - article_no
+# - facts_to_confirm
+# - victim_questions_focus
+# - suspect_questions_focus
+# - confusable_offenses
+# - source_reference
+# - reviewer
+# - review_date
+# - notes
+
+version: null
+status: "pending_manual_review"
+source_note: "未填寫，須由人工核定"
+entries: []
