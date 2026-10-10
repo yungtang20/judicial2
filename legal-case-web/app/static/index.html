@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="session-token" content="__SESSION_TOKEN__">
+  <title>法律案件工作台</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要內容</a>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">LOCAL · HUMAN GATE</p>
+      <h1>法律案件工作台</h1>
+    </div>
+    <div class="security-state" aria-label="安全狀態">
+      <span aria-hidden="true">●</span> 本機模式 · 外部 AI 僅罪章候選
+    </div>
+  </header>
+
+  <div id="status" class="status" role="status" aria-live="polite">準備就緒</div>
+
+  <main id="main">
+    <section id="home" class="hero" aria-labelledby="home-title">
+      <div class="hero-copy">
+        <p class="eyebrow">CASE INTAKE</p>
+        <h2 id="home-title">先把事實說清楚</h2>
+      </div>
+      <form id="intake-form" class="intake-card">
+        <div class="field-row">
+          <label for="event-kind">時間類型</label>
+          <select id="event-kind" name="event_kind">
+            <option value="發生">發生</option>
+            <option value="破獲">破獲</option>
+            <option value="查獲">查獲</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <label for="event-time">發生／破獲時間</label>
+          <input id="event-time" name="event_time" type="datetime-local" required>
+        </div>
+        <div class="field-row">
+          <label for="location">發生／破獲地點</label>
+          <input id="location" name="location" autocomplete="off" maxlength="500" required>
+        </div>
+        <div class="field-stack">
+          <label for="summary">案情摘要</label>
+          <textarea id="summary" name="summary" rows="7" maxlength="20000" required aria-describedby="summary-hint"></textarea>
+          <small id="summary-hint">只寫已知事實；不確定的內容可明確寫 UNKNOWN。</small>
+        </div>
+        <button class="primary" type="submit">建立案件並進入 Gate 1</button>
+        <details class="advanced">
+          <summary>進階欄位（選填）</summary>
+          <fieldset>
+            <legend>案件分支</legend>
+            <label class="check"><input id="has-victim" name="has_victim" type="checkbox" checked> 本案有被害人</label>
+            <label class="check"><input id="victim-is-code" name="victim_is_code" type="checkbox"> 被害人使用代號</label>
+          </fieldset>
+          <div class="details-grid">
+            <div class="field-stack"><label for="victim-identifier">被害人姓名或代號</label><input id="victim-identifier" name="victim_identifier" autocomplete="off"></div>
+            <div class="field-stack"><label for="report-time">報案時間</label><input id="report-time" name="report_time" type="datetime-local"></div>
+            <div class="field-stack"><label for="arrest-time">破獲時間</label><input id="arrest-time" name="arrest_time" type="datetime-local"></div>
+            <div class="field-stack"><label for="station">報告單位</label><input id="station" name="station" value="○○所"></div>
+            <div class="field-stack"><label for="officer">處理員警</label><input id="officer" name="officer" value="○○○"></div>
+            <div class="field-stack"><label for="jurisdiction">本案管轄</label><input id="jurisdiction" name="jurisdiction"></div>
+          </div>
+          <div class="field-stack"><label for="disposition">後續偵辦情形</label><textarea id="disposition" name="disposition" rows="3"></textarea></div>
+        </details>
+      </form>
+    </section>
+
+    <section id="workspace" class="workspace" hidden aria-labelledby="case-heading">
+      <nav aria-label="Gate 進度">
+        <ol id="gate-progress" class="gate-progress">
+          <li data-state="GATE1_REVIEW">1 事實拆解</li>
+          <li data-state="GATE2_QA">2 候選與問答</li>
+          <li data-state="CASE_NUMBERS">2.5 案號補登</li>
+          <li data-state="OUTPUT_READY">3–5 文件輸出</li>
+        </ol>
+      </nav>
+      <div class="case-heading-row">
+        <div><p class="eyebrow">ACTIVE CASE</p><h2 id="case-heading">案件</h2></div>
+        <button id="new-case" class="secondary" type="button">新增案件</button>
+      </div>
+
+      <section id="gate1-panel" class="panel" aria-labelledby="gate1-title">
+        <p class="gate-label">GATE 1</p><h3 id="gate1-title">人、事、時、地、物與因果</h3>
+        <p>每行一項。系統初始內容只是一份待確認草稿。</p>
+        <form id="gate1-form" class="fact-grid">
+          <label>人<textarea name="people" rows="4"></textarea></label>
+          <label>事<textarea name="events" rows="4"></textarea></label>
+          <label>時<textarea name="times" rows="4"></textarea></label>
+          <label>地<textarea name="places" rows="4"></textarea></label>
+          <label>物<textarea name="objects" rows="4"></textarea></label>
+          <label>行為<textarea name="behaviors" rows="4"></textarea></label>
+          <label class="wide">因果關係<textarea name="causation" rows="3"></textarea></label>
+          <label class="wide">尚未確認<textarea name="unknowns" rows="4"></textarea></label>
+          <div class="actions wide">
+            <button class="secondary" type="submit">儲存 Gate 1</button>
+            <button id="approve-gate1" class="primary" type="button">我已核對，進入 Gate 2</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="gate2-panel" class="panel" aria-labelledby="gate2-title" hidden>
+        <p class="gate-label">GATE 2</p><h3 id="gate2-title">候選罪章與中立問答</h3>
+        <div class="warning"><strong>非法律結論</strong><span>候選來自規則比對或 AI 分析。請先確認罪章，再逐題作答。</span></div>
+        <form id="offense-form">
+          <div class="field-stack"><label for="question-role">本次筆錄身分</label><select id="question-role" name="role"><option value="victim">被害人</option><option value="suspect">涉嫌人（有被害人）</option><option value="transfer">涉嫌人（移送／無被害人）</option></select></div>
+          <div class="actions">
+            <button id="ai-analyze" class="secondary" type="button">AI 分析候選罪章</button>
+          </div>
+          <fieldset><legend>候選罪章</legend><div id="offense-list" class="choice-grid"></div></fieldset>
+          <button class="secondary" type="submit">建立／更新問句</button>
+        </form>
+
+        <section id="profile-section" aria-labelledby="profile-title">
+          <h4 id="profile-title">受詢問人年籍與詢問時間</h4>
+          <form id="profile-form" class="details-grid">
+            <div class="field-stack"><label for="profile-name">姓名</label><input id="profile-name" name="name" autocomplete="off"></div>
+            <div class="field-stack"><label for="profile-alias">別（綽號）號</label><input id="profile-alias" name="alias"></div>
+            <div class="field-stack"><label for="profile-gender">性別</label><input id="profile-gender" name="gender"></div>
+            <div class="field-stack"><label for="profile-birth-date">出生年月日</label><input id="profile-birth-date" name="birth_date" placeholder="民國YY.MM.DD"></div>
+            <div class="field-stack"><label for="profile-birth-place">出生地</label><input id="profile-birth-place" name="birth_place"></div>
+            <div class="field-stack"><label for="profile-occupation">職業</label><input id="profile-occupation" name="occupation"></div>
+            <div class="field-stack"><label for="profile-national-id">身分證統一編號</label><input id="profile-national-id" name="national_id" autocomplete="off"></div>
+            <div class="field-stack"><label for="profile-registered-address">戶籍地址</label><input id="profile-registered-address" name="registered_address"></div>
+            <div class="field-stack"><label for="profile-current-address">現住地址</label><input id="profile-current-address" name="current_address"></div>
+            <div class="field-stack"><label for="profile-education">教育程度</label><input id="profile-education" name="education"></div>
+            <div class="field-stack"><label for="profile-phone">電話號碼</label><input id="profile-phone" name="phone" autocomplete="off"></div>
+            <div class="field-stack"><label for="session-start">詢問開始時間</label><input id="session-start" name="session_start" type="datetime-local"></div>
+            <div class="field-stack"><label for="session-end">詢問結束時間</label><input id="session-end" name="session_end" type="datetime-local"></div>
+            <div class="field-stack wide"><label for="session-location">詢問地點</label><input id="session-location" name="session_location"></div>
+            <div class="wide"><button class="secondary" type="submit">儲存年籍與詢問時間</button></div>
+          </form>
+        </section>
+
+        <form id="answers-form">
+          <div id="qa-progress" class="qa-progress" aria-live="polite"></div>
+          <div id="question-current" class="question-card"></div>
+          <div class="actions">
+            <button id="prev-question" class="secondary" type="button">上一題</button>
+            <button id="next-question" class="primary" type="button">下一題</button>
+            <button class="secondary" type="submit">儲存全部回答</button>
+          </div>
+        </form>
+        <div class="actions">
+          <button id="approve-gate2" class="primary" type="button">我已核對罪章與全部回答</button>
+        </div>
+      </section>
+
+      <section id="numbers-panel" class="panel" aria-labelledby="numbers-title" hidden>
+        <p class="gate-label">GATE 2.5</p><h3 id="numbers-title">補登公司系統案號</h3>
+        <p id="brief-preview"></p>
+        <form id="numbers-form" class="details-grid">
+          <div class="field-stack"><label for="proof-number">證明單案號</label><input id="proof-number" name="proof" required></div>
+          <div id="women-child-field" class="field-stack"><label for="women-child-number">婦幼案號</label><input id="women-child-number" name="women_child"></div>
+          <div id="case165-field" class="field-stack"><label for="case165-number">165 案號</label><input id="case165-number" name="case_165"></div>
+          <div class="wide"><button class="primary" type="submit">確認案號並產生條陳</button></div>
+        </form>
+      </section>
+
+      <section id="output-panel" class="panel" aria-labelledby="output-title" hidden>
+        <p class="gate-label">GATE 3–5</p><h3 id="output-title">筆錄與條陳</h3>
+        <p>DOCX 會先由本機 LibreOffice 實際排版。超過 8 頁時禁止下載。筆錄含公司範本必問題，逐字保留。</p>
+        <div class="field-stack"><label for="output-role">輸出身分</label><select id="output-role"><option value="victim">被害人</option><option value="suspect">涉嫌人（有被害人）</option><option value="transfer">涉嫌人（移送／無被害人）</option></select></div>
+        <div class="actions">
+          <button id="download-interview" class="primary" type="button">下載完整筆錄 DOCX</button>
+          <button id="download-brief" class="secondary" type="button">下載條陳 DOCX</button>
+        </div>
+        <label for="brief-output">條陳內容</label>
+        <textarea id="brief-output" rows="16" readonly></textarea>
+        <div class="actions">
+          <button id="copy-brief" class="secondary" type="button">複製條陳</button>
+          <button id="start-suspect" class="primary" type="button">下一步：製作涉嫌人筆錄</button>
+          <button id="reopen-case" class="danger" type="button">重新開啟並修正事實</button>
+        </div>
+        <p class="privacy-note">案件資料以目前 Windows 使用者的 DPAPI 金鑰加密。資料庫移到其他電腦或 Windows 帳號後通常無法解密。下載的 DOCX 是未加密明文。</p>
+      </section>
+    </section>
+
+    <aside class="case-drawer" aria-labelledby="saved-title">
+      <h2 id="saved-title">已保存案件</h2>
+      <ul id="case-list"></ul>
+    </aside>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+data/cases.sqlite3
+data/cases.sqlite3-wal
+data/cases.sqlite3-shm
+output/
+
+
+.env

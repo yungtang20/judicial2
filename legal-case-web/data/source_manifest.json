@@ -1,0 +1,20 @@
+{
+  "recorded_at": "2026-10-10",
+  "usage": "唯讀來源基準；原始檔未由新系統修改",
+  "sources": [
+    {"path":"../../新套表.xlsm","sha256":"AA9B0B9DE07E63C446068396024530B41DAF7430AF7D82C53129A4ECF39C7F60"},
+    {"path":"../../通用被害人筆錄.doc","sha256":"0ED21C08CFF93F47B3C7F7685B87733A0EF47116BE977DB30E6616C79526BABF"},
+    {"path":"../../通用涉嫌人筆錄.doc","sha256":"945BE1335EC6A48C5050EB4B66A84F88863843CA60AEA8716BE6048C59CC9096"},
+    {"path":"../../通用涉嫌人筆錄（移送）.doc","sha256":"D0D0E82FD3A5665FBCE1F476ED2BD96B721F5A2FB8B31EA7FEBB938AC981224C"},
+    {"path":"../../條陳.txt","sha256":"73390941F279F653E5AFD440FEB0F6858D5CE02FC8B1008D2FEDCC1D7D58FD3D"},
+    {"path":"../../家庭暴力罪筆錄範本.odt","sha256":"A54826161CEBCC30327B2A02C1B9B5B78415B25F62621660809EC5CA8390E27B","routing":"company_required"},
+    {"path":"../../警詢筆錄例稿(違反保護令罪).doc","sha256":"137CD55D9542CA1380989675B103A16E9148A39D52D6B7AE697F6BD1B7F16B34","routing":"company_required"},
+    {"path":"../../01(署頒)警詢筆錄例稿(跟蹤騷擾罪)-新.odt","sha256":"D81419CE233D2B5EB1F247315296AA675C46C577CE8C69F5DED108E29FD02E5D","routing":"company_required"},
+    {"path":"../../1.(署頒)性騷擾詢問紀錄例稿(被害人)-1130308起適用.docx","sha256":"D2E16B710C770184E3C8B81633D26DE329EE4C8AE9BBD2B859B306031E608C6D","routing":"company_required"},
+    {"path":"../../2.(署頒)性騷擾詢問紀錄例稿(行為人)-1130308起適用.docx","sha256":"FF83BAFA9F06A55058937627092B66B7644E3DDFA8E5DBD2A72D2A593D96BF81","routing":"company_required"},
+    {"path":"../../兒剝犯保-被害人筆錄例稿（犯保權益告知）.doc","sha256":"D871AEF5FCEFF612B03FB50A1CC5343E0E56E5BBF390AA3000193430A52ED1B1","routing":"company_required"},
+    {"path":"../../性侵害案件調查筆錄範例(已填寫實例).pdf","sha256":"E5353A37167776E410E88592A7E75722211C6C3998613154AF692EFC3430FA75","routing":"reference_only_contains_case_data"},
+    {"path":"../../性影像被害人筆錄例稿.pdf","sha256":"2847D9CC09B87CB0773AA48EA29A48919F280F9BE6DEEBEC6059CA4D8ECF8E13","routing":"company_required"},
+    {"path":"../../性影像嫌疑人筆錄例稿.pdf","sha256":"E8A259BBFDF401AFAEA4A8EF5AEBFA3B0BD577CF0B1CE543D9D0D90C73FA4261","routing":"company_required"}
+  ]
+}

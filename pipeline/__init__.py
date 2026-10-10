@@ -1,1 +1,0 @@
-"""Minimal executable Gate pipeline."""
