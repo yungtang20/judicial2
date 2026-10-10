@@ -1,0 +1,7 @@
+{
+  "gate": "G1", "case_id": "case-stub", "version": "v1", "route": "A",
+  "route_basis": {"受理性質": "受理", "有被害人": "是", "刑事行為": "是", "案號": "UNKNOWN", "行政裁處": "否", "依據條次": "13.1"},
+  "units": {"victim": [{"unit_id": "UNIT-001", "source_raw": "虛構事件", "warnings": []}], "actor": [{"unit_id": "UNIT-001", "source_raw": "虛構事件", "warnings": []}]},
+  "procedure_facts": {"告訴狀態": "UNKNOWN", "告訴期間狀態": "UNKNOWN", "追訴權狀態": "UNKNOWN", "相關罪章檢核": "UNKNOWN", "承辦人待辦": []},
+  "warnings": [], "self_check": "PASS"
+}
