@@ -1,0 +1,7 @@
+{
+  "gate": "G2",
+  "candidates": [{"unit_id": "V-STUB-001", "案類": "虛構候選", "法條": "刑法第 319 條之 1", "法條狀態": "待人工核定", "既遂未遂": "UNKNOWN", "告訴乃論": "待查", "告訴乃論依據": "UNKNOWN", "告訴狀態": "UNKNOWN", "候選狀態": "NEED_REVIEW", "事實基礎": "虛構事實", "理由": "待人工核定"}],
+  "victim_questions": [{"unit_id": "V-STUB-001", "候選罪章": "虛構候選", "核心問句": ["你是否清楚事件經過"], "判定缺少的補充問句": [], "事實釐清問句": [], "證據蒐集問句": [], "關係釐清問句": [], "時間序問句": [], "程序告知問句": [], "其他必要問句": []}],
+  "procedure_questions": [], "procedure_status": {"告訴狀態": "UNKNOWN", "告訴期間狀態": "UNKNOWN", "追訴權狀態": "UNKNOWN"},
+  "acceptance_draft": {}, "warnings": []
+}

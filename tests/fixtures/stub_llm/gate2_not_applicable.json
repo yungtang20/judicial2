@@ -1,0 +1,6 @@
+{
+  "gate": "G2", "candidates": [],
+  "victim_questions": [{"unit_id": "V-STUB-001", "候選罪章": "UNKNOWN", "核心問句": ["請說明事件經過"], "判定缺少的補充問句": [], "事實釐清問句": [], "證據蒐集問句": [], "關係釐清問句": [], "時間序問句": [], "程序告知問句": [], "其他必要問句": []}],
+  "procedure_questions": [], "procedure_status": {"告訴狀態": "UNKNOWN", "告訴期間狀態": "UNKNOWN", "追訴權狀態": "UNKNOWN"},
+  "acceptance_draft": null, "warnings": []
+}
