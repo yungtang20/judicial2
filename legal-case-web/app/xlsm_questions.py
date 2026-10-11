@@ -23,7 +23,7 @@ XLSM_JSON_PATH = Path(__file__).resolve().parents[1] / "data" / "xlsm_questions.
 
 # xlsm 罪章欄名 → 本系統罪章 id（與 question_bank.json 對應）
 OFFENSE_NAME_TO_ID: dict[str, str] = {
-    "過失傷害": "negligent_injury",
+    "過失傷害": "injury",
     "傷害": "injury",
     "竊盜": "theft",
     "侵占": "embezzlement",
