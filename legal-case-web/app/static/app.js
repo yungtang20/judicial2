@@ -338,7 +338,8 @@ async function refreshCases() {
     const li = document.createElement("li");
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = `${item.case_id.slice(0, 8)} · ${stateLabel(item.state)} · r${item.revision}`;
+    const offenseNote = (item.state === "GATE2_QA" && !item.has_offenses) ? "（未選罪章）" : "";
+    button.textContent = `${item.case_id.slice(0, 8)} · ${stateLabel(item.state)}${offenseNote} · r${item.revision}`;
     button.addEventListener("click", async () => {
       try { renderCase(await jsonApi(`/api/cases/${item.case_id}`)); }
       catch (error) { announce(error.message, true); }

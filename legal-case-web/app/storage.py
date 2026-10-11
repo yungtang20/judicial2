@@ -48,6 +48,31 @@ class CaseStore:
             ).fetchall()
         return [dict(row) for row in rows]
 
+    def list_cases_meta(self) -> list[dict[str, Any]]:
+        """案件清單＋是否已選罪章（供 UI 標示「未選罪章」）。不取問答內容。"""
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT case_id, revision, state, updated_at, payload FROM cases ORDER BY updated_at DESC"
+            ).fetchall()
+        result = []
+        for row in rows:
+            try:
+                payload = unprotect_json(row["payload"])
+                selected = set(payload.get("selected_offenses", []))
+                for interview in payload.get("interviews", {}).values():
+                    selected.update(interview.get("selected_offenses", []))
+                has_offenses = bool(selected)
+            except Exception:
+                has_offenses = False
+            result.append({
+                "case_id": row["case_id"],
+                "revision": row["revision"],
+                "state": row["state"],
+                "updated_at": row["updated_at"],
+                "has_offenses": has_offenses,
+            })
+        return result
+
     def get(self, case_id: str) -> dict[str, Any]:
         with self._connect() as connection:
             row = connection.execute(

@@ -126,7 +126,7 @@ class Handler(BaseHTTPRequestHandler):
             self._json(HTTPStatus.OK, {"status": "ok", "mode": "LOCAL_ONLY", "external_ai": False})
             return
         if path == "/api/cases":
-            self._json(HTTPStatus.OK, {"cases": STORE.list_cases()})
+            self._json(HTTPStatus.OK, {"cases": STORE.list_cases_meta()})
             return
         if path == "/api/question-bank":
             self._json(HTTPStatus.OK, {

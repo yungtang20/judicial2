@@ -37,3 +37,23 @@ def test_corrupted_ciphertext_never_becomes_empty_case(tmp_path):
     with pytest.raises(Exception):
         store.get(case["case_id"])
 
+
+
+def test_list_cases_meta_flags_offense_selection(tmp_path):
+    from app.storage import CaseStore
+    from tests.helpers import intake
+    from app.workflow import create_case, apply_action
+
+    store = CaseStore(tmp_path / "meta.sqlite3")
+    bank_case = create_case(intake(), BANK)
+    store.create(bank_case)
+    rows = store.list_cases_meta()
+    assert rows[0]["has_offenses"] is False
+    assert "payload" not in rows[0]
+
+    case = store.get(rows[0]["case_id"])
+    case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "role": "victim"}, BANK)
+    store.save(case, 1)
+    rows = store.list_cases_meta()
+    assert rows[0]["has_offenses"] is True
