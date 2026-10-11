@@ -13,6 +13,7 @@ from .ai import analyze_candidates
 from .company_templates import company_questions, copy_identity, render_company_text
 from .roc_time import format_roc_time
 from .rules import (
+    analyze_gate1,
     build_questions,
     candidate_offenses,
     concise_summary,
@@ -37,7 +38,7 @@ def _clean_text(value: Any, field: str, *, required: bool = True) -> str:
         raise WorkflowError(f"{field} 必須是文字")
     normalized = value.strip()
     if required and not normalized:
-        raise WorkflowError(f"{field} 不得空白")
+        raise WorkflowError(f"{field} 不���空白")
     if len(normalized) > MAX_TEXT_LENGTH:
         raise WorkflowError(f"{field} 超過 {MAX_TEXT_LENGTH} 字")
     return normalized
@@ -115,15 +116,21 @@ def create_case(raw: dict[str, Any], bank: dict[str, Any]) -> dict[str, Any]:
         "jurisdiction": _clean_text(raw.get("jurisdiction", ""), "本案管轄", required=False),
         "disposition": _clean_text(raw.get("disposition", ""), "後續偵辦情形", required=False),
     }
+    gate1 = analyze_gate1(intake)
     case = {
         "case_id": str(uuid4()),
         "state": "GATE1_REVIEW",
         "intake": intake,
         "gate1": {
-            "people": [], "events": [intake["summary"]], "times": [format_roc_time(intake["event_time"])],
-            "places": [intake["location"]], "objects": [], "behaviors": [],
-            "causation": "UNKNOWN",
-            "unknowns": ["行為人", "行為方式", "結果與行為間關係", "可供查證的證據"],
+            "people": gate1["people"],
+            "events": gate1["events"],
+            "times": gate1["times"],
+            "places": gate1["places"],
+            "objects": gate1["objects"],
+            "behaviors": gate1["behaviors"],
+            "causation": gate1["causation"],
+            "unknowns": gate1["unknowns"],
+            "facts": gate1["facts"],
         },
         "people": [],
         "candidates": candidate_offenses(intake["summary"], bank),
@@ -178,6 +185,21 @@ def apply_action(
             if not isinstance(values, list) or any(not isinstance(item, str) for item in values):
                 raise WorkflowError(f"{key} 必須是文字陣列")
             gate1[key] = [_clean_text(item, key) for item in values]
+        facts = gate1.get("facts", [])
+        if not isinstance(facts, list):
+            raise WorkflowError("facts 必須是陣列")
+        for index, fact in enumerate(facts, start=1):
+            if not isinstance(fact, dict):
+                raise WorkflowError(f"facts[{index}] 必須是物件")
+            for field in ("id", "text", "status", "type", "source_ref"):
+                if field not in fact:
+                    raise WorkflowError(f"facts[{index}] 缺少 {field}")
+            fact["text"] = _clean_text(str(fact.get("text", "")), f"facts[{index}].text", required=False)
+            fact["status"] = str(fact.get("status", "UNKNOWN"))
+            fact["type"] = str(fact.get("type", "statement"))
+            fact["source_ref"] = str(fact.get("source_ref", "UNKNOWN"))
+            fact["source_excerpt"] = str(fact.get("source_excerpt", fact["text"]))
+        gate1["facts"] = facts
         gate1["causation"] = _clean_text(gate1.get("causation", "UNKNOWN"), "因果關係")
         case["gate1"] = gate1
         case["state"] = "GATE1_REVIEW"

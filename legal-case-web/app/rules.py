@@ -18,6 +18,44 @@ class RuleError(ValueError):
     pass
 
 
+def _fact_status(text: str) -> str:
+    normalized = text.strip()
+    if not normalized:
+        return "UNKNOWN"
+    if any(keyword in normalized for keyword in ("不明", "未知", "待查", "可能", "疑似", "不確定", "UNKNOWN")):
+        return "UNKNOWN"
+    return "KNOWN"
+
+
+def _summarize_facts(summary: str, intake: dict[str, Any]) -> list[dict[str, Any]]:
+    fragments = [piece.strip() for piece in re.split(r"[。！？\n]+", summary) if piece.strip()]
+    if not fragments:
+        fragments = [summary.strip()] if summary.strip() else ["案情摘要未提供可分解事實內容"]
+    facts: list[dict[str, Any]] = []
+    for index, fragment in enumerate(fragments, start=1):
+        fact = {
+            "id": f"fact-{index}",
+            "text": fragment,
+            "status": _fact_status(fragment),
+            "type": "statement",
+            "source_ref": "intake.summary",
+            "source_excerpt": fragment,
+            "person": "UNKNOWN",
+            "time": intake.get("event_time", "UNKNOWN"),
+            "place": intake.get("location", "UNKNOWN"),
+            "object": "UNKNOWN",
+            "causal_relation": "UNKNOWN",
+            "review_status": "HUMAN_REVIEW_REQUIRED",
+            "notes": "由案情摘要切分，尚需承辦人逐項確認與補充。",
+        }
+        if any(key in fragment for key in ("在", "於", "時", "地點")):
+            fact["type"] = "event"
+        if any(key in fragment for key in ("說", "稱", "表示", "告知", "陳述")):
+            fact["type"] = "statement"
+        facts.append(fact)
+    return facts
+
+
 def load_bank(path: Path) -> dict[str, Any]:
     with path.open(encoding="utf-8") as handle:
         bank = json.load(handle)
@@ -30,16 +68,24 @@ def load_bank(path: Path) -> dict[str, Any]:
 
 
 def analyze_gate1(intake: dict[str, Any]) -> dict[str, Any]:
-    summary = intake["summary"].strip()
+    summary = (intake.get("summary") or "").strip()
+    facts = _summarize_facts(summary, intake)
     return {
         "people": [],
-        "events": [summary],
-        "times": [intake["event_time"]],
-        "places": [intake["location"]],
+        "events": [fact["source_excerpt"] for fact in facts],
+        "times": [intake["event_time"]] if intake.get("event_time") else [],
+        "places": [intake["location"]] if intake.get("location") else [],
         "objects": [],
         "behaviors": [],
         "causation": "UNKNOWN",
-        "unknowns": ["行為人", "行為方式", "結果與行為間關係", "可供查證的證據"],
+        "unknowns": [
+            "行為人",
+            "行為方式",
+            "結果與行為間關係",
+            "可供查證的證據",
+            "多名當事人之間的關係與權限",
+        ],
+        "facts": facts,
         "review_status": "HUMAN_REVIEW_REQUIRED",
     }
 
@@ -124,7 +170,6 @@ def build_questions(
         offense = offenses.get(offense_id)
         if offense is None:
             raise RuleError(f"未知罪章：{offense_id}")
-        # 1) 公司套表罪章題（新套表.xlsm 各罪章欄）
         for question in xlsm_questions_for(questions, role, offense_id):
             if question["text"] in seen:
                 continue
@@ -132,7 +177,6 @@ def build_questions(
                 continue
             questions.append(question)
             seen.add(question["text"])
-        # 2) md 核心與補充（含區分、加重依 section 順序）
         sections = offense.get("section_questions", {}).get(role, {})
         for question in ordered_section_questions(
             sections, role, offense_id, offense["name"], offense["source"],
@@ -143,7 +187,6 @@ def build_questions(
                 continue
             questions.append(question)
             seen.add(question["text"])
-        # 3) JSON 要件題（僅在 md 未涵蓋同一 element 時補入）
         for element in offense.get("elements", []):
             if len(_offense_questions(questions)) >= MAX_OFFENSE_QUESTIONS:
                 break
@@ -194,3 +237,6 @@ def concise_summary(text: str, limit: int = 100) -> str:
     if len(normalized) <= limit:
         return normalized
     return normalized[: limit - 1].rstrip("，、；： ") + "…"
+
+# Backward-compatible alias used by legacy code paths and tests.
+analyze_gate1_summary = analyze_gate1
