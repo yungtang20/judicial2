@@ -22,12 +22,12 @@ from typing import Any
 
 
 QUESTION_RE = re.compile(
-    r"^\s*-\s+\*\*(?P<id>[A-Z0-9]+-(?:C|S|R|D|A|N|W)-[A-Z0-9]+)\*\*"
+    r"^\s*-\s+\*\*(?P<id>[A-Z0-9]+-[A-Z]-[A-Z0-9]+)\*\*"
     r"(?:（[^）]*）)?：(?P<text>.+?)\s*$"
 )
 
 SECTION_MAP: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("core", ("核心問句",)),
+    ("core", ("核心問句", "預備問句")),
     ("evidence_gap", ("補充問句",)),
     ("reinforce", ("補強問句",)),
     ("distinguishing", ("區分問句",)),
@@ -85,7 +85,9 @@ def read_section_questions(path: Path) -> dict[str, dict[str, list[dict[str, str
         if not match:
             continue
         text = match.group("text").strip()
-        if text.count("？") > 1:
+        # 一題一事項由題庫審核（review-checklist.md）把關；此處只排除明顯雜訊，
+        # 不再以「？」數量丟題——公司核定套表題常含合法的子問（例：竊盜 T-N-05）。
+        if not text or len(text) < 8:
             continue
         resolved = section if section is not None else _section_by_id(match.group("id"))
         if resolved is None:
@@ -104,7 +106,7 @@ def read_section_questions(path: Path) -> dict[str, dict[str, list[dict[str, str
 
 
 _ID_CODES: dict[str, tuple[str, ...]] = {
-    "core": ("C", "N", "W"),
+    "core": ("C", "N", "W", "P"),
     "evidence_gap": ("S",),
     "reinforce": ("R",),
     "distinguishing": ("D",),
