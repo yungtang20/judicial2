@@ -105,18 +105,30 @@
 
       <section id="gate2-panel" class="panel" aria-labelledby="gate2-title" hidden>
         <p class="gate-label">GATE 2</p><h3 id="gate2-title">候選罪章與中立問答</h3>
-        <div class="warning"><strong>非法律結論</strong><span>候選來自規則比對或 AI 分析。請先確認罪章，再逐題作答。</span></div>
-        <form id="offense-form">
-          <div class="field-stack"><label for="question-role">本次筆錄身分</label><select id="question-role" name="role"><option value="victim">被害人</option><option value="suspect">涉嫌人（有被害人）</option><option value="transfer">涉嫌人（移送／無被害人）</option></select></div>
-          <div class="actions">
-            <button id="ai-analyze" class="secondary" type="button">AI 分析候選罪章</button>
-          </div>
-          <fieldset><legend>候選罪章</legend><div id="offense-list" class="choice-grid"></div></fieldset>
-          <button class="secondary" type="submit">建立／更新問句</button>
-        </form>
+        <div class="warning"><strong>非法律結論</strong><span>候選來自規則比對或 AI 分析。請先確認罪章，再作答。</span></div>
 
-        <section id="profile-section" aria-labelledby="profile-title">
-          <h4 id="profile-title">受詢問人年籍與詢問時間</h4>
+        <div id="gate2-steps" class="gate2-steps">
+          <button id="step-tab-offense" class="step-tab current" type="button">① 選罪章</button>
+          <button id="step-tab-profile" class="step-tab" type="button">② 年籍與時間</button>
+          <button id="step-tab-qa" class="step-tab" type="button">③ 逐題問答</button>
+        </div>
+
+        <section id="gate2-step-offense" class="gate2-step" aria-labelledby="offense-step-title">
+          <h4 id="offense-step-title" class="visually-hidden">選擇候選罪章</h4>
+          <form id="offense-form">
+            <div class="field-stack"><label for="question-role">本次筆錄身分</label><select id="question-role" name="role"><option value="victim">被害人</option><option value="suspect">涉嫌人（有被害人）</option><option value="transfer">涉嫌人（移送／無被害人）</option></select></div>
+            <div class="actions">
+              <button id="ai-analyze" class="secondary" type="button">AI 分析候選罪章</button>
+            </div>
+            <fieldset><legend>候選罪章（建議先選 1 個主要罪章，再勾選需區辨的關聯罪章）</legend><div id="offense-list" class="choice-grid"></div></fieldset>
+            <div class="actions">
+              <button class="primary" type="submit">建立問句 → 進入年籍</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="gate2-step-profile" class="gate2-step" hidden aria-labelledby="profile-step-title">
+          <h4 id="profile-step-title" class="visually-hidden">受詢問人年籍與詢問時間</h4>
           <form id="profile-form" class="details-grid">
             <div class="field-stack"><label for="profile-name">姓名</label><input id="profile-name" name="name" autocomplete="off"></div>
             <div class="field-stack"><label for="profile-alias">別（綽號）號</label><input id="profile-alias" name="alias"></div>
@@ -132,48 +144,68 @@
             <div class="field-stack"><label for="session-start">詢問開始時間</label><input id="session-start" name="session_start" type="datetime-local"></div>
             <div class="field-stack"><label for="session-end">詢問結束時間</label><input id="session-end" name="session_end" type="datetime-local"></div>
             <div class="field-stack wide"><label for="session-location">詢問地點</label><input id="session-location" name="session_location"></div>
-            <div class="wide"><button class="secondary" type="submit">儲存年籍與詢問時間</button></div>
+            <div class="actions wide">
+              <button class="secondary" type="submit">儲存年籍</button>
+              <button id="profile-to-qa" class="primary" type="button">下一步：逐題問答 →</button>
+            </div>
           </form>
         </section>
 
-        <form id="answers-form">
-          <div id="qa-progress" class="qa-progress" aria-live="polite"></div>
-          <div id="question-current" class="question-card"></div>
+        <section id="gate2-step-qa" class="gate2-step" hidden aria-labelledby="qa-step-title">
+          <h4 id="qa-step-title" class="visually-hidden">逐題問答</h4>
+          <form id="answers-form">
+            <div class="qa-layout">
+              <nav id="question-outline" class="question-outline" aria-label="題目總覽"></nav>
+              <div class="qa-main">
+                <div id="qa-progress" class="qa-progress" aria-live="polite"></div>
+                <div id="question-current" class="question-card"></div>
+                <div class="actions">
+                  <button id="prev-question" class="secondary" type="button">← 上一題</button>
+                  <button id="next-question" class="primary" type="button">下一題 →</button>
+                  <button class="secondary" type="submit">儲存全部回答</button>
+                </div>
+              </div>
+            </div>
+          </form>
           <div class="actions">
-            <button id="prev-question" class="secondary" type="button">上一題</button>
-            <button id="next-question" class="primary" type="button">下一題</button>
-            <button class="secondary" type="submit">儲存全部回答</button>
+            <button id="approve-gate2" class="primary" type="button">我已核對罪章與全部回答，完成 Gate 2</button>
           </div>
-        </form>
-        <div class="actions">
-          <button id="approve-gate2" class="primary" type="button">我已核對罪章與全部回答</button>
-        </div>
+        </section>
       </section>
 
       <section id="numbers-panel" class="panel" aria-labelledby="numbers-title" hidden>
         <p class="gate-label">GATE 2.5</p><h3 id="numbers-title">補登公司系統案號</h3>
-        <p id="brief-preview"></p>
+        <p>請先在公司系統輸登後，填入對應案號。下方為將寫入條陳的摘要。</p>
+        <p id="brief-preview" class="brief-preview"></p>
         <form id="numbers-form" class="details-grid">
           <div class="field-stack"><label for="proof-number">證明單案號</label><input id="proof-number" name="proof" required></div>
           <div id="women-child-field" class="field-stack"><label for="women-child-number">婦幼案號</label><input id="women-child-number" name="women_child"></div>
           <div id="case165-field" class="field-stack"><label for="case165-number">165 案號</label><input id="case165-number" name="case_165"></div>
-          <div class="wide"><button class="primary" type="submit">確認案號並產生條陳</button></div>
+          <div class="wide"><button class="primary" type="submit">確認案號並產生條陳 →</button></div>
         </form>
       </section>
 
       <section id="output-panel" class="panel" aria-labelledby="output-title" hidden>
         <p class="gate-label">GATE 3–5</p><h3 id="output-title">筆錄與條陳</h3>
-        <p>DOCX 會先由本機 LibreOffice 實際排版。超過 8 頁時禁止下載。筆錄含公司範本必問題，逐字保留。</p>
+        <p>DOCX 由本機 LibreOffice 實際排版，超過 8 頁時禁止下載。</p>
         <div class="field-stack"><label for="output-role">輸出身分</label><select id="output-role"><option value="victim">被害人</option><option value="suspect">涉嫌人（有被害人）</option><option value="transfer">涉嫌人（移送／無被害人）</option></select></div>
-        <div class="actions">
-          <button id="download-interview" class="primary" type="button">下載完整筆錄 DOCX</button>
-          <button id="download-brief" class="secondary" type="button">下載條陳 DOCX</button>
+        <div class="output-grid">
+          <div class="output-doc">
+            <h4>筆錄 DOCX</h4>
+            <p class="muted">公司範本必問題逐字保留</p>
+            <button id="download-interview" class="primary" type="button">下載筆錄 DOCX</button>
+          </div>
+          <div class="output-doc">
+            <h4>條陳 DOCX</h4>
+            <p class="muted">含上方案號</p>
+            <button id="download-brief" class="secondary" type="button">下載條陳 DOCX</button>
+          </div>
         </div>
-        <label for="brief-output">條陳內容</label>
+        <label for="brief-output">條陳內容（可直接複製貼到公司系統）</label>
         <textarea id="brief-output" rows="16" readonly></textarea>
         <div class="actions">
           <button id="copy-brief" class="secondary" type="button">複製條陳</button>
-          <button id="start-suspect" class="primary" type="button">下一步：製作涉嫌人筆錄</button>
+          <button id="start-suspect" class="primary" type="button">下一步：製作涉嫌人筆錄 →</button>
           <button id="reopen-case" class="danger" type="button">重新開啟並修正事實</button>
         </div>
         <p class="privacy-note">案件資料以目前 Windows 使用者的 DPAPI 金鑰加密。資料庫移到其他電腦或 Windows 帳號後通常無法解密。下載的 DOCX 是未加密明文。</p>

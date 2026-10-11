@@ -1,7 +1,7 @@
 "use strict";
 
 const token = document.querySelector('meta[name="session-token"]').content;
-const state = { current: null, bank: null, questionIndex: 0 };
+const state = { current: null, bank: null, questionIndex: 0, gate2Step: "offense" };
 const $ = (selector) => document.querySelector(selector);
 
 function announce(message, isError = false) {
@@ -47,6 +47,7 @@ function activeInterview() {
 const KIND_LABELS = {
   company: "公司必問",
   common: "通用必要問句",
+  company_offense: "公司套表題",
   core: "核心問句",
   supplemental: "補充問句",
   reinforce: "補強問句",
@@ -54,12 +55,47 @@ const KIND_LABELS = {
   aggravating: "加重問句",
 };
 
+// 題目分組順序：同罪章、同類型的題目連續排列
+const KIND_ORDER = ["company", "common", "company_offense", "core", "supplemental", "reinforce", "distinguishing", "aggravating"];
+
 function kindMeta(question) {
   if (question.kind === "company") return "公司範本必問題（逐字保留）";
   if (question.kind === "common") return "通用必要問句";
   const parts = [KIND_LABELS[question.kind] || question.kind];
   if (question.offense_name) parts.push(question.offense_name);
   return parts.join(" · ") + " · 待本案人工確認";
+}
+
+// 把問句依「罪章 → 類型」排序，並回傳分段資訊供總覽使用
+function groupQuestions(questions) {
+  const groups = [];
+  let currentKey = null;
+  const sorted = [...questions].sort((a, b) => {
+    const offA = a.offense_name || "";
+    const offB = b.offense_name || "";
+    if (offA !== offB) {
+      // 公司必問、通用題排最前
+      const rankA = a.kind === "company" ? -2 : a.kind === "common" ? -1 : 0;
+      const rankB = b.kind === "company" ? -2 : b.kind === "common" ? -1 : 0;
+      if (rankA !== rankB) return rankA - rankB;
+      return offA.localeCompare(offB, "zh-Hant");
+    }
+    return KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind);
+  });
+  for (const question of sorted) {
+    const key = `${question.offense_name || "通用"}|${question.kind}`;
+    if (key !== currentKey) {
+      groups.push({ key, label: groupLabel(question), questions: [] });
+      currentKey = key;
+    }
+    groups[groups.length - 1].questions.push(question);
+  }
+  return { sorted, groups };
+}
+
+function groupLabel(question) {
+  const kind = KIND_LABELS[question.kind] || question.kind;
+  return question.offense_name ? `${question.offense_name} · ${kind}` : kind;
 }
 
 function renderProgress(caseState) {
@@ -130,6 +166,21 @@ function clampQuestionIndex(caseData) {
   if (state.questionIndex < 0) state.questionIndex = 0;
 }
 
+function setGate2Step(step) {
+  state.gate2Step = step;
+  const tabs = {
+    offense: "#step-tab-offense",
+    profile: "#step-tab-profile",
+    qa: "#step-tab-qa",
+  };
+  for (const [name, tabId] of Object.entries(tabs)) {
+    $(tabId).classList.toggle("current", name === step);
+  }
+  setVisible("#gate2-step-offense", step === "offense");
+  setVisible("#gate2-step-profile", step === "profile");
+  setVisible("#gate2-step-qa", step === "qa");
+}
+
 function renderCurrentQuestion(caseData) {
   clampQuestionIndex(caseData);
   const container = $("#question-current");
@@ -138,11 +189,13 @@ function renderCurrentQuestion(caseData) {
   if (!count) {
     progress.textContent = "尚未建立問句；請先選擇候選罪章。";
     container.replaceChildren();
+    $("#question-outline").replaceChildren();
     return;
   }
   const index = state.questionIndex;
   const question = caseData.questions[index];
-  progress.textContent = `第 ${index + 1} / ${count} 題 · ${KIND_LABELS[question.kind] || question.kind} · 已作答 ${caseData.questions.filter((item) => item.answer).length} 題`;
+  const answered = caseData.questions.filter((item) => (item.answer || "").trim()).length;
+  progress.textContent = `第 ${index + 1} / ${count} 題 · 已作答 ${answered} 題`;
 
   const label = document.createElement("label");
   label.htmlFor = "current-answer";
@@ -159,10 +212,51 @@ function renderCurrentQuestion(caseData) {
   textarea.addEventListener("input", () => {
     question.answer = textarea.value;
     question.status = textarea.value.trim() ? "ANSWERED" : "PENDING";
+    refreshOutline();
   });
   container.replaceChildren(label, meta, textarea);
   $("#prev-question").disabled = index === 0;
   $("#next-question").disabled = index === count - 1;
+  highlightOutline(index);
+}
+
+function highlightOutline(index) {
+  document.querySelectorAll("#question-outline .outline-item").forEach((node, i) => {
+    node.classList.toggle("current", i === index);
+    node.classList.toggle("answered", Boolean(state.current?.questions[i]?.answer?.trim()));
+  });
+}
+
+function refreshOutline() {
+  if (!state.current) return;
+  highlightOutline(state.questionIndex);
+}
+
+function renderQuestionOutline(caseData) {
+  const container = $("#question-outline");
+  const { groups } = groupQuestions(caseData.questions);
+  const nodes = [];
+  let flatIndex = 0;
+  for (const group of groups) {
+    const heading = document.createElement("div");
+    heading.className = "outline-group";
+    heading.textContent = group.label;
+    nodes.push(heading);
+    for (const question of group.questions) {
+      const itemIndex = flatIndex; // closure：flatIndex 會繼續遞增，必須先固定
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "outline-item";
+      item.textContent = `${itemIndex + 1}. ${question.text.slice(0, 24)}${question.text.length > 24 ? "…" : ""}`;
+      item.addEventListener("click", () => {
+        state.questionIndex = itemIndex;
+        renderCurrentQuestion(state.current);
+      });
+      nodes.push(item);
+      flatIndex += 1;
+    }
+  }
+  container.replaceChildren(...nodes);
 }
 
 function stepQuestion(delta) {
@@ -209,12 +303,31 @@ function renderCase(caseData) {
   fillGate1(caseData);
   renderOffenses(caseData);
   fillProfileForm(caseData);
+  if (caseData.questions.length) {
+    // 讓資料順序與總覽顯示順序一致（罪章分組、類型排序）
+    caseData.questions.sort((a, b) => {
+      const offA = a.offense_name || "";
+      const offB = b.offense_name || "";
+      if (offA !== offB) {
+        const rankA = a.kind === "company" ? -2 : a.kind === "common" ? -1 : 0;
+        const rankB = b.kind === "company" ? -2 : b.kind === "common" ? -1 : 0;
+        if (rankA !== rankB) return rankA - rankB;
+        return offA.localeCompare(offB, "zh-Hant");
+      }
+      return KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind);
+    });
+    renderQuestionOutline(caseData);
+  }
   renderCurrentQuestion(caseData);
   renderNumbers(caseData);
   setVisible("#gate1-panel", caseData.state === "GATE1_REVIEW");
   setVisible("#gate2-panel", caseData.state === "GATE2_QA");
   setVisible("#numbers-panel", caseData.state === "CASE_NUMBERS");
   setVisible("#output-panel", caseData.state === "OUTPUT_READY");
+  if (caseData.state === "GATE2_QA") {
+    // 有罪章與問句時直接停在問答；否則從選罪章開始
+    setGate2Step(caseData.questions.length ? "qa" : "offense");
+  }
   if (caseData.state === "OUTPUT_READY") renderOutputRoles(caseData);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -225,7 +338,7 @@ async function refreshCases() {
     const li = document.createElement("li");
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = `${item.case_id.slice(0, 8)} · ${item.state} · r${item.revision}`;
+    button.textContent = `${item.case_id.slice(0, 8)} · ${stateLabel(item.state)} · r${item.revision}`;
     button.addEventListener("click", async () => {
       try { renderCase(await jsonApi(`/api/cases/${item.case_id}`)); }
       catch (error) { announce(error.message, true); }
@@ -234,6 +347,15 @@ async function refreshCases() {
     return li;
   });
   $("#case-list").replaceChildren(...nodes);
+}
+
+function stateLabel(state) {
+  return {
+    GATE1_REVIEW: "1 事實",
+    GATE2_QA: "2 問答",
+    CASE_NUMBERS: "2.5 案號",
+    OUTPUT_READY: "3-5 輸出",
+  }[state] || state;
 }
 
 async function action(name, payload = {}) {
@@ -316,8 +438,12 @@ $("#ai-analyze").addEventListener("click", async () => {
 $("#offense-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const offenseIds = Array.from(document.querySelectorAll('input[name="offense"]:checked')).map((item) => item.value);
-  try { await action("set_offenses", { offense_ids: offenseIds, role: $("#question-role").value }); announce("問句已建立，請逐題作答。 "); }
-  catch (error) { announce(error.message, true); }
+  if (!offenseIds.length) { announce("請至少選擇一個罪章。", true); return; }
+  try {
+    await action("set_offenses", { offense_ids: offenseIds, role: $("#question-role").value });
+    setGate2Step("profile");
+    announce("問句已建立。請填寫年籍與詢問時間。 ");
+  } catch (error) { announce(error.message, true); }
 });
 
 $("#profile-form").addEventListener("submit", async (event) => {
@@ -343,6 +469,12 @@ $("#profile-form").addEventListener("submit", async (event) => {
   } catch (error) { announce(error.message, true); }
 });
 
+$("#profile-to-qa").addEventListener("click", () => setGate2Step("qa"));
+
+$("#step-tab-offense").addEventListener("click", () => setGate2Step("offense"));
+$("#step-tab-profile").addEventListener("click", () => setGate2Step("profile"));
+$("#step-tab-qa").addEventListener("click", () => setGate2Step("qa"));
+
 $("#prev-question").addEventListener("click", () => stepQuestion(-1));
 $("#next-question").addEventListener("click", () => stepQuestion(1));
 
@@ -354,13 +486,22 @@ $("#answers-form").addEventListener("submit", async (event) => {
   }
   try {
     await action("save_answers", { answers });
-    renderCurrentQuestion(state.current);
     announce("回答已加密保存。 ");
   } catch (error) { announce(error.message, true); }
 });
 
 $("#approve-gate2").addEventListener("click", async () => {
-  // 先儲存目前答案再核准，避免最後一題未落盤
+  const unanswered = state.current.questions.filter((q) => !(q.answer || "").trim());
+  if (unanswered.length) {
+    const goFirst = window.confirm(`尚有 ${unanswered.length} 題未作答（不清楚可填 UNKNOWN）。要跳到第一個未作答的題目嗎？`);
+    if (goFirst) {
+      const firstIndex = state.current.questions.findIndex((q) => !(q.answer || "").trim());
+      state.questionIndex = Math.max(0, firstIndex);
+      setGate2Step("qa");
+      renderCurrentQuestion(state.current);
+      return;
+    }
+  }
   const answers = {};
   for (const question of state.current.questions) answers[question.id] = question.answer || "";
   try {
