@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-import mimetypes
+import os
 import re
 import secrets
 from copy import deepcopy
@@ -33,7 +33,7 @@ CASE_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})$")
 ACTION_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})/actions$")
 DOC_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})/documents/(victim|suspect|transfer)/(interview|brief)$")
 BRIEF_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})/brief/(victim|suspect|transfer)$")
-ALLOWED_HOSTS = {f"{HOST}:{PORT}", HOST}
+ALLOWED_HOSTS = {f"{HOST}:{PORT}", HOST, "localhost", f"localhost:{PORT}", "127.0.0.1", f"127.0.0.1:{PORT}"}
 STATIC_FILES = {
     "/": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
@@ -65,14 +65,20 @@ class Handler(BaseHTTPRequestHandler):
 
     def _host_allowed(self) -> bool:
         host = self.headers.get("Host", "")
-        return host in ALLOWED_HOSTS
+        if os.environ.get("RENDER") or ".onrender.com" in host or host.startswith("0.0.0.0"):
+            return True
+        return host in ALLOWED_HOSTS or host.split(":")[0] in ALLOWED_HOSTS
 
     def _token_allowed(self) -> bool:
         return secrets.compare_digest(self.headers.get("X-Session-Token", ""), SESSION_TOKEN)
 
     def _origin_allowed(self) -> bool:
-        return self.headers.get("Origin") == APP_ORIGIN
-
+        origin = self.headers.get("Origin", "")
+        if not origin:
+            return False
+        if os.environ.get("RENDER") or ".onrender.com" in origin:
+            return True
+        return origin == APP_ORIGIN or origin == f"http://localhost:{PORT}" or origin == f"http://127.0.0.1:{PORT}"
     def _begin(self, status: int, content_type: str, length: int = 0, **headers: str) -> None:
         self.send_response(status)
         self._security_headers(content_type)

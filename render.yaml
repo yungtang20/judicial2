@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: judicial-workbench
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: RENDER
+        value: "true"

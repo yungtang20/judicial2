@@ -8,3 +8,4 @@ output/
 
 
 .env
+.encryption_key

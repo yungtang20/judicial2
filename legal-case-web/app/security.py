@@ -15,7 +15,7 @@ class EncryptionError(RuntimeError):
 
 
 class _Blob(ctypes.Structure):
-    _fields_ = [("cbData", wintypes.DWORD), ("pbData", ctypes.POINTER(ctypes.c_char))]
+    _fields_ = [("cbData", wintypes.DWORD), ("pbData", ctypes.POINTER(ctypes.c_char))] if os.name == "nt" else []
 
 
 def _blob(data: bytes) -> tuple[_Blob, ctypes.Array[ctypes.c_char]]:
@@ -23,9 +23,46 @@ def _blob(data: bytes) -> tuple[_Blob, ctypes.Array[ctypes.c_char]]:
     return _Blob(len(data), ctypes.cast(buffer, ctypes.POINTER(ctypes.c_char))), buffer
 
 
+_LINUX_KEY_ENV = "JUDICIAL_ENCRYPTION_KEY"
+_PERSISTENT_KEY_FILE = os.path.join(os.path.dirname(__file__), "..", "data", ".encryption_key")
+
+
+def _get_linux_fernet_key() -> bytes:
+    """取得或產生 Linux 容器環境下的對稱加密金鑰。"""
+    env_key = os.environ.get(_LINUX_KEY_ENV, "").strip()
+    if env_key:
+        try:
+            Fernet(env_key.encode("ascii"))
+            return env_key.encode("ascii")
+        except Exception:
+            pass
+    try:
+        if os.path.isfile(_PERSISTENT_KEY_FILE):
+            key_data = open(_PERSISTENT_KEY_FILE, "rb").read().strip()
+            if key_data:
+                Fernet(key_data)
+                return key_data
+    except Exception:
+        pass
+    new_key = Fernet.generate_key()
+    try:
+        os.makedirs(os.path.dirname(_PERSISTENT_KEY_FILE), exist_ok=True)
+        open(_PERSISTENT_KEY_FILE, "wb").write(new_key)
+    except Exception:
+        pass
+    return new_key
+
+
 def _dpapi(data: bytes, decrypt: bool) -> bytes:
     if os.name != "nt":
-        raise EncryptionError("案件持久化只支援 Windows DPAPI")
+        fernet = Fernet(_get_linux_fernet_key())
+        if decrypt:
+            try:
+                return fernet.decrypt(data)
+            except Exception as exc:
+                raise EncryptionError("資料解密失敗") from exc
+        return fernet.encrypt(data)
+
     in_blob, keepalive = _blob(data)
     out_blob = _Blob()
     crypt32 = ctypes.windll.crypt32
