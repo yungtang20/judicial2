@@ -1,0 +1,235 @@
+{
+  "schema_version": "hg-lr-02-privacy-security-review-v1",
+  "review_id": "HG-LR-02-REVIEW-20261015-03",
+  "reviewed_on": "2026-10-15",
+  "decision_status": "CHANGES_REQUIRED_HUMAN_APPROVAL_PENDING",
+  "human_gate_id": "HG-LR-02",
+  "human_gate_status": "PENDING",
+  "packet_id": "LR-HG-20261015-04",
+  "packet_sha256": "4f8987ddd2ad9c0fdeded492fed78080aa7a288a80178e8468522b98b612065c",
+  "provider_review_id": "HG-LR-01-REVIEW-20261015-03",
+  "provider_review_sha256": "98c15cdcdaccb4915761ca06bec52412449aee4b1421bfcd22780a29507fe6b4",
+  "execution_mode": "SINGLE_EXECUTOR",
+  "agent_mode": "SINGLE_AGENT_MODE",
+  "scope": {
+    "evidence_only": true,
+    "live_provider_calls_performed": false,
+    "credentials_used": false,
+    "case_data_sent": false,
+    "runtime_enabled": false,
+    "gate2_connected": false,
+    "legal_conclusion": false,
+    "review_status": "HUMAN_REVIEW_REQUIRED"
+  },
+  "legal_source_context": {
+    "applicability_status": "REQUIRES_ROLE_PURPOSE_AND_EFFECTIVE_VERSION_REVIEW",
+    "notes": [
+      "The Personal Data Protection Act requires purpose limitation and a reasonable relationship to the collection purpose.",
+      "The Enforcement Rules describe technical and organizational measures including scope definition, risk management, incident response, access and security management, audit trails and continuous improvement.",
+      "The current statute page reports amendments with provisions whose effective date is not yet fixed; this review does not determine which legal basis applies to the eventual operator."
+    ],
+    "evidence_urls": [
+      "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=I0050021",
+      "https://law.moj.gov.tw/LawClass/LawAll.aspx?PCode=I0050022"
+    ]
+  },
+  "data_flow": [
+    {
+      "stage": "CASE_RUNTIME_TO_RETRIEVAL",
+      "current_state": "UNREACHABLE",
+      "data": [],
+      "persistence": "NONE",
+      "evidence": "The four frozen runtime surfaces contain zero retrieval-review provider references."
+    },
+    {
+      "stage": "DEIDENTIFIED_QUERY_BUILD",
+      "current_state": "OFFLINE_ONLY",
+      "data": [
+        "allowlisted child route IDs",
+        "allowlisted fact target names",
+        "finite observation status values",
+        "deterministic legal search terms",
+        "query ID and SHA-256"
+      ],
+      "persistence": "NOT_PERSISTED_BY_QUERY_MODULE",
+      "classification": "DATA_MINIMIZED_LEGAL_CASE_METADATA_NOT_PROVEN_ANONYMOUS",
+      "evidence": "The builder accepts no free-text parameter and validation reconstructs the full object for exact equality."
+    },
+    {
+      "stage": "HOSTED_PROVIDER_BOUNDARY",
+      "current_state": "DISABLED",
+      "data": [
+        "If later enabled, allowlisted offense and fact-status search terms would leave the device"
+      ],
+      "persistence": "PROVIDER_DEPENDENT",
+      "classification": "SENSITIVE_QUERY_METADATA",
+      "evidence": "Reviewed provider policies may log full query parameters or query text; no query has been sent by this application."
+    },
+    {
+      "stage": "ADAPTER_RESPONSE_NORMALIZATION",
+      "current_state": "OFFLINE_FIXTURES_ONLY",
+      "data": [
+        "provider ID",
+        "public source metadata",
+        "content fingerprint",
+        "relation IDs"
+      ],
+      "persistence": "ALLOWLISTED_METADATA_ONLY",
+      "classification": "PUBLIC_SOURCE_METADATA_WITH_LINKABLE_DOCUMENT_IDENTIFIERS",
+      "evidence": "Unknown hit fields are not copied, and explicit content fields are rejected; title, source ID and canonical URL remain persisted fields."
+    },
+    {
+      "stage": "METADATA_CACHE",
+      "current_state": "CALLER_PATH_REQUIRED_OFFLINE_ONLY",
+      "data": [
+        "adapter ID",
+        "query ID and SHA-256",
+        "source ID",
+        "authority",
+        "title",
+        "canonical URL",
+        "document date",
+        "fingerprint",
+        "relation IDs"
+      ],
+      "persistence": "PLAINTEXT_JSON_WHEN_CALLER_COMMITS",
+      "classification": "LINKABLE_LEGAL_RESEARCH_METADATA",
+      "evidence": "No default cache path exists, but committed offline cache is plaintext and includes a public judgment docket title and encoded locator URL."
+    },
+    {
+      "stage": "REMOVAL_AUDIT_AND_TOMBSTONE",
+      "current_state": "OFFLINE_ONLY",
+      "data": [
+        "provider ID",
+        "source ID",
+        "SHA-256 of source locator",
+        "UTC observation time",
+        "affected cache keys",
+        "before and after hashes"
+      ],
+      "persistence": "SAME_PLAINTEXT_CACHE",
+      "classification": "LINKABLE_AUDIT_METADATA",
+      "evidence": "The raw locator is not stored, but a deterministic unkeyed hash is not proof of anonymization for a small or enumerable identifier space."
+    },
+    {
+      "stage": "SYNC_BATCH_REPLAY_REPORTS",
+      "current_state": "OFFLINE_ONLY",
+      "data": [
+        "status",
+        "counts",
+        "opaque IDs",
+        "error type allowlist"
+      ],
+      "persistence": "CALLER_CONTROLLED",
+      "classification": "MINIMIZED_OPERATIONAL_METADATA",
+      "evidence": "Reports exclude query text, fixture summaries, raw provider error text, raw locator and traceback."
+    }
+  ],
+  "controls_verified": [
+    {
+      "control_id": "C01",
+      "status": "PASS",
+      "control": "No current runtime or Gate 2 reachability"
+    },
+    {
+      "control_id": "C02",
+      "status": "PASS",
+      "control": "Query schema is rebuilt from allowlisted routes, fact targets and finite statuses; extra or modified fields fail closed"
+    },
+    {
+      "control_id": "C03",
+      "status": "PASS",
+      "control": "External adapter refuses before network access and offline sync rejects external-network adapters"
+    },
+    {
+      "control_id": "C04",
+      "status": "PASS",
+      "control": "Normalized cache schema excludes document content, excerpts, case payload and explicit personal-data fields"
+    },
+    {
+      "control_id": "C05",
+      "status": "PASS",
+      "control": "Sync, batch and replay reports omit query text, provider error text, raw locator and traceback"
+    },
+    {
+      "control_id": "C06",
+      "status": "PASS_WITH_LIMITATION",
+      "control": "Cache and audit integrity hashes detect unreviewed modification only while the validator and trusted baseline remain authoritative; hashes are not signatures"
+    },
+    {
+      "control_id": "C07",
+      "status": "PASS_WITH_LIMITATION",
+      "control": "Removal uses exact registry matching and stores only a locator hash, but deterministic hashing does not make an enumerable locator anonymous"
+    }
+  ],
+  "remediated_findings": [
+    {
+      "finding_id": "P02_INVALID_INPUT_ECHO_IN_EXCEPTION",
+      "label": "FACT",
+      "severity": "HIGH",
+      "status": "REMEDIATED_ENGINEERING_REVIEW_REQUIRED",
+      "remediation": "Route, fact-target and status validation now returns stable error codes and generic field-level messages without caller-controlled values.",
+      "verification": "Negative tests cover unapproved route values, arbitrary fact-target keys and arbitrary status values and assert that each sentinel is absent from the exception."
+    }
+  ],
+  "blocking_findings": [
+    {
+      "finding_id": "P01_PUBLIC_DOCKET_IDENTIFIER_PERSISTED",
+      "label": "FACT",
+      "severity": "HIGH",
+      "evidence": "A committed metadata cache contains the public judgment title '100年度簡字第5635號' and an encoded KSDM locator in canonical_url.",
+      "impact": "This contradicts broad documentation saying case numbers are not saved and keeps document-level activity linkable.",
+      "required_decision": "The privacy reviewer must either explicitly classify public source docket identifiers as permitted metadata or require opaque cache records with a separately controlled resolution step."
+    },
+    {
+      "finding_id": "P03_PLAINTEXT_CACHE_WITHOUT_ACCESS_CONTROL_CONTRACT",
+      "label": "FACT",
+      "severity": "HIGH",
+      "evidence": "Committed cache and tombstones are JSON files; the module does not enforce encryption, ACLs, retention or secure deletion.",
+      "impact": "Legal research and source-removal activity can be read by any principal with filesystem access.",
+      "required_decision": "Choose no persistent cache or define encryption, access control and owner-approved storage before HG-LR-03."
+    },
+    {
+      "finding_id": "P04_HOSTED_QUERY_LOGGING",
+      "label": "FACT",
+      "severity": "HIGH",
+      "evidence": "Reviewed hosted providers document logging of full query parameters or query text and related operational metadata.",
+      "impact": "Even without names, offense routes and unresolved fact statuses can reveal sensitive investigative interest.",
+      "required_decision": "Approve the exact outbound field allowlist, provider, purpose and retention boundary before any hosted call."
+    },
+    {
+      "finding_id": "P05_HASH_LINKABILITY_AND_UNKEYED_INTEGRITY",
+      "label": "INFERENCE",
+      "severity": "MEDIUM",
+      "evidence": "Query, locator, record and response hashes are deterministic SHA-256 values without a secret key.",
+      "impact": "Small input spaces can be enumerated, and an attacker able to rewrite the file can recompute unkeyed hashes.",
+      "required_decision": "Do not label hashes anonymous or authenticated; define whether keyed integrity or encryption is required by the threat model."
+    },
+    {
+      "finding_id": "P06_PURPOSE_RETENTION_AND_INCIDENT_OWNERSHIP_UNDEFINED",
+      "label": "UNKNOWN",
+      "severity": "HIGH",
+      "evidence": "No approved production purpose statement, retention schedule, deletion verification, access owner or incident response owner exists.",
+      "impact": "The eventual operator cannot demonstrate bounded collection, use, retention or response responsibilities.",
+      "required_decision": "Assign owners and approve purpose, data classes, retention, deletion and incident procedures before persistence or external transfer."
+    }
+  ],
+  "minimum_conditions_before_approval": [
+    "Resolve P01 by explicitly approving or removing public docket identifiers from persistent metadata.",
+    "Classify allowlisted route and fact-status queries as sensitive legal metadata rather than proven anonymous data.",
+    "Select a hosted provider only after accepting its query logging, retention, terms and cross-boundary processing.",
+    "Define cache encryption or no-cache policy, filesystem access control, retention, verified deletion and incident response ownership.",
+    "Document the operator role, specific purpose and applicable legal basis using the law version effective for that operator; this engineering review does not decide legal compliance.",
+    "Keep HG-LR-03, HG-LR-04 and HG-LR-05 independent and pending."
+  ],
+  "claims_not_made": [
+    "HG_LR_02_APPROVED",
+    "ANONYMOUS_DATA",
+    "LEGAL_COMPLIANCE_CONFIRMED",
+    "PERSONAL_DATA_ABSENT",
+    "CACHE_SECURITY_APPROVED",
+    "HOSTED_TRANSFER_APPROVED",
+    "RUNTIME_CONNECTION_AUTHORIZED",
+    "DEPLOYMENT_AUTHORIZED"
+  ]
+}

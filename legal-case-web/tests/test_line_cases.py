@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import pytest
 from app.workflow import create_case, apply_action
 from app.rules import candidate_offenses
 from tests.helpers import BANK
@@ -28,7 +27,7 @@ def test_line_case_drunk_driving_no_victim_flow():
     cands = candidate_offenses(intake["summary"], BANK)
     assert any(c["id"] == "public_danger" for c in cands)
 
-    case = apply_action(case, "set_offenses", {"offense_ids": ["public_danger"], "role": "transfer"}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["public_danger"], "legal_route_ids": [], "route_review_confirmed": True, "role": "transfer"}, BANK)
     assert len(case["questions"]) > 0
 
     # Answers & Gate 2
@@ -53,7 +52,7 @@ def test_line_case_theft_caught_victim_to_suspect_flow():
     }
     case = create_case(intake, BANK)
     case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
-    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "role": "victim"}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, BANK)
 
     answers = {q["id"]: "商品遭竊未結帳屬實" for q in case["questions"]}
     case = apply_action(case, "save_answers", {"answers": answers, "role": "victim"}, BANK)
@@ -64,7 +63,7 @@ def test_line_case_theft_caught_victim_to_suspect_flow():
     # 涉嫌人續辦
     case = apply_action(case, "start_interview", {"role": "suspect"}, BANK)
     assert case["state"] == "GATE2_QA"
-    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "role": "suspect"}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "suspect"}, BANK)
     s_answers = {q["id"]: "坦承行竊，深感後悔" for q in case["questions"]}
     case = apply_action(case, "save_answers", {"answers": s_answers, "role": "suspect"}, BANK)
     case = apply_action(case, "approve_gate2", {"confirmed": True, "role": "suspect"}, BANK)

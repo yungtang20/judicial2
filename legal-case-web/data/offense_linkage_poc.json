@@ -1,0 +1,194 @@
+{
+  "schema_version": "offense-linkage-poc-v1",
+  "runtime_enabled": false,
+  "legal_conclusion": false,
+  "review_status": "HUMAN_REVIEW_REQUIRED",
+  "scope_note": "唯讀 PoC；只驗證普通竊盜、加重竊盜與普通侵占的來源化關聯，不接入 Gate 2。",
+  "ingestion_status": {
+    "statutes": "OFFLINE_SNAPSHOT_VERIFIED",
+    "judgments": "ONE_EXISTING_VERIFIED_ANCHOR",
+    "prosecution_documents": "NOT_INGESTED",
+    "prosecution_document_reason": "公開書類查詢識別與自動化使用邊界尚未完成核對，不以查詢頁或文字相似度建立罪章關聯。"
+  },
+  "route_profiles": [
+    {
+      "route_id": "theft_320_1_movable",
+      "parent_offense_id": "theft",
+      "required_fact_targets": [
+        "object_status",
+        "possession_before_taking",
+        "authorization_scope_status",
+        "post_acquisition_conduct",
+        "completed_or_attempted"
+      ]
+    },
+    {
+      "route_id": "aggravated_theft_321",
+      "parent_offense_id": "aggravated_theft",
+      "required_fact_targets": [
+        "base_theft_facts",
+        "aggravation_presence",
+        "aggravation_awareness",
+        "completed_or_attempted"
+      ]
+    },
+    {
+      "route_id": "embezzlement_335_general",
+      "parent_offense_id": "embezzlement",
+      "required_fact_targets": [
+        "object_status",
+        "prior_lawful_custody",
+        "post_acquisition_conduct",
+        "unlawful_possession_intent",
+        "completed_or_attempted"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "LAW-CRIMINAL-CODE-320",
+      "source_type": "statute",
+      "authority": "全國法規資料庫",
+      "title": "中華民國刑法第320條",
+      "canonical_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+      "document_date": "2026-07-22",
+      "retrieved_at": "2026-10-15",
+      "fingerprinted_text": "刑法第320條離線快照；用於動產竊盜 route 的法條身分與要件來源，不代表個案成立犯罪。",
+      "content_sha256": "7c3cae8bc5d2239fc364cb6a0d8a5d7a24ba8c36de3ffec61ccb4c39acca9709"
+    },
+    {
+      "source_id": "LAW-CRIMINAL-CODE-321",
+      "source_type": "statute",
+      "authority": "全國法規資料庫",
+      "title": "中華民國刑法第321條",
+      "canonical_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+      "document_date": "2026-07-22",
+      "retrieved_at": "2026-10-15",
+      "fingerprinted_text": "刑法第321條離線快照；用於第320條基礎行為及法定加重事由的關聯，不代表個案成立犯罪。",
+      "content_sha256": "2ebb4244263a7468f03540aa00bf3809de161cf356104c9a0bf29f2e8e665834"
+    },
+    {
+      "source_id": "LAW-CRIMINAL-CODE-335",
+      "source_type": "statute",
+      "authority": "全國法規資料庫",
+      "title": "中華民國刑法第335條",
+      "canonical_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+      "document_date": "2026-07-22",
+      "retrieved_at": "2026-10-15",
+      "fingerprinted_text": "刑法第335條離線快照；用於普通侵占 route 的法條身分與要件來源，不代表個案成立犯罪。",
+      "content_sha256": "1f68e8ba615d0529f99895872b341938859cb818e4261f2bb2761ca95565cf56"
+    },
+    {
+      "source_id": "JUDG-KSDM-100-JIAN-5635",
+      "source_type": "judgment",
+      "authority": "司法院裁判書系統",
+      "title": "臺灣高雄地方法院100年度簡字第5635號刑事判決",
+      "canonical_url": "https://judgment.judicial.gov.tw/FJUD/data.aspx?ty=JD&id=KSDM%2c100%2c%e7%b0%a1%2c5635%2c20111130%2c1",
+      "document_date": "2011-11-30",
+      "retrieved_at": "2026-10-02",
+      "verification_status": "PROJECT_EXISTING_ANCHOR_NOT_LIVE_REVERIFIED",
+      "provider_locators": {
+        "judicial_jid": "KSDM,100,簡,5635,20111130,1",
+        "tlr_citation_id": "KSDM,100,簡,5635,20111130,1"
+      },
+      "fingerprinted_text": "既有專案裁判錨點；只支持查證竊盜與侵占時應釐清取得前持有狀態，不直接套用個案結論。",
+      "content_sha256": "afc73333ca2ade6baf331cf9383d5ed0d6d41278c2f0842ad6cdbfe4525fe13e"
+    },
+    {
+      "source_id": "GUIDE-PSUE-PUBLIC-DOCUMENTS",
+      "source_type": "official_guidance",
+      "authority": "臺灣高等檢察署",
+      "title": "公開書類查詢系統資料範圍說明",
+      "canonical_url": "https://www.tph.moj.gov.tw/4421/4663/644719/656174/post",
+      "document_date": "2024-04-19",
+      "retrieved_at": "2026-10-15",
+      "usage": "SOURCE_DISCOVERY_ONLY",
+      "fingerprinted_text": "公開書類自第一審裁判書公開後提供；本 PoC 僅記錄來源範圍，尚未匯入任何起訴書或建立罪章邊。",
+      "content_sha256": "cc1a8c056d69e5eb763f08649d02eb1037293ac5514e444e94f4be7f9b53feeb"
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "REL-THEFT-EMBEZZLEMENT-POSSESSION",
+      "relation_type": "DISTINGUISHED_FROM",
+      "subject_route_id": "theft_320_1_movable",
+      "object_route_id": "embezzlement_335_general",
+      "fact_target": "prior_lawful_custody",
+      "proposition": "區分方向是查明行為人取得物品前是否已基於交付、保管、借用或其他原因持有該物，而不是只比對案情中的罪名關鍵字。",
+      "source_ids": [
+        "LAW-CRIMINAL-CODE-320",
+        "LAW-CRIMINAL-CODE-335",
+        "JUDG-KSDM-100-JIAN-5635"
+      ],
+      "evidence_sha256": "82d05842c39b7fa4dd2c59e257f1c77311602dbf9721b92f88f2cd8b10995589",
+      "review_status": "HUMAN_REVIEW_REQUIRED",
+      "legal_conclusion": false
+    },
+    {
+      "relation_id": "REL-AGGRAVATED-THEFT-BASE",
+      "relation_type": "AGGRAVATES",
+      "subject_route_id": "aggravated_theft_321",
+      "object_route_id": "theft_320_1_movable",
+      "fact_target": "aggravation_presence",
+      "proposition": "加重竊盜方向必須先保留第320條基礎行為，再分別查明第321條所列加重事由及行為人對該事由的認識。",
+      "source_ids": [
+        "LAW-CRIMINAL-CODE-320",
+        "LAW-CRIMINAL-CODE-321"
+      ],
+      "evidence_sha256": "e2e4f432e6ebada13f8460f546ed0727e9233ee0f93b8f90a4ff57475ace4d8b",
+      "review_status": "HUMAN_REVIEW_REQUIRED",
+      "legal_conclusion": false
+    },
+    {
+      "relation_id": "REL-THEFT-REQUIRES-CONTROL",
+      "relation_type": "REQUIRES_FACT",
+      "subject_route_id": "theft_320_1_movable",
+      "object_fact_target": "possession_before_taking",
+      "fact_target": "possession_before_taking",
+      "proposition": "動產竊盜候選需要取得物品移動前的實際持有、保管或控制狀態；不知道時維持 UNKNOWN。",
+      "source_ids": [
+        "LAW-CRIMINAL-CODE-320",
+        "JUDG-KSDM-100-JIAN-5635"
+      ],
+      "evidence_sha256": "7c254b9898992f88c7fa34b759d888ba7cf12a530edce9caf6678d145c94127b",
+      "review_status": "HUMAN_REVIEW_REQUIRED",
+      "legal_conclusion": false
+    },
+    {
+      "relation_id": "REL-EMBEZZLEMENT-REQUIRES-CUSTODY",
+      "relation_type": "REQUIRES_FACT",
+      "subject_route_id": "embezzlement_335_general",
+      "object_fact_target": "prior_lawful_custody",
+      "fact_target": "prior_lawful_custody",
+      "proposition": "普通侵占候選需要查明行為人先前持有他人之物的具體來源，以及其後返還、移轉、出售或其他處理經過。",
+      "source_ids": [
+        "LAW-CRIMINAL-CODE-335",
+        "JUDG-KSDM-100-JIAN-5635"
+      ],
+      "evidence_sha256": "4605e8737beaf3336e062b6c3caf67172a8c4f636548b010ffb9fa6cdebeebe5",
+      "review_status": "HUMAN_REVIEW_REQUIRED",
+      "legal_conclusion": false
+    }
+  ],
+  "question_axes": [
+    {
+      "axis_id": "AXIS-PRIOR-POSSESSION",
+      "fact_target": "prior_lawful_custody",
+      "neutral_prompt": "請說明對方接觸該物品前，物品由誰實際持有、保管或控制，以及你如何知道。",
+      "relation_ids": [
+        "REL-THEFT-EMBEZZLEMENT-POSSESSION",
+        "REL-EMBEZZLEMENT-REQUIRES-CUSTODY"
+      ],
+      "existing_question_concept_refs": ["THF3201MOV-C02"],
+      "runtime_enabled": false
+    },
+    {
+      "axis_id": "AXIS-AGGRAVATION-PRESENCE",
+      "fact_target": "aggravation_presence",
+      "neutral_prompt": "請依你親自知悉的情形，分別說明取得物品時進入、破壞、攜帶物品、同行人數、災害或場所的具體情況。",
+      "relation_ids": ["REL-AGGRAVATED-THEFT-BASE"],
+      "existing_question_concept_refs": [],
+      "runtime_enabled": false
+    }
+  ]
+}

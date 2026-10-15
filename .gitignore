@@ -1,0 +1,13 @@
+# Root ignores (repo has no root .gitignore; legal-case-web/.gitignore covers only that subdir)
+.omo/
+.pytest_cache/
+__pycache__/
+*.pyc
+.wip-*.patch
+*.orig
+*.bak
+*.bak_orig
+*.rej
+_tmp_*.py
+# Local reference material (untracked, keep out of git noise; force-add if ever needed)
+偵查犯罪手冊(114.12.12版本).pdf

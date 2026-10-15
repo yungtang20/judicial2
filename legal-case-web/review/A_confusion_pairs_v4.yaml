@@ -1,0 +1,284 @@
+# A_confusion_pairs_v4.yaml
+# 修正日期：2026-10-15
+# 修正原則：
+# 1. 繼承 v3：剔除純身分加重/法條競合，保留保護法益重疊之真爭點。
+# 2. 新增 v4：擴充「刑法 vs 社維法」、「聚眾」、「槍砲」之第一線執法高頻界分。
+# 3. 問句生成原則：禁止法條轉寫，必須是底層事實提取（時間、地點、具體動作、物品狀態）。
+
+pair_id: PAIR-001
+candidate_a: 竊盜
+candidate_b: 侵占
+legal_issue: 取得當下物品是否仍在他人穩固管領力內（一時弛緩 vs 完全脫離）
+normalization_status: verified
+
+pair_id: PAIR-002
+candidate_a: 竊盜
+candidate_b: 詐欺
+legal_issue: 交付當下被害人是否因行為人施用詐術而陷於錯誤，抑或因不知被竊而喪失持有
+normalization_status: verified
+
+pair_id: PAIR-003
+candidate_a: 竊盜
+candidate_b: 搶奪/強盜
+legal_issue: 強暴脅迫之程度是否達使人不能抗拒（壓制反抗能力 vs 僅乘人不備）
+normalization_status: verified
+
+pair_id: PAIR-004
+candidate_a: 竊盜
+candidate_b: 毀損
+legal_issue: 行為目的事實：為自己利用財物而取得，抑或為毀棄而破壞（取得後處置方式）
+normalization_status: verified
+
+pair_id: PAIR-005
+candidate_a: 竊盜
+candidate_b: 使用竊盜
+legal_issue: 是否有永久排除持有之意思（使用後是否歸還、有無據為己有之舉措）
+normalization_status: verified
+
+pair_id: PAIR-006
+candidate_a: 侵占
+candidate_b: 背信
+legal_issue: 權源事實：基於持有關係侵吞持有物，抑或基於委任違背任務致生損害
+normalization_status: verified
+
+pair_id: PAIR-007
+candidate_a: 詐欺
+candidate_b: 恐嚇取財
+legal_issue: 被害人交付時之主觀狀態事實：因錯誤而交付，抑或因畏懼而交付
+normalization_status: verified
+
+pair_id: PAIR-008
+candidate_a: 詐欺
+candidate_b: 乘人之危
+legal_issue: 是否施用詐術之行為事實，抑或僅利用對方弱勢處境提出不利交易條件
+normalization_status: verified
+
+pair_id: PAIR-009
+candidate_a: 贓物
+candidate_b: 前置犯罪
+legal_issue: 事前有無犯意聯絡（事前通謀共犯 vs 事後知情收受）
+normalization_status: verified
+
+pair_id: PAIR-010
+candidate_a: 偽造文書
+candidate_b: 偽造有價證券/貨幣
+legal_issue: 客體性質事實：是否為具流通功能之票據、有價證券或貨幣，有無授權及是否逾越授權範圍
+normalization_status: verified
+
+pair_id: PAIR-011
+candidate_a: 殺人
+candidate_b: 傷害致死
+legal_issue: 外在行為事實綜合判斷：攻擊部位是否為要害、兇器力道次數、下手輕重、有無預謀、事後舉措
+normalization_status: verified
+
+pair_id: PAIR-012
+candidate_a: 殺人
+candidate_b: 過失致死
+legal_issue: 行為時主觀具體認識事實（是否知悉險境、是否加速未煞車）vs 僅客觀可預見而主觀未預見
+normalization_status: verified
+
+pair_id: PAIR-013
+candidate_a: 遺棄
+candidate_b: 殺人/傷害
+legal_issue: 有無保證人地位之事實＋是否為不作為（未送醫未扶助），抑或有積極作為致死傷
+normalization_status: verified
+
+pair_id: PAIR-014
+candidate_a: 傷害
+candidate_b: 過失傷害
+legal_issue: 行為人個人之具體知與欲事實 vs 一般合理正常人之注意標準（行為時主觀預見 vs 事後客觀評斷）
+normalization_status: verified
+
+pair_id: PAIR-015
+candidate_a: 恐嚇危害安全
+candidate_b: 恐嚇取財
+legal_issue: 財產意圖之事實指標：有無債務依據、金額是否相當、取得後處置方式
+normalization_status: verified
+
+pair_id: PAIR-016
+candidate_a: 恐嚇
+candidate_b: 強盜
+legal_issue: 脅迫程度事實：被害人是否已完全無法反抗、喪失意思決定自由（心生畏懼 vs 不能抗拒）
+normalization_status: verified
+
+pair_id: PAIR-017
+candidate_a: 妨害自由
+candidate_b: 強制
+legal_issue: 手段是否達剝奪行動自由之程度事實（能否自由離開、控制時間方式）
+normalization_status: verified
+
+pair_id: PAIR-018
+candidate_a: 公然侮辱
+candidate_b: 誹謗
+legal_issue: 言論內容事實：是否指涉可驗證真假之特定具體事件，抑或僅為情緒謾罵
+normalization_status: verified
+
+pair_id: PAIR-019
+candidate_a: 誣告
+candidate_b: 妨害名譽
+legal_issue: 陳述對象事實：向警察檢察官法院等公務機關申告並啟動偵查，抑或向親友鄰里網路公眾散布
+normalization_status: verified
+
+pair_id: PAIR-020
+candidate_a: 偽證
+candidate_b: 誣告
+legal_issue: 陳述場景事實：是否經具結程序後作證，抑或以告訴人身分提出申告（身分＋時點）
+normalization_status: verified
+
+pair_id: PAIR-021
+candidate_a: 強制性交
+candidate_b: 強制猥褻
+legal_issue: 行為態樣事實：有無性器進入身體，抑或為性交以外之身體接觸
+normalization_status: verified
+
+pair_id: PAIR-022
+candidate_a: 對未成年性交/猥褻
+candidate_b: 強制性交/猥褻
+legal_issue: 被害人年齡＋意思能力＋同意與否之事實（是否理解行為意涵、有無明確拒絕或反抗）
+normalization_status: verified
+
+pair_id: PAIR-023
+candidate_a: 性騷擾(觸摸)
+candidate_b: 強制猥褻
+legal_issue: 行為持續時間＋強制力＋遮掩事實（瞬間偷襲 vs 持續控制、有無拉扯壓制遮擋）
+normalization_status: verified
+
+pair_id: PAIR-024
+candidate_a: 兒少性剝削
+candidate_b: 妨害性自主
+legal_issue: 被害人是否未滿18歲＋拍攝或性行為態樣事實＋有無違反意願手段（年齡一律保護 vs 意思自由）
+normalization_status: verified
+
+pair_id: PAIR-025
+candidate_a: 散布猥褻物品
+candidate_b: 散布性影像
+legal_issue: 影像是否為特定人之性私密影像＋拍攝與散布時之同意與否＋傳播範圍（私訊1人 vs 公開多數人）
+normalization_status: verified
+
+pair_id: PAIR-026
+candidate_a: 妨害公務
+candidate_b: 傷害/恐嚇
+legal_issue: （降級）僅需身分/結果確認，無複雜構成要件混淆
+normalization_status: UNRESOLVED
+
+pair_id: PAIR-027
+candidate_a: 酒駕
+candidate_b: 過失傷害/致死
+legal_issue: （降級）僅需身分/結果確認，無複雜構成要件混淆
+normalization_status: UNRESOLVED
+
+pair_id: PAIR-028
+candidate_a: 毒品持有
+candidate_b: 施用/販賣/運輸
+legal_issue: 販賣意圖之事實指標：持有數量是否逾個人施用量、分裝磅秤帳冊、尿檢有無施用習慣
+normalization_status: verified
+
+pair_id: PAIR-029
+candidate_a: 圖利
+candidate_b: 賄賂
+legal_issue: 對價關係之實質事實：職務內容、雙方關係、財物種類價額交付時間原因、主觀認識
+normalization_status: verified
+
+pair_id: PAIR-030
+candidate_a: 跟蹤騷擾
+candidate_b: 恐嚇/妨害自由
+legal_issue: 是否反覆持續＋與性或性別有關＋影響日常生活之事實，抑或單次加害通知或剝奪行動
+normalization_status: verified
+
+pair_id: PAIR-031
+candidate_a: 家暴
+candidate_b: 一般傷害/恐嚇
+legal_issue: （降級）僅需身分/結果確認，無複雜構成要件混淆
+normalization_status: UNRESOLVED
+
+pair_id: PAIR-032
+candidate_a: 人口販運
+candidate_b: 妨害自由/詐欺
+legal_issue: 有無利用弱勢處境榨取勞力之事實＋報酬是否顯不相當（剝削目的 vs 單純限制行動或騙財）
+normalization_status: verified
+
+pair_id: PAIR-033
+candidate_a: 少年事件(觸法)
+candidate_b: 少年事件(虞犯)
+legal_issue: （降級）僅需身分/結果確認，無複雜構成要件混淆
+normalization_status: UNRESOLVED
+
+pair_id: PAIR-034
+candidate_a: 職場/校園性騷擾
+candidate_b: 一般性騷擾
+legal_issue: 場域＋權力關係事實（雇主勞工、師生）＋敵意環境或交換條件之具體言行
+normalization_status: verified
+
+pair_id: PAIR-035
+candidate_a: 妨害農工商
+candidate_b: 行政違規界線
+legal_issue: 刑事犯罪 vs 行政違規
+normalization_status: UNRESOLVED
+
+pair_id: PAIR-036
+candidate_a: 侵害墳墓
+candidate_b: 章內條文區分
+legal_issue: §248-250 客體與行為界線
+normalization_status: UNRESOLVED
+
+pair_id: PAIR-037
+candidate_a: 偽造度量衡
+candidate_b: 章內條文區分
+legal_issue: §206-208 行為界線
+normalization_status: UNRESOLVED
+
+# === 以下為 v4 新增：刑法 vs 社維法 / 聚眾 / 槍砲 ===
+
+pair_id: PAIR-038
+candidate_a: 公然侮辱/誹謗 (刑法)
+candidate_b: 加害名譽/散布謠言 (社維法 §63)
+legal_issue: 場所公然性＋言論內容事實：是否指涉具體事實？情節是否達刑事告訴之必要，抑或僅為抽象謾罵/情緒宣洩？
+normalization_status: verified
+
+pair_id: PAIR-039
+candidate_a: 賭博罪 (刑法 §266)
+candidate_b: 賭博 (社維法 §84)
+legal_issue: 場所＋賭注事實：是否為公共場所/公眾得出入場所？賭注是否為現金/高價物，抑或僅為飲料/小玩具等暫時娛樂之物？
+normalization_status: verified
+
+pair_id: PAIR-040
+candidate_a: 公然猥褻 (刑法 §234)
+candidate_b: 妨害風化 (社維法 §81)
+legal_issue: 行為＋場所事實：是否足以引起一般人羞恥厭惡感？場所是否達不特定人共見共聞之公然程度？
+normalization_status: verified
+
+pair_id: PAIR-041
+candidate_a: 妨害公務 (刑法 §135)
+candidate_b: 妨害公務 (社維法 §85)
+legal_issue: 手段事實：對公務員之言詞/行動，是否已達強暴脅迫（如推擠毆打），抑或僅為顯然不當言詞/謊報/不聽勸阻？
+normalization_status: verified
+
+pair_id: PAIR-042
+candidate_a: 傷害/鬥毆 (刑法 §277/283)
+candidate_b: 加暴行於人/互相鬥毆 (社維法 §87)
+legal_issue: 結果＋行為事實：是否造成生理機能損傷（需驗傷），抑或僅為未達傷害之暴行（如推搡潑水）或單純互毆？
+normalization_status: verified
+
+pair_id: PAIR-043
+candidate_a: 毀損 (刑法 §354)
+candidate_b: 污損招牌/擅自塗鴉 (社維法 §90)
+legal_issue: 客體狀態＋復原事實：是否導致物品喪失主要效用（如砸爛/潑漆無法清除），抑或僅為表面污損且可輕易復原（如可撕除/擦拭）？
+normalization_status: verified
+
+pair_id: PAIR-044
+candidate_a: 聚眾鬥毆/妨害秩序 (刑法 §283/149)
+candidate_b: 聚眾鬥毆/加暴行 (社維法 §87)
+legal_issue: 規模＋意圖事實：是否達刑法聚眾鬥毆之規模（聚集多人/意圖），或僅為社維法之偶發互毆/加暴行？
+normalization_status: verified
+
+pair_id: PAIR-045
+candidate_a: 持有具殺傷力槍枝 (槍砲條例)
+candidate_b: 攜帶具有殺傷力之器械/空氣槍 (社維法 §63)
+legal_issue: 客體性質＋主觀認知事實：物品是否經鑑定具殺傷力？行為人主觀上是否明知為真槍/致命器械，抑或僅認為是玩具/空氣槍/日常工具？
+normalization_status: verified
+
+pair_id: PAIR-046
+candidate_a: 製造/改造槍枝 (槍砲條例)
+candidate_b: 持有槍枝 (槍砲條例)
+legal_issue: 行為參與程度事實：是否實際參與組裝/改造/車床加工等核心製造行為，抑或僅為單純取得並保有？
+normalization_status: verified

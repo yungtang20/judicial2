@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import base64
 import ctypes
 import json
 import os
@@ -53,8 +52,12 @@ def _get_linux_fernet_key() -> bytes:
     return new_key
 
 
+def _use_linux_crypto() -> bool:
+    return os.name != "nt"
+
+
 def _dpapi(data: bytes, decrypt: bool) -> bytes:
-    if os.name != "nt":
+    if _use_linux_crypto():
         fernet = Fernet(_get_linux_fernet_key())
         if decrypt:
             try:

@@ -6,10 +6,74 @@ from app.workflow import WorkflowError, apply_action, create_case
 from tests.helpers import BANK, completed_case, intake
 
 
+def test_summary_labels_supply_time_kind_and_location_when_fields_are_omitted():
+    case = create_case({
+        "summary": (
+            "查獲時間：民國115年10月15日10時許\n"
+            "查獲地點：臺北市○○區○○路1號\n"
+            "案情經過：員警在現場查獲測試物品。"
+        ),
+        "has_victim": False,
+    }, BANK)
+    assert case["intake"]["event_kind"] == "查獲"
+    assert case["intake"]["event_time"] == "民國115年10月15日10時許"
+    assert case["intake"]["location"] == "臺北市○○區○○路1號"
+    assert case["gate1"]["times"][0] == "民國115年10月15日10時許"
+    assert case["gate1"]["places"][0] == "臺北市○○區○○路1號"
+
+
+def test_missing_summary_labels_fail_closed_to_unknown_without_guessing():
+    case = create_case({"summary": "有人在某處拿走物品。", "has_victim": True}, BANK)
+    assert case["intake"]["event_kind"] == "發生"
+    assert case["intake"]["event_time"] == "UNKNOWN"
+    assert case["intake"]["location"] == "UNKNOWN"
+
+
+def test_legacy_intake_fields_override_summary_labels_and_gate1_can_correct_them():
+    case = create_case(intake(summary="發生時間：摘要時間\n發生地點：摘要地點\n案情經過：測試。"), BANK)
+    assert case["intake"]["event_time"] == "2026-10-10T10:30"
+    assert case["intake"]["location"] == "測試地點"
+    case = apply_action(case, "update_gate1", {
+        "gate1": {"times": ["民國115年10月16日11時許"], "places": ["修正地點"]},
+    }, BANK)
+    assert case["intake"]["event_time"] == "民國115年10月16日11時許"
+    assert case["intake"]["location"] == "修正地點"
+
+
+def test_gate1_summary_change_recomputes_facts_and_candidates():
+    case = create_case(intake(summary="他把我的手機拿走了。"), BANK)
+    assert {item["id"] for item in case["candidates"]} >= {"theft", "embezzlement", "robbery"}
+    case = apply_action(case, "update_gate1", {"gate1": {"events": ["事情發生了。"]}}, BANK)
+    assert case["intake"]["summary"] == "事情發生了。"
+    assert case["candidates"] == []
+    assert case["alternative_routes"] == []
+    assert all(not item.get("fact_key") for item in case["gate1"]["facts"])
+
+
 def test_gates_cannot_be_skipped():
     case = create_case(intake(), BANK)
     with pytest.raises(WorkflowError):
         apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
+
+def test_case_carries_acts_linked_to_facts_not_conclusions():
+    case = create_case(intake(summary="有人未經同意拿走店內物品。"), BANK)
+    assert case["acts"], "acts 應非空（由 gate1.facts 擷取）"
+    act = case["acts"][0]
+    for key in ("act_id", "event_id", "actor_ref", "action", "object",
+                "time", "purpose", "result", "related_fact_ids",
+                "related_candidate_ids", "evidence_refs", "review_status"):
+        assert key in act, f"act 缺少欄位 {key}"
+    # 行為是分析方向，非法律結論
+    assert "分析方向" in act["note"]
+
+
+def test_candidate_act_linking_is_not_assumed():
+    case = create_case(intake(summary="對方以假客服名義要求匯款，疑似詐騙"), BANK)
+    for candidate in case["candidates"]:
+        # 系統不得武斷把行為套到罪名；須保留人工連結
+        assert candidate["act_ids"] == ["HUMAN-ACT-LINKING-REQUIRED"]
+        assert "NOT_ASSESSED" not in candidate["competition_analysis"] or "待" in candidate["competition_analysis"] or "人工" in candidate["competition_analysis"]
+
 
 
 def test_gate2_requires_human_selected_offense_and_all_answers():
@@ -18,7 +82,7 @@ def test_gate2_requires_human_selected_offense_and_all_answers():
     assert case["candidates"] == []
     with pytest.raises(WorkflowError):
         apply_action(case, "set_offenses", {"offense_ids": [], "role": "victim"}, BANK)
-    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "role": "victim"}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, BANK)
     with pytest.raises(WorkflowError, match="所有問句"):
         apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
 
@@ -38,7 +102,7 @@ def test_same_case_can_continue_from_victim_to_suspect():
     case = apply_action(case, "start_interview", {"role": "suspect"}, BANK)
     assert case["state"] == "GATE2_QA"
     assert case["interviews"]["victim:default"] == victim_snapshot
-    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "role": "suspect"}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "suspect"}, BANK)
     answers = {item["id"]: "UNKNOWN" for item in case["questions"]}
     case = apply_action(case, "save_answers", {"answers": answers}, BANK)
     case = apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
@@ -73,10 +137,8 @@ def test_brief_dates_are_roc_era():
 
 
 def test_ai_analyze_updates_candidates_and_marks_source():
-    from app import ai as ai_module
-
     monkey_data = {"candidates": [{"id": "fraud", "reason": "以詐術使人交付"}], "model": "test-model"}
-    monkeypatch_ai = lambda summary, offenses, max_candidates=6: monkey_data
+    monkeypatch_ai = lambda summary, offenses, max_candidates=6, facts=None: monkey_data
     import app.workflow as wf
     original = wf.analyze_candidates
     wf.analyze_candidates = monkeypatch_ai
@@ -84,9 +146,34 @@ def test_ai_analyze_updates_candidates_and_marks_source():
         case = completed_case()
         case = apply_action(case, "start_interview", {"role": "victim"}, BANK)
         case = apply_action(case, "analyze_candidates", {}, BANK)
-        assert case["candidates_source"] == "ai"
+        assert case["candidates_source"] == "ai+rules"
+        # AI 與規則來源分標（spec §5.6 不得混為同一來源）
+        fraud_candidate = [c for c in case["candidates"] if c["id"] == "fraud"][0]
+        assert "ai" in fraud_candidate["candidate_sources"]
         assert case["candidates"][0]["id"] == "fraud"
         assert "AI 候選" in case["candidates"][0]["notice"]
+    finally:
+        wf.analyze_candidates = original
+
+
+def test_ai_only_candidate_keeps_crosswalk_fail_closed_metadata():
+    monkey_data = {"candidates": [{"id": "opium", "reason": "AI 建議辨識鴉片章"}], "model": "test-model"}
+    monkeypatch_ai = lambda summary, offenses, max_candidates=6, facts=None: monkey_data
+    import app.workflow as wf
+    original = wf.analyze_candidates
+    wf.analyze_candidates = monkeypatch_ai
+    try:
+        case = completed_case()
+        case = apply_action(case, "start_interview", {"role": "victim"}, BANK)
+        case["intake"]["summary"] = "摘要沒有規則關鍵詞"
+        case = apply_action(case, "analyze_candidates", {}, BANK)
+        candidate = next(item for item in case["candidates"] if item["id"] == "opium")
+        assert candidate["candidate_sources"] == ["ai"]
+        assert candidate["status"] == "NEED_LEGAL_ROUTE_MAPPING"
+        assert candidate["element_model_status"] == "UNMAPPED"
+        assert candidate["crosswalk_status"] == "SPLIT_REQUIRED"
+        assert len(candidate["legal_routes"]) == 10
+        assert candidate["legal_route_selection_status"] == "OPTIONAL"
     finally:
         wf.analyze_candidates = original
 
@@ -94,7 +181,7 @@ def test_ai_analyze_updates_candidates_and_marks_source():
 def test_company_questions_precede_common_questions():
     case = completed_case()
     case = apply_action(case, "start_interview", {"role": "victim"}, BANK)
-    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "role": "victim"}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, BANK)
     kinds = [item["kind"] for item in case["questions"]]
     assert kinds[0] == "company"
     assert kinds.index("common") > kinds.index("company")
@@ -109,3 +196,181 @@ def test_no_victim_case_cannot_enter_regular_suspect_branch():
     with pytest.raises(WorkflowError):
         apply_action(case, "start_interview", {"role": "suspect"}, BANK)
 
+
+
+def test_version_bump_invalidates_downstream():
+    case = completed_case()
+    assert case["state"] == "OUTPUT_READY"
+    # 模擬題庫版本變更
+    old_bank = dict(BANK)
+    old_bank["library_version"] = "CHANGED-VERSION"
+    updated = apply_action(case, "update_gate1", {"gate1": {"events": ["新描述"]}}, old_bank)
+    # 版本 bump → gate1 失效 → 所有下游核准被清空
+    assert updated["approvals"] == {}
+    assert updated["versions"]["question_bank"] == "CHANGED-VERSION"
+
+def test_template_version_bump_invalidates_downstream():
+    from app import workflow as wf
+    case = completed_case()
+    original = wf.CURRENT_TEMPLATE_VERSION
+    try:
+        # 模擬公司範本版本升級
+        wf.CURRENT_TEMPLATE_VERSION = "company-verbatim-NEW"
+        updated = apply_action(case, "update_gate1", {"gate1": {"events": ["改"]}}, BANK)
+        assert updated["versions"]["template"] == "company-verbatim-NEW"
+        assert updated["approvals"] == {}
+    finally:
+        wf.CURRENT_TEMPLATE_VERSION = original
+
+
+def test_candidate_engine_version_bump_invalidates_downstream():
+    from app import workflow as wf
+    case = completed_case()
+    original = wf.CURRENT_CANDIDATE_ENGINE
+    try:
+        wf.CURRENT_CANDIDATE_ENGINE = "rules-v3+ai+facts"
+        updated = apply_action(case, "update_gate1", {"gate1": {"events": ["改"]}}, BANK)
+        assert updated["versions"]["candidate_engine"] == "rules-v3+ai+facts"
+        assert updated["approvals"] == {}
+    finally:
+        wf.CURRENT_CANDIDATE_ENGINE = original
+
+def test_competition_hint_includes_verified_judgment_anchor():
+    from app.acts import competition_relationships
+    candidates = [
+        {"id": "theft", "name": "竊盜", "distinguishing_question_ids": ["T-D-01"]},
+        {"id": "embezzlement", "name": "侵占", "distinguishing_question_ids": ["E-D-01"]},
+    ]
+    competition_relationships(candidates)
+    text = candidates[0]["competition_analysis"]
+    # 含經核實之裁判錨點（最高法院43年台上字第675號）
+    assert "43年台上字第675號" in text
+    # 明示僅供參考，非定性
+    assert "非定性" in text
+
+
+def test_competition_hint_includes_fraud_intimidation_anchor():
+    """第二十輪：詐欺與恐嚇取財區辨裁判錨點（最高法院84年台上字第1993號）。"""
+    from app.acts import competition_relationships
+    candidates = [
+        {"id": "fraud", "name": "詐欺", "distinguishing_question_ids": ["F-D-01"]},
+        {"id": "intimidation", "name": "恐嚇取財", "distinguishing_question_ids": ["I-D-01"]},
+    ]
+    competition_relationships(candidates)
+    text = candidates[0]["competition_analysis"]
+    assert "84年度台上字第1993號" in text
+    assert "CYDM,112,易,613" in text
+    assert "非定性" in text
+    assert "陷於錯誤" in text
+    assert "心生畏懼" in text
+
+def test_update_gate1_facts_length_and_count_limits():
+    """spec §10 API 輸入驗證：facts 欄位不得無限膨脹 payload（第十二輪盤點發現）。"""
+    case = create_case(intake(), BANK)
+    case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
+    # 超長 excerpt 被拒
+    with pytest.raises(WorkflowError, match="超過"):
+        apply_action(case, "update_gate1", {
+            "gate1": {"facts": [{"fact_id": "x", "source_excerpt": "x" * 200000}]}
+        }, BANK)
+    # 超量 facts 被拒
+    with pytest.raises(WorkflowError, match="不得超過 50"):
+        apply_action(case, "update_gate1", {
+            "gate1": {"facts": [{"fact_id": f"x{i}"} for i in range(51)]}
+        }, BANK)
+    # 正常範圍通過
+    updated = apply_action(case, "update_gate1", {
+        "gate1": {"facts": [{"fact_id": "ok1", "source_excerpt": "正常長度"}]}
+    }, BANK)
+    assert updated["gate1"]["facts"][0]["fact_id"] == "ok1"
+
+def test_save_profile_field_length_limits():
+    """spec §10：年籍與詢問時間欄位長度限制（第十二輪盤點發現）。"""
+    case = create_case(intake(), BANK)
+    case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, BANK)
+    with pytest.raises(WorkflowError, match="超過 200 字"):
+        apply_action(case, "save_profile", {"profile": {"name": "z" * 100000}}, BANK)
+    with pytest.raises(WorkflowError, match="超過 200 字"):
+        apply_action(case, "save_profile", {
+            "profile": {"name": "測試"},
+            "session": {"start_time": "s" * 100000},
+        }, BANK)
+    # 正常通過
+    updated = apply_action(case, "save_profile", {"profile": {"name": "測試"}}, BANK)
+    assert updated["profiles"]["victim:default"]["name"] == "測試"
+
+def test_reopen_snapshot_includes_gate1_facts():
+    """spec §8.4：reopen 快照必須含 gate1（含 facts）——審計斷鏈缺陷（第十四輪盤點發現）。"""
+    case = create_case(intake(), BANK)
+    case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
+    original_fact_ids = [f["fact_id"] for f in case["gate1"]["facts"]]
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, BANK)
+    case = apply_action(case, "save_profile", {"profile": {"name": "測試"}}, BANK)
+    case = apply_action(case, "save_answers", {"answers": {q["id"]: "回答" for q in case["questions"]}}, BANK)
+    case = apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
+    case = apply_action(case, "save_case_numbers", {"case_numbers": {"proof": "Z123"}}, BANK)
+    reopened = apply_action(case, "reopen", {}, BANK)
+    snap = reopened["snapshots"][-1]
+    assert "gate1" in snap, "快照缺 gate1"
+    snap_fact_ids = [f["fact_id"] for f in snap["gate1"].get("facts", [])]
+    assert snap_fact_ids == original_fact_ids, "快照 facts 與開案時不一致"
+
+def test_update_gate1_replace_semantics_allow_deletion():
+    """F33：舊 append 語意使承辦人無法刪除錯誤事實；replace 語意 + 未提供 key 保留。"""
+    case = create_case(intake(), BANK)
+    case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
+    # 初始 facts 來自 analyze_gate1（events 含 intake summary）
+    initial_events = list(case["gate1"]["events"])
+    # 建案後有初始 events；送 replace 清單（不同內容）
+    updated = apply_action(case, "update_gate1", {
+        "gate1": {"events": ["修正後的唯一事件描述"]}
+    }, BANK)
+    # replace 語意：舊事件被刪除，只剩新描述
+    assert updated["gate1"]["events"] == ["修正後的唯一事件描述"]
+    assert initial_events[0] not in updated["gate1"]["events"] or initial_events[0] == "修正後的唯一事件描述"
+    # 未提供的 key 保留原值
+    assert updated["gate1"]["unknowns"] == case["gate1"]["unknowns"]
+
+
+def test_brief_summary_follows_gate1_fact_changes():
+    """F33：事實修改後 brief_summary 須反映現行版本（spec §9）。"""
+    from app.config import MAX_SUMMARY_LENGTH
+    case = create_case(intake(summary="初始摘要甲"), BANK)
+    case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, BANK)
+    case = apply_action(case, "save_profile", {"profile": {"name": "測試"}}, BANK)
+    case = apply_action(case, "save_answers", {"answers": {q["id"]: "回答" for q in case["questions"]}}, BANK)
+    case = apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
+    case = apply_action(case, "save_case_numbers", {"case_numbers": {"proof": "Z123"}}, BANK)
+    case = apply_action(case, "reopen", {}, BANK)
+    updated = apply_action(case, "update_gate1", {
+        "gate1": {"events": ["修正後的事件描述乙"]}
+    }, BANK)
+    assert "初始摘要甲" not in updated["brief_summary"], "條陳摘要殘留舊事實"
+    assert "修正後的事件描述乙" in updated["brief_summary"]
+    assert len(updated["brief_summary"]) <= MAX_SUMMARY_LENGTH
+
+def test_case_numbers_correction_after_output_ready():
+    """F35：OUTPUT_READY 後承辦人無法更正錯誤案號（只能 reopen 重跑全流程）。
+    修：OUTPUT_READY 允許重新 save_case_numbers（新核准取代舊核准，舊值入快照）。"""
+    case = create_case(intake(), BANK)
+    case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, BANK)
+    case = apply_action(case, "save_profile", {"profile": {"name": "測試"}}, BANK)
+    case = apply_action(case, "save_answers", {"answers": {q["id"]: "回答" for q in case["questions"]}}, BANK)
+    case = apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
+    case = apply_action(case, "save_case_numbers", {"case_numbers": {"proof": "錯誤案號"}}, BANK)
+    assert case["state"] == "OUTPUT_READY"
+    old_at = case["approvals"]["case_numbers"]["at"]
+    # 更正（重新核准，非繞過）
+    corrected = apply_action(case, "save_case_numbers", {"case_numbers": {"proof": "正確案號Z999"}}, BANK)
+    assert corrected["case_numbers"]["proof"] == "正確案號Z999"
+    assert corrected["approvals"]["case_numbers"]["at"] != old_at, "更正須產生新核准記錄"
+    # 舊值可追溯
+    assert any("錯誤案號" in str(s.get("case_numbers", {})) for s in corrected["snapshots"])
+    # 驗證不完整的更正被拒（fail closed）
+    import pytest
+    from app.workflow import WorkflowError
+    with pytest.raises(WorkflowError, match="缺少必要案號"):
+        apply_action(corrected, "save_case_numbers", {"case_numbers": {"proof": ""}}, BANK)

@@ -29,7 +29,30 @@ def intake(*, summary: str = "有人未經同意拿走店內物品。", has_vict
 def completed_case(role: str = "victim", offense: str = "theft") -> dict:
     case = create_case(intake(has_victim=role != "transfer"), BANK)
     case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
-    case = apply_action(case, "set_offenses", {"offense_ids": [offense], "role": role}, BANK)
+    offense_entry = next(item for item in BANK["offenses"] if item["id"] == offense)
+    route_ids = [offense_entry["legal_routes"][0]["id"]] if offense_entry.get("legal_routes") else []
+    case = apply_action(case, "set_offenses", {
+        "offense_ids": [offense], "legal_route_ids": route_ids,
+        "route_review_confirmed": True, "role": role,
+    }, BANK)
+    case = apply_action(
+        case,
+        "save_profile",
+        {
+            "profile": {
+                "name": "測試受詢問人",
+                "national_id": "A123456789",
+                "sex": "男",
+                "education": "大學",
+            },
+            "session": {
+                "start_time": "2026-10-11T14:00",
+                "end_time": "2026-10-11T15:00",
+                "location": "測試所",
+            },
+        },
+        BANK,
+    )
     answers = {question["id"]: "測試回答" for question in case["questions"]}
     case = apply_action(case, "save_answers", {"answers": answers}, BANK)
     case = apply_action(case, "approve_gate2", {"confirmed": True}, BANK)

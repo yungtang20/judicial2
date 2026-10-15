@@ -1,178 +1,1640 @@
 {
   "schema_version": "1.0",
-  "library_version": "2026-10-10-draft-1",
+  "library_version": "2026-10-12-verified-legal-basis-7",
   "review_status": "HUMAN_REVIEW_REQUIRED",
   "notice": "本題庫取材自使用者範本並經中性化整理。每案仍須由承辦人確認，不代表法律結論。",
   "common": {
     "victim": [
-      {"id":"V-COM-000","text":"上述身分資料是否正確？","priority":1,"purpose":"identity"},
-      {"id":"V-COM-001","text":"請用自己的話說明事情從開始到結束的經過。","priority":1,"purpose":"free_account"},
-      {"id":"V-COM-002","text":"事情發生時，你看見或聽見了什麼？","priority":1,"purpose":"perception"},
-      {"id":"V-COM-002A","text":"你是否知道行為人的身分或可供辨識的特徵？","priority":1,"purpose":"identification"},
-      {"id":"V-COM-002B","text":"你與行為人原本有何關係或糾紛？","priority":2,"purpose":"relationship"},
-      {"id":"V-COM-003","text":"你知道哪些人可能看見或聽見這件事嗎？","priority":2,"purpose":"witness"},
-      {"id":"V-COM-004","text":"你有哪些資料或物品可以提供警方查證？","priority":1,"purpose":"evidence"},
-      {"id":"V-COM-004A","text":"你是否要提出告訴或請求民事賠償？","priority":1,"purpose":"complaint"},
-      {"id":"V-COM-004B","text":"後續司法文書應送達何處？","priority":2,"purpose":"service_address"},
-      {"id":"V-COM-004C","text":"你是否需要警方協助調查其他有利事證？","priority":2,"purpose":"investigation_request"},
-      {"id":"V-COM-004D","text":"以上回答是否為你親自陳述且內容實在？","priority":1,"purpose":"accuracy"},
-      {"id":"V-COM-005","text":"你是否還有其他想補充或請警方調查的事項？","priority":1,"purpose":"closing"}
+      {
+        "id": "V-COM-000",
+        "text": "上述身分資料是否正確？",
+        "priority": 1,
+        "purpose": "identity"
+      },
+      {
+        "id": "V-COM-001",
+        "text": "請用自己的話說明事情從開始到結束的經過。",
+        "priority": 1,
+        "purpose": "free_account"
+      },
+      {
+        "id": "V-COM-002",
+        "text": "事情發生時，你看見或聽見了什麼？",
+        "priority": 1,
+        "purpose": "perception"
+      },
+      {
+        "id": "V-COM-002A",
+        "text": "你是否知道行為人的身分或可供辨識的特徵？",
+        "priority": 1,
+        "purpose": "identification"
+      },
+      {
+        "id": "V-COM-002B",
+        "text": "你與行為人原本有何關係或糾紛？",
+        "priority": 2,
+        "purpose": "relationship"
+      },
+      {
+        "id": "V-COM-003",
+        "text": "你知道哪些人可能看見或聽見這件事嗎？",
+        "priority": 2,
+        "purpose": "witness"
+      },
+      {
+        "id": "V-COM-004",
+        "text": "你有哪些資料或物品可以提供警方查證？",
+        "priority": 1,
+        "purpose": "evidence"
+      },
+      {
+        "id": "V-COM-004A",
+        "text": "你是否要提出告訴或請求民事賠償？",
+        "priority": 1,
+        "purpose": "complaint"
+      },
+      {
+        "id": "V-COM-004B",
+        "text": "後續司法文書應送達何處？",
+        "priority": 2,
+        "purpose": "service_address"
+      },
+      {
+        "id": "V-COM-004C",
+        "text": "你是否需要警方協助調查其他有利事證？",
+        "priority": 2,
+        "purpose": "investigation_request"
+      },
+      {
+        "id": "V-COM-004D",
+        "text": "以上回答是否為你親自陳述且內容實在？",
+        "priority": 1,
+        "purpose": "accuracy"
+      },
+      {
+        "id": "V-COM-005",
+        "text": "你是否還有其他想補充或請警方調查的事項？",
+        "priority": 1,
+        "purpose": "closing"
+      }
     ],
     "suspect": [
-      {"id":"S-COM-000","text":"上述身分資料是否正確？","priority":1,"purpose":"identity"},
-      {"id":"S-COM-001","text":"警方告知的涉嫌罪名及權利，你是否清楚？","priority":1,"purpose":"rights"},
-      {"id":"S-COM-001A","text":"你是否需要辯護人或法律扶助到場協助？","priority":1,"purpose":"counsel"},
-      {"id":"S-COM-002","text":"請用自己的話說明你所知道的事情經過。","priority":1,"purpose":"free_account"},
-      {"id":"S-COM-002A","text":"你是否知道被害人的身分？","priority":2,"purpose":"victim_identity"},
-      {"id":"S-COM-002B","text":"你與被害人原本有何關係或糾紛？","priority":2,"purpose":"relationship"},
-      {"id":"S-COM-003","text":"你有哪些對自己有利的資料或證據希望警方調查？","priority":1,"purpose":"exculpatory"},
-      {"id":"S-COM-003A","text":"警方製作筆錄時是否全程錄音？","priority":1,"purpose":"recording"},
-      {"id":"S-COM-004","text":"以上回答是否出於你的自由意思？","priority":1,"purpose":"voluntariness"},
-      {"id":"S-COM-004A","text":"筆錄記載是否與你的回答相符？","priority":1,"purpose":"record_accuracy"},
-      {"id":"S-COM-005","text":"你是否還有其他想補充或更正的事項？","priority":1,"purpose":"closing"}
+      {
+        "id": "S-COM-000",
+        "text": "上述身分資料是否正確？",
+        "priority": 1,
+        "purpose": "identity"
+      },
+      {
+        "id": "S-COM-001",
+        "text": "警方告知的涉嫌罪名及權利，你是否清楚？",
+        "priority": 1,
+        "purpose": "rights"
+      },
+      {
+        "id": "S-COM-001A",
+        "text": "你是否需要辯護人或法律扶助到場協助？",
+        "priority": 1,
+        "purpose": "counsel"
+      },
+      {
+        "id": "S-COM-002",
+        "text": "請用自己的話說明你所知道的事情經過。",
+        "priority": 1,
+        "purpose": "free_account"
+      },
+      {
+        "id": "S-COM-002A",
+        "text": "你是否知道被害人的身分？",
+        "priority": 2,
+        "purpose": "victim_identity"
+      },
+      {
+        "id": "S-COM-002B",
+        "text": "你與被害人原本有何關係或糾紛？",
+        "priority": 2,
+        "purpose": "relationship"
+      },
+      {
+        "id": "S-COM-003",
+        "text": "你有哪些對自己有利的資料或證據希望警方調查？",
+        "priority": 1,
+        "purpose": "exculpatory"
+      },
+      {
+        "id": "S-COM-003A",
+        "text": "警方製作筆錄時是否全程錄音？",
+        "priority": 1,
+        "purpose": "recording"
+      },
+      {
+        "id": "S-COM-004",
+        "text": "以上回答是否出於你的自由意思？",
+        "priority": 1,
+        "purpose": "voluntariness"
+      },
+      {
+        "id": "S-COM-004A",
+        "text": "筆錄記載是否與你的回答相符？",
+        "priority": 1,
+        "purpose": "record_accuracy"
+      },
+      {
+        "id": "S-COM-005",
+        "text": "你是否還有其他想補充或更正的事項？",
+        "priority": 1,
+        "purpose": "closing"
+      }
     ],
     "transfer": [
-      {"id":"T-COM-000","text":"上述身分資料是否正確？","priority":1,"purpose":"identity"},
-      {"id":"T-COM-001","text":"警方告知的涉嫌罪名及權利，你是否清楚？","priority":1,"purpose":"rights"},
-      {"id":"T-COM-001A","text":"你是否需要辯護人或法律扶助到場協助？","priority":1,"purpose":"counsel"},
-      {"id":"T-COM-001B","text":"你是否需要依法聲請提審？","priority":1,"purpose":"habeas_corpus"},
-      {"id":"T-COM-002","text":"請說明你在查獲時間及地點所做的事情。","priority":1,"purpose":"free_account"},
-      {"id":"T-COM-003","text":"你有哪些對自己有利的資料或證據希望警方調查？","priority":1,"purpose":"exculpatory"},
-      {"id":"T-COM-003A","text":"警方製作筆錄時是否全程錄音？","priority":1,"purpose":"recording"},
-      {"id":"T-COM-003B","text":"警方查獲或逮捕你時是否使你受傷？","priority":1,"purpose":"arrest_injury"},
-      {"id":"T-COM-004","text":"以上回答是否出於你的自由意思？","priority":1,"purpose":"voluntariness"},
-      {"id":"T-COM-004A","text":"筆錄記載是否與你的回答相符？","priority":1,"purpose":"record_accuracy"},
-      {"id":"T-COM-005","text":"你是否還有其他想補充或更正的事項？","priority":1,"purpose":"closing"}
+      {
+        "id": "T-COM-000",
+        "text": "上述身分資料是否正確？",
+        "priority": 1,
+        "purpose": "identity"
+      },
+      {
+        "id": "T-COM-001",
+        "text": "警方告知的涉嫌罪名及權利，你是否清楚？",
+        "priority": 1,
+        "purpose": "rights"
+      },
+      {
+        "id": "T-COM-001A",
+        "text": "你是否需要辯護人或法律扶助到場協助？",
+        "priority": 1,
+        "purpose": "counsel"
+      },
+      {
+        "id": "T-COM-001B",
+        "text": "你是否需要依法聲請提審？",
+        "priority": 1,
+        "purpose": "habeas_corpus"
+      },
+      {
+        "id": "T-COM-002",
+        "text": "請說明你在查獲時間及地點所做的事情。",
+        "priority": 1,
+        "purpose": "free_account"
+      },
+      {
+        "id": "T-COM-003",
+        "text": "你有哪些對自己有利的資料或證據希望警方調查？",
+        "priority": 1,
+        "purpose": "exculpatory"
+      },
+      {
+        "id": "T-COM-003A",
+        "text": "警方製作筆錄時是否全程錄音？",
+        "priority": 1,
+        "purpose": "recording"
+      },
+      {
+        "id": "T-COM-003B",
+        "text": "警方查獲或逮捕你時是否使你受傷？",
+        "priority": 1,
+        "purpose": "arrest_injury"
+      },
+      {
+        "id": "T-COM-004",
+        "text": "以上回答是否出於你的自由意思？",
+        "priority": 1,
+        "purpose": "voluntariness"
+      },
+      {
+        "id": "T-COM-004A",
+        "text": "筆錄記載是否與你的回答相符？",
+        "priority": 1,
+        "purpose": "record_accuracy"
+      },
+      {
+        "id": "T-COM-005",
+        "text": "你是否還有其他想補充或更正的事項？",
+        "priority": 1,
+        "purpose": "closing"
+      }
     ]
   },
   "offenses": [
     {
-      "id":"theft","name":"竊盜","keywords":["偷","竊","拿走","遭竊","未結帳"],"related":["embezzlement","aggravated_theft"],
-      "source":{"label":"刑法竊盜罪章；適用條文及行為時法待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"property","label":"財物及持有狀態","victim":"案發前，該物品由誰保管或使用？","suspect":"你接觸該物品前，該物品由誰保管或使用？"},
-        {"id":"taking","label":"取走行為","victim":"你如何發現物品被取走？","suspect":"請說明你取得或移動該物品的過程。"},
-        {"id":"consent","label":"同意狀態","victim":"你是否曾同意任何人取走或使用該物品？","suspect":"物品持有人是否同意你取得或使用該物品？"},
-        {"id":"purpose","label":"處分目的","victim":"物品被取走後，有哪些使用或處分情形是你知道的？","suspect":"你取得該物品後，打算如何處理？"}
+      "id": "theft",
+      "name": "竊盜",
+      "keywords": [
+        "偷",
+        "竊",
+        "拿走",
+        "遭竊",
+        "未結帳",
+        "闖入",
+        "倉庫",
+        "取走工具"
+      ],
+      "related": [
+        "embezzlement",
+        "aggravated_theft"
+      ],
+      "source": {
+        "label": "中華民國刑法第320條、第323條至第324條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第320條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:23.119734+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "property",
+          "label": "財物及持有狀態",
+          "victim": "案發前，該物品由誰保管或使用？",
+          "suspect": "你接觸該物品前，該物品由誰保管或使用？"
+        },
+        {
+          "id": "taking",
+          "label": "取走行為",
+          "victim": "你如何發現物品被取走？",
+          "suspect": "請說明你取得或移動該物品的過程。"
+        },
+        {
+          "id": "consent",
+          "label": "同意狀態",
+          "victim": "你是否曾同意任何人取走或使用該物品？",
+          "suspect": "物品持有人是否同意你取得或使用該物品？"
+        },
+        {
+          "id": "purpose",
+          "label": "處分目的",
+          "victim": "物品被取走後，有哪些使用或處分情形是你知道的？",
+          "suspect": "你取得該物品後，打算如何處理？"
+        }
       ]
     },
     {
-      "id":"aggravated_theft","name":"加重竊盜（候選）","keywords":["破壞門鎖","翻牆","結夥","攜帶兇器","侵入住宅"],"related":["theft"],
-      "source":{"label":"刑法加重竊盜規定；具體款次及行為時法待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"access","label":"進入或接近方式","victim":"請說明對方進入或接近物品所在位置的方式。","suspect":"請說明你進入或接近物品所在位置的方式。"},
-        {"id":"tools","label":"工具或設備影響","victim":"你看見現場有哪些工具、損壞或安全設備異常？","suspect":"你當時攜帶或使用哪些工具？"},
-        {"id":"participants","label":"共同參與情形","victim":"你看見有幾人參與及各自做了什麼？","suspect":"請說明在場人員及各自所做的事情。"}
+      "id": "aggravated_theft",
+      "name": "加重竊盜",
+      "keywords": [
+        "破壞門鎖",
+        "翻牆",
+        "結夥",
+        "攜帶兇器",
+        "侵入住宅",
+        "闖入",
+        "倉庫"
+      ],
+      "related": [
+        "theft"
+      ],
+      "source": {
+        "label": "中華民國刑法第321條（核實自全國法規資料庫鏡像 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第321條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:23.945993+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "access",
+          "label": "進入或接近方式",
+          "victim": "請說明對方進入或接近物品所在位置的方式。",
+          "suspect": "請說明你進入或接近物品所在位置的方式。"
+        },
+        {
+          "id": "tools",
+          "label": "工具或設備影響",
+          "victim": "你看見現場有哪些工具、損壞或安全設備異常？",
+          "suspect": "你當時攜帶或使用哪些工具？"
+        },
+        {
+          "id": "participants",
+          "label": "共同參與情形",
+          "victim": "你看見有幾人參與及各自做了什麼？",
+          "suspect": "請說明在場人員及各自所做的事情。"
+        }
       ]
     },
     {
-      "id":"embezzlement","name":"侵占","keywords":["侵占","代管","保管","拾得","遺失物","占為己有"],"related":["theft"],
-      "source":{"label":"刑法侵占罪章；適用條文及行為時法待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"possession","label":"原持有關係","victim":"對方最初如何取得或保管該物品？","suspect":"你最初如何取得或保管該物品？"},
-        {"id":"return","label":"返還要求","victim":"你何時以何種方式要求返還物品？","suspect":"物品所有人是否曾要求你返還？請說明經過。"},
-        {"id":"disposition","label":"後續處分","victim":"你知道對方後來如何處理該物品嗎？","suspect":"你後來如何保管、使用或處理該物品？"}
+      "id": "embezzlement",
+      "name": "侵占",
+      "keywords": [
+        "侵占",
+        "代管",
+        "保管",
+        "拾得",
+        "遺失物",
+        "占為己有",
+        "逾期未還",
+        "變賣",
+        "借給",
+        "拾獲",
+        "遺失"
+      ],
+      "related": [
+        "theft"
+      ],
+      "source": {
+        "label": "中華民國刑法第335條至第338條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第335條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:24.552477+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "related_articles": [
+          {
+            "law_name": "中華民國刑法",
+            "article_no": "第337條",
+            "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+            "role": "侵占遺失物特別規定"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "id": "possession",
+          "label": "原持有關係",
+          "victim": "對方最初如何取得或保管該物品？",
+          "suspect": "你最初如何取得或保管該物品？"
+        },
+        {
+          "id": "return",
+          "label": "返還要求",
+          "victim": "你何時以何種方式要求返還物品？",
+          "suspect": "物品所有人是否曾要求你返還？請說明經過。"
+        },
+        {
+          "id": "disposition",
+          "label": "後續處分",
+          "victim": "你知道對方後來如何處理該物品嗎？",
+          "suspect": "你後來如何保管、使用或處理該物品？"
+        }
       ]
     },
     {
-      "id":"fraud","name":"詐欺","keywords":["詐欺","詐騙","匯款","投資群組","假客服","165","騙"],
-      "source":{"label":"刑法詐欺罪章；適用條文、加重事由及行為時法待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"representation","label":"傳達內容","victim":"對方對你說了什麼，或向你顯示了哪些內容？","suspect":"你向對方傳達了哪些內容？"},
-        {"id":"belief","label":"認知影響","victim":"哪些內容使你相信對方的說法？","suspect":"你當時認為對方會如何理解你所傳達的內容？"},
-        {"id":"disposition","label":"財產處分","victim":"你因為對方的說法做了哪些付款、交付或其他處分？","suspect":"對方後來做了哪些付款、交付或其他處分？"},
-        {"id":"flow","label":"金流去向","victim":"請說明款項、帳戶、時間及交易方式。","suspect":"請說明你知道的款項、帳戶、時間及交易方式。"}
+      "id": "fraud",
+      "name": "詐欺",
+      "keywords": [
+        "詐欺",
+        "詐騙",
+        "匯款",
+        "投資群組",
+        "假客服",
+        "165",
+        "騙",
+        "虛構"
+      ],
+      "source": {
+        "label": "中華民國刑法第339條（核實自全國法規資料庫鏡像 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第339條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:25.144598+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "representation",
+          "label": "傳達內容",
+          "victim": "對方對你說了什麼，或向你顯示了哪些內容？",
+          "suspect": "你向對方傳達了哪些內容？"
+        },
+        {
+          "id": "belief",
+          "label": "認知影響",
+          "victim": "哪些內容使你相信對方的說法？",
+          "suspect": "你當時認為對方會如何理解你所傳達的內容？"
+        },
+        {
+          "id": "disposition",
+          "label": "財產處分",
+          "victim": "你因為對方的說法做了哪些付款、交付或其他處分？",
+          "suspect": "對方後來做了哪些付款、交付或其他處分？"
+        },
+        {
+          "id": "flow",
+          "label": "金流去向",
+          "victim": "請說明款項、帳戶、時間及交易方式。",
+          "suspect": "請說明你知道的款項、帳戶、時間及交易方式。"
+        }
       ]
     },
     {
-      "id":"injury","name":"傷害","keywords":["受傷","傷害","毆打","打傷","推倒","驗傷"],
-      "source":{"label":"刑法傷害罪章；傷勢、因果及行為時法待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"conduct","label":"行為方式","victim":"對方做了哪些動作？","suspect":"你當時做了哪些動作？"},
-        {"id":"injury","label":"傷勢","victim":"你身體哪些部位不舒服或受傷？","suspect":"你當時是否看見對方有任何不舒服或受傷情形？"},
-        {"id":"causation","label":"時間因果","victim":"身體不適或傷勢是在什麼時候出現的？","suspect":"你所做的動作與對方受傷之間，你知道哪些情況？"}
+      "id": "injury",
+      "name": "傷害",
+      "keywords": [
+        "受傷",
+        "傷害",
+        "毆打",
+        "打傷",
+        "推倒",
+        "驗傷"
+      ],
+      "source": {
+        "label": "中華民國刑法第277條（核實自全國法規資料庫鏡像 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第277條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:25.573639+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "conduct",
+          "label": "行為方式",
+          "victim": "對方做了哪些動作？",
+          "suspect": "你當時做了哪些動作？"
+        },
+        {
+          "id": "injury",
+          "label": "傷勢",
+          "victim": "你身體哪些部位不舒服或受傷？",
+          "suspect": "你當時是否看見對方有任何不舒服或受傷情形？"
+        },
+        {
+          "id": "causation",
+          "label": "時間因果",
+          "victim": "身體不適或傷勢是在什麼時候出現的？",
+          "suspect": "你所做的動作與對方受傷之間，你知道哪些情況？"
+        }
       ]
     },
     {
-      "id":"damage","name":"毀損","keywords":["毀損","破壞","砸","刮傷","凹陷","損壞"],
-      "source":{"label":"刑法毀棄損壞罪章；適用條文及行為時法待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"object","label":"物品狀態","victim":"請說明遭損壞的物品及損壞前後差異。","suspect":"請說明你接觸的物品及接觸前後差異。"},
-        {"id":"method","label":"行為方式","victim":"你看見或得知物品以何種方式受損？","suspect":"請說明你接觸或處理該物品的方式。"},
-        {"id":"usability","label":"使用影響","victim":"該物品目前是否仍可正常使用？","suspect":"你是否知道該物品後來是否仍可正常使用？"}
+      "id": "damage",
+      "name": "毀損",
+      "keywords": [
+        "毀損",
+        "破壞",
+        "砸",
+        "刮傷",
+        "凹陷",
+        "損壞",
+        "撞壞",
+        "圍牆"
+      ],
+      "source": {
+        "label": "中華民國刑法第352條至第357條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第354條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:26.223133+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "object",
+          "label": "物品狀態",
+          "victim": "請說明遭損壞的物品及損壞前後差異。",
+          "suspect": "請說明你接觸的物品及接觸前後差異。"
+        },
+        {
+          "id": "method",
+          "label": "行為方式",
+          "victim": "你看見或得知物品以何種方式受損？",
+          "suspect": "請說明你接觸或處理該物品的方式。"
+        },
+        {
+          "id": "usability",
+          "label": "使用影響",
+          "victim": "該物品目前是否仍可正常使用？",
+          "suspect": "你是否知道該物品後來是否仍可正常使用？"
+        }
       ]
     },
     {
-      "id":"intimidation","name":"恐嚇／妨害自由","keywords":["恐嚇","威脅","不准離開","限制自由","強迫","脅迫"],
-      "source":{"label":"刑法恐嚇及妨害自由罪章；適用條文待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"words_actions","label":"言語或行為","victim":"對方說了什麼或做了什麼？","suspect":"你當時說了什麼或做了什麼？"},
-        {"id":"context","label":"當時情境","victim":"當時你所在的位置及可離開的情況為何？","suspect":"當時雙方所在的位置及離開條件為何？"},
-        {"id":"impact","label":"實際影響","victim":"這些言語或行為對你的決定或行動造成什麼影響？","suspect":"你當時希望對方做或不做什麼？"}
+      "id": "intimidation",
+      "name": "恐嚇／妨害自由",
+      "keywords": [
+        "恐嚇",
+        "威脅",
+        "不准離開",
+        "限制自由",
+        "強迫",
+        "脅迫",
+        "交付金錢",
+        "不交付",
+        "扣薪",
+        "沒收證件",
+        "限制離開"
+      ],
+      "source": {
+        "label": "中華民國刑法第305條（核實自全國法規資料庫鏡像 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第305條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:26.873324+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "words_actions",
+          "label": "言語或行為",
+          "victim": "對方說了什麼或做了什麼？",
+          "suspect": "你當時說了什麼或做了什麼？"
+        },
+        {
+          "id": "context",
+          "label": "當時情境",
+          "victim": "當時你所在的位置及可離開的情況為何？",
+          "suspect": "當時雙方所在的位置及離開條件為何？"
+        },
+        {
+          "id": "impact",
+          "label": "實際影響",
+          "victim": "這些言語或行為對你的決定或行動造成什麼影響？",
+          "suspect": "你當時希望對方做或不做什麼？"
+        }
       ]
     },
     {
-      "id":"defamation","name":"妨害名譽","keywords":["妨害名譽","公然侮辱","誹謗","貼文","辱罵","散布"],
-      "source":{"label":"刑法妨害名譽及信用罪章；適用條文待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"content","label":"表達內容","victim":"請完整說明或提供對方表達的內容。","suspect":"請完整說明你所表達的內容。"},
-        {"id":"audience","label":"接觸範圍","victim":"有哪些人可能聽見、看見或收到該內容？","suspect":"你將內容傳達給哪些人或發布在何處？"},
-        {"id":"basis","label":"事實基礎","victim":"你知道對方表達該內容所依據的資料嗎？","suspect":"你表達該內容前查證了哪些資料？"}
+      "id": "defamation",
+      "name": "妨害名譽",
+      "keywords": [
+        "妨害名譽",
+        "公然侮辱",
+        "誹謗",
+        "貼文",
+        "辱罵",
+        "不實指控",
+        "張貼"
+      ],
+      "source": {
+        "label": "中華民國刑法第309條（核實自全國法規資料庫鏡像 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第309條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:27.314183+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "content",
+          "label": "表達內容",
+          "victim": "請完整說明或提供對方表達的內容。",
+          "suspect": "請完整說明你所表達的內容。"
+        },
+        {
+          "id": "audience",
+          "label": "接觸範圍",
+          "victim": "有哪些人可能聽見、看見或收到該內容？",
+          "suspect": "你將內容傳達給哪些人或發布在何處？"
+        },
+        {
+          "id": "basis",
+          "label": "事實基礎",
+          "victim": "你知道對方表達該內容所依據的資料嗎？",
+          "suspect": "你表達該內容前查證了哪些資料？"
+        }
       ]
     },
     {
-      "id":"forgery","name":"偽造文書","keywords":["偽造","冒名","簽名","文書","印章","變造"],
-      "source":{"label":"刑法偽造文書印文罪章；文件性質及適用條文待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"document","label":"文件內容","victim":"請說明涉及的文件及文件記載內容。","suspect":"請說明涉及的文件及文件記載內容。"},
-        {"id":"authorship","label":"製作名義","victim":"文件上的簽名、印章或名義是否由你授權？","suspect":"文件上的簽名、印章或名義如何形成？"},
-        {"id":"use","label":"使用情形","victim":"該文件後來被提供或使用在什麼地方？","suspect":"你是否曾提供或使用該文件？請說明經過。"}
+      "id": "forgery",
+      "name": "偽造文書",
+      "keywords": [
+        "偽造",
+        "冒名",
+        "簽名",
+        "文書",
+        "印章",
+        "變造",
+        "假身分證",
+        "冒用",
+        "冒名申請"
+      ],
+      "source": {
+        "label": "中華民國刑法第210條（核實自全國法規資料庫鏡像 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第210條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:27.917866+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "document",
+          "label": "文件內容",
+          "victim": "請說明涉及的文件及文件記載內容。",
+          "suspect": "請說明涉及的文件及文件記載內容。"
+        },
+        {
+          "id": "authorship",
+          "label": "製作名義",
+          "victim": "文件上的簽名、印章或名義是否由你授權？",
+          "suspect": "文件上的簽名、印章或名義如何形成？"
+        },
+        {
+          "id": "use",
+          "label": "使用情形",
+          "victim": "該文件後來被提供或使用在什麼地方？",
+          "suspect": "你是否曾提供或使用該文件？請說明經過。"
+        }
+      ],
+      "related": [
+        "fraud"
       ]
     },
     {
-      "id":"computer","name":"妨害電腦使用","keywords":["帳號被盜","登入","密碼","電腦","刪除資料","駭客","電子郵件"],
-      "source":{"label":"刑法妨害電腦使用罪章；系統權限及適用條文待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"system","label":"系統或帳號","victim":"涉及哪一個系統、設備或帳號？","suspect":"你曾使用哪一個系統、設備或帳號？"},
-        {"id":"authorization","label":"授權範圍","victim":"請說明獲准使用的人員及其授權範圍。","suspect":"你認為自己獲得何種使用授權？"},
-        {"id":"change","label":"資料影響","victim":"你發現哪些資料被取得、變更、刪除或影響？","suspect":"你登入後曾查看、變更或處理哪些資料？"}
+      "id": "computer",
+      "name": "妨害電腦使用",
+      "keywords": [
+        "帳號被盜",
+        "登入",
+        "密碼",
+        "電腦",
+        "刪除資料",
+        "駭客",
+        "電子郵件",
+        "網路貸款",
+        "盜用後",
+        "刪除其",
+        "雲端"
+      ],
+      "source": {
+        "label": "中華民國刑法第359條（核實自全國法規資料庫鏡像 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第359條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:28.494223+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "system",
+          "label": "系統或帳號",
+          "victim": "涉及哪一個系統、設備或帳號？",
+          "suspect": "你曾使用哪一個系統、設備或帳號？"
+        },
+        {
+          "id": "authorization",
+          "label": "授權範圍",
+          "victim": "請說明獲准使用的人員及其授權範圍。",
+          "suspect": "你認為自己獲得何種使用授權？"
+        },
+        {
+          "id": "change",
+          "label": "資料影響",
+          "victim": "你發現哪些資料被取得、變更、刪除或影響？",
+          "suspect": "你登入後曾查看、變更或處理哪些資料？"
+        }
       ]
     },
     {
-      "id":"sexual_harassment","name":"性騷擾／性隱私","keywords":["性騷擾","性影像","偷拍","散布私密","觸摸","性暗示"],
-      "source":{"label":"性騷擾及性隱私相關法規；適用體系須由承辦人確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"conduct","label":"具體行為","victim":"請用你能接受的方式說明對方的言語或行為。","suspect":"請說明你當時的言語或行為。"},
-        {"id":"consent","label":"意願表達","victim":"你當時如何表達自己的意願或反應？","suspect":"對方當時如何表達意願或反應？"},
-        {"id":"relationship","label":"關係及權勢","victim":"你與對方的關係及工作、監督或其他權力關係為何？","suspect":"你與對方的關係及工作、監督或其他權力關係為何？"}
+      "id": "sexual_harassment",
+      "name": "性騷擾",
+      "keywords": [
+        "性騷擾",
+        "觸摸",
+        "性暗示",
+        "權勢性騷擾",
+        "親吻",
+        "擁抱"
+      ],
+      "source": {
+        "label": "性騷擾防治法第2條、第25條（2026-10-13 核實自全國法規資料庫）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "性騷擾防治法",
+        "article_no": "第2條、第25條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050074",
+        "law_modified_date": "2023-08-16",
+        "dataset_version": "2026-10-13",
+        "verified_at": "2026-10-13T20:00:00+08:00",
+        "verification_note": "現行法核實；第7條至第17條之防治、申訴及調查程序與第26條至第30條行政處罰須分層；刑法妨害秘密及性影像由 privacy 路由處理；行為時法仍須人工確認。"
+      },
+      "elements": [
+        {
+          "id": "conduct",
+          "label": "具體行為",
+          "victim": "請用你能接受的方式說明對方的言語或行為。",
+          "suspect": "請說明你當時的言語或行為。"
+        },
+        {
+          "id": "consent",
+          "label": "意願表達",
+          "victim": "你當時如何表達自己的意願或反應？",
+          "suspect": "對方當時如何表達意願或反應？"
+        },
+        {
+          "id": "relationship",
+          "label": "關係及權勢",
+          "victim": "你與對方的關係及工作、監督或其他權力關係為何？",
+          "suspect": "你與對方的關係及工作、監督或其他權力關係為何？"
+        }
+      ],
+      "related": [
+        "defamation"
       ]
     },
     {
-      "id":"stalking","name":"跟蹤騷擾／違反保護令","keywords":["跟蹤","騷擾","尾隨","守候","保護令","反覆聯絡"],
-      "source":{"label":"跟蹤騷擾防制法及家庭暴力防治法；適用法規待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"pattern","label":"次數及持續性","victim":"請說明類似情形的次數、時間及方式。","suspect":"你與對方聯絡或接近的次數、時間及方式為何？"},
-        {"id":"notice","label":"意願或命令知悉","victim":"你曾如何向對方表達不願再被聯絡或接近？","suspect":"你何時知道對方不願再被聯絡或接近，或知道相關命令內容？"},
-        {"id":"effect","label":"生活影響","victim":"這些行為對你的日常生活或活動造成哪些影響？","suspect":"你是否知道對方因這些行為改變日常生活或活動？"}
+      "id": "stalking",
+      "name": "跟蹤騷擾／違反保護令",
+      "keywords": [
+        "跟蹤",
+        "騷擾",
+        "尾隨",
+        "守候",
+        "保護令",
+        "反覆聯絡",
+        "徘徊守候",
+        "反覆徘徊"
+      ],
+      "source": {
+        "label": "跟蹤騷擾防制法第3條、第4條至第21條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "跟蹤騷擾防制法",
+        "article_no": "第3條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0080211",
+        "law_modified_date": "2021-12-01",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:30:05.662144+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "related_articles": [
+          {
+            "law_name": "跟蹤騷擾防制法",
+            "article_no": "第12條",
+            "role": "保護令核發"
+          }
+        ]
+      },
+      "elements": [
+        {
+          "id": "pattern",
+          "label": "次數及持續性",
+          "victim": "請說明類似情形的次數、時間及方式。",
+          "suspect": "你與對方聯絡或接近的次數、時間及方式為何？"
+        },
+        {
+          "id": "notice",
+          "label": "意願或命令知悉",
+          "victim": "你曾如何向對方表達不願再被聯絡或接近？",
+          "suspect": "你何時知道對方不願再被聯絡或接近，或知道相關命令內容？"
+        },
+        {
+          "id": "effect",
+          "label": "生活影響",
+          "victim": "這些行為對你的日常生活或活動造成哪些影響？",
+          "suspect": "你是否知道對方因這些行為改變日常生活或活動？"
+        }
       ]
     },
     {
-      "id":"public_danger","name":"公共危險／酒駕","keywords":["酒駕","酒測","公共危險","肇事","駕駛","酒精"],
-      "source":{"label":"刑法公共危險罪章；檢測標準與行為時法待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"consumption","label":"飲用情形","victim":"你知道駕駛人在駕駛前有何飲酒或用藥情形嗎？","suspect":"請說明駕駛前的飲酒、飲食或用藥情形。"},
-        {"id":"driving","label":"駕駛行為","victim":"你看見車輛如何行駛？","suspect":"請說明駕駛的車輛、路線、時間及距離。"},
-        {"id":"testing","label":"檢測程序","victim":"你是否在場看見任何檢測程序？","suspect":"警方進行檢測前後告知了哪些事項？"}
+      "id": "public_danger",
+      "name": "公共危險／酒駕",
+      "keywords": [
+        "酒駕",
+        "酒測",
+        "公共危險",
+        "肇事",
+        "駕駛",
+        "酒精"
+      ],
+      "source": {
+        "label": "中華民國刑法第185條之3至第185條之4（2026-10-13 官方網站複核；離線 dataset 2026-10-02；僅限酒毒駕與事故逃逸）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第185條之3",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:30.026148+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "consumption",
+          "label": "飲用情形",
+          "victim": "你知道駕駛人在駕駛前有何飲酒或用藥情形嗎？",
+          "suspect": "請說明駕駛前的飲酒、飲食或用藥情形。"
+        },
+        {
+          "id": "driving",
+          "label": "駕駛行為",
+          "victim": "你看見車輛如何行駛？",
+          "suspect": "請說明駕駛的車輛、路線、時間及距離。"
+        },
+        {
+          "id": "testing",
+          "label": "檢測程序",
+          "victim": "你是否在場看見任何檢測程序？",
+          "suspect": "警方進行檢測前後告知了哪些事項？"
+        }
       ]
     },
     {
-      "id":"drugs","name":"毒品案件","keywords":["毒品","吸毒","施用","販賣毒品","持有毒品","尿液"],
-      "source":{"label":"毒品危害防制條例；毒品級別及行為時法待人工確認","status":"HUMAN_REVIEW_REQUIRED"},
-      "elements":[
-        {"id":"substance","label":"物質辨識","victim":"你知道涉及物質的名稱、外觀或來源嗎？","suspect":"請說明涉及物質的名稱、外觀及你如何得知其內容。"},
-        {"id":"possession","label":"持有關係","victim":"你看見該物質由誰保管或控制？","suspect":"該物質如何由你保管或控制？"},
-        {"id":"purpose","label":"取得及用途","victim":"你知道取得方式或用途嗎？","suspect":"請說明你取得該物質的方式及原本用途。"}
+      "id": "drugs",
+      "name": "毒品案件",
+      "keywords": [
+        "毒品",
+        "吸毒",
+        "施用",
+        "販賣毒品",
+        "持有毒品",
+        "尿液"
+      ],
+      "source": {
+        "label": "毒品危害防制條例第10條（核實自全國法規資料庫鏡像 dataset 2026-10-02）",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "毒品危害防制條例",
+        "article_no": "第10條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000008",
+        "law_modified_date": "2022-05-04",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:30.439620+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。"
+      },
+      "elements": [
+        {
+          "id": "substance",
+          "label": "物質辨識",
+          "victim": "你知道涉及物質的名稱、外觀或來源嗎？",
+          "suspect": "請說明涉及物質的名稱、外觀及你如何得知其內容。"
+        },
+        {
+          "id": "possession",
+          "label": "持有關係",
+          "victim": "你看見該物質由誰保管或控制？",
+          "suspect": "該物質如何由你保管或控制？"
+        },
+        {
+          "id": "purpose",
+          "label": "取得及用途",
+          "victim": "你知道取得方式或用途嗎？",
+          "suspect": "請說明你取得該物質的方式及原本用途。"
+        }
       ]
+    },
+    {
+      "id": "state_security",
+      "name": "內亂／外患／妨害國交",
+      "keywords": [
+        "內亂",
+        "外患",
+        "國交",
+        "敵國",
+        "國防秘密"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第100條至第119條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/state-security.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第100條至第119條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:19.504711+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "state-security.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "duty",
+      "name": "瀆職",
+      "keywords": [
+        "瀆職",
+        "受賄",
+        "行賄",
+        "圖利",
+        "枉法"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第120條至第134條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/duty.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第120條至第134條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:20.349601+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "duty.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "obstruction",
+      "name": "妨害公務",
+      "keywords": [
+        "妨害公務",
+        "公務員",
+        "查封",
+        "封印"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第135條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/obstruction.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第135條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:21.127484+00:00",
+        "verification_note": "第135條現行法已核實。第141條之1業經憲法法庭113年憲判字第9號判決宣告違憲失效，已排除於現行候選關鍵詞與 runtime 問句；若案件涉及歷史行為，須另經行為時法 Human Gate。",
+        "related_articles": [
+          {
+            "law_name": "中華民國刑法",
+            "article_no": "第141條之1",
+            "role": "歷史法查對專用，不得作現行候選或 runtime 問句",
+            "constitutional_status": "INVALIDATED_BY_CONSTITUTIONAL_COURT",
+            "constitutional_judgment": "憲法法庭 113 年憲判字第 9 號判決"
+          }
+        ],
+        "question_file": "obstruction.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "judicial_integrity",
+      "name": "妨害司法公正",
+      "keywords": [
+        "妨害司法",
+        "證人報復",
+        "不法關說",
+        "證言利益",
+        "第172條之1",
+        "第172條之2",
+        "第172條之3",
+        "172-1",
+        "172-2",
+        "172-3"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第172條之1至第172條之3（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/judicial-integrity.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第172條之1至第172條之3",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:21.819803+00:00",
+        "verification_note": "現行法第172條之1至第172條之3已核實；不含第141條之1；行為時法仍須由承辦人依官方修正歷程確認。",
+        "related_articles": [
+          {
+            "law_name": "中華民國刑法",
+            "article_no": "第172條之2",
+            "role": "對證人、鑑定人、專家證人或通譯相關人實行犯罪行為"
+          },
+          {
+            "law_name": "中華民國刑法",
+            "article_no": "第172條之3",
+            "role": "司法案件中的不法關說"
+          }
+        ],
+        "question_file": "judicial-integrity.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "voting",
+      "name": "妨害投票",
+      "keywords": [
+        "投票",
+        "選舉",
+        "賄選",
+        "幽靈人口"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第142條至第148條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/voting.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第142條至第148條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:22.431989+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "voting.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "disorder",
+      "name": "妨害秩序",
+      "keywords": [
+        "聚眾",
+        "妨害秩序",
+        "煽惑",
+        "冒充公務員"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第149條至第160條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/disorder.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第149條至第160條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:22.898538+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "disorder.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "escape",
+      "name": "脫逃／藏匿人犯",
+      "keywords": [
+        "脫逃",
+        "藏匿人犯",
+        "頂替",
+        "通緝"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第161條至第164條（含第161條之1；2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/escape-concealment.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第161條至第164條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:23.334788+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "escape-concealment.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "evidence",
+      "name": "湮滅證據",
+      "keywords": [
+        "湮滅證據",
+        "隱匿證據",
+        "偽造證據"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第165條至第167條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/evidence.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第165條至第167條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:23.793794+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "evidence.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "accusation",
+      "name": "偽證／誣告",
+      "keywords": [
+        "偽證",
+        "誣告",
+        "虛偽陳述"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第168條至第172條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/accusation.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第168條至第172條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:24.211901+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "accusation.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "currency",
+      "name": "偽造貨幣",
+      "keywords": [
+        "偽鈔",
+        "偽造貨幣",
+        "假鈔"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第195條至第200條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/currency.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第195條至第200條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:24.823270+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "currency.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "securities",
+      "name": "偽造有價證券",
+      "keywords": [
+        "有價證券",
+        "偽造股票",
+        "偽造票券"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第201條至第205條（含第201條之1；2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/securities.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第201條至第205條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:25.427785+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "securities.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "weights_measures",
+      "name": "偽造度量衡",
+      "keywords": [
+        "度量衡",
+        "磅秤",
+        "計量"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第206條至第209條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/weights-measures.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第206條至第209條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:25.985660+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "weights-measures.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "sexual",
+      "name": "妨害性自主",
+      "keywords": [
+        "性侵害",
+        "強制性交",
+        "強制猥褻",
+        "性自主"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第221條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/sexual.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第221條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:26.613343+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "sexual.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "obscenity",
+      "name": "妨害風化",
+      "keywords": [
+        "妨害風化",
+        "猥褻物",
+        "媒介性交"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第235條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/obscenity.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第235條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:27.273477+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "obscenity.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "marriage",
+      "name": "妨害婚姻及家庭",
+      "keywords": [
+        "重婚",
+        "略誘",
+        "和誘",
+        "婚姻"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第237條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/marriage.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第237條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:27.715766+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "marriage.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "graves_religion",
+      "name": "褻瀆祀典／侵害墳墓屍體",
+      "keywords": [
+        "墳墓",
+        "屍體",
+        "骨灰",
+        "祀典"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第246條至第250條（2026-10-13 官方網站複核；離線 dataset 2026-10-02）；題庫檔案 questions/graves-religion.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第246條至第250條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:28.116711+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "graves-religion.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "agriculture_commerce",
+      "name": "妨害農工商",
+      "keywords": [
+        "農工商",
+        "商品標記",
+        "囤積"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第251條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/agriculture-commerce.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第251條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:28.529391+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "agriculture-commerce.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "opium",
+      "name": "鴉片",
+      "keywords": [
+        "鴉片",
+        "罌粟"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第20章第256條至第265條（核實自全國法規資料庫 2026-10-13）；題庫檔案 questions/opium.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第256條至第265條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "official-law-moj-2026-10-13",
+        "verified_at": "2026-10-13T12:00:00+00:00",
+        "verification_note": "已核對刑法第20章第256條至第265條；各行為態樣與毒品危害防制條例的特別法競合仍須 Human Gate，行為時法須依官方修正歷程確認。",
+        "question_file": "opium.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "gambling",
+      "name": "賭博",
+      "keywords": [
+        "賭博",
+        "賭場",
+        "下注",
+        "彩票"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第266條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/gambling.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第266條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:28.973496+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "gambling.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "homicide",
+      "name": "殺人／過失致死",
+      "keywords": [
+        "殺人",
+        "死亡",
+        "致死",
+        "加工自殺"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第271條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/homicide.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第271條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:29.410931+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "homicide.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "abortion",
+      "name": "墮胎",
+      "keywords": [
+        "墮胎",
+        "流產"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第288條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/abortion.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第288條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:29.822587+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "abortion.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "abandonment",
+      "name": "遺棄",
+      "keywords": [
+        "遺棄",
+        "無自救力",
+        "扶養"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第293條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/abandonment.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第293條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:30.427281+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "abandonment.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "liberty",
+      "name": "妨害自由",
+      "keywords": [
+        "拘禁",
+        "妨害自由",
+        "強制",
+        "侵入住宅"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第302條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/liberty.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第302條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:30.849200+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "liberty.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "privacy",
+      "name": "妨害秘密／性隱私",
+      "keywords": [
+        "妨害秘密",
+        "竊錄",
+        "竊聽",
+        "性影像",
+        "偷拍",
+        "側錄",
+        "散布私密",
+        "私密影像",
+        "私密照片"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第315條之1（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/privacy.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第315條之1",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:13:28.932215+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "privacy.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "robbery",
+      "name": "搶奪／強盜／海盜",
+      "keywords": [
+        "搶奪",
+        "強盜",
+        "海盜",
+        "不能抗拒"
+      ],
+      "related": [],
+      "source": {
+        "label": "中華民國刑法第325條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/robbery.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "中華民國刑法",
+        "article_no": "第325條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001",
+        "law_modified_date": "2026-07-22",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:31.318799+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "robbery.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "trafficking",
+      "name": "人口販運",
+      "keywords": [
+        "人口販運",
+        "剝削",
+        "強迫勞動",
+        "債務約束"
+      ],
+      "related": [],
+      "source": {
+        "label": "人口販運防制法第2條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/trafficking.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "人口販運防制法",
+        "article_no": "第2條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0080177",
+        "law_modified_date": "2023-06-14",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:32.203010+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "trafficking.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "juvenile",
+      "name": "少年事件",
+      "keywords": [
+        "少年事件",
+        "未滿十八歲",
+        "觸法少年"
+      ],
+      "related": [],
+      "source": {
+        "label": "少年事件處理法第1條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/juvenile.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "少年事件處理法",
+        "article_no": "第1條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0010011",
+        "law_modified_date": "2023-06-21",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:32.733238+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "juvenile.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "domestic_violence",
+      "name": "家庭暴力／違反保護令",
+      "keywords": [
+        "家庭暴力",
+        "家暴",
+        "保護令",
+        "聲請保護令"
+      ],
+      "related": [],
+      "source": {
+        "label": "家庭暴力防治法第2條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；違反保護令罪罰則見第61條",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "家庭暴力防治法",
+        "article_no": "第2條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050071",
+        "law_modified_date": "2023-12-06",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:33.168529+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "related_articles": [
+          {
+            "law_name": "家庭暴力防治法",
+            "article_no": "第61條",
+            "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050071",
+            "role": "違反保護令罪罰則"
+          }
+        ],
+        "question_file": "domestic-violence.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "child_protection",
+      "name": "兒少保護／性剝削",
+      "keywords": [
+        "兒少性剝削",
+        "兒童虐待",
+        "少年性剝削"
+      ],
+      "related": [],
+      "source": {
+        "label": "兒童及少年性剝削防制條例第2條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/child-protection.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "兒童及少年性剝削防制條例",
+        "article_no": "第2條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=D0050023",
+        "law_modified_date": "2024-08-07",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:33.611143+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "child-protection.md"
+      },
+      "elements": []
+    },
+    {
+      "id": "gender_equality",
+      "name": "職場／校園性別事件",
+      "keywords": [
+        "職場性騷擾",
+        "校園性別",
+        "性平申訴"
+      ],
+      "related": [],
+      "source": {
+        "label": "性別平等工作法第12條（核實自全國法規資料庫鏡像 dataset 2026-10-02）；題庫檔案 questions/gender-equality.md",
+        "status": "VERIFIED_CURRENT",
+        "law_name": "性別平等工作法",
+        "article_no": "第12條",
+        "law_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=N0030014",
+        "law_modified_date": "2023-08-16",
+        "dataset_version": "2026-10-02",
+        "verified_at": "2026-10-12T01:23:34.172581+00:00",
+        "verification_note": "現行法核實；行為時法（歷史版本）仍須由承辦人依官方修正歷程確認。",
+        "question_file": "gender-equality.md"
+      },
+      "elements": []
     }
   ]
 }

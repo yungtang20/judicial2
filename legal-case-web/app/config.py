@@ -14,7 +14,7 @@ HOST = os.environ.get("HOST", "0.0.0.0" if os.environ.get("PORT") or os.environ.
 PORT = int(os.environ.get("PORT", "8787"))
 MAX_BODY_BYTES = 256_000
 MAX_TEXT_LENGTH = 20_000
-MAX_SUMMARY_LENGTH = 100
+MAX_SUMMARY_LENGTH = 500
 MAX_DOCX_PAGES = 8
 APP_ORIGIN = os.environ.get("APP_ORIGIN", f"http://{HOST}:{PORT}")
 

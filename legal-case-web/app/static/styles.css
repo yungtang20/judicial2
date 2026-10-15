@@ -120,3 +120,40 @@ legend { font-weight: 800; margin-bottom: .4rem; font-size: .92rem; }
   .output-grid { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+
+
+.case-warnings {
+  border: 1px solid #b45309;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  white-space: pre-line;
+  font-size: 0.95rem;
+}
+
+.case-warnings p {
+  margin: 0.25rem 0;
+}
+
+
+.structured-facts {
+  margin: 0.5rem 0 1rem;
+  border: 1px solid var(--border, #ccc);
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.fact-label { font-size: 0.85rem; color: var(--muted, #666); margin: 0.25rem 0; }
+
+.structured-facts table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+
+.structured-facts th, .structured-facts td {
+  border-bottom: 1px solid var(--border, #ddd);
+  padding: 0.3rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.structured-facts td.fact-id { font-family: monospace; font-size: 0.75rem; }

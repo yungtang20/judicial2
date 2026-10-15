@@ -30,13 +30,24 @@ def local_server(tmp_path, monkeypatch):
 
 
 def request(port, method, path, *, headers=None, body=None):
-    connection = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
-    connection.request(method, path, body=body, headers=headers or {})
-    response = connection.getresponse()
-    data = response.read()
-    result = response.status, dict(response.getheaders()), data
-    connection.close()
-    return result
+    # Windows ThreadingHTTPServer teardown 偶發 ConnectionAbortedError（socket race）
+    # → 重試一次；僅重試冪等的 GET（mutation 重試會重複建案）
+    last_error: Exception | None = None
+    for attempt in range(2):
+        try:
+            connection = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+            connection.request(method, path, body=body, headers=headers or {})
+            response = connection.getresponse()
+            data = response.read()
+            result = response.status, dict(response.getheaders()), data
+            connection.close()
+            return result
+        except OSError as exc:  # ConnectionAborted/Reset/timeout 都是 OSError 子類
+            last_error = exc
+            connection.close()
+            if method != "GET" or attempt == 1:
+                raise
+    raise last_error  # pragma: no cover
 
 
 def test_api_requires_session_token_and_no_store(local_server):
@@ -84,3 +95,24 @@ def test_static_path_traversal_is_not_served(local_server):
     )
     assert status == 404
 
+
+
+def test_error_messages_are_sanitized_for_unknown_payloads(local_server):
+    headers = {
+        "Host": f"127.0.0.1:{local_server}",
+        "X-Session-Token": server_module.SESSION_TOKEN,
+        "Origin": f"http://127.0.0.1:{local_server}",
+        "Content-Type": "application/json",
+    }
+    # 意圖帶攻擊性內容的 payload；錯誤訊息不應回顯輸入
+    raw = json.dumps({"summary": "x" * 10, "unexpected_field": "內部機密字串"}, ensure_ascii=False).encode("utf-8")
+    headers["Content-Length"] = str(len(raw))
+    status, _, body = request(local_server, "POST", "/api/cases", headers=headers, body=raw)
+    text = body.decode("utf-8")
+    # 不應把輸入內容原樣回顯
+    assert "內部機密字串" not in text
+
+def test_safe_error_message_allows_known_business_hints():
+    from app.server import _safe_error_message
+    assert _safe_error_message("目前不可選擇候選罪章") == "目前不可選擇候選罪章"
+    assert _safe_error_message("某未知內部訊息-ID-12345") == "操作未完成，請確認輸入內容或稍後再試"

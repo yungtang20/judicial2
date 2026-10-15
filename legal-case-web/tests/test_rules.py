@@ -5,7 +5,16 @@ import json
 from pathlib import Path
 
 from app.markdown_questions import CATALOG
-from app.rules import build_questions, candidate_offenses, concise_summary, is_victim_code, required_case_numbers
+from app.rules import (
+    MAX_SELECTED_OFFENSES,
+    analyze_gate1,
+    alternative_legal_routes,
+    build_questions,
+    candidate_offenses,
+    concise_summary,
+    is_victim_code,
+    required_case_numbers,
+)
 from tests.helpers import BANK, completed_case
 
 
@@ -14,11 +23,270 @@ def test_candidate_engine_is_deterministic_and_can_return_zero():
     first = candidate_offenses("對方以假客服名義要求匯款，疑似詐騙", BANK)
     assert first == candidate_offenses("對方以假客服名義要求匯款，疑似詐騙", BANK)
     assert first[0]["id"] == "fraud"
-    assert first[0]["status"] == "NEED_REVIEW"
+    assert first[0]["status"] == "NEED_LEGAL_ROUTE_MAPPING"
     assert first[0]["unknown_elements"]
     theft = candidate_offenses("有人偷走物品", BANK)
-    assert {item["id"] for item in theft} >= {"theft", "embezzlement", "aggravated_theft"}
+    assert {item["id"] for item in theft} >= {"theft", "embezzlement", "robbery"}
+    assert "aggravated_theft" not in {item["id"] for item in theft}
 
+
+def test_phone_taken_extracts_neutral_facts_without_legal_conclusion():
+    raw = {
+        "event_time": "2026-10-10T10:30",
+        "location": "測試地點",
+        "summary": "他把我的手機拿走了。",
+    }
+    gate1 = analyze_gate1(raw, use_ai=False)
+    facts = {item["fact_key"]: item for item in gate1["facts"]}
+    assert facts["actor"]["value"] == "他"
+    assert facts["action"]["value"] == "取走物品"
+    assert facts["object"]["value"] == "手機"
+    for key in (
+        "original_possession", "consent", "prior_lawful_possession",
+        "force_or_threat", "return_agreement", "intent",
+    ):
+        assert facts[key]["value"] == "UNKNOWN"
+    assert not any("犯罪成立" in item["normalized_text"] for item in gate1["facts"])
+
+
+def test_phone_taken_keeps_competing_routes_and_separate_civil_alternative():
+    raw = {
+        "event_time": "2026-10-10T10:30",
+        "location": "測試地點",
+        "summary": "他把我的手機拿走了。",
+    }
+    gate1 = analyze_gate1(raw, use_ai=False)
+    candidates = candidate_offenses(raw["summary"], BANK, gate1)
+    assert {item["id"] for item in candidates} >= {"theft", "embezzlement", "robbery"}
+    assert all(item["candidate_state"] == "NEED_REVIEW" for item in candidates)
+    alternatives = alternative_legal_routes(gate1)
+    assert [item["route_id"] for item in alternatives] == ["civil_possession_dispute"]
+    assert alternatives[0]["selectable_as_offense"] is False
+
+def test_candidate_schema_contains_required_fields():
+    c = candidate_offenses("對方以假客服名義要求匯款，疑似詐騙", BANK)
+    assert len(c) == 1
+    item = c[0]
+    # New schema fields per spec §5.2
+    assert item["candidate_id"] == "candidate:fraud"
+    assert item["inclusion_reason"] and "關鍵詞" in item["inclusion_reason"]
+    assert item["reservation_reason"] and "結構化事實" in item["reservation_reason"]
+    assert item["distinguishing_question_ids"]
+    assert item["required_evidence_question_ids"]
+    assert item["competition_analysis"] == "NOT_ASSESSED"
+    assert item["prohibited_conclusions"] == ["犯罪成立", "故意成立", "因果關係成立", "競合成立"]
+    assert item["version"] == "VERIFIED_CURRENT"
+    # 法源核實欄位（spec §5.5）
+    assert item["source"]["status"] == "VERIFIED_CURRENT"
+    assert item["source"]["law_url"].startswith("http")
+    assert item["source"]["dataset_version"]
+
+
+def test_all_runtime_routes_have_explicit_crosswalk_status():
+    offenses = {item["id"]: item for item in BANK["offenses"]}
+    assert len(offenses) == 44
+    assert BANK["legal_route_crosswalk_version"] == "1.1"
+    allowed_types = {"substantive", "mixed", "procedural", "protective"}
+    allowed_statuses = {
+        "PARTIAL_SCOPE", "SPLIT_REQUIRED", "PROCEDURAL_ONLY", "PROTECTIVE_UMBRELLA"
+    }
+    for offense in offenses.values():
+        assert offense["route_type"] in allowed_types
+        assert offense["crosswalk_status"] in allowed_statuses
+        assert offense["content_review_status"] == "HUMAN_REVIEW_REQUIRED"
+
+
+def test_opium_route_uses_criminal_code_chapter_twenty_source():
+    offense = next(item for item in BANK["offenses"] if item["id"] == "opium")
+    source = offense["source"]
+    assert source["law_name"] == "中華民國刑法"
+    assert source["article_no"] == "第256條至第265條"
+    assert "C0000001" in source["law_url"]
+    assert offense["crosswalk_status"] == "SPLIT_REQUIRED"
+    assert [item["article_no"] for item in offense["legal_routes"]] == [
+        "第256條", "第257條", "第258條", "第259條", "第260條",
+        "第261條", "第262條", "第263條", "第264條", "第265條",
+    ]
+
+
+def test_first_child_route_batch_has_reviewable_fact_models():
+    expected_counts = {
+        "opium": 10,
+        "fraud": 10,
+        "injury": 10,
+        "intimidation": 2,
+        "defamation": 6,
+        "forgery": 11,
+        "computer": 6,
+        "sexual_harassment": 5,
+        "drugs": 8,
+        "state_security": 21,
+        "duty": 15,
+        "judicial_integrity": 3,
+        "voting": 7,
+        "disorder": 12,
+        "escape": 5,
+        "evidence": 3,
+        "accusation": 5,
+        "currency": 6,
+        "securities": 6,
+        "weights_measures": 4,
+        "graves_religion": 5,
+        "theft": 4,
+        "aggravated_theft": 1,
+        "embezzlement": 5,
+        "damage": 6,
+        "stalking": 5,
+        "public_danger": 2,
+        "gambling": 4,
+        "homicide": 7,
+        "abortion": 5,
+        "abandonment": 4,
+        "obstruction": 7,
+        "sexual": 12,
+        "obscenity": 3,
+        "marriage": 8,
+        "agriculture_commerce": 5,
+        "liberty": 15,
+        "privacy": 16,
+        "robbery": 8,
+        "trafficking": 13,
+        "juvenile": 4,
+        "domestic_violence": 5,
+        "child_protection": 5,
+        "gender_equality": 6,
+    }
+    offenses = {item["id"]: item for item in BANK["offenses"]}
+    for offense_id, count in expected_counts.items():
+        routes = offenses[offense_id]["legal_routes"]
+        assert len(routes) == count
+        assert len({item["id"] for item in routes}) == count
+        assert all(item["fact_elements"] for item in routes)
+        assert all(item["review_status"] == "HUMAN_REVIEW_REQUIRED" for item in routes)
+        candidate = next(
+            item for item in candidate_offenses(offenses[offense_id]["keywords"][0], BANK)
+            if item["id"] == offense_id
+        )
+        assert candidate["legal_routes"] == routes
+        assert candidate["legal_route_selection_status"] == "OPTIONAL"
+        if offenses[offense_id]["route_type"] in {"procedural", "protective"}:
+            expected_status = "PROCEDURAL_FACT_MODEL_REQUIRED"
+        elif offenses[offense_id]["crosswalk_status"] == "SPLIT_REQUIRED":
+            expected_status = "NEED_LEGAL_ROUTE_MAPPING"
+        else:
+            expected_status = "NEED_REVIEW"
+        assert candidate["status"] == expected_status
+
+    assert sum(len(item.get("legal_routes", [])) for item in offenses.values()) == 310
+    assert {
+        item["id"] for item in offenses.values() if not item.get("legal_routes")
+    } == set()
+
+
+def test_sexual_harassment_and_sexual_privacy_are_separate_routes():
+    offenses = {item["id"]: item for item in BANK["offenses"]}
+    harassment = offenses["sexual_harassment"]
+    privacy = offenses["privacy"]
+
+    assert harassment["name"] == "性騷擾"
+    assert harassment["source"]["law_name"] == "性騷擾防治法"
+    assert harassment["source"]["article_no"] == "第2條、第25條"
+    assert "D0050074" in harassment["source"]["law_url"]
+    assert not ({"性影像", "偷拍", "側錄", "私密影像", "私密照片"} & set(harassment["keywords"]))
+    assert {"性影像", "偷拍", "側錄", "私密影像", "私密照片"} <= set(privacy["keywords"])
+
+    candidate_ids = {item["id"] for item in candidate_offenses("有人偷拍性影像", BANK)}
+    assert "privacy" in candidate_ids
+    assert "sexual_harassment" not in candidate_ids
+
+
+def test_obstruction_excludes_invalidated_routes_and_narrows_article_140():
+    offense = next(item for item in BANK["offenses"] if item["id"] == "obstruction")
+    active_ids = {item["id"] for item in offense["legal_routes"]}
+    excluded = {item["id"]: item for item in offense["excluded_legal_routes"]}
+    assert "obstruction_141_1_false_statement" not in active_ids
+    assert excluded["obstruction_141_1_false_statement"]["status"] == "UNCONSTITUTIONAL_INVALIDATED"
+    assert excluded["obstruction_140_insult_duty"]["status"] == "UNCONSTITUTIONAL_INVALIDATED"
+    article_140 = next(item for item in offense["legal_routes"] if item["article_no"] == "第140條")
+    assert article_140["constitutional_status"] == "CONSTITUTIONALLY_NARROWED"
+    assert "妨害公務之主觀目的" in article_140["fact_elements"]
+    assert "足以影響公務員執行公務" in article_140["fact_elements"]
+
+
+def test_empty_or_split_routes_fail_closed_in_candidate_metadata():
+    for offense in BANK["offenses"]:
+        if not offense.get("elements") or offense["crosswalk_status"] == "SPLIT_REQUIRED":
+            candidate = next(
+                item for item in candidate_offenses(offense["keywords"][0], BANK)
+                if item["id"] == offense["id"]
+            )
+            expected = (
+                "PROCEDURAL_FACT_MODEL_REQUIRED"
+                if offense["route_type"] in {"procedural", "protective"}
+                else "NEED_LEGAL_ROUTE_MAPPING"
+            )
+            assert candidate["status"] == expected
+            assert candidate["element_model_status"] == "UNMAPPED"
+
+
+def test_procedural_and_protective_umbrellas_do_not_fake_criminal_elements():
+    cases = {
+        "juvenile": ("procedural", "PROCEDURAL_ONLY"),
+        "domestic_violence": ("protective", "PROTECTIVE_UMBRELLA"),
+        "child_protection": ("protective", "PROTECTIVE_UMBRELLA"),
+        "gender_equality": ("procedural", "PROCEDURAL_ONLY"),
+    }
+    by_id = {item["id"]: item for item in BANK["offenses"]}
+    for offense_id, expected in cases.items():
+        offense = by_id[offense_id]
+        assert (offense["route_type"], offense["crosswalk_status"]) == expected
+        candidate = next(
+            item for item in candidate_offenses(offense["keywords"][0], BANK)
+            if item["id"] == offense_id
+        )
+        assert candidate["status"] == "PROCEDURAL_FACT_MODEL_REQUIRED"
+        assert candidate["unknown_elements"] == ["PROCEDURAL_FACT_MODEL_REQUIRED"]
+
+
+
+
+def test_analyze_gate1_schema_and_provenance():
+    intake = {
+        "summary": "測試案件：有人在店內拿取貨物未結帳。",
+        "event_time": "2026-10-10T10:30",
+        "location": "測試地點",
+        "has_victim": True,
+    }
+    g1 = analyze_gate1(intake)
+    # Must contain facts list with required fields
+    assert "facts" in g1
+    facts = g1["facts"]
+    assert len(facts) >= 5  # event + 4 unknowns
+    for f in facts:
+        assert "fact_id" in f
+        assert f["source_ref"] == "intake.summary"
+        assert "source_excerpt" in f
+        assert "normalized_text" in f
+        assert "fact_status" in f
+        assert f["fact_status"] in ("當事人陳述", "未知", "客觀觀察")
+        assert "review_status" in f
+        assert f["review_status"] == "HUMAN_REVIEW_REQUIRED"
+    # Backward-compatible string arrays must exist
+    for key in ("people", "events", "times", "places", "objects", "behaviors", "unknowns"):
+        assert key in g1
+        assert isinstance(g1[key], list)
+    # causation is a string
+    assert "causation" in g1
+    assert isinstance(g1["causation"], str)
+    # times must be ROC era format
+    assert g1["times"][0].startswith("115年10月10日") and "時30分" in g1["times"][0]
+    assert g1["review_status"] == "HUMAN_REVIEW_REQUIRED"
+
+
+def test_max_selected_offenses_guard():
+    """MAX_SELECTED_OFFENSES 為 3（8 頁防線實測容量：97 題/8 頁，每罪章 core+xls 約 24 題）。"""
+    assert MAX_SELECTED_OFFENSES == 3
+    # 實際防護由 test_e2e_max_selected_offenses_enforced 驗證（4 罪章 → 422）
 
 def test_question_bank_questions_are_single_judgment_questions():
     for group in BANK["common"].values():
@@ -43,12 +311,49 @@ def test_suspect_common_questions_do_not_accuse_false_statement():
     assert all("推卸責任而作不實陳述" not in text for text in texts)
 
 
+def test_contempt_of_legislature_and_judicial_integrity_routes_are_separate():
+    catalog = {item["id"]: item for item in CATALOG}
+    assert "藐視國會" not in catalog["obstruction"]["keywords"]
+    assert "藐視國會" not in catalog["judicial_integrity"]["keywords"]
+    assert catalog["judicial_integrity"]["name"] == "妨害司法公正"
+
+    contempt_ids = {item["id"] for item in candidate_offenses("藐視國會", BANK)}
+    integrity_ids = {item["id"] for item in candidate_offenses("妨害司法公正", BANK)}
+    assert "obstruction" not in contempt_ids
+    assert "judicial_integrity" not in contempt_ids
+    assert "judicial_integrity" in integrity_ids
+    assert "obstruction" not in integrity_ids
+
+    offenses = {item["id"]: item for item in BANK["offenses"]}
+    obstruction_source = offenses["obstruction"]["source"]
+    integrity_source = offenses["judicial_integrity"]["source"]
+    assert any(item["article_no"] == "第141條之1" for item in obstruction_source["related_articles"])
+    assert "第141條之1" not in integrity_source["label"]
+    assert integrity_source["article_no"] == "第172條之1至第172條之3"
+    assert {item["article_no"] for item in integrity_source["related_articles"]} == {"第172條之2", "第172條之3"}
+
+
+def test_invalidated_chapter_five_one_is_not_a_runtime_question_route():
+    question_root = Path(__file__).resolve().parents[2] / "questions"
+    obstruction = (question_root / "obstruction.md").read_text(encoding="utf-8")
+    integrity = (question_root / "judicial-integrity.md").read_text(encoding="utf-8")
+    index = (question_root / "index.md").read_text(encoding="utf-8")
+    assert "§141-1" in obstruction
+    assert "§141-1" not in integrity
+    assert "第5章之1藐視國會罪、第10章之1" not in integrity
+    assert "§141-1 已違憲失效" in index
+    assert "| 10之1 | 妨害司法公正 |" in index
+
+
 def test_question_budget_caps_offense_questions_for_eight_page_guard():
-    selected = [item["id"] for item in BANK["offenses"]]
+    # spec §7.5：core/公司罪章題不得裁除；runtime 限 MAX_SELECTED_OFFENSES（6）。
+    # 選擇上限內：offense 題 <= 30，core 優先於區分/加重，公司必問逐字保留。
+    from app.rules import MAX_SELECTED_OFFENSES
+    selected = ["theft", "embezzlement", "fraud"]  # 實測 97 題 = 8 頁極限（3 罪章）
+    assert MAX_SELECTED_OFFENSES == 3
     questions = build_questions(BANK, "victim", selected)
     offense_questions = [item for item in questions if item["kind"] not in {"common", "company"}]
-    assert len(offense_questions) <= 30
-    # 核心題優先於區分與加重題；公司必問完整保留
+    assert len(offense_questions) <= 78  # 8 頁防線：offense 題上限（97 總容量 - 19 company/common）
     kinds = [item["kind"] for item in offense_questions]
     first_distinguishing = kinds.index("distinguishing") if "distinguishing" in kinds else len(kinds)
     assert kinds[:first_distinguishing].count("core") > 0
@@ -57,7 +362,14 @@ def test_question_budget_caps_offense_questions_for_eight_page_guard():
     # 單一罪章時也維持公司必問與預算
     single = build_questions(BANK, "victim", ["theft"])
     assert sum(item["kind"] in {"common", "company"} for item in single) == 12 + 7
-    assert sum(item["kind"] not in {"common", "company"} for item in single) <= 30
+    assert sum(item["kind"] not in {"common", "company"} for item in single) <= 78
+
+    # 超過 runtime 選擇上限或 core 總量爆表時 fail closed（spec §7.5 不得靜默裁 core）
+    import pytest
+    from app.rules import RuleError
+    all_ids = [item["id"] for item in BANK["offenses"]]
+    with pytest.raises(RuleError):
+        build_questions(BANK, "victim", all_ids)
 
 
 def test_case_number_rules_cover_fraud_and_alias():
@@ -68,10 +380,10 @@ def test_case_number_rules_cover_fraud_and_alias():
     assert is_victim_code("aw001001523")
 
 
-def test_summary_is_at_most_100_unicode_characters():
-    result = concise_summary("字" * 130)
-    assert len(result) == 100
-    assert result.endswith("…")
+def test_summary_limit_is_500_unicode_characters_without_truncation():
+    result = concise_summary("字" * 500)
+    assert len(result) == 500
+    assert not result.endswith("…")
 
 
 def test_original_template_sources_match_recorded_hashes():
@@ -81,3 +393,144 @@ def test_original_template_sources_match_recorded_hashes():
         path = (manifest_path.parent / source["path"]).resolve()
         assert path.is_file()
         assert hashlib.sha256(path.read_bytes()).hexdigest().upper() == source["sha256"]
+
+def test_law_reference_builds_verified_source_from_cache(tmp_path, monkeypatch):
+    from app import law_reference as lr
+    cache = {
+        "刑法:320": {
+            "law_name": "中華民國刑法", "article_no": "第320條",
+            "article_content": "意圖為自己或第三人不法之所有…",
+            "law_url": "https://law.moj.gov.tw/LawClass/LawSearchNo.aspx?PCode=C0010001",
+            "law_modified_date": "2026-07-22", "dataset_version": "2026-10-02",
+            "abolished": False, "verified_at": "2026-10-12T00:00:00+00:00",
+        }
+    }
+    monkeypatch.setattr(lr, "CACHE_PATH", tmp_path / "law_cache.json")
+    lr.save_cache(cache)
+    source = lr.build_verified_source("刑法", "320")
+    assert source["status"] == "VERIFIED_CURRENT"
+    assert source["law_name"] == "中華民國刑法"
+    assert source["dataset_version"] == "2026-10-02"
+
+
+def test_law_reference_rejects_abolished_article(tmp_path, monkeypatch):
+    from app import law_reference as lr
+    cache = {
+        "舊法:1": {
+            "law_name": "舊法", "article_no": "第1條",
+            "article_content": "…", "law_url": "https://example",
+            "law_modified_date": "2000-01-01", "dataset_version": "2026-10-02",
+            "abolished": True, "verified_at": "2026-10-12T00:00:00+00:00",
+        }
+    }
+    monkeypatch.setattr(lr, "CACHE_PATH", tmp_path / "law_cache.json")
+    lr.save_cache(cache)
+    import pytest
+    with pytest.raises(lr.LawReferenceError, match="已廢止"):
+        lr.build_verified_source("舊法", "1")
+
+
+def test_bank_sources_are_verified_current():
+    for offense in BANK["offenses"]:
+        assert offense["source"]["status"] == "VERIFIED_CURRENT", f"{offense['id']} 法源未核實"
+        assert offense["source"]["law_url"]
+        assert offense["source"]["dataset_version"]
+
+
+def test_all_related_articles_are_verified_and_in_cache():
+    """核對題庫中所有 related_articles 均在離線快照中，非空且未廢止。"""
+    from app.law_reference import get_law_article
+    checked = 0
+    for offense in BANK["offenses"]:
+        for rel in offense.get("source", {}).get("related_articles", []):
+            entry = get_law_article(rel["law_name"], rel["article_no"], use_cache=True)
+            assert entry, f"{offense['id']} 關聯法條 {rel['law_name']} {rel['article_no']} 查無"
+            assert not entry["abolished"], f"{offense['id']} 關聯法條已廢止"
+            assert entry["article_content"].strip()
+            checked += 1
+    assert checked >= 6, f"預期至少 6 條關聯法條，實查 {checked} 條"
+
+def test_event_time_before_law_amendment_triggers_warning():
+    from app.law_reference import check_event_time_against_law
+    w = check_event_time_against_law("2020-01-01T10:00", "2026-07-22")
+    assert w is not None
+    assert w["level"] == "EVENT_TIME_BEFORE_LAW_AMENDMENT"
+
+
+def test_event_time_after_law_amendment_no_warning():
+    from app.law_reference import check_event_time_against_law
+    assert check_event_time_against_law("2026-08-01T10:00", "2026-07-22") is None
+
+
+def test_event_time_warning_empty_inputs():
+    from app.law_reference import check_event_time_against_law
+    assert check_event_time_against_law("", "2026-07-22") is None
+    assert check_event_time_against_law("2020-01-01T10:00", "") is None
+
+
+def test_set_offenses_records_temporal_law_warning():
+    from app.workflow import create_case, apply_action
+    from tests.helpers import intake
+    from tests.helpers import BANK as bank
+    raw_intake = intake()
+    raw_intake["event_time"] = "2020-01-01T10:00"
+    case = create_case(raw_intake, bank)
+    case = apply_action(case, "approve_gate1", {"confirmed": True}, bank)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, bank)
+    # 行為時間 2020 早於刑法 320 修正日 2026-07-22 → 應有警示
+    assert case.get("temporal_law_warnings")
+    assert case["temporal_law_warnings"][0]["offense_id"] == "theft"
+
+def test_roc_time_boundaries():
+    """民國前日期不得輸出誤導性的「0年」（第十輪盤點發現）。"""
+    from app.roc_time import format_roc_time, format_roc_date
+    # 民國前
+    assert format_roc_time("1911-12-31T23:59") == "民國前1年12月31日23時59分"
+    assert format_roc_date("1911-06-15T00:00") == "民國前1年6月15日"
+    # 民國元年
+    assert format_roc_time("1912-01-01T00:00") == "1年1月1日0時00分"
+    # 正常
+    assert format_roc_time("2026-10-10T10:30") == "115年10月10日10時30分"
+    # 空白與垃圾字串保持既有行為
+    assert format_roc_time("") == "年月日時分"
+    assert format_roc_time("garbage") == "garbage"
+
+
+def test_constitutional_validity_warning_for_invalidated_article():
+    """驗證憲法法庭判決宣告違憲失效條文檢驗（113年憲判字第9號對刑法第141條之1）。"""
+    from app.law_reference import check_constitutional_validity
+    w = check_constitutional_validity("中華民國刑法", "第141條之1")
+    assert w is not None
+    assert w["status"] == "UNCONSTITUTIONAL_INVALIDATED"
+    assert "113 年憲判字第 9 號" in w["judgment"]
+    assert "失其效力" in w["effect"]
+
+    # 模糊別名檢驗
+    w_alt = check_constitutional_validity("刑法", "141-1")
+    assert w_alt is not None
+    assert w_alt["status"] == "UNCONSTITUTIONAL_INVALIDATED"
+
+    # 有效條文無警示
+    assert check_constitutional_validity("中華民國刑法", "第320條") is None
+    assert check_constitutional_validity("刑法", "339") is None
+
+
+def test_set_offenses_records_constitutional_warning_for_obstruction():
+    """當選中 obstruction（含 §141-1 關聯路由）時，案件必須自動記錄憲法法庭違憲失效警示。"""
+    from app.workflow import create_case, apply_action
+    from tests.helpers import intake
+    from tests.helpers import BANK as bank
+    case = create_case(intake(), bank)
+    case = apply_action(case, "approve_gate1", {"confirmed": True}, bank)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["obstruction"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, bank)
+    warnings = case.get("constitutional_warnings", [])
+    assert len(warnings) >= 1
+    assert any(w["article_no"] == "第141條之1" for w in warnings)
+    assert any("113 年憲判字第 9 號" in w["judgment"] for w in warnings)
+
+
+def test_nonexistent_date_passthrough_is_visible():
+    """2026-02-29（不存在）原樣返回西格式——可見但未轉換；
+    筆錄中承辦人可察覺（文件其余欄位皆民國格式）。"""
+    from app.roc_time import format_roc_time
+    assert format_roc_time("2026-02-29T10:00") == "2026-02-29T10:00"

@@ -1,0 +1,8 @@
+# Normalize line endings: blobs stored as LF, Windows checkout uses CRLF.
+# This silences CR-at-EOL "trailing whitespace" noise in `git diff --check`.
+* text=auto
+# Never mangle user reference documents.
+*.pdf binary
+*.docx binary
+*.odt binary
+*.xlsm binary

@@ -7,7 +7,6 @@ import secrets
 from copy import deepcopy
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
@@ -40,6 +39,30 @@ STATIC_FILES = {
     "/styles.css": ("styles.css", "text/css; charset=utf-8"),
     "/app.js": ("app.js", "text/javascript; charset=utf-8"),
 }
+
+
+def _safe_error_message(message: str) -> str:
+    """把內部錯誤訊息轉成通用化文字，避免洩漏間接案情資訊。
+
+    保留常見的業務驗證提示（這些是使用者需要的行為指引），
+    隱藏包含具體 ID、題號、帳戶等細節的訊息。
+    """
+    # 不需轉換的通用業務驗證提示
+    allowed_prefixes = (
+        "目前不可", "請先", "至少由人工", "所有問句", "缺少 Gate 1", "Gate 1 必須",
+        "Gate 2 必須", "尚未確認候選罪章", "包含未知罪章", "不支援的", "年籍資料",
+        "詢問時間", "身分與目前", "回答格式", "包含未知題號", "案號格式",
+        "缺少必要案號", "只有完成", "有被害人案件", "無被害人案件", "只有已完成",
+        "AI 分析無法使用", "案情摘要", "候選方向最多", "必須是文字", "不得為空白",
+        "必須是文字陣列", "facts 必須是", "案件狀態無效", "未知操作", "未知文件",
+        "缺少受詢問人", "缺少詢問起訖", "尚未完成", "問句未作答", "找不到",
+        "缺少", "輸出不是", "DOCX 內部", "文件殘留", "文件實際排版",
+        "找不到本機 LibreOffice", "LibreOffice 無法",
+    )
+    if any(message.startswith(prefix) for prefix in allowed_prefixes):
+        return message
+    # 其餘以通用訊息取代，避免洩漏
+    return "操作未完成，請確認輸入內容或稍後再試"
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -92,8 +115,10 @@ class Handler(BaseHTTPRequestHandler):
         self._begin(status, "application/json; charset=utf-8", len(raw))
         self.wfile.write(raw)
 
+
+
     def _error(self, status: int, code: str, message: str) -> None:
-        self._json(status, {"error": code, "message": message})
+        self._json(status, {"error": code, "message": _safe_error_message(message)})
 
     def _guard(self, *, token: bool = False, mutation: bool = False) -> bool:
         if not self._host_allowed():
@@ -138,7 +163,15 @@ class Handler(BaseHTTPRequestHandler):
             self._json(HTTPStatus.OK, {
                 "library_version": BANK["library_version"],
                 "review_status": BANK["review_status"],
-                "offenses": [{"id": item["id"], "name": item["name"], "source": item["source"]} for item in BANK["offenses"]],
+                "legal_route_crosswalk_version": BANK["legal_route_crosswalk_version"],
+                "offenses": [{
+                    "id": item["id"],
+                    "name": item["name"],
+                    "source": item["source"],
+                    "route_type": item["route_type"],
+                    "selection_policy": item["selection_policy"],
+                    "legal_routes": [{"id": route["id"], "name": route["name"]} for route in item["legal_routes"]],
+                } for item in BANK["offenses"]],
             })
             return
         match = CASE_ROUTE.fullmatch(path)
@@ -218,9 +251,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def _document(self, case_id: str, role: str, kind: str) -> None:
         try:
+            from .document_validation import validate_document_output
             case = STORE.get(validate_case_id(case_id))
             if case["state"] != "OUTPUT_READY":
                 raise DocumentError("案件尚未完成必要 Gate")
+            # 完整性驗證（spec Phase 7）：有缺失即阻擋下載
+            problems = validate_document_output(case, role, kind)
+            if problems:
+                raise DocumentError("；".join(problems))
             if kind == "brief":
                 data = brief_docx(case, role)
                 filename = f"case-{case_id[:8]}-{role}-brief.docx"

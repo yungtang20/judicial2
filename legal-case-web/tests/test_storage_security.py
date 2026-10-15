@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+
 import sqlite3
 
 import pytest
+from cryptography.fernet import Fernet
 
 from app.storage import CaseStore, RevisionConflict
 from app.workflow import create_case
@@ -53,7 +55,57 @@ def test_list_cases_meta_flags_offense_selection(tmp_path):
 
     case = store.get(rows[0]["case_id"])
     case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
-    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "role": "victim"}, BANK)
+    case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, BANK)
     store.save(case, 1)
     rows = store.list_cases_meta()
     assert rows[0]["has_offenses"] is True
+
+
+def test_linux_fernet_roundtrip_when_not_windows(monkeypatch, tmp_path):
+    import app.security as sec
+    monkeypatch.setattr(sec, "_use_linux_crypto", lambda: True)
+    key = Fernet.generate_key()
+    monkeypatch.setenv(sec._LINUX_KEY_ENV, key.decode("ascii"))
+    payload = {"k": "值"}
+    blob = sec.protect_json(payload)
+    assert sec.unprotect_json(blob) == payload
+
+
+def test_linux_key_persists_to_file(monkeypatch, tmp_path):
+    import app.security as sec
+    monkeypatch.delenv(sec._LINUX_KEY_ENV, raising=False)
+    monkeypatch.setattr(sec, "_PERSISTENT_KEY_FILE", str(tmp_path / ".encryption_key"))
+    key1 = sec._get_linux_fernet_key()
+    key2 = sec._get_linux_fernet_key()
+    assert key1 == key2
+
+
+
+def _stored_case(tmp_path, name):
+    """建一筆含 case_id 的完整案件（走 workflow.create_case）。"""
+    from tests.helpers import intake
+    from app.workflow import create_case
+    from tests.helpers import BANK
+    store = CaseStore(tmp_path / f"{name}.sqlite3")
+    case = create_case(intake(), BANK)
+    store.create(case)
+    store.save(case, 1)
+    return store
+
+
+def test_list_cases_meta_flags_damaged_payload(tmp_path):
+    """密文損壞的案件不得靜默標記為「未選罪章」——須標 damaged=True（spec §8.4 fail closed）。"""
+    store = _stored_case(tmp_path, "damaged")
+    import sqlite3
+    with sqlite3.connect(tmp_path / "damaged.sqlite3") as conn:
+        conn.execute("UPDATE cases SET payload = ?", (b"corrupted-bytes",))
+    meta = store.list_cases_meta()
+    assert len(meta) == 1
+    assert meta[0]["damaged"] is True
+    assert meta[0]["has_offenses"] is False
+
+
+def test_list_cases_meta_healthy_case_not_damaged(tmp_path):
+    store = _stored_case(tmp_path, "healthy")
+    meta = store.list_cases_meta()
+    assert meta[0]["damaged"] is False

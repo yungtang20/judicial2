@@ -4,26 +4,23 @@ import io
 import shutil
 import subprocess
 import tempfile
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 from docx import Document
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Cm, Pt
 from pypdf import PdfReader
 
 from .company_templates import (
-    COMPANY_QUESTIONS,
     FOOTER_LINES,
     IDENTITY_FIELDS,
     INCOME_LEVELS,
     notice_lines,
 )
-from .config import MAX_DOCX_PAGES
+from .config import MAX_DOCX_PAGES, MAX_SUMMARY_LENGTH
 from .roc_time import format_roc_date, format_roc_time
 
 
@@ -206,8 +203,8 @@ def brief_text(case: dict[str, Any], role: str) -> str:
         case_number_parts.append(f"165案號：{numbers['case_165']}")
     report = f"依規定陳報（{'、'.join(case_number_parts)}）"
     summary = case["brief_summary"]
-    if len(summary) > 100:
-        raise DocumentError("條陳案情摘要超過 100 字")
+    if len(summary) > MAX_SUMMARY_LENGTH:
+        raise DocumentError(f"條陳案情摘要超過 {MAX_SUMMARY_LENGTH} 字")
     if role == "victim":
         return (
             f"{intake['station']}報告\n"

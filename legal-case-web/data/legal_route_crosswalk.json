@@ -1,0 +1,596 @@
+{
+  "schema_version": "1.1",
+  "review_status": "HUMAN_REVIEW_REQUIRED",
+  "notice": "本表描述 runtime 路由與法律子路由的覆蓋狀態，不是犯罪成立判斷。SPLIT_REQUIRED、PROCEDURAL_ONLY、PROTECTIVE_UMBRELLA 均不得被解讀為單一罪名已完成構成要件建模。",
+  "routes": [
+    {
+      "id": "theft", "route_type": "substantive", "crosswalk_status": "PARTIAL_SCOPE", "note": "刑法第320條動產竊盜與不動產竊佔分開；能量準動產及親屬減免程序另列，第322條刪除。",
+      "child_routes": [
+        {"id": "theft_320_1_movable", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第320條第1項", "name": "竊取他人動產", "fact_elements": ["他人動產及原持有狀態", "未經同意竊取並破壞原持有", "為自己或第三人不法所有之意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "theft_320_2_real_estate", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第320條第2項", "name": "竊佔他人不動產", "fact_elements": ["他人不動產及權利使用狀態", "排除權利人而建立占有支配之行為", "為自己或第三人不法利益之意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "theft_323_energy", "route_kind": "definition", "law_name": "中華民國刑法", "article_no": "第323條", "name": "電能熱能等能量準動產", "fact_elements": ["電能、熱能或其他能量", "與竊盜章基礎行為之關聯", "計量、來源及控制方式"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "theft_324_relative", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第324條", "name": "親屬間竊盜減免與告訴條件", "fact_elements": ["竊盜章基礎行為", "直系血親、配偶、同財共居或其他法定親屬關係", "免刑或告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ],
+      "excluded_routes": [
+        {"id": "theft_322_deleted", "article_no": "第322條", "status": "DELETED", "reason": "條文已刪除，不得建立現行候選。", "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001"}
+      ]
+    },
+    {
+      "id": "aggravated_theft", "route_type": "substantive", "crosswalk_status": "PARTIAL_SCOPE", "note": "刑法第321條同時繼承第320條第1項動產竊盜與第2項不動產竊佔，六款加重事由逐案勾稽。",
+      "child_routes": [
+        {"id": "aggravated_theft_321", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第321條", "name": "加重竊盜或竊佔", "fact_elements": ["第320條第1項或第2項基礎行為", "侵入住宅、毀越安全設備、攜帶兇器、結夥三人、乘災害或公共運輸場所等法定事由", "行為人對加重事由之認識", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "embezzlement", "route_type": "substantive", "crosswalk_status": "PARTIAL_SCOPE", "note": "刑法第335條至第338條分開普通、公務公益、業務、離本人持有物與準用條款。",
+      "child_routes": [
+        {"id": "embezzlement_335_general", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第335條", "name": "普通侵占", "fact_elements": ["因合法原因持有他人之物", "易持有為不法所有之侵占行為", "為自己或第三人不法所有之意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "embezzlement_336_1_public", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第336條第1項", "name": "侵占公務或公益持有物", "fact_elements": ["公務上或因公益持有他人之物", "侵占行為", "不法所有意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "embezzlement_336_2_business", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第336條第2項", "name": "業務侵占", "fact_elements": ["業務上持有他人之物", "持有與業務之關聯", "侵占行為及不法所有意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "embezzlement_337_lost_property", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第337條", "name": "侵占遺失物等離本人持有之物", "fact_elements": ["遺失物、漂流物或其他離本人持有之物", "取得與後續處分行為", "為自己或第三人不法所有之意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "embezzlement_338_applicable", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第338條", "name": "能量準用及親屬減免告訴條件", "fact_elements": ["侵占章基礎行為", "第323條能量準動產適用情形", "第324條親屬關係、免刑或告訴情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "fraud",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "一般詐欺、設備詐欺、電腦詐欺、加重詐欺、乘機詐欺、背信與重利不得共用單一要件模型；第340條及第345條已刪除。",
+      "child_routes": [
+        {"id": "fraud_339_general", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第339條", "name": "一般詐欺", "fact_elements": ["詐術內容及實施", "相對人陷於錯誤", "交付財物或財產利益處分", "財產流向與損害", "不法所有意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "fraud_339_1_charge_device", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第339條之1", "name": "收費設備詐欺", "fact_elements": ["以不正方法操作收費設備", "取得他人財物或不法利益", "不法所有意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "fraud_339_2_payment_device", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第339條之2", "name": "自動付款設備詐欺", "fact_elements": ["以不正方法操作自動付款設備", "取得他人財物或不法利益", "不法所有意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "fraud_339_3_computer", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第339條之3", "name": "電腦詐欺", "fact_elements": ["輸入虛偽資料或不正指令", "製作財產權得喪變更紀錄", "取得他人財產或不法利益", "不法所有意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "fraud_339_4_aggravated", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第339條之4", "name": "加重詐欺", "fact_elements": ["第339條詐欺基礎行為", "冒用政府公務員、三人以上、對公眾傳播或科技製作不實影音等法定態樣", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "fraud_341_exploitation", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第341條", "name": "乘機詐欺", "fact_elements": ["未滿十八歲知慮淺薄、辨識能力顯有不足或相類情形", "乘機使之交付財物或利益", "不法所有意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "fraud_342_breach_of_trust", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第342條", "name": "背信", "fact_elements": ["為他人處理事務關係", "違背任務行為", "不法利益或損害本人利益意圖", "本人財產或其他利益損害", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "fraud_343_property_family_rules", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第343條", "name": "準用財產與親屬程序規定", "fact_elements": ["第339條至第342條基礎罪名", "電能等能量視為動產之準用", "親屬關係及告訴或免刑效果"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "fraud_344_usury", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第344條", "name": "重利", "fact_elements": ["急迫、輕率、無經驗或難以求助處境", "貸與金錢或其他物品", "取得與原本顯不相當重利", "手續費等借貸相關費用"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "fraud_344_1_aggravated_usury", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第344條之1", "name": "加重重利", "fact_elements": ["第344條重利基礎行為", "強暴、脅迫、恐嚇、侵入住宅、傷害、毀損、監控或相類方法", "取得重利", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ],
+      "excluded_routes": [
+        {"id": "fraud_340_deleted", "article_no": "第340條", "status": "DELETED", "reason": "條文已刪除，不得建立現行候選。", "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001"},
+        {"id": "fraud_345_deleted", "article_no": "第345條", "status": "DELETED", "reason": "條文已刪除，不得建立現行候選。", "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001"}
+      ]
+    },
+    {
+      "id": "injury",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "普通傷害、重傷、特殊身分、囑託自傷、聚眾鬥毆、過失、兒少凌虐及告訴條件須分層；第285條已刪除。",
+      "child_routes": [
+        {"id": "injury_277_general", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第277條", "name": "普通傷害及結果加重", "fact_elements": ["傷害身體或健康行為", "傷害結果與因果關係", "死亡或重傷結果與因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "injury_278_serious", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第278條", "name": "重傷害", "fact_elements": ["使人受重傷行為", "重傷結果與因果關係", "死亡結果", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "injury_279_righteous_indignation", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第279條", "name": "當場激於義憤傷害", "fact_elements": ["第277條或第278條基礎行為", "當場性", "激於義憤的事件脈絡", "死亡結果"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "injury_280_ancestor", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第280條", "name": "對直系血親尊親屬傷害加重", "fact_elements": ["第277條或第278條基礎行為", "被害人為直系血親尊親屬", "身分關係證據"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "injury_281_violence_ancestor", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第281條", "name": "對直系血親尊親屬施強暴未成傷", "fact_elements": ["施強暴行為", "被害人為直系血親尊親屬", "未造成傷害結果"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "injury_282_requested_self_harm", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第282條", "name": "受囑託承諾傷害或加工自傷", "fact_elements": ["囑託、承諾、教唆或幫助態樣", "本人意思形成與內容", "死亡或重傷結果與因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "injury_283_group_fight", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第283條", "name": "聚眾鬥毆在場助勢", "fact_elements": ["聚眾鬥毆事件", "在場助勢角色", "死亡或重傷結果"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "injury_284_negligent", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第284條", "name": "過失傷害", "fact_elements": ["注意義務與可預見性事實", "注意義務違反行為", "傷害或重傷結果", "行為與結果間因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "injury_286_child_abuse", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第286條", "name": "凌虐或妨害未成年人身心發育", "fact_elements": ["被害人未滿十八歲及年齡分層", "凌虐或妨害身心健全發育行為", "營利意圖", "死亡或重傷結果與因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "injury_287_complaint", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第287條", "name": "特定傷害罪告訴條件", "fact_elements": ["基礎罪名是否為第277條第1項、第281條或第284條", "公務員執行職務例外", "告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ],
+      "excluded_routes": [
+        {"id": "injury_285_deleted", "article_no": "第285條", "status": "DELETED", "reason": "條文已刪除，不得建立現行候選。", "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001"}
+      ]
+    },
+    {"id": "damage", "route_type": "substantive", "crosswalk_status": "PARTIAL_SCOPE", "note": "刑法第352條至第357條依文書、建築物、一般物、詐術損害、損害債權及告訴條件分層。", "child_routes": [
+      {"id": "damage_352_document", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第352條", "name": "毀損他人文書", "fact_elements": ["他人文書", "毀棄損壞或致令不堪用", "足以生損害於公眾或他人"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "damage_353_building", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第353條", "name": "毀壞建築物礦坑船艦", "fact_elements": ["他人建築物、礦坑或船艦", "毀壞或致令不堪用", "死亡或重傷結果、因果關係及可預見性", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "damage_354_property", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第354條", "name": "毀損一般物品", "fact_elements": ["第352條及第353條以外之他人之物", "毀棄損壞或致令不堪用", "足以生損害於公眾或他人"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "damage_355_fraud", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第355條", "name": "詐術使人處分財產致損害", "fact_elements": ["損害他人之意圖", "以詐術使本人或第三人為財產處分", "財產損害及因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "damage_356_creditor", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第356條", "name": "損害債權", "fact_elements": ["債務人身分及將受強制執行之際", "損害債權人債權之意圖", "毀壞處分或隱匿財產"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "damage_357_complaint", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第357條", "name": "部分毀棄損壞罪告訴條件", "fact_elements": ["基礎罪名是否為第352條或第354條至第356條", "告訴權人、告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {
+      "id": "intimidation",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "恐嚇危害安全與恐嚇取財不得合併；是否有財物交付或不法利益是核心區分。",
+      "child_routes": [
+        {"id": "intimidation_305_safety", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第305條", "name": "恐嚇危害安全", "fact_elements": ["告知加害生命、身體、自由、名譽或財產之事", "恐嚇內容及傳達對象", "致生安全危害的具體事實"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "intimidation_346_property", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第346條", "name": "恐嚇取財或得利", "fact_elements": ["恐嚇行為與內容", "使人交付財物或取得不法利益", "不法所有意圖", "財產流向", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "defamation",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "公然侮辱、誹謗、不罰事由、對死者、信用毀損與告訴程序須分開；第309條受113年憲判字第3號限縮。",
+      "child_routes": [
+        {"id": "defamation_309_public_insult", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第309條", "name": "公然侮辱", "fact_elements": ["故意發表公然貶損他人名譽之言論", "個案表意脈絡及公然性", "是否逾越一般人可合理忍受範圍", "名譽權與公共事務、文學藝術、學術專業等言論價值之權衡", "強暴態樣"], "constitutional_status": "CONSTITUTIONALLY_NARROWED", "constitutional_source": "https://cons.judicial.gov.tw/docdata.aspx?fid=38&id=340393", "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "defamation_310_defamation", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第310條", "name": "誹謗", "fact_elements": ["指摘或傳述具體事項", "足以毀損他人名譽", "散布於眾意圖及文字圖畫態樣", "真實性、公共利益與私德範圍", "相當理由確信為真實之證據資料"], "constitutional_status": "CONSTITUTIONALLY_INTERPRETED", "constitutional_source": "https://cons.judicial.gov.tw/docdata.aspx?fid=100&id=310690&rn=18530", "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "defamation_311_good_faith", "route_kind": "exception", "law_name": "中華民國刑法", "article_no": "第311條", "name": "善意言論不罰事由", "fact_elements": ["善意發表言論", "自衛自辯、職務報告、可受公評適當評論或適當記事等法定情形", "發表方式與必要範圍"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "defamation_312_deceased", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第312條", "name": "侮辱或誹謗已死之人", "fact_elements": ["對象為已死之人", "公然侮辱或誹謗行為", "表意內容與傳播情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "defamation_313_credit", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第313條", "name": "損害信用", "fact_elements": ["散布流言或施用詐術", "他人信用受損害", "廣播電視、電子通訊、網際網路或其他傳播工具態樣"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "defamation_314_complaint", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第314條", "name": "妨害名譽及信用罪告訴條件", "fact_elements": ["本章基礎罪名", "告訴權人、告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "forgery",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "文書類型、偽造變造、登載不實、行使、印章署押、沒收及文書定義分層；各路由仍須人工選定。",
+      "child_routes": [
+        {"id": "forgery_210_private_document", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第210條", "name": "偽造變造私文書", "fact_elements": ["偽造或變造私文書", "足以生損害於公眾或他人", "文書製作名義、內容及權限狀態"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "forgery_211_public_document", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第211條", "name": "偽造變造公文書", "fact_elements": ["偽造或變造公文書", "足以生損害於公眾或他人", "公文書製作機關、名義及權限狀態"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "forgery_212_certificate", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第212條", "name": "偽造變造特種文書", "fact_elements": ["偽造或變造護照、旅券、免許證、特許證或其他品行、能力、服務或其他相類證書介紹書", "足以生損害於公眾或他人", "文件種類、製作名義及權限狀態"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "forgery_213_official_false_entry", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第213條", "name": "公務員登載不實", "fact_elements": ["公務員身分及職務上掌管之公文書", "明知不實而登載", "足以生損害於公眾或他人"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "forgery_214_cause_official_false_entry", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第214條", "name": "使公務員登載不實", "fact_elements": ["向公務員提出不實事項", "使公務員將不實事項登載於職務上掌管之公文書", "足以生損害於公眾或他人"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "forgery_215_business_false_entry", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第215條", "name": "業務登載不實", "fact_elements": ["從事業務之人身分", "明知不實而登載於業務上作成之文書", "足以生損害於公眾或他人"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "forgery_216_use_document", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第216條", "name": "行使偽造變造或登載不實文書", "fact_elements": ["行使第210條至第215條所列文書", "將文書置於可發生其內容效用之狀態", "對文書來源或不實內容的認識"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "forgery_217_seal_signature", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第217條", "name": "偽造盜用印章印文或署押", "fact_elements": ["偽造印章、印文或署押，或盜用印章、印文或署押", "足以生損害於公眾或他人", "權利人、授權範圍及使用情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "forgery_218_official_seal", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第218條", "name": "偽造盜用公印或公印文", "fact_elements": ["偽造公印或公印文，或盜用公印或公印文", "公印所表彰的公署或機關", "足以生損害於公眾或他人"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "forgery_219_confiscation", "route_kind": "collateral", "law_name": "中華民國刑法", "article_no": "第219條", "name": "偽造印章印文或署押沒收", "fact_elements": ["偽造之印章、印文或署押", "與本章行為之關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "forgery_220_document_definition", "route_kind": "definition", "law_name": "中華民國刑法", "article_no": "第220條", "name": "文書及電磁紀錄準文書", "fact_elements": ["文字、符號、圖畫、照相或電磁紀錄等載體", "足以表示製作人意思及法律上用途", "是否符合準文書法定範圍"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "computer",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "無故入侵、資料取得刪改、電腦干擾、公務機關加重、惡意程式及告訴條件分層。",
+      "child_routes": [
+        {"id": "computer_358_intrusion", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第358條", "name": "無故入侵他人電腦或相關設備", "fact_elements": ["輸入帳號密碼、破解保護措施或利用系統漏洞等方法", "入侵他人電腦或相關設備", "無故狀態及授權範圍"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "computer_359_data_change", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第359條", "name": "無故取得刪除或變更電磁紀錄", "fact_elements": ["無故取得、刪除或變更行為", "他人電腦或相關設備之電磁紀錄", "致生損害於公眾或他人"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "computer_360_interference", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第360條", "name": "無故干擾他人電腦或相關設備", "fact_elements": ["電腦程式或其他電磁方式的干擾行為", "他人電腦或相關設備", "致生損害於公眾或他人", "無故狀態"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "computer_361_public_agency", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第361條", "name": "對公務機關電腦犯罪加重", "fact_elements": ["第358條至第360條基礎行為", "標的為公務機關之電腦或相關設備", "公務機關標的同一性"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "computer_362_malware", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第362條", "name": "製作供電腦犯罪之程式", "fact_elements": ["製作專供犯本章之罪的電腦程式", "供自己或他人犯本章之罪的意圖", "致生損害於公眾或他人"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "computer_363_complaint", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第363條", "name": "部分妨害電腦使用罪告訴條件", "fact_elements": ["基礎罪名是否為第358條至第360條", "告訴權人、告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "sexual_harassment",
+      "route_type": "mixed",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "本路由限性騷擾防治法；刑法妨害秘密及性影像改由 privacy 路由處理，預防申訴、刑事觸摸罪與行政處罰不得混為單一罪名。",
+      "child_routes": [
+        {"id": "sexual_harassment_2_scope", "route_kind": "classification", "law_name": "性騷擾防治法", "article_no": "第2條", "name": "性騷擾及權勢性騷擾定義與適用分類", "fact_elements": ["違反他人意願且與性或性別有關之言行", "敵意冒犯環境或交換條件等法定態樣", "行為人與被害人之權勢、監督、照護或從屬關係", "是否應優先適用性別平等教育法或性別平等工作法"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_harassment_7_13_prevention", "route_kind": "procedure", "law_name": "性騷擾防治法", "article_no": "第7條至第13條", "name": "性騷擾防治與被害人保護", "fact_elements": ["場所主人或機構之防治義務", "知悉事件後之即時有效糾正與補救措施", "被害人安全、隱私及證據保存需求"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_harassment_14_17_complaint", "route_kind": "procedure", "law_name": "性騷擾防治法", "article_no": "第14條至第17條", "name": "性騷擾申訴與調查程序", "fact_elements": ["申訴人、相對人及受理機關或單位", "申訴期限與提出情形", "調查、移送、通知及迴避等程序事實"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_harassment_25_unwanted_touch", "route_kind": "offense", "law_name": "性騷擾防治法", "article_no": "第25條", "name": "乘人不及抗拒之性騷擾觸摸罪", "fact_elements": ["意圖性騷擾", "乘被害人不及抗拒之際", "親吻、擁抱或觸摸臀部、胸部或其他身體隱私處之行為", "權勢性騷擾之加重關係", "告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_harassment_26_30_administrative", "route_kind": "administrative", "law_name": "性騷擾防治法", "article_no": "第26條至第30條", "name": "性騷擾行政處罰", "fact_elements": ["具體違反義務或性騷擾行為", "主管機關、裁罰對象及適用條文", "通知改善、屆期未改善或權勢關係等裁罰事實"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {"id": "stalking", "route_type": "mixed", "crosswalk_status": "PARTIAL_SCOPE", "note": "本路由涵蓋跟蹤騷擾防制法第3條定義、第4條至第17條保護程序、第18條犯罪及第19條違反保護令；程序不得冒充構成要件。", "child_routes": [
+      {"id": "stalking_3_definition", "route_kind": "classification", "law_name": "跟蹤騷擾防制法", "article_no": "第3條", "name": "跟蹤騷擾行為定義", "fact_elements": ["以人員設備通訊網路或其他方法對特定人", "反覆或持續且違反意願", "與性或性別有關，或對密切關係人之法定例外", "使人心生畏怖且足以影響日常生活或社會活動", "八款法定行為態樣"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "stalking_4_17_protection", "route_kind": "procedure", "law_name": "跟蹤騷擾防制法", "article_no": "第4條至第17條", "name": "書面告誡及保護令程序", "fact_elements": ["警察受理調查與書面告誡情形", "二年內再為跟蹤騷擾及聲請權人", "保護令核發、內容、有效期間、送達與執行情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "stalking_18_offense", "route_kind": "offense", "law_name": "跟蹤騷擾防制法", "article_no": "第18條", "name": "實行跟蹤騷擾及攜帶危險物加重", "fact_elements": ["符合第3條跟蹤騷擾行為", "實行人、對象、次數與持續期間", "攜帶兇器或其他危險物品之加重情形", "第1項告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "stalking_19_protection_order", "route_kind": "offense", "law_name": "跟蹤騷擾防制法", "article_no": "第19條", "name": "違反跟蹤騷擾保護令", "fact_elements": ["法院依第12條第一項第一款至第三款核發之有效保護令", "相對人知悉保護令內容", "違反禁止接近查閱或治療處遇命令之具體行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "stalking_20_21_procedure", "route_kind": "procedure", "law_name": "跟蹤騷擾防制法", "article_no": "第20條至第21條", "name": "不公開審理及羈押特別規定", "fact_elements": ["第18條或第19條基礎案件", "審理不公開", "第18條第二項或第19條嫌疑重大、反覆實行之虞及羈押必要性"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {"id": "public_danger", "route_type": "substantive", "crosswalk_status": "PARTIAL_SCOPE", "note": "runtime 僅建模刑法第185條之3酒毒駕與第185條之4事故逃逸；不代表公共危險章其餘條文已覆蓋。", "child_routes": [
+      {"id": "public_danger_185_3_impaired_driving", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第185條之3", "name": "酒毒駕駛動力交通工具", "fact_elements": ["駕駛動力交通工具", "酒精濃度、不能安全駕駛，或毒品麻醉藥品品項濃度及不能安全駕駛之法定態樣", "死亡或重傷結果、因果關係及可預見性", "十年內再犯與前案確定狀態"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "public_danger_185_4_hit_and_run", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第185條之4", "name": "交通事故致人死傷逃逸", "fact_elements": ["駕駛動力交通工具發生交通事故", "致人傷害、重傷或死亡", "知悉事故與死傷後逃逸", "駕駛人對事故有無過失之減免情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {
+      "id": "drugs",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "依毒品危害防制條例第4條至第11條分開製造運輸販賣、意圖販賣而持有、強迫或引誘施用、轉讓、加重、施用與持有；毒品級別及數量均須查證。",
+      "child_routes": [
+        {"id": "drugs_4_manufacture_transport_sale", "route_kind": "offense", "law_name": "毒品危害防制條例", "article_no": "第4條", "name": "製造運輸販賣毒品", "fact_elements": ["製造、運輸或販賣行為", "毒品品項及第一級至第四級分類", "交易、運送或製造流程與角色", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "drugs_5_possession_intent_sale", "route_kind": "offense", "law_name": "毒品危害防制條例", "article_no": "第5條", "name": "意圖販賣而持有毒品", "fact_elements": ["持有或實力支配毒品", "毒品品項及級別", "販賣意圖之客觀事實", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "drugs_6_force_use", "route_kind": "offense", "law_name": "毒品危害防制條例", "article_no": "第6條", "name": "以強暴脅迫等方法使人施用毒品", "fact_elements": ["強暴、脅迫、欺瞞或其他非法方法", "使他人施用毒品", "毒品品項及級別", "死亡或重傷結果與因果關係", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "drugs_7_induce_use", "route_kind": "offense", "law_name": "毒品危害防制條例", "article_no": "第7條", "name": "引誘他人施用毒品", "fact_elements": ["引誘行為及內容", "使他人施用毒品", "毒品品項及級別", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "drugs_8_transfer", "route_kind": "offense", "law_name": "毒品危害防制條例", "article_no": "第8條", "name": "轉讓毒品", "fact_elements": ["轉讓或交付行為", "毒品品項及級別", "受讓人與交付經過", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "drugs_9_aggravation", "route_kind": "aggravation", "law_name": "毒品危害防制條例", "article_no": "第9條", "name": "對未成年人、孕婦或混合毒品等加重", "fact_elements": ["第6條至第8條基礎行為或法定混合毒品行為", "未成年人、孕婦或混合二種以上毒品等加重事實", "行為人對加重事實之認識"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "drugs_10_use", "route_kind": "offense", "law_name": "毒品危害防制條例", "article_no": "第10條", "name": "施用第一級或第二級毒品", "fact_elements": ["施用行為、時間、地點及方法", "毒品品項及第一級或第二級分類", "採尿、鑑驗或其他可回查證據"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "drugs_11_possession", "route_kind": "offense", "law_name": "毒品危害防制條例", "article_no": "第11條", "name": "持有毒品或專供製造施用器具", "fact_elements": ["持有或實力支配行為", "毒品品項、級別、純質淨重或器具用途", "超過法定數量門檻之檢驗事實", "持有期間與來源"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "state_security", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "內亂、外患與妨害國交三章分層；準備陰謀、自首減免、適用範圍及請求乃論不冒充獨立犯罪。",
+      "child_routes": [
+        {"id": "state_security_100_insurrection", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第100條", "name": "強暴脅迫內亂及預備", "fact_elements": ["破壞國體、竊據國土、非法變更國憲或顛覆政府之意圖", "以強暴或脅迫著手實行", "首謀或預備角色"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_101_riot", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第101條", "name": "暴動內亂", "fact_elements": ["第100條第一項之目的", "以暴動方式實行", "首謀、預備或陰謀角色"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_102_surrender", "route_kind": "mitigation", "law_name": "中華民國刑法", "article_no": "第102條", "name": "內亂預備陰謀自首減免", "fact_elements": ["第100條第二項或第101條第二項基礎行為", "自首時間與內容"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_103_start_war", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第103條", "name": "通謀外國使對我國開戰", "fact_elements": ["通謀外國或其派遣之人", "使外國對中華民國開戰之意圖", "未遂、預備或陰謀情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_104_territory", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第104條", "name": "通謀外國使我國領域屬於他國", "fact_elements": ["通謀外國或其派遣之人", "使中華民國領域屬於外國或他國之意圖", "未遂、預備或陰謀情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_105_enemy_service", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第105條", "name": "為敵軍服役或械抗我國", "fact_elements": ["行為人為中華民國人民", "在敵軍服役或與敵國械抗我國或同盟國", "未遂、預備或陰謀情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_106_military_advantage", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第106條", "name": "供敵軍事利益或害我國軍事利益", "fact_elements": ["與外國開戰或將開戰期間", "供敵國軍事利益或使我國、同盟國受軍事不利益", "未遂、預備或陰謀情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_107_aggravated_enemy_aid", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第107條", "name": "交付軍事設施或間諜等加重外患", "fact_elements": ["第106條第一項基礎行為", "交付或毀壞軍事設施物資、招募煽惑軍人、洩漏軍略秘密、間諜或幫助間諜等法定態樣", "未遂、預備或陰謀情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_108_military_supply", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第108條", "name": "戰時不履行軍需契約", "fact_elements": ["與外國開戰或將開戰期間", "軍需供給契約", "故意不履行、不完全履行或過失"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_109_defense_secret", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第109條", "name": "洩漏交付國防秘密", "fact_elements": ["國防應秘密之文書、圖畫、消息或物品", "洩漏或交付行為與對象", "交付外國或派遣人、未遂、預備或陰謀情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_110_negligent_secret", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第110條", "name": "公務員過失洩漏國防秘密", "fact_elements": ["公務員身分及職務上知悉或持有", "第109條第一項國防秘密", "過失洩漏或交付"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_111_collect_secret", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第111條", "name": "刺探收集國防秘密", "fact_elements": ["刺探或收集行為", "第109條第一項國防秘密", "未遂、預備或陰謀情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_112_military_site", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第112條", "name": "為刺探國防秘密侵入軍事處所", "fact_elements": ["刺探或收集國防秘密之意圖", "未受允准", "進入或留滯要塞、軍港、軍艦等軍事處所"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_113_foreign_agreement", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第113條", "name": "未授權私與外國政府約定", "fact_elements": ["事項依法應經政府授權", "未獲授權而與外國政府或派遣人約定", "是否足以生損害於中華民國"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_114_breach_mandate", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第114條", "name": "受政府委任處理外交事務違背委任", "fact_elements": ["受政府委任處理對外國政府事務", "違背委任", "致生損害於中華民國及因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_115_foreign_right_evidence", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第115條", "name": "毀損隱匿我國對外權利證據", "fact_elements": ["足以證明中華民國對外國權利之文書圖畫或證據", "偽造、變造、毀棄或隱匿行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_115_1_extended_scope", "route_kind": "definition", "law_name": "中華民國刑法", "article_no": "第115條之1", "name": "外患罪地域與對象擴張適用", "fact_elements": ["外患章基礎罪名", "地域或對象是否為大陸地區、香港、澳門、境外敵對勢力或其派遣人"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_116_foreign_representative", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第116條", "name": "侵害友邦元首或外國代表加重", "fact_elements": ["對象為友邦元首或派駐我國之外國代表", "故意傷害、妨害自由或妨害名譽之基礎行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_117_neutrality", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第117條", "name": "違背局外中立命令", "fact_elements": ["外國交戰期間", "政府局外中立命令", "違背命令之具體行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_118_foreign_symbol", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第118條", "name": "公然侮辱外國國旗國章", "fact_elements": ["侮辱外國之意圖", "公然損壞、除去或污辱", "外國國旗或國章"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "state_security_119_request", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第119條", "name": "妨害國交罪之外國政府請求條件", "fact_elements": ["第116條妨害名譽或第118條基礎行為", "外國政府是否提出請求"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "duty", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "刑法第120條至第134條逐條分層；公務員或仲裁人身分、職務關聯、結果加重及一般罪加重須獨立查明。",
+      "child_routes": [
+        {"id": "duty_120_abandon_post", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第120條", "name": "公務員委棄守地", "fact_elements": ["公務員身分與應盡職責", "不盡職責而委棄守地", "守地及職務範圍"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_121_bribery_duty", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第121條", "name": "職務行為受賄", "fact_elements": ["公務員或仲裁人身分", "職務上行為", "要求、期約或收受賄賂或其他不正利益"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_122_bribery_breach", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第122條", "name": "違背職務受賄及行賄", "fact_elements": ["公務員或仲裁人及違背職務行為", "要求期約收受或行求期約交付不正利益", "是否實際為違背職務行為", "行賄人自首或自白情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_123_advance_bribery", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第123條", "name": "準公務員預先受賄後履行", "fact_elements": ["尚未成為公務員或仲裁人時預先要求期約或收受", "與將來職務行為之對價關係", "成為公務員或仲裁人後履行"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_124_unlawful_judgment", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第124條", "name": "枉法裁判或仲裁", "fact_elements": ["審判職務公務員或仲裁人身分", "裁判或仲裁行為", "明知枉法之具體事實"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_125_abuse_prosecution", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第125條", "name": "追訴處罰職務濫權", "fact_elements": ["追訴或處罰犯罪職務之公務員", "濫權逮捕羈押、取供強暴脅迫或故意錯誤追訴等法定行為", "死亡或重傷結果、因果關係及可預見性"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_126_abuse_detainee", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第126條", "name": "職務上凌虐人犯", "fact_elements": ["管收解送或拘禁人犯職務之公務員", "對人犯施以凌虐", "死亡或重傷結果、因果關係及可預見性"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_127_execution", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第127條", "name": "違法執行或不執行刑罰", "fact_elements": ["執行刑罰職務之公務員", "違法執行、不執行或過失執行不應執行之刑罰", "刑罰與執行依據"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_128_unlawful_acceptance", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第128條", "name": "明知不應受理訴訟而受理", "fact_elements": ["公務員身分與訴訟事件", "明知依法不應受理", "實際受理行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_129_illegal_collection", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第129條", "name": "違法徵收或抑留剋扣", "fact_elements": ["公務員身分與職務上款項物品", "明知不應徵收而徵收或應發給而抑留剋扣", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_130_disaster", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第130條", "name": "公務員廢弛職務釀成災害", "fact_elements": ["公務員身分與法定職務", "廢弛職務", "災害結果、因果關係及可預見性"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_131_unlawful_benefit", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第131條", "name": "主管監督事務圖利", "fact_elements": ["公務員主管或監督事務", "明知違背法令", "直接或間接圖私人不法利益", "因而獲得利益及因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_132_nondefense_secret", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第132條", "name": "洩漏國防以外公務秘密", "fact_elements": ["國防以外依法應秘密之資料", "公務員故意或過失洩漏交付，或非公務員因職務業務知悉持有", "取得、持有與洩漏對象"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_133_mail", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第133條", "name": "郵電公務員開拆隱匿郵件電報", "fact_elements": ["郵務或電報機關執行職務之公務員", "投寄之郵件或電報", "開拆或隱匿行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "duty_134_official_aggravation", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第134條", "name": "公務員假借職務犯一般罪加重", "fact_elements": ["公務員身分", "假借職務權力、機會或方法", "故意犯本章以外之罪", "是否已有公務員身分特別刑度"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "obstruction",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "第135條至第141條須拆分；第140條受113年憲判字第5號限縮及部分失效；第141條之1不得作現行候選。",
+      "child_routes": [
+        {"id": "obstruction_135_violence_threat", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第135條", "name": "對依法執行職務公務員施強暴脅迫", "fact_elements": ["公務員依法執行職務或特定職務目的", "強暴或脅迫行為", "動力交通工具、兇器或危險物品等加重態樣", "死亡或重傷結果與因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "obstruction_136_group", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第136條", "name": "聚集三人以上妨害公務", "fact_elements": ["公共場所或公眾得出入場所", "聚集三人以上", "第135條行為", "在場助勢、首謀或下手實施角色", "死亡或重傷結果與因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "obstruction_137_exam_fraud", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第137條", "name": "妨害依法舉行考試", "fact_elements": ["依考試法舉行之考試", "詐術或其他非法方法", "使考試發生不正確結果", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "obstruction_138_official_property", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第138條", "name": "毀損隱匿公務掌管文書物品", "fact_elements": ["毀棄、損壞、隱匿或致令不堪用", "公務員職務上掌管或委託第三人掌管", "文書、圖畫或物品"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "obstruction_139_seal_seizure", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第139條", "name": "違背封印、查封或扣押命令效力", "fact_elements": ["依法施作之封印、查封標示或具扣押效力命令", "損壞、除去、污穢或其他違背效力行為", "公務措施與標的同一性"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "obstruction_140_insult_official", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第140條", "name": "當場侮辱依法執行職務之公務員", "fact_elements": ["公務員依法執行職務", "對公務員本人當場侮辱", "妨害公務之主觀目的", "足以影響公務員執行公務"], "constitutional_status": "CONSTITUTIONALLY_NARROWED", "constitutional_source": "https://cons.judicial.gov.tw/docdata.aspx?fid=38&id=339983", "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "obstruction_141_public_notice", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第141條", "name": "侮辱目的損壞公共場所文告", "fact_elements": ["意圖侮辱公務員", "損壞、除去或污穢行為", "實貼公共場所之文告"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ],
+      "excluded_routes": [
+        {"id": "obstruction_140_insult_duty", "article_no": "第140條部分", "status": "UNCONSTITUTIONAL_INVALIDATED", "reason": "侮辱職務罪部分自113年憲判字第5號宣示日起失效。", "source_url": "https://cons.judicial.gov.tw/docdata.aspx?fid=38&id=339983"},
+        {"id": "obstruction_141_1_false_statement", "article_no": "第141條之1", "status": "UNCONSTITUTIONAL_INVALIDATED", "reason": "經113年憲判字第9號宣告違憲失效，不得作現行候選。", "source_url": "https://cons.judicial.gov.tw/docdata.aspx?fid=38&id=340359"}
+      ]
+    },
+    {"id": "judicial_integrity", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "第172條之1至第172條之3各自建模。", "child_routes": [
+      {"id": "judicial_integrity_172_1_witness_benefit", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第172條之1", "name": "以不正利益影響證言鑑定傳譯", "fact_elements": ["證人、鑑定人、專家證人或通譯身分", "行求期約交付或要求期約收受不正利益", "不為或為一定證言、鑑定或傳譯之約定"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "judicial_integrity_172_2_retaliation", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第172條之2", "name": "為影響證言對關係人犯罪加重", "fact_elements": ["使證人等不為或為一定證言鑑定傳譯之意圖", "對本人或法定密切關係人實行犯罪", "基礎罪名及關係人身分"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "judicial_integrity_172_3_lobbying", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第172條之3", "name": "不法關說司法案件", "fact_elements": ["影響法官或檢察官特定裁判處分等之意圖", "偵查審判或執行中利用職務身分地位影響力不法關說", "關說對象及具體內容", "法官檢察官是否因而作成特定行為"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {"id": "voting", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "刑法第142條至第148條逐條分層。", "child_routes": [
+      {"id": "voting_142_coercion", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第142條", "name": "妨害自由行使投票權", "fact_elements": ["法定政治選舉或其他投票權", "強暴脅迫或其他非法方法", "妨害自由行使及未遂情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "voting_143_receiver_bribery", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第143條", "name": "投票權人受賄", "fact_elements": ["有投票權人身分", "要求期約或收受賄賂或不正利益", "約定不投票或為一定投票"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "voting_144_offer_bribery", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第144條", "name": "對投票權人行賄", "fact_elements": ["相對人有投票權", "行求期約或交付賄賂或不正利益", "約定不投票或為一定投票"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "voting_145_livelihood", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第145條", "name": "以生計利害誘惑投票", "fact_elements": ["以生計上利害為方法", "誘惑投票人", "使不投票或為一定投票"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "voting_146_result", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第146條", "name": "使投票結果不正確或幽靈人口投票", "fact_elements": ["詐術或非法方法使結果不正確、變造結果，或虛偽遷籍投票", "特定候選人當選意圖之適用情形", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "voting_147_disrupt", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第147條", "name": "妨害擾亂投票", "fact_elements": ["法定投票程序", "妨害或擾亂行為", "時間地點與影響"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "voting_148_secret_ballot", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第148條", "name": "刺探無記名投票內容", "fact_elements": ["無記名投票", "刺探票載內容行為"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {"id": "disorder", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "刑法第149條至第160條逐條分層。", "child_routes": [
+      {"id": "disorder_149_refuse_dispersal", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第149條", "name": "聚眾意圖強暴脅迫拒不解散", "fact_elements": ["公共場所或公眾得出入場所聚集三人以上", "強暴脅迫意圖", "經公務員三次以上解散命令仍不解散", "在場助勢或首謀角色"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_150_group_violence", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第150條", "name": "聚眾施強暴脅迫", "fact_elements": ["公共場所或公眾得出入場所聚集三人以上", "施強暴脅迫", "在場助勢、首謀或下手角色", "攜帶危險物或致生公共交通危險加重"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_151_public_threat", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第151條", "name": "恐嚇公眾致危害公安", "fact_elements": ["以加害生命身體財產之事恐嚇公眾", "致生危害於公安", "恐嚇內容與傳播範圍"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_152_assembly", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第152條", "name": "阻止擾亂合法集會", "fact_elements": ["合法集會", "強暴脅迫或詐術", "阻止或擾亂行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_153_incitement", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第153條", "name": "公然煽惑犯罪違法或抗命", "fact_elements": ["文字圖畫演說或其他方法", "公然性", "煽惑他人犯罪、違背法令或抗拒合法命令之內容"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_154_criminal_association", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第154條", "name": "參與犯罪宗旨結社", "fact_elements": ["結社以犯罪為宗旨", "參與或首謀角色", "自首情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_155_military_incitement", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第155條", "name": "煽惑軍人失職違紀逃叛", "fact_elements": ["煽惑行為及內容", "對象為軍人", "不執行職務、不守紀律或逃叛之目的"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_156_raise_troops", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第156條", "name": "未經允准招集率帶軍隊", "fact_elements": ["未受允准", "招集軍隊、發給軍需或率帶軍隊"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_157_litigation_broker", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第157條", "name": "挑唆包攬訴訟", "fact_elements": ["挑唆或包攬他人訴訟", "漁利意圖", "利益及訴訟案件關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_158_impersonate_official", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第158條", "name": "冒充公務員行使職權", "fact_elements": ["冒充本國或外國公務員", "實際行使其職權", "冒用身分與行為關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_159_uniform_title", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第159條", "name": "公然冒用公務員服飾徽章官銜", "fact_elements": ["公然冒用", "公務員服飾、徽章或官銜"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "disorder_160_national_symbol", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第160條", "name": "公然侮辱國徽國旗或遺像", "fact_elements": ["侮辱中華民國或孫先生之意圖", "公然損壞、除去或污辱", "國徽、國旗或法定遺像"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {"id": "escape", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "脫逃章及藏匿人犯罪分層；湮滅證據另由 evidence 路由處理。", "child_routes": [
+      {"id": "escape_161_escape", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第161條", "name": "依法逮捕拘禁之人脫逃", "fact_elements": ["行為人依法受逮捕或拘禁", "脫逃行為", "損壞械具、強暴脅迫或聚眾態樣", "在場助勢首謀下手角色及未遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "escape_161_1_abscond", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第161條之1", "name": "受命具保等經通緝不到庭", "fact_elements": ["檢察官或法官命具保責付限制住居或出境出海", "合法傳喚無正當理由不到庭", "已發布通緝"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "escape_162_facilitate", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第162條", "name": "縱放或便利脫逃", "fact_elements": ["對象為依法逮捕拘禁之人", "縱放或便利脫逃", "強暴脅迫聚眾態樣、親屬減輕及未遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "escape_163_official", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第163條", "name": "公務員縱放或便利脫逃", "fact_elements": ["公務員職務上掌管依法逮捕拘禁之人", "故意縱放便利或過失致脫逃", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "escape_164_conceal", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第164條", "name": "藏匿人犯脫逃人或頂替", "fact_elements": ["對象為犯人或依法逮捕拘禁之脫逃人", "藏匿、使隱避或意圖而頂替", "對對象身分之認識"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {"id": "evidence", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "刑法第165條實體罪與第166條、第167條減免事由分層。", "child_routes": [
+      {"id": "evidence_165_destroy", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第165條", "name": "偽變造湮滅隱匿他人刑案證據", "fact_elements": ["關係他人刑事被告案件之證據", "偽造、變造、湮滅、隱匿或使用偽變造證據", "對案件與證據關聯之認識"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "evidence_166_confession", "route_kind": "mitigation", "law_name": "中華民國刑法", "article_no": "第166條", "name": "湮滅證據罪裁判確定前自白減免", "fact_elements": ["第165條基礎行為", "他人刑事被告案件裁判確定前自白"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "evidence_167_relative", "route_kind": "mitigation", "law_name": "中華民國刑法", "article_no": "第167條", "name": "親屬圖利人犯之減免", "fact_elements": ["第164條或第165條基礎行為", "配偶或法定親屬關係", "圖利犯人或脫逃人之目的"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {"id": "accusation", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "刑法第168條至第172條分開偽證、指定或未指定犯人誣告、加重及自白減免。", "child_routes": [
+      {"id": "accusation_168_perjury", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第168條", "name": "具結虛偽陳述", "fact_elements": ["證人鑑定人或通譯身分", "審判或檢察官偵查程序", "供前或供後具結", "對案情重要事項虛偽陳述"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "accusation_169_false_accusation", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第169條", "name": "誣告或偽造證據陷害他人", "fact_elements": ["使特定他人受刑事或懲戒處分之意圖", "向該管公務員誣告或偽變造使用證據", "指涉對象與陳述證據內容"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "accusation_170_ancestor", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第170條", "name": "誣告直系血親尊親屬加重", "fact_elements": ["第169條基礎行為", "陷害意圖", "被誣告人為直系血親尊親屬"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "accusation_171_unspecified", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第171條", "name": "未指定犯人誣告犯罪或偽造證據", "fact_elements": ["未指定犯人", "向該管公務員誣告犯罪，或偽變造使用犯罪證據", "偽證據行為是否致開始刑事訴訟程序"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "accusation_172_confession", "route_kind": "mitigation", "law_name": "中華民國刑法", "article_no": "第172條", "name": "偽證誣告案件確定前自白減免", "fact_elements": ["第168條至第171條基礎行為", "相關案件裁判或懲戒處分確定前自白"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {"id": "currency", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "刑法第195條至第200條分層。", "child_routes": [
+      {"id": "currency_195_counterfeit", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第195條", "name": "偽造變造通用貨幣", "fact_elements": ["偽造或變造通用貨幣紙幣銀行券", "供行使之意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "currency_196_use", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第196條", "name": "行使收集交付偽造貨幣", "fact_elements": ["偽造變造貨幣之行使收集或交付", "供行使意圖或收受後知情", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "currency_197_reduce", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第197條", "name": "減損通用貨幣分量", "fact_elements": ["減損通用貨幣分量", "供行使意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "currency_198_use_reduced", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第198條", "name": "行使收集交付減損貨幣", "fact_elements": ["減損分量貨幣之行使收集或交付", "供行使意圖或收受後知情", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "currency_199_tools", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第199條", "name": "製造交付收受偽造貨幣器械原料", "fact_elements": ["器械或原料之製造交付收受", "供偽造變造貨幣或減損分量之意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "currency_200_confiscation", "route_kind": "collateral", "law_name": "中華民國刑法", "article_no": "第200條", "name": "偽造減損貨幣及器械原料沒收", "fact_elements": ["偽造變造或減損貨幣、器械原料", "與本章行為之關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {"id": "securities", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "刑法第201條至第205條含支付卡電磁紀錄物、票券、器械原料與沒收。", "child_routes": [
+      {"id": "securities_201_securities", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第201條", "name": "偽造變造或行使有價證券", "fact_elements": ["公債票公司股票或其他有價證券", "偽造變造行使收集或交付", "供行使之意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "securities_201_1_payment_card", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第201條之1", "name": "偽造變造或行使支付卡電磁紀錄物", "fact_elements": ["信用卡金融卡儲值卡等支付工具電磁紀錄物", "偽造變造行使收受或交付", "供行使之意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "securities_202_stamp", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第202條", "name": "偽造變造行使郵票印花稅票", "fact_elements": ["郵票或印花稅票", "偽造變造行使收集交付或塗抹註銷符號", "供行使之意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "securities_203_ticket", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第203條", "name": "偽造變造或行使往來客票", "fact_elements": ["船票火車電車票或其他往來客票", "偽造變造或行使", "供行使之意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "securities_204_tools", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第204條", "name": "製造交付收受偽造證券器械原料", "fact_elements": ["器械原料或電磁紀錄之製造交付收受", "供偽造變造證券票券或支付工具之意圖", "利用業務機會加重"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "securities_205_confiscation", "route_kind": "collateral", "law_name": "中華民國刑法", "article_no": "第205條", "name": "偽造證券票券支付工具及器械沒收", "fact_elements": ["偽造變造證券票券支付工具或器械原料電磁紀錄", "與本章行為之關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {"id": "weights_measures", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "刑法第206條至第209條分開製造變更、販賣、行使業務加重及沒收。", "child_routes": [
+      {"id": "weights_206_make_change", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第206條", "name": "製造或變更違背定程度量衡", "fact_elements": ["製造違背定程度量衡或變更定程", "供行使之意圖", "度量衡法定定程與實測差異"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "weights_207_sell", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第207條", "name": "販賣違背定程度量衡", "fact_elements": ["販賣違背定程度量衡", "供行使之意圖", "標的及交易經過"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "weights_208_use", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第208條", "name": "行使違背定程度量衡", "fact_elements": ["違背定程之度量衡", "實際行使", "是否從事業務並關於其業務"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "weights_209_confiscation", "route_kind": "collateral", "law_name": "中華民國刑法", "article_no": "第209條", "name": "違背定程度量衡沒收", "fact_elements": ["違背定程之度量衡", "與本章行為之關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {
+      "id": "sexual",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "性交、猥褻、年齡、權勢、詐術、結果加重與告訴條件均須分開；屬高敏感路由，逐題須創傷知情人工審查。",
+      "child_routes": [
+        {"id": "sexual_221_nonconsensual_intercourse", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第221條", "name": "違反意願性交", "fact_elements": ["性交行為", "強暴、脅迫、恐嚇、催眠術或其他違反意願方法", "本人意願與方法作用的具體事實", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_222_aggravated_intercourse", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第222條", "name": "加重違反意願性交", "fact_elements": ["第221條基礎行為", "共同犯、年齡、障礙、藥劑、凌虐、交通工具、侵入住居、兇器或攝錄散布等法定態樣", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_224_nonconsensual_indecency", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第224條", "name": "違反意願猥褻", "fact_elements": ["猥褻行為", "強暴、脅迫、恐嚇、催眠術或其他違反意願方法", "本人意願與方法作用的具體事實"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_224_1_aggravated_indecency", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第224條之1", "name": "加重違反意願猥褻", "fact_elements": ["第224條基礎行為", "第222條第一項各款法定態樣"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_225_incapacity", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第225條", "name": "利用不能或不知抗拒而性交或猥褻", "fact_elements": ["性交或猥褻行為", "精神、身體障礙、心智缺陷或相類情形", "不能或不知抗拒狀態", "利用該狀態", "性交未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_226_result_aggravation", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第226條", "name": "性自主犯罪結果加重", "fact_elements": ["第221、222、224、224條之1或225條基礎行為", "死亡、重傷、羞忿自殺或意圖自殺致重傷結果", "基礎行為與結果間因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_226_1_intentional_killing_injury", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第226條之1", "name": "性自主犯罪故意殺害或重傷", "fact_elements": ["第221、222、224、224條之1或225條基礎行為", "故意殺害或使受重傷行為", "故意不得由結果反推", "行為間關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_227_age", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第227條", "name": "與未滿十六歲者性交或猥褻", "fact_elements": ["性交或猥褻行為", "被害人行為時年齡及年齡證據", "未滿十四歲或十四歲以上未滿十六歲之區分", "性交未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_227_1_youth_mitigation", "route_kind": "mitigation", "law_name": "中華民國刑法", "article_no": "第227條之1", "name": "未滿十八歲行為人減免", "fact_elements": ["第227條基礎行為", "行為人行為時未滿十八歲", "雙方年齡證據"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_228_authority", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第228條", "name": "利用權勢或機會性交猥褻", "fact_elements": ["監督、扶助或照護關係", "利用權勢或機會", "性交或猥褻行為", "性交未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_229_spouse_deception", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第229條", "name": "詐術使誤信為配偶而性交", "fact_elements": ["詐術內容與實施", "誤信行為人為自己配偶", "因誤信而聽從性交", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "sexual_229_1_complaint", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第229條之1", "name": "特定性自主犯罪告訴條件", "fact_elements": ["配偶間第221條或第224條，或未滿十八歲行為人第227條之法定範圍", "告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ],
+      "excluded_routes": [
+        {"id": "sexual_223_deleted", "article_no": "第223條", "status": "DELETED", "reason": "條文已刪除，不得建立現行候選。", "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001"}
+      ]
+    },
+    {
+      "id": "obscenity",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "公然猥褻與猥褽物品須分開；第235條沒收效果另列，第236條係第230條程序規定而非本 route 現行子罪名。",
+      "child_routes": [
+        {"id": "obscenity_234_public_act", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第234條", "name": "公然猥褻行為", "fact_elements": ["猥褻行為", "公然性", "供人觀覽意圖", "營利意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "obscenity_235_materials", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第235條", "name": "散布販賣或製造持有猥褽物品", "fact_elements": ["文字、圖畫、聲音、影像或其他物品的性質", "散布、播送、販賣、公然陳列、供觀覽聽聞、製造或持有行為", "製造持有時的散布、播送或販賣意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "obscenity_235_confiscation", "route_kind": "collateral", "law_name": "中華民國刑法", "article_no": "第235條第3項", "name": "猥褽物品沒收", "fact_elements": ["文字圖畫聲音影像的附著物或其他物品", "與第235條行為的關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "marriage",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "重婚、詐術婚姻、和誘略誘、移送收受及程序效果須分開；第239條已刪除。",
+      "child_routes": [
+        {"id": "marriage_237_bigamy", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第237條", "name": "重婚", "fact_elements": ["行為人既有配偶或同時與二人以上結婚", "再次婚姻行為", "相婚者角色與認知事實", "婚姻關係文件與時間"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "marriage_238_fraudulent_marriage", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第238條", "name": "詐術締結無效或得撤銷婚姻", "fact_elements": ["締結婚姻之詐術", "婚姻無效或得撤銷事由", "婚姻無效或撤銷裁判確定"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "marriage_240_consenting_abduction", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第240條", "name": "和誘未成年人或有配偶之人", "fact_elements": ["和誘行為", "未成年人或有配偶者身分", "脫離家庭或其他監督權人", "營利、猥褻或性交目的", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "marriage_241_abduction", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第241條", "name": "略誘未成年人", "fact_elements": ["略誘行為或和誘未滿十六歲者", "未成年人年齡", "脫離家庭或其他監督權人", "營利、猥褻或性交目的", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "marriage_242_transfer_abducted_person", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第242條", "name": "移送被誘人出境", "fact_elements": ["第240條或第241條被誘人", "移送出中華民國領域外", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "marriage_243_receive_hide_abducted_person", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第243條", "name": "收受藏匿被誘人或使之隱避", "fact_elements": ["收受、藏匿或使隱避行為", "第240條或第241條被誘人", "營利、猥褻或性交目的", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "marriage_244_return_mitigation", "route_kind": "mitigation", "law_name": "中華民國刑法", "article_no": "第244條", "name": "送回或指明被誘人所在地之減輕條件", "fact_elements": ["第240條至第243條基礎行為", "裁判宣告前送回或指明所在地", "是否因而尋獲"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "marriage_245_complaint", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第245條", "name": "特定婚姻家庭罪告訴條件", "fact_elements": ["基礎罪名為第238條或第240條第2項", "告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ],
+      "excluded_routes": [
+        {"id": "marriage_239_deleted", "article_no": "第239條", "status": "DELETED", "reason": "條文已刪除，不得建立現行候選。", "source_url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=C0000001"}
+      ]
+    },
+    {"id": "graves_religion", "route_type": "substantive", "crosswalk_status": "SPLIT_REQUIRED", "note": "刑法第246條至第250條分開宗教祭禮、屍體遺骨、發掘墳墓、結合行為與親屬加重。", "child_routes": [
+      {"id": "graves_246_religion", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第246條", "name": "侮辱宗教紀念場所或妨害儀式", "fact_elements": ["壇廟寺觀教堂墳墓或公眾紀念處所", "公然侮辱，或妨害喪葬祭禮說教禮拜", "公開性與具體行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "graves_247_body", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第247條", "name": "侵害屍體遺骨遺灰殮物", "fact_elements": ["屍體、遺骨、遺髮、殮物或火葬遺灰", "損壞遺棄污辱或盜取之法定行為", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "graves_248_excavate", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第248條", "name": "發掘墳墓", "fact_elements": ["墳墓標的", "發掘行為", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "graves_249_excavate_injure", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第249條", "name": "發掘墳墓並侵害屍體遺骨", "fact_elements": ["發掘墳墓", "損壞遺棄污辱或盜取屍體，或損壞遺棄盜取遺骨遺髮殮物遺灰", "各行為之時間與同一性"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+      {"id": "graves_250_ancestor", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第250條", "name": "侵害直系血親尊親屬遺體加重", "fact_elements": ["第247條至第249條基礎行為", "被侵害者為直系血親尊親屬", "親屬關係證據"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+    ]},
+    {
+      "id": "agriculture_commerce",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "囤積與價格操縱、妨害水利、商標商號及商品表示須分開；行政公告前提須有可回查證據。",
+      "child_routes": [
+        {"id": "agriculture_251_market_goods", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第251條", "name": "囤積必需品、妨害販運或散布價格不實資訊", "fact_elements": ["法定物品種類或行政院公告依據", "囤積不應市、強暴脅迫妨害販運或散布不實資訊之行為態樣", "抬高或影響交易價格之意圖", "正當理由、傳播工具及未遂等法定情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "agriculture_252_irrigation", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第252條", "name": "妨害農事水利", "fact_elements": ["妨害農事上水利行為", "加損害於他人之意圖", "受影響農事與水利關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "agriculture_253_registered_mark", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第253條", "name": "偽造仿造已登記商標商號", "fact_elements": ["已登記商標或商號及登記證據", "偽造或仿造行為", "欺騙他人意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "agriculture_254_counterfeit_goods", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第254條", "name": "販賣陳列輸入偽造仿造商標商號貨物", "fact_elements": ["貨物具有偽造或仿造商標商號", "販賣、意圖販賣而陳列或自外國輸入", "對偽造或仿造情形之明知"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "agriculture_255_false_origin_quality", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第255條", "name": "商品原產國或品質虛偽表示", "fact_elements": ["商品原產國或品質之虛偽標記或表示", "欺騙他人意圖", "販賣、意圖販賣而陳列或自外國輸入及明知情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "opium",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "刑法鴉片章與毒品危害防制條例特別法競合待 Human Gate。",
+      "child_routes": [
+        {"id": "opium_256_manufacture", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第256條", "name": "製造鴉片等物", "fact_elements": ["製造行為", "涉及物質種類", "行為完成或未遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "opium_257_trade_transport_import", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第257條", "name": "販賣、運輸或輸入鴉片等物", "fact_elements": ["販賣、運輸或自外國輸入行為", "涉及物質種類", "行為完成或未遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "opium_258_paraphernalia", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第258條", "name": "製造販運吸食器具", "fact_elements": ["製造、販賣或運輸行為", "器具是否專供吸食鴉片", "行為完成或未遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "opium_259_profit_injection_venue", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第259條", "name": "營利施打或提供吸食場所", "fact_elements": ["為人施打或提供館舍", "意圖營利", "涉及物質及使用方式", "行為完成或未遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "opium_260_poppy", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第260條", "name": "栽種罌粟或販運種子", "fact_elements": ["栽種、販賣或運輸行為", "標的為罌粟或其種子", "供製造鴉片或嗎啡之意圖", "行為完成或未遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "opium_261_official_coercion", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第261條", "name": "公務員利用權力強迫栽種等", "fact_elements": ["行為人公務員身分", "利用權力強迫他人", "被強迫行為與第260條的關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "opium_262_use", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第262條", "name": "吸食或施打鴉片等物", "fact_elements": ["吸食、施打或使用行為", "涉及物質種類", "檢驗與物質同一性"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "opium_263_possession", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第263條", "name": "意圖供犯罪使用而持有", "fact_elements": ["持有行為與支配狀態", "涉及物質或專用器具", "供本章犯罪使用之意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "opium_264_official_sheltering", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第264條", "name": "公務員包庇加重", "fact_elements": ["行為人公務員身分", "包庇本章犯罪行為", "被包庇的基礎罪名"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "opium_265_confiscation", "route_kind": "collateral", "law_name": "中華民國刑法", "article_no": "第265條", "name": "鴉片章物品沒收", "fact_elements": ["物品種類", "物品與本章犯罪的關聯", "所有權不影響法定沒收之條文效果"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "gambling",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "第267條已刪除；賭博、營利場所／聚眾、彩票及公務員包庇須分開。",
+      "child_routes": [
+        {"id": "gambling_266_public_or_online", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第266條", "name": "公共場所或網路賭博財物", "fact_elements": ["賭博財物行為", "公共場所、公眾得出入場所或電信網路方式", "供暫時娛樂之物例外是否涉及"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "gambling_268_profit_venue_gathering", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第268條", "name": "營利供給場所或聚眾賭博", "fact_elements": ["供給賭博場所或聚眾賭博行為", "意圖營利", "場所、人員與收益關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "gambling_269_lottery", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第269條", "name": "有獎儲蓄或未經允准彩票", "fact_elements": ["辦理、發行、經營或媒介行為", "有獎儲蓄或彩票性質", "政府允准狀態"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "gambling_270_official_sheltering", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第270條", "name": "公務員包庇賭博章犯罪", "fact_elements": ["行為人公務員身分", "包庇行為", "被包庇的基礎罪名"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "homicide",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "故意殺人、特殊加重／減輕、加工自殺與過失致死均須分開；不得由結果反推故意。",
+      "child_routes": [
+        {"id": "homicide_271_intentional", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第271條", "name": "殺人", "fact_elements": ["殺害行為", "死亡結果與因果關係", "殺人故意須由事實查明", "預備、未遂或既遂階段"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "homicide_272_ancestor", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第272條", "name": "對直系血親尊親屬殺人加重", "fact_elements": ["第271條基礎行為", "被害人為直系血親尊親屬", "身分關係證據"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "homicide_272_1_under_seven", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第272條之1", "name": "對未滿七歲者殺人加重", "fact_elements": ["第271條基礎行為", "被害人未滿七歲", "是否以凌虐方式", "預備、未遂或既遂階段"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "homicide_273_righteous_indignation", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第273條", "name": "當場激於義憤殺人", "fact_elements": ["殺害行為", "當場性", "激於義憤的事件脈絡", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "homicide_274_maternal_neonaticide", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第274條", "name": "母於生產時或甫生產後殺子女", "fact_elements": ["行為人為生母", "生產時或甫生產後", "不得已事由", "殺害自己子女", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "homicide_275_requested_or_assisted_suicide", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第275條", "name": "受囑託承諾殺人或加工自殺", "fact_elements": ["囑託、承諾、教唆或幫助態樣", "本人意思形成與內容", "死亡結果或未遂", "謀為同死情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "homicide_276_negligent", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第276條", "name": "過失致死", "fact_elements": ["注意義務與可預見性事實", "注意義務違反行為", "死亡結果", "行為與死亡間因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "abortion",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "懷胎婦女自行、受囑託／承諾、營利、未得同意及公開介紹須依主體與行為分開。",
+      "child_routes": [
+        {"id": "abortion_288_self", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第288條", "name": "懷胎婦女自行或聽從他人墮胎", "fact_elements": ["行為人為懷胎婦女", "服藥、他法或聽從他人墮胎", "疾病或防止生命危險之必要情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "abortion_289_consensual", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第289條", "name": "受囑託或承諾使之墮胎", "fact_elements": ["使懷胎婦女墮胎行為", "婦女囑託或承諾", "死亡或重傷結果與因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "abortion_290_for_profit", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第290條", "name": "營利受囑託或承諾使之墮胎", "fact_elements": ["第289條第一項行為", "意圖營利", "死亡或重傷結果與因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "abortion_291_nonconsensual", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第291條", "name": "未受囑託或未得承諾使之墮胎", "fact_elements": ["使懷胎婦女墮胎行為", "未受囑託或未得承諾", "死亡或重傷結果與因果關係", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "abortion_292_public_introduction", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第292條", "name": "公然介紹墮胎方法、物品或行為人", "fact_elements": ["文字、圖畫或其他介紹方法", "公然性", "介紹標的為方法、物品或實施墮胎者"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "abandonment",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "普通遺棄、義務人遺棄／不扶助、不罰事由與尊親屬加重須分層。",
+      "child_routes": [
+        {"id": "abandonment_293_general", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第293條", "name": "遺棄無自救力之人", "fact_elements": ["被害人無自救力狀態", "遺棄行為", "死亡或重傷結果與因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "abandonment_294_duty", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第294條", "name": "有扶助養育保護義務者遺棄或不扶助", "fact_elements": ["被害人無自救力狀態", "法令或契約上的扶助、養育或保護義務", "遺棄或不為生存必要扶助等行為", "死亡或重傷結果與因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "abandonment_294_1_nonpunishment", "route_kind": "exception", "law_name": "中華民國刑法", "article_no": "第294條之1", "name": "特定親屬扶養義務不作為之不罰事由", "fact_elements": ["依民法親屬編的扶助、養育或保護關係", "無自救力者先前侵害或長期未扶養的法定情形", "前行為、判決或期間證據"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "abandonment_295_ancestor", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第295條", "name": "對直系血親尊親屬犯義務人遺棄加重", "fact_elements": ["第294條基礎行為", "被害人為直系血親尊親屬", "身分關係證據"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "liberty",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "奴役、人口買賣、略誘、拘禁、強制、恐嚇、侵入住居及違法搜索不得合併；程序效果另列。",
+      "child_routes": [
+        {"id": "liberty_296_slavery", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第296條", "name": "使人為奴隸或處於類似不自由地位", "fact_elements": ["使人為奴隸或類似奴隸地位的行為", "被害人自由受限制的具體狀態", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_296_1_human_trade", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第296條之1", "name": "人口買賣、質押及相關行為", "fact_elements": ["買賣、質押、媒介、收受、藏匿或使隱避行為", "被害人與交易或控制關係", "性目的、違反意願方法或公務員包庇等法定態樣", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_297_fraudulent_exit", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第297條", "name": "營利以詐術使人出境", "fact_elements": ["以詐術使人出中華民國領域外", "意圖營利", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_298_abduction", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第298條", "name": "為結婚、營利或性目的略誘婦女", "fact_elements": ["略誘行為", "被略誘人及移動控制狀態", "結婚、營利、猥褻或性交目的", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_299_transfer_abducted_person", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第299條", "name": "移送被略誘人出境", "fact_elements": ["第298條被略誘人", "移送出中華民國領域外", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_300_receive_hide_abducted_person", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第300條", "name": "收受藏匿被略誘人或使之隱避", "fact_elements": ["收受、藏匿或使隱避行為", "對象為被略誘人", "營利、猥褻或性交目的", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_301_return_mitigation", "route_kind": "mitigation", "law_name": "中華民國刑法", "article_no": "第301條", "name": "送回或指明被誘人所在地之減輕條件", "fact_elements": ["第298條至第300條基礎行為", "裁判宣告前送回或指明所在地", "是否因而尋獲"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_302_deprivation", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第302條", "name": "私行拘禁或非法剝奪行動自由", "fact_elements": ["私行拘禁或其他非法方法", "被害人行動自由遭剝奪的期間與程度", "死亡或重傷結果與因果關係", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_302_1_aggravated_deprivation", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第302條之1", "name": "加重剝奪行動自由", "fact_elements": ["第302條第一項基礎行為", "三人以上、攜帶兇器、特定弱勢、凌虐或七日以上等態樣", "死亡或重傷結果與因果關係", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_303_ancestor", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第303條", "name": "對直系血親尊親屬剝奪自由加重", "fact_elements": ["第302條或第302條之1基礎行為", "被害人為直系血親尊親屬", "身分關係證據"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_304_coercion", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第304條", "name": "強制", "fact_elements": ["強暴或脅迫方法", "使人行無義務之事或妨害權利行使", "方法與自由受限間關聯", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_305_threat", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第305條", "name": "恐嚇危害安全", "fact_elements": ["告知加害生命、身體、自由、名譽或財產之事", "恐嚇對象與傳達內容", "致生安全危害的具體事實"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_306_trespass", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第306條", "name": "侵入住居或拒不退去", "fact_elements": ["侵入、隱匿或受要求仍留滯行為", "住宅、建築物、附連圍繞土地或船艦", "無故狀態與退去要求"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_307_unlawful_search", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第307條", "name": "不依法令搜索", "fact_elements": ["搜索行為", "被搜索的人身或場所、交通工具", "搜索法令依據與程序"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "liberty_308_complaint", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第308條", "name": "略誘及侵入住居告訴條件", "fact_elements": ["基礎罪名為第298條或第306條", "告訴意思與提出情形", "第298條第一項被略誘人意思"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "privacy",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "信函秘密、竊視竊聽、業務秘密、電腦秘密與性影像各自建模；沒收與告訴條件另列。",
+      "child_routes": [
+        {"id": "privacy_315_letters", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第315條", "name": "開拆隱匿或窺視封緘信函等", "fact_elements": ["開拆、隱匿或窺視內容行為", "他人封緘信函、文書或圖畫", "無故狀態"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_315_1_peeping_recording", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第315條之1", "name": "無故窺視竊聽或竊錄非公開活動", "fact_elements": ["窺視、竊聽或竊錄行為及工具", "非公開活動、言論、談話或身體隱私部位", "無故狀態"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_315_2_profit_facilitation_distribution", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第315條之2", "name": "營利便利竊錄或製造散布竊錄內容", "fact_elements": ["供給場所工具、竊錄、製造或散布等行為", "意圖營利、散布、播送或販賣等法定目的", "內容與第315條之1竊錄行為的關聯", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_315_3_confiscation", "route_kind": "collateral", "law_name": "中華民國刑法", "article_no": "第315條之3", "name": "竊錄內容附著物及物品沒收", "fact_elements": ["附著物或物品", "與第315條之1或第315條之2竊錄內容的關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_316_professional_secret", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第316條", "name": "特定專業人員洩漏秘密", "fact_elements": ["法定專業身分或曾任該職務", "因業務知悉或持有他人秘密", "無故洩漏行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_317_industrial_secret", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第317條", "name": "違反義務洩漏工商秘密", "fact_elements": ["法令或契約上的守密義務", "因業務知悉或持有工商秘密", "無故洩漏行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_318_official_industrial_secret", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第318條", "name": "公務員洩漏工商秘密", "fact_elements": ["公務員或曾任公務員身分", "因職務知悉或持有他人工商秘密", "無故洩漏行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_318_1_computer_secret", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第318條之1", "name": "洩漏利用電腦知悉或持有之秘密", "fact_elements": ["利用電腦或相關設備知悉或持有秘密", "他人秘密", "無故洩漏行為"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_318_2_computer_aggravation", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第318條之2", "name": "利用電腦犯專業或工商秘密罪加重", "fact_elements": ["第316條至第318條基礎行為", "利用電腦或相關設備"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_319_complaint", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第319條", "name": "一般秘密罪告訴條件", "fact_elements": ["基礎罪名是否落在第315條、第315條之1或第316條至第318條之2", "告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_319_1_nonconsensual_sexual_image", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第319條之1", "name": "未經同意攝錄性影像", "fact_elements": ["攝錄性影像的科技方法", "本人同意狀態與無故情形", "營利便利或營利散布等目的與行為", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_319_2_coerced_sexual_image", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第319條之2", "name": "違反意願攝錄或使本人攝錄性影像", "fact_elements": ["強暴、脅迫、恐嚇或其他違反意願方法", "攝錄或使本人攝錄性影像", "營利便利或營利散布等目的與行為", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_319_3_sexual_image_distribution", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第319條之3", "name": "未經同意重製散布或販賣性影像", "fact_elements": ["重製、散布、播送、交付、公然陳列、供觀覽或販賣行為", "本人同意狀態與無故情形", "性影像來源類型", "營利意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_319_4_fabricated_sexual_image", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第319條之4", "name": "製作或散布不實性影像", "fact_elements": ["電腦合成或其他科技製作不實性影像", "散布目的或實際散布、販賣行為", "足以生損害於他人", "營利意圖"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_319_5_confiscation", "route_kind": "collateral", "law_name": "中華民國刑法", "article_no": "第319條之5", "name": "性影像附著物及物品沒收", "fact_elements": ["性影像附著物或物品", "與第319條之1至第319條之4行為的關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "privacy_319_6_complaint", "route_kind": "procedure", "law_name": "中華民國刑法", "article_no": "第319條之6", "name": "特定性影像罪告訴條件", "fact_elements": ["基礎罪名與法定項次", "未遂或既遂", "告訴意思與提出情形"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "robbery",
+      "route_type": "substantive",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "第327條及第331條已刪除；搶奪、強盜、準強盜、結合犯與海盜須分開。",
+      "child_routes": [
+        {"id": "robbery_325_snatching", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第325條", "name": "搶奪", "fact_elements": ["搶奪他人動產行為", "為自己或第三人不法所有意圖", "死亡或重傷結果與因果關係", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "robbery_326_aggravated_snatching", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第326條", "name": "加重搶奪", "fact_elements": ["第325條第一項基礎行為", "第321條第一項各款加重事由", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "robbery_328_robbery", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第328條", "name": "強盜", "fact_elements": ["強暴、脅迫、藥劑、催眠術或其他方法", "被害人達不能抗拒程度", "取物、使交付或取得財產上不法利益", "不法所有意圖", "結果加重、預備、未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "robbery_329_constructive", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第329條", "name": "準強盜", "fact_elements": ["先前竊盜或搶奪行為", "防護贓物、脫免逮捕或湮滅罪證目的", "當場施以強暴脅迫"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "robbery_330_aggravated", "route_kind": "aggravation", "law_name": "中華民國刑法", "article_no": "第330條", "name": "加重強盜", "fact_elements": ["強盜基礎行為", "第321條第一項各款加重事由", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "robbery_332_combined", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第332條", "name": "強盜結合故意殺人等行為", "fact_elements": ["強盜基礎行為", "故意殺人、放火、強制性交、擄人勒贖或使人重傷行為", "各行為間時間與目的關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "robbery_333_piracy", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第333條", "name": "海盜", "fact_elements": ["船艦駕駛、指揮與身分狀態", "對他船、人或物施強暴脅迫的意圖或行為", "掠奪財物意圖", "死亡或重傷結果與因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "robbery_334_piracy_combined", "route_kind": "offense", "law_name": "中華民國刑法", "article_no": "第334條", "name": "海盜結合故意殺人等行為", "fact_elements": ["海盜基礎行為", "故意殺人、放火、強制性交、擄人勒贖或使人重傷行為", "各行為間時間與目的關聯"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "trafficking",
+      "route_type": "mixed",
+      "crosswalk_status": "SPLIT_REQUIRED",
+      "note": "人口販運定義、不法手段、不法作為、性剝削、勞力剝削、器官摘取、招募運送等須分開；被害人鑑別與保護程序不得當成犯罪要件。",
+      "child_routes": [
+        {"id": "trafficking_2_classification", "route_kind": "classification", "law_name": "人口販運防制法", "article_no": "第2條", "name": "人口販運定義與分類", "fact_elements": ["剝削意圖或故意", "不法手段及未滿十八歲例外", "招募運送等不法作為或性、勞力、犯罪、器官剝削類型", "不當債務約束與勞報顯不相當定義"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_29_sexual_exploitation", "route_kind": "offense", "law_name": "人口販運防制法", "article_no": "第29條", "name": "利用處境使人從事有對價性交猥褻", "fact_elements": ["不當債務約束或不能、不知、難以求助處境", "使人從事有對價性交或猥褻", "營利意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_30_forced_labor", "route_kind": "offense", "law_name": "人口販運防制法", "article_no": "第30條", "name": "以不法方法使人提供勞務", "fact_elements": ["強暴脅迫、拘禁監控、藥劑詐術等法定方法", "使人提供勞務", "營利意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_31_exploitative_labor_crime", "route_kind": "offense", "law_name": "人口販運防制法", "article_no": "第31條", "name": "使人從事勞報顯不相當工作或犯罪", "fact_elements": ["不法方法、處境、扣留文件或未滿十八歲等法定態樣", "使人從事勞報顯不相當工作或刑罰行為", "營利意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_32_organ_removal", "route_kind": "offense", "law_name": "人口販運防制法", "article_no": "第32條", "name": "以不法方法摘取器官", "fact_elements": ["不法方法、處境或未滿十八歲等法定態樣", "摘取他人器官行為", "營利意圖", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_33_recruit_transport_harbor", "route_kind": "offense", "law_name": "人口販運防制法", "article_no": "第33條", "name": "剝削目的招募買賣運送收受藏匿等", "fact_elements": ["剝削意圖", "不法手段；未滿十八歲者不以不法手段為必要", "招募、買賣、質押、運送、交付、收受、藏匿、隱避、媒介或容留", "未遂或既遂"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_34_result_aggravation", "route_kind": "aggravation", "law_name": "人口販運防制法", "article_no": "第34條", "name": "人口販運犯罪死亡重傷結果加重", "fact_elements": ["第29條至第33條法定基礎行為與項次", "死亡或重傷結果", "基礎行為與結果間因果關係"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_35_official_sheltering", "route_kind": "aggravation", "law_name": "人口販運防制法", "article_no": "第35條", "name": "公務員包庇人口販運罪加重", "fact_elements": ["行為人公務員身分", "包庇人口販運罪行為", "被包庇的基礎罪名"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_36_cooperation_mitigation", "route_kind": "mitigation", "law_name": "人口販運防制法", "article_no": "第36條", "name": "自首自白並查獲共犯之減免", "fact_elements": ["人口販運罪基礎行為", "自首或偵查中自白", "提供資料並因而查獲其他正犯或共犯"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_37_victim_subsidy", "route_kind": "protective", "law_name": "人口販運防制法", "article_no": "第37條", "name": "犯罪所得撥交被害人補助", "fact_elements": ["依法沒收犯罪所得或追徵價額", "人口販運被害人補助資格", "不得重複領取相同性質補助"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_38_civil_preservation", "route_kind": "protective", "law_name": "人口販運防制法", "article_no": "第38條", "name": "被害人民事保全措施", "fact_elements": ["人口販運被害人或家屬民事求償", "假扣押或假處分聲請", "被害人鑑別通知書與顯無勝訴之望例外"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_40_entity_fine", "route_kind": "collateral", "law_name": "人口販運防制法", "article_no": "第40條", "name": "法人等業務行為併罰", "fact_elements": ["代表人、代理人、受僱人或從業人員因執行業務犯罪", "法人、團體或自然人關係", "已盡力防止之例外"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "trafficking_44_extraterritorial", "route_kind": "jurisdiction", "law_name": "人口販運防制法", "article_no": "第44條", "name": "境外犯適用", "fact_elements": ["行為地在中華民國領域外", "基礎罪名為第29條至第34條"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "juvenile",
+      "route_type": "procedural",
+      "crosswalk_status": "PROCEDURAL_ONLY",
+      "note": "少年事件身分、保護事件、刑事移送與保護處分是程序路由，不是單一犯罪。",
+      "child_routes": [
+        {"id": "juvenile_2_3_scope", "route_kind": "procedure", "law_name": "少年事件處理法", "article_no": "第2條至第3條", "name": "少年身分與事件範圍", "fact_elements": ["行為時年齡十二歲以上未滿十八歲", "觸犯刑罰法律或法定曝險情形", "健全自我成長保障必要之個案情狀"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "juvenile_14_18_referral", "route_kind": "procedure", "law_name": "少年事件處理法", "article_no": "第14條至第18條", "name": "少年保護事件管轄、報告與移送", "fact_elements": ["行為地、住所、居所或所在地", "知悉事件之機關或人員", "報告、移送、通知輔導或請求法院處理路徑", "相關紀錄、資料與證據"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "juvenile_27_65_74_criminal", "route_kind": "procedure", "law_name": "少年事件處理法", "article_no": "第27條、第65條至第74條", "name": "少年刑事案件移送與審理", "fact_elements": ["觸犯刑罰法律及法定刑", "犯罪時年齡與事件繫屬後年齡", "強制或裁量移送條件", "羈押、審判公開、被害人代理及刑罰替代保護處分等程序事項"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "juvenile_42_protective_disposition", "route_kind": "protective", "law_name": "少年事件處理法", "article_no": "第42條", "name": "少年保護處分與資源整合", "fact_elements": ["訓誡、保護管束、安置或感化教育等處分需求", "毒品酒癮或身心治療需求", "福利、醫療、就學、職訓、就業及家庭處遇資源"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "domestic_violence",
+      "route_type": "protective",
+      "crosswalk_status": "PROTECTIVE_UMBRELLA",
+      "note": "家庭暴力事實、其他法律犯罪、保護令、刑事安全程序與違反保護令罪須分層。",
+      "child_routes": [
+        {"id": "domestic_2_classification", "route_kind": "classification", "law_name": "家庭暴力防治法", "article_no": "第2條", "name": "家庭暴力及家庭暴力罪分類", "fact_elements": ["家庭成員關係", "身體、精神或經濟上騷擾、控制、脅迫或其他不法侵害", "是否另成立其他法律犯罪", "目睹、騷擾、跟蹤與處遇需求"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "domestic_9_21_protection_order", "route_kind": "protective", "law_name": "家庭暴力防治法", "article_no": "第9條至第21條", "name": "民事保護令聲請、內容與執行", "fact_elements": ["通常、暫時或緊急保護令類型", "聲請人資格與家庭暴力事實", "急迫危險與保護必要", "禁止、遷出、遠離、會面、性影像或處遇等命令需求", "核發、有效期間及執行狀態"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "domestic_29_42_criminal_safety", "route_kind": "procedure", "law_name": "家庭暴力防治法", "article_no": "第29條至第42條", "name": "家庭暴力刑事安全程序", "fact_elements": ["家庭暴力罪或違反保護令罪嫌疑", "繼續侵害或反覆實施風險", "逮捕、拘提、羈押或附條件釋放事項", "被害人隔離、陪同、通知及文件送達需求"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "domestic_61_order_violation", "route_kind": "offense", "law_name": "家庭暴力防治法", "article_no": "第61條", "name": "違反保護令罪", "fact_elements": ["有效法院保護令及送達、知悉情形", "具體命令內容", "違反禁止暴力、聯絡、遷出、遠離、處遇或性影像等法定裁定之行為", "行為時間與保護令效力"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "domestic_61_1_63_admin", "route_kind": "administrative", "law_name": "家庭暴力防治法", "article_no": "第61條之1至第63條", "name": "媒體、平臺、通報等行政罰", "fact_elements": ["義務主體身分", "法定媒體、平臺、移除保留、通報或其他義務", "違反行為、正當理由與主管機關命令"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "child_protection",
+      "route_type": "protective",
+      "crosswalk_status": "PROTECTIVE_UMBRELLA",
+      "note": "兒少有害物品場所、禁止侵害、責任通報、緊急安置與刑罰加重屬不同路由；不得把保護程序當作單一犯罪。",
+      "child_routes": [
+        {"id": "child_43_48_harmful_access", "route_kind": "protective", "law_name": "兒童及少年福利與權益保障法", "article_no": "第43條至第48條", "name": "有害物質內容場所與工作防護", "fact_elements": ["兒童或少年年齡與身分", "物質、內容、場所或工作類型", "提供、散布、允許進入、利用僱用或誘迫行為", "照顧者、業者或平臺義務"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "child_49_51_prohibited_harm", "route_kind": "protective", "law_name": "兒童及少年福利與權益保障法", "article_no": "第49條至第51條", "name": "兒少禁止侵害與照顧義務", "fact_elements": ["遺棄、虐待、利用、拐騙買賣、性侵害利用或其他法定禁止行為", "兒童少年受影響狀態", "照顧者義務及獨處或不適任照顧情形"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "child_52_55_reporting_support", "route_kind": "procedure", "law_name": "兒童及少年福利與權益保障法", "article_no": "第52條至第55條", "name": "協助、責任通報、調查與就醫", "fact_elements": ["法定通報人身分或一般知悉來源", "受害、未適當照顧、毒品或其他法定通報情形", "二十四小時通報、分級分類及調查紀錄", "保密、訪視、跨機關協助及就醫需求"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "child_56_emergency_protection", "route_kind": "protective", "law_name": "兒童及少年福利與權益保障法", "article_no": "第56條", "name": "兒少保護與緊急安置", "fact_elements": ["未適當照顧、醫療必要、遺棄虐待買賣或其他迫害情形", "生命、身體或自由立即危險", "多元評估與最佳利益", "保護、安置、緊急安置或司法協助需求"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "child_112_criminal_aggravation", "route_kind": "aggravation", "law_name": "兒童及少年福利與權益保障法", "article_no": "第112條", "name": "成年人利用兒少犯罪或故意對兒少犯罪加重", "fact_elements": ["行為人成年人及被害人或共同行為人為兒童少年", "教唆、幫助、利用、共同犯罪或故意對其犯罪", "基礎罪名是否已有兒少特別處罰規定", "主管機關獨立告訴事項"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    },
+    {
+      "id": "gender_equality",
+      "route_type": "procedural",
+      "crosswalk_status": "PROCEDURAL_ONLY",
+      "note": "職場與校園性別事件分屬不同法規、主管機關與申訴調查程序，不是單一犯罪。",
+      "child_routes": [
+        {"id": "gender_work_12_classification", "route_kind": "classification", "law_name": "性別平等工作法", "article_no": "第12條", "name": "職場性騷擾與權勢性騷擾分類", "fact_elements": ["僱用、求職或執行職務關係", "性要求、性意味或性別歧視言詞行為", "敵意環境或交換條件型態", "權勢關係、持續性及事件背景"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "gender_work_13_measures", "route_kind": "procedure", "law_name": "性別平等工作法", "article_no": "第13條至第13條之1", "name": "雇主防治、調查與立即有效措施", "fact_elements": ["雇主知悉來源與時間", "避免再發、資源轉介、調查及懲戒措施", "客觀公正專業與避免重複詢問", "權勢被申訴人暫停或調整職務需求"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "gender_work_32_1_34_external", "route_kind": "procedure", "law_name": "性別平等工作法", "article_no": "第32條之1至第34條", "name": "職場性騷擾外部申訴調查與救濟", "fact_elements": ["被申訴人身分與雇主調查適格性", "地方主管機關申訴、調查或協調程序", "處理期限、通知、處分及後續救濟"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "gender_education_21_30_prevention", "route_kind": "procedure", "law_name": "性別平等教育法", "article_no": "第21條至第30條", "name": "校園性別事件預防、通報、保護與人員處置", "fact_elements": ["事件是否屬校園性別事件及當事人身分", "二十四小時通報與禁止湮滅證據", "當事人受教工作權、保密、專業服務與保護需求", "調查後懲處、追蹤及人員任用限制"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "gender_education_31_36_investigation", "route_kind": "procedure", "law_name": "性別平等教育法", "article_no": "第31條至第36條", "name": "校園性別事件申請、受理與調查", "fact_elements": ["申請人、被害人、檢舉人與行為人所屬機關", "受理、不受理與移送條件", "調查小組組成及迴避、配合義務", "調查期限、報告與處理通知"], "review_status": "HUMAN_REVIEW_REQUIRED"},
+        {"id": "gender_education_37_40_remedy", "route_kind": "procedure", "law_name": "性別平等教育法", "article_no": "第37條至第40條", "name": "校園性別事件申復與救濟", "fact_elements": ["處理結果及送達時間", "申復事由、期限與次數", "重新調查條件", "教師職員學生等不同救濟途徑及主管機關監督"], "review_status": "HUMAN_REVIEW_REQUIRED"}
+      ]
+    }
+  ]
+}

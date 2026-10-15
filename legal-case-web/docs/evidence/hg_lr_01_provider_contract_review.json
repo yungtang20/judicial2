@@ -1,0 +1,217 @@
+{
+  "schema_version": "hg-lr-01-provider-contract-review-v1",
+  "review_id": "HG-LR-01-REVIEW-20261015-03",
+  "reviewed_on": "2026-10-15",
+  "decision_status": "PARTIAL_REVIEW_HUMAN_APPROVAL_REQUIRED",
+  "human_gate_id": "HG-LR-01",
+  "human_gate_status": "PENDING",
+  "packet_id": "LR-HG-20261015-04",
+  "packet_sha256": "4f8987ddd2ad9c0fdeded492fed78080aa7a288a80178e8468522b98b612065c",
+  "execution_mode": "SINGLE_EXECUTOR",
+  "agent_mode": "SINGLE_AGENT_MODE",
+  "question": "Which documented Taiwan legal retrieval providers have enough endpoint, response contract, authentication, terms, privacy and removal evidence to be considered for a later runtime design?",
+  "scope": {
+    "evidence_only": true,
+    "live_provider_calls_performed": false,
+    "credentials_used": false,
+    "case_data_sent": false,
+    "runtime_enabled": false,
+    "gate2_connected": false,
+    "legal_conclusion": false,
+    "review_status": "HUMAN_REVIEW_REQUIRED"
+  },
+  "providers": [
+    {
+      "provider_id": "judicial_jdoc_official",
+      "operator": "Judicial Yuan",
+      "service_kind": "official_rest_api",
+      "endpoint": "https://data.judicial.gov.tw/jdg/api/JDoc",
+      "endpoint_status": "DOCUMENTED",
+      "response_contract_status": "DOCUMENTED_PARTIAL",
+      "response_contract": [
+        "ATTACHMENTS[].TITLE",
+        "ATTACHMENTS[].URL",
+        "JFULLX.JFULLTYPE",
+        "JFULLX.JFULLCONTENT",
+        "JFULLX.JFULLPDF",
+        "JID",
+        "JYEAR",
+        "JCASE",
+        "JNO",
+        "JDATE",
+        "JTITLE"
+      ],
+      "authentication": "Platform account and password are exchanged for a six-hour token; JList and JDoc require the token.",
+      "rate_or_availability": "Documented service window is 00:00-06:00 daily; no numeric request-rate limit was found in the reviewed specification.",
+      "terms_or_license": "Official API specification and Judicial Yuan website open-data declaration were found; an API-specific production SLA and numeric rate contract were not found in the reviewed material.",
+      "privacy_and_removal": "A repeated JID means the later version replaces the earlier version. A documented removal response requires deletion of a previously downloaded judgment.",
+      "candidate_disposition": "CONDITIONAL_OFFICIAL_SOURCE_CANDIDATE",
+      "blocking_unknowns": [
+        "ACCOUNT_PROVISIONING_AND_CREDENTIAL_OWNER",
+        "NUMERIC_RATE_LIMIT",
+        "PRODUCTION_SLA",
+        "APPLICATION_RETENTION_AND_DELETION_RUNBOOK"
+      ],
+      "evidence_urls": [
+        "https://opendata.judicial.gov.tw/api/Newses/42/file",
+        "https://www2.judicial.gov.tw/%E5%8F%B8%E6%B3%95%E9%99%A2%E6%94%BF%E5%BA%9C%E7%B6%B2%E7%AB%99%E8%B3%87%E6%96%99%E9%96%8B%E6%94%BE%E5%AE%A3%E5%91%8A.pdf"
+      ]
+    },
+    {
+      "provider_id": "psue_public_documents",
+      "operator": "Taiwan High Prosecutors Office / Ministry of Justice",
+      "service_kind": "public_search_website",
+      "endpoint": "https://psue.moj.gov.tw/psiqs/",
+      "endpoint_status": "PUBLIC_UI_DOCUMENTED",
+      "response_contract_status": "NO_PUBLIC_MACHINE_API_CONTRACT_FOUND",
+      "response_contract": [],
+      "authentication": "No machine authentication contract was found in the reviewed public guidance.",
+      "rate_or_availability": "UNKNOWN",
+      "terms_or_license": "The official guidance documents publication scope and says the data is for reference and the original document controls. It does not document an automation API contract.",
+      "privacy_and_removal": "Publication and redaction rules exist, but no machine removal event or synchronization contract was found.",
+      "candidate_disposition": "DISCOVERY_ONLY_NOT_A_RUNTIME_PROVIDER",
+      "blocking_unknowns": [
+        "MACHINE_ENDPOINT",
+        "RESPONSE_SCHEMA",
+        "AUTOMATION_PERMISSION",
+        "AUTHENTICATION",
+        "RATE_LIMIT",
+        "REMOVAL_SIGNAL"
+      ],
+      "evidence_urls": [
+        "https://www.tph.moj.gov.tw/4421/4663/644719/656174/post",
+        "https://psue.moj.gov.tw/psiqs/rule.pdf"
+      ]
+    },
+    {
+      "provider_id": "taiwan_law_mcp_hosted",
+      "operator": "Taiwan Legal Tech Platform",
+      "service_kind": "hosted_streamable_http_mcp",
+      "endpoint": "https://legaltech.org.tw/mcp",
+      "endpoint_status": "DOCUMENTED_PUBLIC_BETA",
+      "response_contract_status": "TOOL_CATALOG_DOCUMENTED_OUTPUT_SCHEMA_UNFROZEN",
+      "response_contract": [
+        "14 named MCP tools are publicly listed",
+        "MCP protocol discovery is supported",
+        "No version-pinned per-tool output schema was found in the reviewed public page"
+      ],
+      "authentication": "The hosted public endpoint is described as no registration, no API key and no OAuth.",
+      "rate_or_availability": "No numeric rate limit or SLA was found in the reviewed public pages.",
+      "terms_or_license": "Hosted endpoint use instructions and privacy policy were found; a separate hosted-service terms document with a versioned output guarantee was not found.",
+      "privacy_and_removal": "Tool name, full query parameters, result status and processing time are logged for 90 days; full IP addresses are not stored. The service says it does not retain judgment copies and stops serving official records after source removal.",
+      "candidate_disposition": "CONDITIONAL_DISCOVERY_CANDIDATE",
+      "blocking_unknowns": [
+        "VERSION_PINNED_OUTPUT_SCHEMA",
+        "NUMERIC_RATE_LIMIT",
+        "PRODUCTION_SLA",
+        "HOSTED_SERVICE_TERMS_VERSION",
+        "CHANGE_NOTIFICATION_PROCESS"
+      ],
+      "evidence_urls": [
+        "https://legaltech.org.tw/tools/taiwan-law-mcp",
+        "https://legaltech.org.tw/privacy"
+      ]
+    },
+    {
+      "provider_id": "tlr_hosted",
+      "operator": "Legal Detective / Dr.Legal",
+      "service_kind": "hosted_mcp_and_rest_retrieval",
+      "endpoint": "https://tlr.dr-legal.com.tw/mcp",
+      "endpoint_status": "DOCUMENTED",
+      "response_contract_status": "DOCUMENTED_PARTIAL",
+      "response_contract": [
+        "allowed_citations",
+        "judgments",
+        "unread_candidates",
+        "verification_instructions",
+        "result_token",
+        "case_history",
+        "hit_excerpt"
+      ],
+      "authentication": "Remote MCP documents OAuth dynamic registration. Public REST is described as no-key, with optional enterprise API keys.",
+      "rate_or_availability": "Terms say rate limits are published in API responses; no fixed numeric limit or availability SLA was found in the reviewed documents.",
+      "terms_or_license": "Hosted service terms permit individual, internal-business, research and professional use. Resale, corpus mirroring and training or fine-tuning on output require a separate agreement or are prohibited as stated.",
+      "privacy_and_removal": "The provider may log query text, timestamps, IP-derived metadata, result counts, connector identity and user agent. A retention period was not found in the reviewed documents.",
+      "candidate_disposition": "CONDITIONAL_CITATION_RETRIEVAL_CANDIDATE",
+      "blocking_unknowns": [
+        "LOG_RETENTION_PERIOD",
+        "NUMERIC_RATE_LIMIT_BEFORE_CALL",
+        "PRODUCTION_SLA",
+        "VERSION_PINNING_AND_CHANGE_NOTIFICATION",
+        "OFFICIAL_REMOVAL_EVENT_CONTRACT"
+      ],
+      "evidence_urls": [
+        "https://github.com/aa0101181514/tw-legal-rag/blob/main/README.md",
+        "https://github.com/aa0101181514/tw-legal-rag/blob/main/docs/mcp-anchor.zh.md",
+        "https://github.com/aa0101181514/tw-legal-rag/blob/main/TERMS.md"
+      ]
+    },
+    {
+      "provider_id": "mcp_taiwan_legal_db_local",
+      "operator": "LawChat OSS",
+      "service_kind": "self_hosted_local_mcp_scraper",
+      "endpoint": null,
+      "endpoint_status": "LOCAL_PROCESS_ONLY",
+      "response_contract_status": "SOURCE_INSPECTABLE_NOT_VERSION_PINNED_FOR_THIS_APP",
+      "response_contract": [
+        "Python tool signatures return dictionaries",
+        "search_judgments documents success, query, total_count, results, cached and timestamp",
+        "get_judgment documents case fields, full text, source URL and history"
+      ],
+      "authentication": "Local MCP process has no hosted provider authentication; upstream websites may impose their own controls.",
+      "rate_or_availability": "No centralized service SLA exists. The project describes best-effort maintenance and warns against bulk or high-frequency retrieval.",
+      "terms_or_license": "Code is MIT and the LawChat structured dataset is CC0. Users remain responsible for each upstream website's terms; centralized service deployment shifts responsibility to the builder.",
+      "privacy_and_removal": "Requests originate from the user's computer. Some upstream public records can contain personal data; the tool does not add redaction. Local cache, cookies and browser fallback require a separate security review.",
+      "candidate_disposition": "SELF_HOST_EVALUATION_ONLY_NOT_BROWSER_DIRECT",
+      "blocking_unknowns": [
+        "APPROVED_RELEASE_PIN",
+        "UPSTREAM_AUTOMATION_ACCEPTANCE",
+        "LOCAL_CACHE_AND_COOKIE_LIFECYCLE",
+        "BROWSER_ONLY_DEPLOYMENT_COMPATIBILITY",
+        "SOURCE_CHANGE_MONITORING_OWNER"
+      ],
+      "evidence_urls": [
+        "https://github.com/lawchat-oss/mcp-taiwan-legal-db",
+        "https://github.com/lawchat-oss/mcp-taiwan-legal-db/blob/main/LICENSE",
+        "https://github.com/lawchat-oss/mcp-taiwan-legal-db/blob/main/DATA_LICENSE",
+        "https://github.com/lawchat-oss/mcp-taiwan-legal-db/blob/main/SOURCES.md",
+        "https://raw.githubusercontent.com/lawchat-oss/mcp-taiwan-legal-db/main/mcp_server/server.py"
+      ]
+    }
+  ],
+  "review_findings": [
+    {
+      "label": "FACT",
+      "finding": "The five candidates are not interchangeable: one is an official authenticated REST feed, one is a public search UI, two are hosted MCP services, and one is a local scraper-backed MCP process."
+    },
+    {
+      "label": "FACT",
+      "finding": "No reviewed candidate has all endpoint, immutable output schema, authentication, numeric rate, availability SLA, privacy retention and removal evidence needed for unattended production use."
+    },
+    {
+      "label": "INFERENCE",
+      "finding": "A later design should separate discovery/search from official-document verification and must not use PSUE HTML as an undocumented API."
+    },
+    {
+      "label": "UNKNOWN",
+      "finding": "The system owner has not selected a provider, accepted its terms, assigned credential ownership or approved failure and change-management rules."
+    }
+  ],
+  "minimum_conditions_before_approval": [
+    "Select one discovery provider and one official verification path instead of treating all sources as fallbacks with equivalent authority.",
+    "Freeze the exact tool or REST request and response schema with contract fixtures before runtime code is written.",
+    "Approve query allowlists that exclude case narrative, names, addresses, identifiers and case numbers unless an official-source workflow expressly requires them.",
+    "Record authentication owner, secret storage, rate handling, timeout, retry, circuit-breaker and source-removal behavior.",
+    "Obtain HG-LR-02 privacy and security approval before any hosted provider receives a query.",
+    "Keep results as source evidence and candidate-analysis input with HUMAN_REVIEW_REQUIRED, never as a legal conclusion."
+  ],
+  "claims_not_made": [
+    "HG_LR_01_APPROVED",
+    "PROVIDER_SELECTED",
+    "PROVIDER_PRODUCTION_READY",
+    "LIVE_SCHEMA_VERIFIED",
+    "LEGAL_COMPLETENESS_APPROVED",
+    "RUNTIME_CONNECTION_AUTHORIZED",
+    "DEPLOYMENT_AUTHORIZED"
+  ]
+}

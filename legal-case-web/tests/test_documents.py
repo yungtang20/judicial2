@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import io
 import zipfile
 
@@ -68,7 +70,7 @@ def test_brief_has_conditional_case_numbers_and_short_summary():
     assert "證明單案號" in text
     assert "165案號" in text
     assert "婦幼案號" not in text
-    assert len(case["brief_summary"]) <= 100
+    assert len(case["brief_summary"]) <= 500
 
 
 def test_real_local_renderer_verifies_page_limit():
@@ -76,3 +78,76 @@ def test_real_local_renderer_verifies_page_limit():
     data, pages = checked_interview_docx(case, "victim")
     assert data.startswith(b"PK")
     assert 1 <= pages <= 8
+
+
+def test_interview_completeness_validates_case_and_content():
+    from app.document_validation import validate_interview_completeness
+    from tests.helpers import BANK, intake
+    from app.workflow import create_case
+    case = completed_case()
+    assert validate_interview_completeness(case, "victim") == []
+    # 未完成 Gate 之案件應報缺失
+    fresh = create_case(intake(), BANK)
+    problems = validate_interview_completeness(fresh, "victim")
+    assert problems and "尚未完成" in problems[0]
+
+
+def test_brief_completeness_separate_from_interview():
+    from app.document_validation import validate_brief_completeness
+    case = completed_case(offense="fraud")
+    problems = validate_brief_completeness(case, "victim")
+    assert problems == []
+    # 逼出長度上限
+    from app.rules import concise_summary
+    case["brief_summary"] = concise_summary("字" * 500)
+    assert len(case["brief_summary"]) == 500
+
+
+def test_docx_structure_detects_invalid_bytes():
+    from app.document_validation import validate_docx_structure
+    assert validate_docx_structure(b"not a zip") != []
+    assert validate_docx_structure(b"PK\x03\x04-empty") != []
+
+
+def test_document_output_dispatch():
+    from app.document_validation import validate_document_output
+    case = completed_case()
+    assert validate_document_output(case, "victim", "interview") == []
+    assert validate_document_output(case, "victim", "brief") == []
+
+def test_document_validation_blocks_when_required_numbers_missing():
+    from app.document_validation import validate_interview_completeness
+    case = completed_case()
+    # 移除證明單案號 → 應阻擋
+    case["case_numbers"]["proof"] = ""
+    problems = validate_interview_completeness(case, "victim")
+    assert any("缺少必要案號" in p for p in problems)
+
+
+def test_document_validation_blocks_when_answer_missing():
+    from app.document_validation import validate_interview_completeness
+    case = completed_case()
+    interview = case["interviews"]["victim:default"]
+    interview["questions"][0]["answer"] = ""
+    problems = validate_interview_completeness(case, "victim")
+    assert any("問句未作答" in p for p in problems)
+
+
+def test_document_validation_blocks_suspect_without_session():
+    from app.document_validation import validate_interview_completeness
+    case = completed_case("suspect")
+    case["interview_sessions"]["suspect:default"]["start_time"] = ""
+    problems = validate_interview_completeness(case, "suspect")
+    assert any("詢問起訖" in p for p in problems)
+
+def test_interview_header_does_not_contain_candidate_marker():
+    """F37：offense name 含「（候選）」會寫進筆錄告知 header（你涉嫌　加重竊盜（候選）　案）。
+    候選狀態由 status/notice 傳達，不得進入罪名文字。"""
+    from app.company_templates import notice_lines
+    import json
+    bank = json.loads((Path(__file__).resolve().parents[1] / "data" / "question_bank.json").read_text(encoding="utf-8"))
+    for offense in bank["offenses"]:
+        assert "（候選）" not in offense["name"], f"{offense['id']} 罪名含候選標記"
+    # 渲染驗證
+    header = notice_lines("suspect", "加重竊盜")[0]
+    assert "（候選）" not in header

@@ -3,9 +3,9 @@
   "usage": "唯讀來源基準；原始檔未由新系統修改",
   "sources": [
     {"path":"../../新套表.xlsm","sha256":"AA9B0B9DE07E63C446068396024530B41DAF7430AF7D82C53129A4ECF39C7F60"},
-    {"path":"../../通用被害人筆錄.doc","sha256":"0ED21C08CFF93F47B3C7F7685B87733A0EF47116BE977DB30E6616C79526BABF"},
-    {"path":"../../通用涉嫌人筆錄.doc","sha256":"945BE1335EC6A48C5050EB4B66A84F88863843CA60AEA8716BE6048C59CC9096"},
-    {"path":"../../通用涉嫌人筆錄（移送）.doc","sha256":"D0D0E82FD3A5665FBCE1F476ED2BD96B721F5A2FB8B31EA7FEBB938AC981224C"},
+    {"template_id":"general-victim","path":"../../通用被害人筆錄.doc","sha256":"0ED21C08CFF93F47B3C7F7685B87733A0EF47116BE977DB30E6616C79526BABF","assigned_role":"victim","role_authority":"COMPANY_DESIGNATED","source_version":"UNKNOWN","extraction_version":"company-verbatim-2026-10-11"},
+    {"template_id":"general-suspect","path":"../../通用涉嫌人筆錄.doc","sha256":"945BE1335EC6A48C5050EB4B66A84F88863843CA60AEA8716BE6048C59CC9096","assigned_role":"suspect","role_authority":"COMPANY_DESIGNATED","source_version":"UNKNOWN","extraction_version":"company-verbatim-2026-10-11"},
+    {"template_id":"general-transfer","path":"../../通用涉嫌人筆錄（移送）.doc","sha256":"D0D0E82FD3A5665FBCE1F476ED2BD96B721F5A2FB8B31EA7FEBB938AC981224C","assigned_role":"transfer","role_authority":"COMPANY_DESIGNATED","source_version":"UNKNOWN","extraction_version":"company-verbatim-2026-10-11"},
     {"path":"../../條陳.txt","sha256":"73390941F279F653E5AFD440FEB0F6858D5CE02FC8B1008D2FEDCC1D7D58FD3D"},
     {"path":"../../家庭暴力罪筆錄範本.odt","sha256":"A54826161CEBCC30327B2A02C1B9B5B78415B25F62621660809EC5CA8390E27B","routing":"company_required"},
     {"path":"../../警詢筆錄例稿(違反保護令罪).doc","sha256":"137CD55D9542CA1380989675B103A16E9148A39D52D6B7AE697F6BD1B7F16B34","routing":"company_required"},

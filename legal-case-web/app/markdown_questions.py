@@ -11,7 +11,7 @@ CATALOG: tuple[dict[str, Any], ...] = (
     {"id": "state_security", "name": "內亂／外患／妨害國交", "file": "state-security.md", "keywords": ["內亂", "外患", "國交", "敵國", "國防秘密"]},
     {"id": "duty", "name": "瀆職", "file": "duty.md", "keywords": ["瀆職", "受賄", "行賄", "圖利", "枉法"]},
     {"id": "obstruction", "name": "妨害公務", "file": "obstruction.md", "keywords": ["妨害公務", "公務員", "查封", "封印"]},
-    {"id": "judicial_integrity", "name": "藐視國會／妨害司法公正", "file": "judicial-integrity.md", "keywords": ["藐視國會", "妨害司法", "證人報復"]},
+    {"id": "judicial_integrity", "name": "妨害司法公正", "file": "judicial-integrity.md", "keywords": ["妨害司法", "證人報復", "不法關說", "證言利益", "第172條之1", "第172條之2", "第172條之3", "172-1", "172-2", "172-3"]},
     {"id": "voting", "name": "妨害投票", "file": "voting.md", "keywords": ["投票", "選舉", "賄選", "幽靈人口"]},
     {"id": "disorder", "name": "妨害秩序", "file": "disorder.md", "keywords": ["聚眾", "妨害秩序", "煽惑", "冒充公務員"]},
     {"id": "escape", "name": "脫逃／藏匿人犯", "file": "escape-concealment.md", "keywords": ["脫逃", "藏匿人犯", "頂替", "通緝"]},
@@ -31,7 +31,7 @@ CATALOG: tuple[dict[str, Any], ...] = (
     {"id": "abortion", "name": "墮胎", "file": "abortion.md", "keywords": ["墮胎", "流產"]},
     {"id": "abandonment", "name": "遺棄", "file": "abandonment.md", "keywords": ["遺棄", "無自救力", "扶養"]},
     {"id": "liberty", "name": "妨害自由", "file": "liberty.md", "keywords": ["拘禁", "妨害自由", "強制", "侵入住宅"]},
-    {"id": "privacy", "name": "妨害秘密／性隱私", "file": "privacy.md", "keywords": ["妨害秘密", "竊錄", "竊聽", "性影像"]},
+    {"id": "privacy", "name": "妨害秘密／性隱私", "file": "privacy.md", "keywords": ["妨害秘密", "竊錄", "竊聽", "性影像", "偷拍", "側錄", "散布私密", "私密影像", "私密照片"]},
     {"id": "robbery", "name": "搶奪／強盜／海盜", "file": "robbery.md", "keywords": ["搶奪", "強盜", "海盜", "不能抗拒"]},
     {"id": "trafficking", "name": "人口販運", "file": "trafficking.md", "keywords": ["人口販運", "剝削", "強迫勞動", "債務約束"]},
     {"id": "juvenile", "name": "少年事件", "file": "juvenile.md", "keywords": ["少年事件", "未滿十八歲", "觸法少年"]},
@@ -54,7 +54,9 @@ EXISTING_FILES = {
     "computer": "computer.md",
     "sexual_harassment": "sexual-harassment.md",
     "stalking": "stalking.md",
-    "public_danger": "public-danger.md",
+    # question_bank 的 public_danger 目前只建模刑法 §185-3。廣義公共危險
+    # public-danger.md 必須等 legal-route split 完成，不能混接到酒駕 elements。
+    "public_danger": "drink-driving.md",
     "drugs": "drugs.md",
 }
 
@@ -62,6 +64,8 @@ EXISTING_FILES = {
 def merge_markdown_questions(bank: dict[str, Any], root: Path) -> dict[str, Any]:
     merged = deepcopy(bank)
     by_id = {item["id"]: item for item in merged["offenses"]}
+    # 載入順序：EXISTING_FILES 明確映射 → offense 自帶 question_file（核實法源新增者）→ CATALOG 其餘
+    seen_files: set[str] = set()
     for offense_id, filename in EXISTING_FILES.items():
         path = root / filename
         if path.is_file() and offense_id in by_id:
@@ -70,7 +74,22 @@ def merge_markdown_questions(bank: dict[str, Any], root: Path) -> dict[str, Any]
                 by_id[offense_id]["section_questions"]
             )
             by_id[offense_id]["question_source"] = filename
+            seen_files.add(offense_id)
+    # question_bank.json 內自帶 question_file 的 offense（法源核實新增）也載入 markdown 題
+    for offense_id, offense in by_id.items():
+        if offense_id in seen_files:
+            continue
+        filename = offense.get("source", {}).get("question_file") or offense.get("question_file")
+        if not filename:
+            continue
+        path = root / filename
+        if path.is_file():
+            offense["section_questions"] = read_section_questions(path)
+            offense["role_questions"] = flatten_sections(offense["section_questions"])
+            offense["question_source"] = filename
     for entry in CATALOG:
+        if entry["id"] in by_id:
+            continue  # 已在 question_bank.json（含核實法源），不得重複
         path = root / entry["file"]
         if not path.is_file():
             continue
@@ -90,7 +109,6 @@ def merge_markdown_questions(bank: dict[str, Any], root: Path) -> dict[str, Any]
             "question_source": entry["file"],
         }
         merged["offenses"].append(offense)
-    merged["library_version"] = "2026-10-11-reviewed-markdown-2"
     return merged
 
 

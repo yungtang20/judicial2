@@ -1,0 +1,126 @@
+{
+  "schema_version": "legal-retrieval-golden-replay-corpus-v1",
+  "generated_for": "OFFLINE_FIXTURE_REPLAY_ONLY",
+  "contains_case_data": false,
+  "scenarios": [
+    {
+      "scenario_id": "store_dry_run",
+      "description": "合法搜尋 fixture 預設只產生 dry-run 報告。",
+      "route_ids": ["theft_320_1_movable", "embezzlement_335_general"],
+      "observations": {"prior_lawful_custody": "UNKNOWN"},
+      "operations": [
+        {
+          "provider": "mcp_taiwan_legal_db",
+          "fixture": {
+            "success": true,
+            "results": [{"jid": "KSDM,100,簡,5635,20111130,1"}]
+          },
+          "requested_jid": null
+        }
+      ],
+      "commit": false,
+      "observed_at": "2026-10-15T12:00:00Z",
+      "expected": {
+        "result_kind": "REPORT",
+        "batch_status": "DRY_RUN",
+        "item_operations": ["STORE_METADATA"],
+        "cache_exists": false,
+        "entry_count": 0,
+        "audit_count": 0,
+        "record_count": 0,
+        "error_type": null
+      }
+    },
+    {
+      "scenario_id": "store_then_remove_commit",
+      "description": "搜尋後收到移除訊號，全批次只提交 tombstone 與去除來源後的 metadata。",
+      "route_ids": ["theft_320_1_movable", "embezzlement_335_general"],
+      "observations": {"prior_lawful_custody": "UNKNOWN"},
+      "operations": [
+        {
+          "provider": "mcp_taiwan_legal_db",
+          "fixture": {
+            "success": true,
+            "results": [{"jid": "KSDM,100,簡,5635,20111130,1"}]
+          },
+          "requested_jid": null
+        },
+        {
+          "provider": "judicial_jdoc",
+          "fixture": {"error": "synthetic removal fixture"},
+          "requested_jid": "KSDM,100,簡,5635,20111130,1"
+        }
+      ],
+      "commit": true,
+      "observed_at": "2026-10-15T12:00:00Z",
+      "expected": {
+        "result_kind": "REPORT",
+        "batch_status": "COMMITTED",
+        "item_operations": ["STORE_METADATA", "REMOVE_METADATA"],
+        "cache_exists": true,
+        "entry_count": 1,
+        "audit_count": 1,
+        "record_count": 0,
+        "error_type": null
+      }
+    },
+    {
+      "scenario_id": "provider_schema_drift",
+      "description": "provider 缺少 success 契約時整批失敗且不建立 cache。",
+      "route_ids": ["theft_320_1_movable", "embezzlement_335_general"],
+      "observations": {"prior_lawful_custody": "UNKNOWN"},
+      "operations": [
+        {
+          "provider": "mcp_taiwan_legal_db",
+          "fixture": {"results": [{"jid": "KSDM,100,簡,5635,20111130,1"}]},
+          "requested_jid": null
+        }
+      ],
+      "commit": true,
+      "observed_at": "2026-10-15T12:00:00Z",
+      "expected": {
+        "result_kind": "ERROR",
+        "batch_status": null,
+        "item_operations": [],
+        "cache_exists": false,
+        "entry_count": 0,
+        "audit_count": 0,
+        "record_count": 0,
+        "error_type": "FixtureContractError"
+      }
+    },
+    {
+      "scenario_id": "remove_then_stale_store",
+      "description": "先移除後回填舊來源時全批次失敗且不建立 cache。",
+      "route_ids": ["theft_320_1_movable", "embezzlement_335_general"],
+      "observations": {"prior_lawful_custody": "UNKNOWN"},
+      "operations": [
+        {
+          "provider": "judicial_jdoc",
+          "fixture": {"error": "synthetic removal fixture"},
+          "requested_jid": "KSDM,100,簡,5635,20111130,1"
+        },
+        {
+          "provider": "mcp_taiwan_legal_db",
+          "fixture": {
+            "success": true,
+            "results": [{"jid": "KSDM,100,簡,5635,20111130,1"}]
+          },
+          "requested_jid": null
+        }
+      ],
+      "commit": true,
+      "observed_at": "2026-10-15T12:00:00Z",
+      "expected": {
+        "result_kind": "ERROR",
+        "batch_status": null,
+        "item_operations": [],
+        "cache_exists": false,
+        "entry_count": 0,
+        "audit_count": 0,
+        "record_count": 0,
+        "error_type": "RetrievalCacheIntegrityError"
+      }
+    }
+  ]
+}

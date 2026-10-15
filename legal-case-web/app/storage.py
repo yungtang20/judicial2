@@ -56,6 +56,8 @@ class CaseStore:
             ).fetchall()
         result = []
         for row in rows:
+            damaged = False
+            has_offenses = False
             try:
                 payload = unprotect_json(row["payload"])
                 selected = set(payload.get("selected_offenses", []))
@@ -63,13 +65,15 @@ class CaseStore:
                     selected.update(interview.get("selected_offenses", []))
                 has_offenses = bool(selected)
             except Exception:
-                has_offenses = False
+                # 密文損壞：不得靜默標記為「未選罪章」（誤導承辦人）；明確標記 damaged
+                damaged = True
             result.append({
                 "case_id": row["case_id"],
                 "revision": row["revision"],
                 "state": row["state"],
                 "updated_at": row["updated_at"],
                 "has_offenses": has_offenses,
+                "damaged": damaged,
             })
         return result
 

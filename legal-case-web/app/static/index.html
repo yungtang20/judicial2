@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="session-token" content="__SESSION_TOKEN__">
+  <link rel="icon" href="data:,">
   <title>法律案件工作台</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
@@ -28,26 +29,10 @@
         <h2 id="home-title">先把事實說清楚</h2>
       </div>
       <form id="intake-form" class="intake-card">
-        <div class="field-row">
-          <label for="event-kind">時間類型</label>
-          <select id="event-kind" name="event_kind">
-            <option value="發生">發生</option>
-            <option value="破獲">破獲</option>
-            <option value="查獲">查獲</option>
-          </select>
-        </div>
-        <div class="field-row">
-          <label for="event-time">發生／破獲時間</label>
-          <input id="event-time" name="event_time" type="datetime-local" required>
-        </div>
-        <div class="field-row">
-          <label for="location">發生／破獲地點</label>
-          <input id="location" name="location" autocomplete="off" maxlength="500" required>
-        </div>
         <div class="field-stack">
           <label for="summary">案情摘要</label>
-          <textarea id="summary" name="summary" rows="7" maxlength="20000" required aria-describedby="summary-hint"></textarea>
-          <small id="summary-hint">只寫已知事實；不確定的內容可明確寫 UNKNOWN。</small>
+          <textarea id="summary" name="summary" rows="10" maxlength="20000" required aria-describedby="summary-hint" placeholder="請在摘要中寫明：&#10;發生時間：民國115年10月15日10時許&#10;發生地點：臺北市○○區○○路○號&#10;案情經過：請依時間順序寫明已知事實&#10;&#10;破獲或查獲案件，請改寫成「破獲時間：」「破獲地點：」或「查獲時間：」「查獲地點：」。"></textarea>
+          <small id="summary-hint">請使用「發生時間：」「發生地點：」、「破獲時間：」「破獲地點：」或「查獲時間：」「查獲地點：」其中一組明確標籤；不知道的內容請填 UNKNOWN。系統不會從一般敘述自行猜測時間或地點。</small>
         </div>
         <button class="primary" type="submit">建立案件並進入 Gate 1</button>
         <details class="advanced">
@@ -83,9 +68,14 @@
         <div><p class="eyebrow">ACTIVE CASE</p><h2 id="case-heading">案件</h2></div>
         <button id="new-case" class="secondary" type="button">新增案件</button>
       </div>
+      <div id="case-warnings" class="case-warnings" role="alert" hidden></div>
       <section id="gate1-panel" class="panel" aria-labelledby="gate1-title">
         <p class="gate-label">GATE 1</p><h3 id="gate1-title">人、事、時、地、物與因果</h3>
         <p>每行一項。系統初始內容只是一份待確認草稿。</p>
+        <div id="structured-facts" class="structured-facts" hidden>
+          <p class="fact-label">結構化事實（含溯源；承辦人確認後始得核准）</p>
+          <table id="facts-table"><thead><tr><th>ID</th><th>內容（原文摘錄）</th><th>狀態</th></tr></thead><tbody></tbody></table>
+        </div>
         <form id="gate1-form" class="fact-grid">
           <label>人<textarea name="people" rows="4"></textarea></label>
           <label>事<textarea name="events" rows="4"></textarea></label>
@@ -120,6 +110,13 @@
               <button id="ai-analyze" class="secondary" type="button">AI 分析候選罪章</button>
             </div>
             <fieldset><legend>候選罪章（建議先選 1 個主要罪章，再勾選需區辨的關聯罪章）</legend><div id="offense-list" class="choice-grid"></div></fieldset>
+            <fieldset>
+              <legend>法律路由（可複選，也可確認目前資料不足而暫不選）</legend>
+              <div id="legal-route-list" class="choice-grid"></div>
+              <p class="muted">法律路由與候選罪章分開保存。目前問句仍來自上層罪章題包，不代表已完成路由專屬問句覆蓋。</p>
+              <label class="choice"><input id="route-review-confirmed" type="checkbox"><span>我已人工檢視上述法律路由</span></label>
+            </fieldset>
+            <div id="alternative-route-list" class="warning" hidden></div>
             <div class="actions">
               <button class="primary" type="submit">建立問句 → 進入年籍</button>
             </div>
