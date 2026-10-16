@@ -323,9 +323,12 @@ def candidate_offenses(
             keyword for keyword in offense["keywords"]
             if keyword.casefold() in lowered and not _keyword_negated(keyword, summary)
         ]
+        # 「電腦」可能只是地點或設備描述。單獨命中時不建立妨害電腦使用候選，
+        # 仍保留「登入、刪除資料、駭客」等具體行為關鍵字供人工檢視。
+        if offense["id"] == "computer" and hits == ["電腦"]:
+            hits = []
         if hits:
             element_labels, candidate_status, element_status = candidate_element_state(offense)
-            matched_ids.add(offense["id"])
             matches.append({
                 "id": offense["id"],
                 "candidate_id": f"candidate:{offense['id']}",
@@ -350,15 +353,19 @@ def candidate_offenses(
                 "competition_analysis": "NOT_ASSESSED",
                 "prohibited_conclusions": ["犯罪成立", "故意成立", "因果關係成立", "競合成立"],
                 "version": offense.get("source", {}).get("status", "UNKNOWN"),
+                "selection_origin": "keyword_hint",
+                "machine_effects": [],
             })
-    property_taking = _property_taking_values(summary) is not None
+            matched_ids.add(offense["id"])
+    # 關聯罪章只作人工區辨提示，不會因為出現在 candidates 就自動進入
+    # question builder。正式問句仍須經 Gate 2 明確選取 parent + route。
     related_ids = {
         related
         for offense_id in matched_ids
         for related in by_id[offense_id].get("related", [])
         if related not in matched_ids and related in by_id
     }
-    if property_taking:
+    if _property_taking_values(summary) is not None:
         related_ids.discard("aggravated_theft")
         related_ids.update(PROPERTY_ROUTE_IDS - matched_ids)
     for offense_id in sorted(related_ids):
@@ -370,7 +377,7 @@ def candidate_offenses(
             "name": offense["name"],
             "matched_terms": [],
             "status": candidate_status,
-            "notice": "區辨用關聯候選，不代表犯罪成立。",
+            "notice": "區辨用關聯候選，不代表犯罪成立；需人工另行選取。",
             "inclusion_reason": "由已命中的方向帶入作為競爭假設，只供區辨，不是事實支持。",
             "reservation_reason": "僅為關聯方向，沒有直接事實支持",
             "supporting_fact_refs": [],
@@ -386,8 +393,10 @@ def candidate_offenses(
             "distinguishing_question_ids": [item["id"] for item in offense.get("role_questions", {}).get("victim", []) if "-D-" in item["id"]][:5] or ["HUMAN-DISTINGUISHING-QUESTION-REQUIRED"],
             "required_evidence_question_ids": [item["id"] for item in offense.get("role_questions", {}).get("victim", []) if "-R-" in item["id"]][:5] or ["HUMAN-EVIDENCE-REVIEW-REQUIRED"],
             "competition_analysis": "NOT_ASSESSED",
-                "prohibited_conclusions": ["犯罪成立", "故意成立", "因果關係成立", "競合成立"],
+            "prohibited_conclusions": ["犯罪成立", "故意成立", "因果關係成立", "競合成立"],
             "version": offense.get("source", {}).get("status", "UNKNOWN"),
+            "selection_origin": "related_hint",
+            "machine_effects": [],
         })
     property_unknowns = {
         item.get("fact_key")
@@ -472,7 +481,9 @@ def build_questions(
         build_property_taking_questions,
     )
 
-    candidate_ids = {item.get("id") for item in (candidates or [])}
+    # 候選只是 Gate 2 hint。只有已核准的 parent offense 才能影響問句
+    # materialization，避免未選方向的區分題或 machine effect 滲入正式筆錄。
+    candidate_ids = set(offense_ids)
     route_ids = list(dict.fromkeys(legal_route_ids or []))
     focused_questions = build_property_taking_questions(
         role,
@@ -491,7 +502,7 @@ def build_questions(
         if offense is None:
             raise RuleError(f"未知罪章：{offense_id}")
         # 1) 公司套表罪章題（新套表.xlsm 各罪章欄）— 不受即時預算限制（公司核定題）
-        for question in xlsm_questions_for(questions, role, offense_id):
+        for question in xlsm_questions_for(questions, role, offense_id, route_ids):
             if question["text"] in seen:
                 continue
             questions.append(question)

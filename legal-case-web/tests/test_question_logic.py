@@ -545,7 +545,7 @@ def test_property_questions_are_role_specific_with_stable_fact_targets():
         by_role[role] = focused
         assert {q["meta"]["fact_target"] for q in focused} == {
             "original_possession", "consent", "prior_lawful_possession", "force_or_threat",
-            "return_agreement", "stated_use_or_return_plan", "evidence",
+            "stated_use_or_return_plan", "evidence",
         }
         assert all(q["meta"]["legal_targets"] for q in focused)
         assert all(
@@ -665,7 +665,7 @@ def test_exact_theft_route_materializes_approved_pack_and_only_replaces_allowlis
         if q.get("meta", {}).get("mapping_version") == "property-taking-v1"
     }
     assert legacy == {
-        "prior_lawful_possession", "return_agreement",
+        "prior_lawful_possession",
         "stated_use_or_return_plan", "evidence",
     }
     assert {q["kind"] for q in questions if q["kind"] in {"company", "common"}} == {"company", "common"}

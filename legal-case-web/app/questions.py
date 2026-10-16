@@ -472,6 +472,17 @@ def enrich_question_metadata(
             meta["trigger_condition"] = f"candidate:{offense_id}:present"
             meta["purpose"] = "確認加重情節"
 
+        elif kind == "company_offense":
+            # 公司固定題逐字保留，但回答預設只作筆錄內容，不直接改變
+            # fact、candidate 或 legal route。只有後續人工核准的 answer_map
+            # 才能建立 machine effect。
+            meta["legal_targets"] = [offense_id] if offense_id else []
+            meta["trigger_condition"] = f"candidate:{offense_id}:present"
+            meta["purpose"] = "公司核定固定題（敘事記錄）"
+            meta["legacy_fixed"] = True
+            meta["machine_effects"] = []
+            meta.setdefault("answer_mode", "narrative_only")
+
         else:
             # company/common 通用程序題：不屬於單一法律路由，跨所有候選共通
             meta["legal_targets"] = ["ALL_ROUTES"]
@@ -702,7 +713,7 @@ def reevaluate_candidates_from_answers(
         if "negative" in categories:
             candidate.setdefault("contradictory_answers", [])
             for qid, _, text in entries:
-                if classify_answer(text) == "negative":
+                if text and classify_answer(text) == "negative":
                     entry = {"element": element_label, "question_id": qid}
                     if entry not in candidate["contradictory_answers"]:
                         candidate["contradictory_answers"].append(entry)

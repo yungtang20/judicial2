@@ -1,6 +1,6 @@
 # 法律案件工作台
 
-本專案是獨立、本機優先的 Gate 1–5 工作台。它不會復原父目錄中已刪除的舊系統檔案，也不會把案件內容送往外部 AI。
+本專案是獨立、本機優先的 Gate 1–5 工作台。它不會復原父目錄中已刪除的舊系統檔案。Gate 1 固定在本機處理，Gate 2 外部 AI 預設關閉，只有明確啟用並由操作人員逐次同意才會送出摘要。
 
 ## 啟動
 
@@ -18,7 +18,7 @@ py -3 -m pip install -r requirements.txt
 
 1. 首頁只輸入案情摘要；請在摘要內以「發生／查獲時間：」「發生／查獲地點：」「案情經過：」寫明資料（進階欄位收合）。未明示標籤時，時間或地點會保留為 `UNKNOWN`，不自行猜測。
 2. Gate 1 先從自由敘述抽取中性事實。沒有證據支持的原持有、同意、保管、取得手段、返還約定及主觀意圖維持 `UNKNOWN`。
-3. Gate 2 以規則或 AI（api.iamhc.cn，OpenAI 相容）提出零個或多個候選罪章；候選只代表待區分方向，不代表犯罪成立。
+3. Gate 2 以規則或經明示同意的 AI（api.iamhc.cn，OpenAI 相容）提出零個或多個候選罪章；候選只代表待區分方向，不代表犯罪成立。關聯候選只供人工區辨，不會自動進入問句。
 4. 承辦人分別確認候選罪章與 child legal route。兩者原子保存；目前 child route 僅作為法律脈絡，問句覆蓋狀態維持 `PARENT_PACK_ONLY / NONE`。
 5. 系統依角色及候選方向選出核心問句與區分問句。每題同時連結 `fact_target` 及 `legal_targets`。
 6. 回答的自由文字只保存為陳述。只有操作人員明確選擇的 `YES`、`NO` 或 `UNKNOWN` 事實狀態會觸發候選重評估；衝突資訊維持 `NEED_REVIEW`。
@@ -46,6 +46,9 @@ py -3 -m pip install -r requirements.txt
 - 《警察犯罪偵查手冊》現行公開全文仍為 `UNKNOWN`，因此題庫不可宣稱已依該手冊逐條核准。
 
 ## 外部 AI 邊界
+
+- 必須同時設定 ALLOW_EXTERNAL_AI=true 與 IAMHC_API_KEY，且在 Gate 2 勾選明示同意後，才可送出案情摘要。
+- Gate 1 永遠使用本機規則切分，不因 API key 存在而外送。
 
 - 僅 Gate 2 候選罪章分析可送出案情摘要（上限 4000 字）至 `IAMHC_BASE_URL`（預設 https://api.iamhc.cn/v1）。
 - 金鑰存於 `legal-case-web/.env`（`IAMHC_API_KEY`），已列入 `.gitignore`。

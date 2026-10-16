@@ -382,6 +382,14 @@ function renderCurrentQuestion(caseData) {
   const meta = document.createElement("div");
   meta.className = "meta";
   meta.textContent = kindMeta(question);
+  if (question.meta?.legacy_fixed) {
+    const legacy = document.createElement("div");
+    legacy.className = "meta warning-inline";
+    legacy.textContent = question.meta.legacy_compound
+      ? "公司核定固定題：複合問句，逐字詢問；回答只作敘事記錄，不自動更新事實或路由。"
+      : "公司核定固定題：逐字保留；回答只作敘事記錄，不自動更新事實或路由。";
+    meta.append(legacy);
+  }
   const method = document.createElement("div");
   method.className = "meta question-method";
   method.textContent = questionMethod(question);
@@ -673,14 +681,26 @@ $("#ai-analyze").addEventListener("click", async () => {
   button.disabled = true;
   button.textContent = "AI 分析中…（約 30 秒）";
   try {
-    await action("analyze_candidates", {});
+    await action("analyze_candidates", { external_ai_consent: true });
     announce("AI 分析完成。候選僅供人工選擇，不代表犯罪成立。 ");
   } catch (error) { announce(error.message, true); }
   finally {
-    button.disabled = false;
     button.textContent = "AI 分析候選罪章";
+    refreshAiConsent();
   }
 });
+
+function refreshAiConsent() {
+  const consent = $("#ai-consent");
+  const button = $("#ai-analyze");
+  const enabled = Boolean(state.bank?.external_ai_enabled);
+  button.disabled = !enabled || !consent.checked;
+  $("#ai-consent-status").textContent = enabled
+    ? (consent.checked ? "已明確同意。本次只送出案情摘要，請確認摘要不含不必要的個資。" : "服務已設定，但仍須勾選明示同意後才能送出摘要。")
+    : "外部 AI 尚未啟用。僅設定 API key 不會自動外送資料。";
+}
+
+$("#ai-consent").addEventListener("change", refreshAiConsent);
 
 $("#offense-form").addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -796,8 +816,9 @@ $("#new-case").addEventListener("click", () => {
 async function initialize() {
   try {
     state.bank = await jsonApi("/api/question-bank");
+    refreshAiConsent();
     await refreshCases();
-    announce("準備就緒。案件內容僅在 AI 罪章候選時送出摘要；問答內容不外傳。 ");
+    announce("準備就緒。Gate 1 只在本機處理；外部 AI 必須由承辦人明示同意後才可分析候選。 ");
   } catch (error) { announce(error.message, true); }
 }
 

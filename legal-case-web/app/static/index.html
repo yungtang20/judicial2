@@ -107,8 +107,10 @@
           <form id="offense-form">
             <div class="field-stack"><label for="question-role">本次筆錄身分</label><select id="question-role" name="role"><option value="victim">被害人</option><option value="suspect">涉嫌人（有被害人）</option><option value="transfer">涉嫌人（移送／無被害人）</option></select></div>
             <div class="actions">
-              <button id="ai-analyze" class="secondary" type="button">AI 分析候選罪章</button>
+              <button id="ai-analyze" class="secondary" type="button" disabled>AI 分析候選罪章</button>
             </div>
+            <label class="choice ai-consent-row"><input id="ai-consent" type="checkbox"><span>我明確同意將本案<strong>案情摘要原文（最多 4,000 字）</strong>送至外部 AI，僅取得候選方向。請先移除不必要的個資。外部結果不會自動選罪章，也不代表犯罪成立。</span></label>
+            <p id="ai-consent-status" class="muted">外部 AI 尚未啟用。僅設定 API key 不會自動外送資料。</p>
             <fieldset><legend>候選罪章（建議先選 1 個主要罪章，再勾選需區辨的關聯罪章）</legend><div id="offense-list" class="choice-grid"></div></fieldset>
             <fieldset>
               <legend>法律路由（可複選，也可確認目前資料不足而暫不選）</legend>

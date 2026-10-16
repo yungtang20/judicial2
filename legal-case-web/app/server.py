@@ -20,6 +20,7 @@ from .config import (
     STATIC_DIR,
 )
 from .documents import DocumentError, brief_docx, brief_text, checked_interview_docx
+from .ai import ai_configured, external_ai_enabled
 from .rules import RuleError, load_bank
 from .storage import CaseNotFound, CaseStore, RevisionConflict
 from .workflow import WorkflowError, apply_action, create_case, public_case, validate_case_id
@@ -154,7 +155,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self._guard(token=path.startswith("/api/") and path != "/api/health"):
             return
         if path == "/api/health":
-            self._json(HTTPStatus.OK, {"status": "ok", "mode": "LOCAL_ONLY", "external_ai": False})
+            self._json(HTTPStatus.OK, {"status": "ok", "mode": "LOCAL_ONLY", "external_ai": ai_configured(), "external_ai_enabled": external_ai_enabled()})
             return
         if path == "/api/cases":
             self._json(HTTPStatus.OK, {"cases": STORE.list_cases_meta()})
@@ -164,6 +165,7 @@ class Handler(BaseHTTPRequestHandler):
                 "library_version": BANK["library_version"],
                 "review_status": BANK["review_status"],
                 "legal_route_crosswalk_version": BANK["legal_route_crosswalk_version"],
+                "external_ai_enabled": external_ai_enabled(),
                 "offenses": [{
                     "id": item["id"],
                     "name": item["name"],

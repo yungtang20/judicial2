@@ -27,7 +27,17 @@ def test_candidate_engine_is_deterministic_and_can_return_zero():
     assert first[0]["unknown_elements"]
     theft = candidate_offenses("有人偷走物品", BANK)
     assert {item["id"] for item in theft} >= {"theft", "embezzlement", "robbery"}
-    assert "aggravated_theft" not in {item["id"] for item in theft}
+
+
+def test_computer_candidate_requires_specific_conduct():
+    assert not any(
+        item["id"] == "computer"
+        for item in candidate_offenses("醫院電腦辦公區，沒有未授權操作或破壞", BANK)
+    )
+    assert any(
+        item["id"] == "computer"
+        for item in candidate_offenses("帳號遭盜用，密碼被他人變更", BANK)
+    )
 
 
 def test_phone_taken_extracts_neutral_facts_without_legal_conclusion():

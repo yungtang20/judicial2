@@ -145,7 +145,7 @@ def test_ai_analyze_updates_candidates_and_marks_source():
     try:
         case = completed_case()
         case = apply_action(case, "start_interview", {"role": "victim"}, BANK)
-        case = apply_action(case, "analyze_candidates", {}, BANK)
+        case = apply_action(case, "analyze_candidates", {"external_ai_consent": True}, BANK)
         assert case["candidates_source"] == "ai+rules"
         # AI 與規則來源分標（spec §5.6 不得混為同一來源）
         fraud_candidate = [c for c in case["candidates"] if c["id"] == "fraud"][0]
@@ -154,6 +154,21 @@ def test_ai_analyze_updates_candidates_and_marks_source():
         assert "AI 候選" in case["candidates"][0]["notice"]
     finally:
         wf.analyze_candidates = original
+
+
+def test_ai_analyze_requires_explicit_consent():
+    case = completed_case()
+    case = apply_action(case, "start_interview", {"role": "victim"}, BANK)
+    import pytest
+    with pytest.raises(Exception, match="明確同意"):
+        apply_action(case, "analyze_candidates", {}, BANK)
+
+
+def test_create_case_gate1_never_calls_external_ai(monkeypatch):
+    from app import ai as ai_module
+    monkeypatch.setattr(ai_module, "segment_facts", lambda summary: (_ for _ in ()).throw(AssertionError("Gate 1 外送")))
+    case = create_case(intake(), BANK)
+    assert case["gate1"]["segmentation_source"] == "rules"
 
 
 def test_ai_only_candidate_keeps_crosswalk_fail_closed_metadata():
@@ -166,7 +181,7 @@ def test_ai_only_candidate_keeps_crosswalk_fail_closed_metadata():
         case = completed_case()
         case = apply_action(case, "start_interview", {"role": "victim"}, BANK)
         case["intake"]["summary"] = "摘要沒有規則關鍵詞"
-        case = apply_action(case, "analyze_candidates", {}, BANK)
+        case = apply_action(case, "analyze_candidates", {"external_ai_consent": True}, BANK)
         candidate = next(item for item in case["candidates"] if item["id"] == "opium")
         assert candidate["candidate_sources"] == ["ai"]
         assert candidate["status"] == "NEED_LEGAL_ROUTE_MAPPING"

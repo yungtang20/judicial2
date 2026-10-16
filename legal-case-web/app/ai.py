@@ -40,7 +40,19 @@ def _load_env() -> dict[str, str]:
     return values
 
 
+def _truthy(value: str | None) -> bool:
+    return str(value or "").strip().casefold() in {"1", "true", "yes", "on"}
+
+
+def external_ai_enabled() -> bool:
+    """外部 AI 必須由承辦人明確啟用，API key 本身不構成授權。"""
+    env = _load_env()
+    return _truthy(env.get("ALLOW_EXTERNAL_AI") or os.environ.get("ALLOW_EXTERNAL_AI"))
+
+
 def _settings() -> tuple[str, str, str] | None:
+    if not external_ai_enabled():
+        return None
     env = _load_env()
     api_key = env.get("IAMHC_API_KEY") or os.environ.get("IAMHC_API_KEY", "")
     if not api_key:
