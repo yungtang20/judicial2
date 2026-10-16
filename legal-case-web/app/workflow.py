@@ -166,7 +166,9 @@ def create_case(raw: dict[str, Any], bank: dict[str, Any]) -> dict[str, Any]:
     }
     # 在任何 AI／規則分析前先套用寫入邊界，避免超長內容被送往下游後才失敗。
     intake["summary"] = concise_summary(intake["summary"], MAX_SUMMARY_LENGTH)
-    gate1 = analyze_gate1(intake)
+    # Gate 1 只在本機執行 deterministic segmentation。外部 AI 僅能由 Gate 2
+    # 的明示操作觸發，避免僅因環境存在 API key 就外送案情摘要。
+    gate1 = analyze_gate1(intake, use_ai=False)
     candidates = candidate_offenses(intake["summary"], bank, gate1)
     acts = extract_acts(gate1)
     link_acts_to_candidates(acts, candidates)
@@ -659,13 +661,14 @@ def apply_action(
     elif action == "analyze_candidates":
         if case["state"] != "GATE2_QA":
             raise WorkflowError("目前不可重新分析候選罪章")
+        if payload.get("external_ai_consent") is not True:
+            raise WorkflowError("外部 AI 分析必須由承辦人明確同意")
         summary = payload.get("summary", case["intake"]["summary"])
         if not isinstance(summary, str) or not summary.strip():
             raise WorkflowError("案情摘要不得空白")
         result = analyze_candidates(
             _clean_text(summary, "案情摘要")[:4000],
             [{"id": item["id"], "name": item["name"]} for item in bank["offenses"]],
-            facts=case.get("gate1", {}).get("facts", []),
         )
         if result is None:
             raise WorkflowError("AI 分析無法使用（未設定金鑰或服務失敗）；請改用規則候選或人工選擇")

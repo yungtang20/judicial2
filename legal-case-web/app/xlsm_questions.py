@@ -101,7 +101,12 @@ def load_xlsm_questions(path: Path | None = None) -> dict[str, list[dict[str, An
     return result
 
 
-def xlsm_questions_for(bank_questions: list[dict[str, Any]], role: str, offense_id: str) -> list[dict[str, Any]]:
+def xlsm_questions_for(
+    bank_questions: list[dict[str, Any]],
+    role: str,
+    offense_id: str,
+    legal_route_ids: list[str] | None = None,
+) -> list[dict[str, Any]]:
     """取得指定罪章之公司套表題（kind=company_offense）。"""
     cache = getattr(load_xlsm_questions, "_cache", None)
     if cache is None:
@@ -112,6 +117,13 @@ def xlsm_questions_for(bank_questions: list[dict[str, Any]], role: str, offense_
     for index, item in enumerate(cache.get(role, []), start=1):
         if item["offense_id"] != offense_id:
             continue
+        selected_routes = set(legal_route_ids or [])
+        if offense_id == "injury" and "injury_277_general" in selected_routes:
+            if "過失" in item["offense_name"]:
+                continue
+        if offense_id == "injury" and "injury_284_negligent" in selected_routes:
+            if "過失" not in item["offense_name"] and item["offense_name"] != "傷害":
+                continue
         if item["text"] in seen:
             continue
         questions.append({
@@ -125,6 +137,13 @@ def xlsm_questions_for(bank_questions: list[dict[str, Any]], role: str, offense_
             "source": {"label": "新套表.xlsm 公司核定套表題", "status": "COMPANY_VERBATIM"},
             "status": "PENDING",
             "answer": "",
+            "meta": {
+                "legacy_fixed": True,
+                "legacy_compound": item["text"].count("？") + item["text"].count("?") > 1,
+                "answer_mode": "narrative_only",
+                "machine_effects": [],
+                "source_cell": {"row": item.get("row", 0), "col": item.get("col", "")},
+            },
         })
         seen.add(item["text"])
     return questions

@@ -22,6 +22,15 @@ def test_analyze_returns_none_without_key(monkeypatch):
     assert analyze_candidates("摘要", OFFENSES) is None
 
 
+def test_external_ai_requires_explicit_enable_flag(monkeypatch):
+    monkeypatch.setenv("IAMHC_API_KEY", "sk-test")
+    monkeypatch.delenv("ALLOW_EXTERNAL_AI", raising=False)
+    assert ai_module.external_ai_enabled() is False
+    assert ai_module.ai_configured() is False
+    monkeypatch.setenv("ALLOW_EXTERNAL_AI", "true")
+    assert ai_module.external_ai_enabled() is True
+
+
 def test_analyze_parses_ai_response(monkeypatch):
     _fake_settings(monkeypatch)
 
