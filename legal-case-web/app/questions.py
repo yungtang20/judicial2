@@ -71,20 +71,20 @@ PROPERTY_FACT_TARGETS = {
 
 PROPERTY_ROLE_QUESTIONS = {
     "victim": {
-        "original_possession": "手機被拿走前，是否由你實際持有或保管？",
-        "consent": "你是否曾同意對方拿走、使用或保管手機？",
-        "prior_lawful_possession": "對方在本次處置前，是否因借用、保管或業務關係合法持有手機？",
-        "force_or_threat": "對方取得手機時，是否使用拉扯、暴力或威脅？",
-        "return_agreement": "對方取得手機時，是否有約定歸還？",
+        "original_possession": "{object}被拿走前，是否由你實際持有或保管？",
+        "consent": "你是否曾同意對方拿走、使用或保管{object}？",
+        "prior_lawful_possession": "對方在本次處置前，是否因借用、保管或業務關係合法持有{object}？",
+        "force_or_threat": "對方取得{object}時，是否使用拉扯、暴力或威脅？",
+        "return_agreement": "對方取得{object}時，是否有約定歸還？",
         "stated_use_or_return_plan": "對方當時是否表示用途或預計歸還時間？",
         "evidence": "是否有訊息、錄影或證人可供查證？",
     },
     "suspect": {
-        "original_possession": "你取得手機前，是否由對方實際持有或保管？",
-        "consent": "對方是否曾同意你拿取、使用或保管手機？",
-        "prior_lawful_possession": "你在本次處置前，是否因借用、保管或業務關係合法持有手機？",
-        "force_or_threat": "你取得手機時，是否有拉扯、使用暴力或威脅？",
-        "return_agreement": "你取得手機時，是否有約定歸還？",
+        "original_possession": "你取得{object}前，是否由對方實際持有或保管？",
+        "consent": "對方是否曾同意你拿取、使用或保管{object}？",
+        "prior_lawful_possession": "你在本次處置前，是否因借用、保管或業務關係合法持有{object}？",
+        "force_or_threat": "你取得{object}時，是否有拉扯、使用暴力或威脅？",
+        "return_agreement": "你取得{object}時，是否有約定歸還？",
         "stated_use_or_return_plan": "你當時是否曾表示用途或預計歸還時間？",
         "evidence": "是否有訊息、錄影或證人可供查證？",
     },
@@ -333,6 +333,21 @@ def _materialize_theft_320_1_movable_questions(
     return questions
 
 
+def _property_object_noun(gate1: dict[str, Any]) -> str:
+    """取 Gate 1 客體名詞填入財產取走題。
+
+    無可辨識客體時用中性「該物」，不以「手機」等特定物品預設案情。
+    """
+    for fact in gate1.get("facts", []):
+        if fact.get("fact_key") != "object":
+            continue
+        for key in ("value", "source_excerpt"):
+            noun = str(fact.get(key, "")).strip()
+            if noun and noun != "UNKNOWN":
+                return noun
+    return "該物"
+
+
 def build_property_taking_questions(
     role: str,
     candidate_ids: set[str],
@@ -346,13 +361,15 @@ def build_property_taking_questions(
     prefix = {"victim": "V", "suspect": "S", "transfer": "T"}[role]
     selected_route_ids = legal_route_ids or set()
     exact_pack_enabled = THEFT_320_1_MOVABLE_ROUTE_ID in selected_route_ids
+    object_noun = _property_object_noun(gate1)
     questions = (
         _materialize_theft_320_1_movable_questions(role, materialized_at)
         if exact_pack_enabled else []
     )
-    for index, (fact_key, text) in enumerate(PROPERTY_ROLE_QUESTIONS[role].items(), start=1):
+    for index, (fact_key, template) in enumerate(PROPERTY_ROLE_QUESTIONS[role].items(), start=1):
         if exact_pack_enabled and fact_key not in THEFT_320_1_MOVABLE_LEGACY_FACT_TARGETS:
             continue
+        text = template.format(object=object_noun)
         spec = PROPERTY_FACT_TARGETS[fact_key]
         target_ids = [item for item in spec["targets"] if item in candidate_ids]
         if not target_ids:

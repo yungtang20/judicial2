@@ -18,6 +18,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .question_hygiene import classify, duplicate_verdict, normalize
+
 XLSM_JSON_PATH = Path(__file__).resolve().parents[1] / "data" / "xlsm_questions.json"
 
 # xlsm 罪章欄名 → 本系統罪章 id（與 question_bank.json 對應）
@@ -55,24 +57,34 @@ SHEET_ROLE_ALIASES = {"被害人通用": "victim", "涉嫌人通用": "suspect",
 # 明確為樣板插值的公式題，保留為承辦人檢核提示而非問句
 _FORMULA_SKIP_MARKERS = ("CONCATENATE", "MID(", "LEFT(")
 
-# 明確屬其他案類且與所標罪章無關的殘留題（跨欄貼上殘留），依內容排除
-_UNRELATED_MARKERS = (
-    "你向警方表示你係為美國人士",
-    "你於民國114年02月09日",
-    "你於108年7月1日酒駕新法",
-    "6N-5698",
-    "台北馬偕醫院，經醫生於113年1月10日",
-)
-
 # 這些婦幼／保護路由已有公司核定逐字筆錄，runtime 不得再混入本庫
 # 同罪章的 markdown 或 JSON 問句。其他 XLSM 罪章題仍可依 company-standard.md
 # 規則補充未涵蓋的法定要件。
 COMPANY_STANDARD_ONLY_OFFENSES = frozenset({"sexual_harassment", "stalking"})
 
 
+def _quarantine_record(
+    text: str, role: str, item: dict[str, Any], verdict: Any,
+) -> dict[str, Any]:
+    return {
+        "text": text,
+        "role": role,
+        "source_cell": {"row": item.get("row", 0), "col": item.get("col", "")},
+        "rule_id": verdict.rule_id,
+        "decision": verdict.decision,
+        "reason": verdict.reason,
+    }
+
+
 def load_xlsm_questions(path: Path | None = None) -> dict[str, list[dict[str, Any]]]:
-    """回傳 {role: [{offense_id, text, col, row}]}. 公式題跳過。"""
+    """回傳 {role: [{offense_id, text, col, row}]}. 公式題跳過。
+
+    不在訪談頻道的格子改存於 `load_xlsm_questions.quarantine`（同 role 鍵），
+    供呼叫端回報；判定只換通道，公司原文不改。
+    """
     source = path or XLSM_JSON_PATH
+    quarantine: dict[str, list[dict[str, Any]]] = {"victim": [], "suspect": [], "witness": []}
+    load_xlsm_questions.quarantine = quarantine
     if not source.is_file():
         return {"victim": [], "suspect": [], "witness": []}
     raw = json.loads(source.read_text(encoding="utf-8"))
@@ -85,17 +97,23 @@ def load_xlsm_questions(path: Path | None = None) -> dict[str, list[dict[str, An
             text = str(item.get("text", "")).strip()
             if not text or text.startswith("="):
                 continue
-            if any(marker in text for marker in _UNRELATED_MARKERS):
-                continue
-            if text in seen:
-                continue
-            seen.add(text)
             offense_name = str(item.get("offense", "")).strip()
             if offense_name in SHEET_ROLE_ALIASES:
                 continue  # 通用欄已由 company_templates.py 逐字涵蓋
             offense_id = OFFENSE_NAME_TO_ID.get(offense_name)
             if offense_id is None:
                 continue
+            key = normalize(text)
+            if key in seen:
+                quarantine[role].append(
+                    _quarantine_record(text, role, item, duplicate_verdict())
+                )
+                continue
+            verdict = classify(text, role)
+            if verdict.decision != "SERVE":
+                quarantine[role].append(_quarantine_record(text, role, item, verdict))
+                continue
+            seen.add(key)
             result[role].append({
                 "offense_id": offense_id,
                 "offense_name": offense_name,
@@ -104,6 +122,23 @@ def load_xlsm_questions(path: Path | None = None) -> dict[str, list[dict[str, An
                 "row": item.get("row", 0),
             })
     return result
+
+
+def xlsm_quarantine() -> list[dict[str, Any]]:
+    """公司套表題在載入邊界被移出訪談頻道的全部紀錄。
+
+    回傳跨角色的清單：紀錄本身帶 role 與來源格，供承辦人核對被扣留的題目。
+    """
+    cache = getattr(load_xlsm_questions, "_cache", None)
+    if cache is None:
+        cache = load_xlsm_questions()
+        load_xlsm_questions._cache = cache
+    quarantine = getattr(load_xlsm_questions, "quarantine", {})
+    return [
+        record
+        for role_records in quarantine.values()
+        for record in role_records
+    ]
 
 
 def xlsm_questions_for(
@@ -119,7 +154,7 @@ def xlsm_questions_for(
         cache = load_xlsm_questions()
         load_xlsm_questions._cache = cache
     questions: list[dict[str, Any]] = []
-    seen = {q["text"] for q in bank_questions}
+    seen = {normalize(q["text"]) for q in bank_questions}
     source_text = " ".join(
         str(fact.get("source_excerpt", ""))
         for fact in (gate1 or {}).get("facts", [])
@@ -144,7 +179,7 @@ def xlsm_questions_for(
         if offense_id == "fraud" and "fraud_339_general" in selected_routes:
             if "信用卡" in item["text"] and "信用卡" not in source_text and "盜刷" not in source_text:
                 continue
-        if item["text"] in seen:
+        if normalize(item["text"]) in seen:
             continue
         questions.append({
             "id": f"XLSM-{role[0].upper()}-{offense_id}-{item['row']}{item['col']}",
@@ -166,7 +201,7 @@ def xlsm_questions_for(
                 "applicability_route_ids": sorted(selected_routes),
             },
         })
-        seen.add(item["text"])
+        seen.add(normalize(item["text"]))
     return questions
 
 

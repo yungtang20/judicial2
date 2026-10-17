@@ -9,73 +9,121 @@
         "id": "V-COM-000",
         "text": "上述身分資料是否正確？",
         "priority": 1,
-        "purpose": "identity"
+        "purpose": "identity",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-001",
         "text": "請用自己的話說明事情從開始到結束的經過。",
         "priority": 1,
-        "purpose": "free_account"
+        "purpose": "free_account",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-002",
         "text": "事情發生時，你看見或聽見了什麼？",
         "priority": 1,
-        "purpose": "perception"
+        "purpose": "perception",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-002A",
         "text": "你是否知道行為人的身分或可供辨識的特徵？",
         "priority": 1,
-        "purpose": "identification"
+        "purpose": "identification",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-002B",
         "text": "你與行為人原本有何關係或糾紛？",
         "priority": 2,
-        "purpose": "relationship"
+        "purpose": "relationship",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-003",
         "text": "你知道哪些人可能看見或聽見這件事嗎？",
         "priority": 2,
-        "purpose": "witness"
+        "purpose": "witness",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-004",
         "text": "你有哪些資料或物品可以提供警方查證？",
         "priority": 1,
-        "purpose": "evidence"
+        "purpose": "evidence",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-004A",
         "text": "你是否要提出告訴或請求民事賠償？",
         "priority": 1,
-        "purpose": "complaint"
+        "purpose": "complaint",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-004B",
         "text": "後續司法文書應送達何處？",
         "priority": 2,
-        "purpose": "service_address"
+        "purpose": "service_address",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-004C",
         "text": "你是否需要警方協助調查其他有利事證？",
         "priority": 2,
-        "purpose": "investigation_request"
+        "purpose": "investigation_request",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-004D",
         "text": "以上回答是否為你親自陳述且內容實在？",
         "priority": 1,
-        "purpose": "accuracy"
+        "purpose": "accuracy",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "V-COM-005",
         "text": "你是否還有其他想補充或請警方調查的事項？",
         "priority": 1,
-        "purpose": "closing"
+        "purpose": "closing",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       }
     ],
     "suspect": [
@@ -83,67 +131,111 @@
         "id": "S-COM-000",
         "text": "上述身分資料是否正確？",
         "priority": 1,
-        "purpose": "identity"
+        "purpose": "identity",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "S-COM-001",
         "text": "警方告知的涉嫌罪名及權利，你是否清楚？",
         "priority": 1,
-        "purpose": "rights"
+        "purpose": "rights",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "S-COM-001A",
         "text": "你是否需要辯護人或法律扶助到場協助？",
         "priority": 1,
-        "purpose": "counsel"
+        "purpose": "counsel",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "S-COM-002",
         "text": "請用自己的話說明你所知道的事情經過。",
         "priority": 1,
-        "purpose": "free_account"
+        "purpose": "free_account",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "S-COM-002A",
         "text": "你是否知道被害人的身分？",
         "priority": 2,
-        "purpose": "victim_identity"
+        "purpose": "victim_identity",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "S-COM-002B",
         "text": "你與被害人原本有何關係或糾紛？",
         "priority": 2,
-        "purpose": "relationship"
+        "purpose": "relationship",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "S-COM-003",
         "text": "你有哪些對自己有利的資料或證據希望警方調查？",
         "priority": 1,
-        "purpose": "exculpatory"
+        "purpose": "exculpatory",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "S-COM-003A",
         "text": "警方製作筆錄時是否全程錄音？",
         "priority": 1,
-        "purpose": "recording"
+        "purpose": "recording",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "S-COM-004",
         "text": "以上回答是否出於你的自由意思？",
         "priority": 1,
-        "purpose": "voluntariness"
+        "purpose": "voluntariness",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "S-COM-004A",
         "text": "筆錄記載是否與你的回答相符？",
         "priority": 1,
-        "purpose": "record_accuracy"
+        "purpose": "record_accuracy",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "S-COM-005",
         "text": "你是否還有其他想補充或更正的事項？",
         "priority": 1,
-        "purpose": "closing"
+        "purpose": "closing",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       }
     ],
     "transfer": [
@@ -151,67 +243,111 @@
         "id": "T-COM-000",
         "text": "上述身分資料是否正確？",
         "priority": 1,
-        "purpose": "identity"
+        "purpose": "identity",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "T-COM-001",
         "text": "警方告知的涉嫌罪名及權利，你是否清楚？",
         "priority": 1,
-        "purpose": "rights"
+        "purpose": "rights",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "T-COM-001A",
         "text": "你是否需要辯護人或法律扶助到場協助？",
         "priority": 1,
-        "purpose": "counsel"
+        "purpose": "counsel",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "T-COM-001B",
         "text": "你是否需要依法聲請提審？",
         "priority": 1,
-        "purpose": "habeas_corpus"
+        "purpose": "habeas_corpus",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "T-COM-002",
         "text": "請說明你在查獲時間及地點所做的事情。",
         "priority": 1,
-        "purpose": "free_account"
+        "purpose": "free_account",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "T-COM-003",
         "text": "你有哪些對自己有利的資料或證據希望警方調查？",
         "priority": 1,
-        "purpose": "exculpatory"
+        "purpose": "exculpatory",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "T-COM-003A",
         "text": "警方製作筆錄時是否全程錄音？",
         "priority": 1,
-        "purpose": "recording"
+        "purpose": "recording",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "T-COM-003B",
         "text": "警方查獲或逮捕你時是否使你受傷？",
         "priority": 1,
-        "purpose": "arrest_injury"
+        "purpose": "arrest_injury",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "T-COM-004",
         "text": "以上回答是否出於你的自由意思？",
         "priority": 1,
-        "purpose": "voluntariness"
+        "purpose": "voluntariness",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "T-COM-004A",
         "text": "筆錄記載是否與你的回答相符？",
         "priority": 1,
-        "purpose": "record_accuracy"
+        "purpose": "record_accuracy",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       },
       {
         "id": "T-COM-005",
         "text": "你是否還有其他想補充或更正的事項？",
         "priority": 1,
-        "purpose": "closing"
+        "purpose": "closing",
+        "source": {
+          "label": "本庫通用題",
+          "status": "HUMAN_REVIEW_REQUIRED"
+        }
       }
     ]
   },

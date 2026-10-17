@@ -12,6 +12,7 @@ from .config import MAX_BODY_BYTES, MAX_SUMMARY_LENGTH, MAX_TEXT_LENGTH
 from .ai import analyze_candidates
 from .acts import competition_relationships, extract_acts, link_acts_to_candidates
 from .company_templates import copy_identity
+from .xlsm_questions import xlsm_quarantine
 from .rules import (
     MAX_SELECTED_OFFENSES,
     analyze_gate1,
@@ -110,7 +111,7 @@ def revision_hash(case: dict[str, Any]) -> str:
 def _audit(case: dict[str, Any], event: str, **metadata: Any) -> None:
     allowed = {
         "from_state", "to_state", "role", "rule_id", "reason_code",
-        "question_count", "offense_count", "document_type",
+        "question_count", "offense_count", "document_type", "quarantine_count",
     }
     case.setdefault("audit", []).append({
         "event": event,
@@ -550,6 +551,17 @@ def apply_action(
             "message": "選配問句超出預算並已記錄；必要核心題不得裁除。",
         }] if pruned else [])
 
+        # 被移出訪談頻道的公司套表題是參考資料，不是本庫題；
+        # 逐筆保留原因供承辦人核對，並在稽核軌跡留下扣留筆數。
+        case["question_quarantine"] = xlsm_quarantine()
+        _audit(
+            case,
+            "QUESTION_QUARANTINE",
+            role=role,
+            reason_code="QUESTION_HYGIENE",
+            quarantine_count=len(case["question_quarantine"]),
+        )
+
         from .law_reference import check_constitutional_validity, check_event_time_against_law
         temporal_warnings: list[dict[str, Any]] = []
         constitutional_warnings: list[dict[str, Any]] = []
@@ -829,6 +841,7 @@ def public_case(case: dict[str, Any]) -> dict[str, Any]:
     result.setdefault("route_fact_observations", {})
     result.setdefault("route_fact_overlay", {})
     result.setdefault("selected_legal_route_states", {})
+    result.setdefault("question_quarantine", [])
     return result
 
 
