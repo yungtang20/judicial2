@@ -681,7 +681,7 @@ def test_exact_pack_budget_pruning_downgrades_route_coverage(monkeypatch):
     from tests.helpers import intake
 
     base = create_case(intake(), BANK)
-    monkeypatch.setattr(rules, "MAX_OFFENSE_QUESTIONS", 16)
+    monkeypatch.setattr(rules, "MAX_OFFENSE_QUESTIONS", 15)
     rules.build_questions(
         BANK,
         "victim",
