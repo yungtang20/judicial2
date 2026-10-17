@@ -1,6 +1,8 @@
-# Normalize line endings: blobs stored as LF, Windows checkout uses CRLF.
-# This silences CR-at-EOL "trailing whitespace" noise in `git diff --check`.
-* text=auto
+# Normalize line endings: blobs stored as LF, checkout also LF.
+# This silences CR-at-EOL "trailing whitespace" noise in `git diff --check`
+# and keeps evidence hashes stable, because the frozen-file hash tests in
+# tests/test_legal_retrieval_human_gate_packet.py hash raw worktree bytes.
+* text=auto eol=lf
 # Never mangle user reference documents.
 *.pdf binary
 *.docx binary
