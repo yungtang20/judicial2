@@ -7,6 +7,7 @@ import secrets
 from copy import deepcopy
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
@@ -22,13 +23,27 @@ from .config import (
 from .documents import DocumentError, brief_docx, brief_text, checked_interview_docx
 from .ai import ai_configured, external_ai_enabled
 from .rules import RuleError, load_bank
-from .storage import CaseNotFound, CaseStore, RevisionConflict
+from .storage import CaseNotFound, EphemeralCaseStore, RevisionConflict
 from .workflow import WorkflowError, apply_action, create_case, public_case, validate_case_id
+
+
+def _runtime_source_mtime() -> int:
+    root = Path(__file__).resolve().parents[1]
+    source_files = [
+        *root.joinpath("app").glob("*.py"),
+        *root.joinpath("app", "static").glob("*.js"),
+        *root.joinpath("app", "static").glob("*.html"),
+        root / "data" / "question_bank.json",
+    ]
+    return int(max(path.stat().st_mtime for path in source_files if path.is_file()))
+
+
+RUNTIME_SOURCE_MTIME = _runtime_source_mtime()
 
 
 SESSION_TOKEN = secrets.token_urlsafe(32)
 BANK = load_bank(QUESTION_BANK_PATH)
-STORE = CaseStore(DATABASE_PATH)
+STORE = EphemeralCaseStore()
 CASE_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})$")
 ACTION_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})/actions$")
 DOC_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})/documents/(victim|suspect|transfer)/(interview|brief)$")
@@ -155,10 +170,16 @@ class Handler(BaseHTTPRequestHandler):
         if not self._guard(token=path.startswith("/api/") and path != "/api/health"):
             return
         if path == "/api/health":
-            self._json(HTTPStatus.OK, {"status": "ok", "mode": "LOCAL_ONLY", "external_ai": ai_configured(), "external_ai_enabled": external_ai_enabled()})
+            self._json(HTTPStatus.OK, {
+                "status": "ok",
+                "mode": "LOCAL_ONLY",
+                "external_ai": ai_configured(),
+                "external_ai_enabled": external_ai_enabled(),
+                "source_mtime": RUNTIME_SOURCE_MTIME,
+            })
             return
         if path == "/api/cases":
-            self._json(HTTPStatus.OK, {"cases": STORE.list_cases_meta()})
+            self._json(HTTPStatus.OK, {"cases": [], "mode": "EPHEMERAL_SINGLE_CASE"})
             return
         if path == "/api/question-bank":
             self._json(HTTPStatus.OK, {

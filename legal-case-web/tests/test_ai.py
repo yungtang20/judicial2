@@ -22,6 +22,28 @@ def test_analyze_returns_none_without_key(monkeypatch):
     assert analyze_candidates("摘要", OFFENSES) is None
 
 
+def test_long_summary_is_split_and_candidates_are_merged(monkeypatch):
+    calls = []
+
+    def fake_once(summary, offenses, max_candidates=6, facts=None):
+        calls.append(summary)
+        return {
+            "model": "test-model",
+            "candidates": [{
+                "id": "fraud" if len(calls) == 1 else "theft",
+                "reason": "分段命中",
+                "source": "ai",
+            }],
+        }
+
+    monkeypatch.setattr(ai_module, "_analyze_candidates_once", fake_once)
+    result = analyze_candidates("前段。" * 2500, OFFENSES)
+    assert result is not None
+    assert result["chunk_count"] == 2
+    assert len(calls) == 2
+    assert [item["id"] for item in result["candidates"]] == ["fraud", "theft"]
+
+
 def test_external_ai_requires_explicit_enable_flag(monkeypatch):
     monkeypatch.setenv("IAMHC_API_KEY", "sk-test")
     monkeypatch.delenv("ALLOW_EXTERNAL_AI", raising=False)

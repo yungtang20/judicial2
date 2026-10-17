@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "review_status": "HUMAN_REVIEW_REQUIRED",
+  "source": "review/knowledge_base_v1.md",
+  "packs": [
+    {
+      "pack_id": "SINGLE_ASSAULT",
+      "route_ids": ["injury"],
+      "status": "HUMAN_REVIEW_REQUIRED",
+      "questions": {
+        "victim": [
+          {"id": "SUP-SINGLE_ASSAULT-V-01", "fact_categories": ["事", "行為"], "text": "你們是為了什麼事情發生爭執？是誰先動手的？"},
+          {"id": "SUP-SINGLE_ASSAULT-V-02", "fact_categories": ["物", "行為"], "text": "對方動手的時候，手上有沒有拿東西？如果有，是什麼？"},
+          {"id": "SUP-SINGLE_ASSAULT-V-03", "fact_categories": ["行為", "結果"], "text": "對方打到你身體哪些地方？大約打了幾下？"},
+          {"id": "SUP-SINGLE_ASSAULT-V-04", "fact_categories": ["結果", "證據"], "text": "你受傷後有沒有去醫院？有沒有診斷證明或其他就醫資料？"}
+        ],
+        "suspect": [
+          {"id": "SUP-SINGLE_ASSAULT-S-01", "fact_categories": ["事", "行為"], "text": "你們是為了什麼事情發生爭執？是誰先動手的？"},
+          {"id": "SUP-SINGLE_ASSAULT-S-02", "fact_categories": ["物", "行為"], "text": "你動手的時候，手上有沒有拿東西？如果有，是什麼？"},
+          {"id": "SUP-SINGLE_ASSAULT-S-03", "fact_categories": ["行為", "結果"], "text": "你打到對方身體哪些地方？大約打了幾下？"},
+          {"id": "SUP-SINGLE_ASSAULT-S-04", "fact_categories": ["結果", "證據"], "text": "對方受傷後有沒有去醫院？你知道有沒有診斷證明或其他就醫資料？"}
+        ],
+        "witness": []
+      }
+    }
+  ]
+}

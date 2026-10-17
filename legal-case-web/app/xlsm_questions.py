@@ -64,6 +64,11 @@ _UNRELATED_MARKERS = (
     "台北馬偕醫院，經醫生於113年1月10日",
 )
 
+# 這些婦幼／保護路由已有公司核定逐字筆錄，runtime 不得再混入本庫
+# 同罪章的 markdown 或 JSON 問句。其他 XLSM 罪章題仍可依 company-standard.md
+# 規則補充未涵蓋的法定要件。
+COMPANY_STANDARD_ONLY_OFFENSES = frozenset({"sexual_harassment", "stalking"})
+
 
 def load_xlsm_questions(path: Path | None = None) -> dict[str, list[dict[str, Any]]]:
     """回傳 {role: [{offense_id, text, col, row}]}. 公式題跳過。"""
@@ -106,6 +111,7 @@ def xlsm_questions_for(
     role: str,
     offense_id: str,
     legal_route_ids: list[str] | None = None,
+    gate1: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """取得指定罪章之公司套表題（kind=company_offense）。"""
     cache = getattr(load_xlsm_questions, "_cache", None)
@@ -114,6 +120,10 @@ def xlsm_questions_for(
         load_xlsm_questions._cache = cache
     questions: list[dict[str, Any]] = []
     seen = {q["text"] for q in bank_questions}
+    source_text = " ".join(
+        str(fact.get("source_excerpt", ""))
+        for fact in (gate1 or {}).get("facts", [])
+    )
     for index, item in enumerate(cache.get(role, []), start=1):
         if item["offense_id"] != offense_id:
             continue
@@ -122,7 +132,17 @@ def xlsm_questions_for(
             if "過失" in item["offense_name"]:
                 continue
         if offense_id == "injury" and "injury_284_negligent" in selected_routes:
+            medical_context = any(
+                term in source_text for term in ("手術", "醫師", "診所", "醫院", "病歷", "醫療")
+            )
+            if medical_context:
+                # 現行公司「過失傷害」及「傷害」欄均非醫療事故專用；
+                # 保留原始題庫不改字，只避免把車禍／一般攻擊題套入醫療事件。
+                continue
             if "過失" not in item["offense_name"] and item["offense_name"] != "傷害":
+                continue
+        if offense_id == "fraud" and "fraud_339_general" in selected_routes:
+            if "信用卡" in item["text"] and "信用卡" not in source_text and "盜刷" not in source_text:
                 continue
         if item["text"] in seen:
             continue
@@ -143,10 +163,26 @@ def xlsm_questions_for(
                 "answer_mode": "narrative_only",
                 "machine_effects": [],
                 "source_cell": {"row": item.get("row", 0), "col": item.get("col", "")},
+                "applicability_route_ids": sorted(selected_routes),
             },
         })
         seen.add(item["text"])
     return questions
+
+
+def has_company_standard_questions(role: str, offense_id: str) -> bool:
+    """判斷指定角色／罪章是否已有公司核定套表題。
+
+    有公司題時，runtime 不再把本庫同一罪章的 md/JSON 題混入，
+    以免公司逐字標準筆錄被自建題改寫或重複。
+    """
+    cache = getattr(load_xlsm_questions, "_cache", None)
+    if cache is None:
+        cache = load_xlsm_questions()
+        load_xlsm_questions._cache = cache
+    return offense_id in COMPANY_STANDARD_ONLY_OFFENSES and any(
+        item["offense_id"] == offense_id for item in cache.get(role, [])
+    )
 
 
 def reset_cache() -> None:

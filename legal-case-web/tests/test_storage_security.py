@@ -6,7 +6,18 @@ import sqlite3
 import pytest
 from cryptography.fernet import Fernet
 
-from app.storage import CaseStore, RevisionConflict
+from app.storage import CaseNotFound, CaseStore, EphemeralCaseStore, RevisionConflict
+
+
+def test_ephemeral_store_keeps_only_current_case_without_database_file(tmp_path):
+    store = EphemeralCaseStore()
+    first = store.create({"case_id": "first", "state": "GATE1_REVIEW"})
+    assert store.get("first")["revision"] == 1
+    second = store.create({"case_id": "second", "state": "GATE1_REVIEW"})
+    assert store.get("second")["revision"] == 1
+    with pytest.raises(CaseNotFound):
+        store.get("first")
+    assert list(tmp_path.iterdir()) == []
 from app.workflow import create_case
 from tests.helpers import BANK, intake
 

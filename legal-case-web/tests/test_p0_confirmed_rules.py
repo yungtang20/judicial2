@@ -23,11 +23,12 @@ def test_statement_summary_preserves_500_unicode_characters_without_ellipsis():
     assert not case["brief_summary"].endswith("…")
 
 
-def test_statement_summary_rejects_501_characters_instead_of_truncating():
+def test_statement_summary_rejects_501_characters_but_initial_case_input_is_unlimited():
     with pytest.raises(RuleError, match="500"):
         concise_summary("字" * 501)
-    with pytest.raises(RuleError, match="500"):
-        create_case(intake(summary="字" * 501), BANK)
+    case = create_case(intake(summary="字" * 501), BANK)
+    assert len(case["intake"]["summary"]) == 501
+    assert len(case["brief_summary"]) == 500
 
 
 def test_gate1_rejects_501_character_update_without_partial_mutation():

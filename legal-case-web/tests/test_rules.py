@@ -13,6 +13,7 @@ from app.rules import (
     candidate_offenses,
     concise_summary,
     is_victim_code,
+    mark_known_questions,
     required_case_numbers,
 )
 from tests.helpers import BANK, completed_case
@@ -27,6 +28,70 @@ def test_candidate_engine_is_deterministic_and_can_return_zero():
     assert first[0]["unknown_elements"]
     theft = candidate_offenses("有人偷走物品", BANK)
     assert {item["id"] for item in theft} >= {"theft", "embezzlement", "robbery"}
+
+
+def test_hyphenated_women_child_victim_code_is_recognized():
+    assert is_victim_code("AW000-A113415") is True
+
+
+def test_candidate_uses_route_element_matrix_with_traceable_gate1_facts():
+    summary = (
+        "黃思維意圖為自己不法所有，於民國114年1月23日0時18分許，"
+        "在臺北市某夜店內，徒手竊取李○○放在吧臺上的包包及現金1,500元得手。"
+    )
+    gate1 = analyze_gate1({"summary": summary, "event_time": "", "location": ""}, use_ai=False)
+    candidate = next(item for item in candidate_offenses(summary, BANK, gate1) if item["id"] == "theft")
+    assert candidate["suggested_legal_route_ids"] == ["theft_320_1_movable"]
+    matrix = candidate["route_element_matrix"][0]
+    assert matrix["route_id"] == "theft_320_1_movable"
+    assert matrix["supported_count"] >= 3
+    assert candidate["supporting_fact_refs"]
+    assert all(row["status"] in {"SOURCE_SUPPORTED", "UNKNOWN"} for row in matrix["elements"])
+
+
+def test_incapacity_indecency_route_is_ranked_from_direct_source_evidence():
+    summary = (
+        "A女飲酒後已呈現嘔吐、全身癱軟無力，趙子興乘A女不能抗拒之際，"
+        "親吻A女嘴部並伸入內衣撫摸胸部而猥褻得逞。"
+    )
+    gate1 = analyze_gate1({"summary": summary, "event_time": "", "location": ""}, use_ai=False)
+    candidate = next(item for item in candidate_offenses(summary, BANK, gate1) if item["id"] == "sexual")
+    assert candidate["suggested_legal_route_ids"] == ["sexual_225_incapacity"]
+    route = candidate["route_element_matrix"][0]
+    assert route["supported_count"] >= 4
+    assert any(
+        row["element"] == "不能或不知抗拒狀態" and row["source_excerpts"]
+        for row in route["elements"]
+    )
+
+
+def test_general_fraud_and_sexual_image_distribution_routes_are_ranked_by_source_facts():
+    fraud_summary = "行為人冒充銀行客服，使被害人陷於錯誤而依指示匯款新臺幣10萬元。"
+    fraud_gate1 = analyze_gate1({"summary": fraud_summary, "event_time": "", "location": ""}, use_ai=False)
+    fraud = next(item for item in candidate_offenses(fraud_summary, BANK, fraud_gate1) if item["id"] == "fraud")
+    assert fraud["suggested_legal_route_ids"] == ["fraud_339_general"]
+
+    privacy_summary = "行為人未經同意將被害人的性影像上傳網路供人觀看。"
+    privacy_gate1 = analyze_gate1({"summary": privacy_summary, "event_time": "", "location": ""}, use_ai=False)
+    privacy = next(item for item in candidate_offenses(privacy_summary, BANK, privacy_gate1) if item["id"] == "privacy")
+    assert privacy["suggested_legal_route_ids"] == ["privacy_319_3_sexual_image_distribution"]
+
+
+def test_combined_time_and_place_question_is_known_only_when_both_are_present():
+    question = {"text": "請說明事件發生的時間與地點。", "kind": "core", "meta": {}}
+    mark_known_questions([question], {"times": ["民國114年1月1日"], "places": ["UNKNOWN"]})
+    assert "known_from_summary" not in question["meta"]
+
+    mark_known_questions([question], {"times": ["民國114年1月1日"], "places": ["臺北市"]})
+    assert question["meta"]["known_from_summary"] is True
+
+
+def test_common_caseword_variants_still_surface_the_correct_candidate_route():
+    summary = "某人冒充銀行客服，要求被害人提供驗證碼並轉帳。"
+    candidates = candidate_offenses(summary, BANK)
+    assert candidates
+    assert candidates[0]["id"] == "fraud"
+    assert candidates[0]["candidate_state"] == "NEED_REVIEW"
 
 
 def test_computer_candidate_requires_specific_conduct():
@@ -291,6 +356,76 @@ def test_analyze_gate1_schema_and_provenance():
     # times must be ROC era format
     assert g1["times"][0].startswith("115年10月10日") and "時30分" in g1["times"][0]
     assert g1["review_status"] == "HUMAN_REVIEW_REQUIRED"
+
+
+def test_gate1_decomposes_assault_narrative_into_eight_fact_categories():
+    summary = (
+        "曹富生、顏大鈞前與羅世亮在法務部矯正署新店戒治所中因抽煙問題生有嫌隙，"
+        "竟共同基於傷害他人身體之犯意聯絡，於民國114年4月14日14時5分許，"
+        "在新店戒治所靜舍前廣場上，共同徒手毆打羅世亮，致羅世亮因而受有"
+        "上唇瘀腫、下唇撕裂傷及門牙折斷等傷害。"
+    )
+    gate1 = analyze_gate1({"summary": summary, "event_time": "UNKNOWN", "location": "UNKNOWN"}, use_ai=False)
+    assert gate1["people"] == ["曹富生", "顏大鈞前", "羅世亮"]
+    assert gate1["times"] == ["民國114年4月14日14時5分許"]
+    assert gate1["places"] == ["法務部矯正署新店戒治所", "新店戒治所靜舍前廣場"]
+    assert gate1["objects"] == ["他人身體"]
+    assert gate1["behaviors"] == ["共同徒手毆打羅世亮"]
+    assert gate1["results"] == ["上唇瘀腫、下唇撕裂傷及門牙折斷"]
+
+
+def test_gate1_decomposes_detailed_theft_narrative_without_raw_summary_fallback():
+    summary = (
+        "黃思維意圖為自己不法之所有，基於竊盜之犯意，於民國114年1月23日0時18分許，"
+        "在臺北市○○區○○路00號0樓之夜店內，徒手竊取李○○放置於吧臺上之包包，"
+        "得手後即攜往男廁所，將包包內現金1,500元取出放於身上口袋，"
+        "李○○即上前取回其遭竊之包包，嗣夜店員工鍾○○透過無線電通報，並壓制黃思維。"
+    )
+    gate1 = analyze_gate1({"summary": summary, "event_time": "", "location": ""}, use_ai=False)
+
+    assert gate1["segmentation_source"] == "rules:narrative"
+    assert gate1["people"]
+    assert gate1["behaviors"]
+    assert gate1["objects"]
+    assert gate1["results"]
+    assert gate1["evidence"]
+    assert gate1["unknowns"] == []
+    assert not any(item["source_excerpt"] == summary for item in gate1["facts"])
+    assert all(item["source_excerpt"] in summary for item in gate1["facts"] if item["source_excerpt"])
+
+
+def test_gate1_decomposes_robbery_assault_narrative_with_compatibility_characters():
+    summary = (
+        "洪丞葦因需錢孔急，竟意圖為自己不法所有，基於搶奪、傷害等犯意，"
+        "於民國114年7月14日23時許，前往張○○所經營、位在新北市○○區○○街000號之彩券行內，"
+        "持預藏之汽油朝張○○潑灑之後，進入彩券行櫃台內拉開櫃台抽屜，"
+        "搶奪抽屜內現金10萬9,000元得手，因防護贓物、脫免逮捕而徒手毆打張○○，"
+        "使張○○受有右側眼點狀角膜炎、左側手腕挫傷等傷害，並施以強暴、脅迫後逃離現場。"
+    )
+    gate1 = analyze_gate1({"summary": summary, "event_time": "", "location": ""}, use_ai=False)
+
+    assert gate1["segmentation_source"] == "rules:narrative"
+    assert "洪丞葦" in gate1["people"]
+    assert "張○○" in gate1["people"]
+    assert any("搶奪" in value for value in gate1["behaviors"])
+    assert any("汽油" in value for value in gate1["objects"])
+    assert gate1["results"]
+
+
+def test_injury_questions_include_reviewed_single_assault_supplement():
+    gate1 = analyze_gate1({
+        "summary": "雙方因抽煙問題爭執，涉嫌人徒手毆打對方，造成上唇撕裂傷。",
+        "event_time": "UNKNOWN",
+        "location": "UNKNOWN",
+    }, use_ai=False)
+    bank = __import__("app.rules", fromlist=["load_bank"]).load_bank(
+        Path(__file__).resolve().parents[1] / "data" / "question_bank.json"
+    )
+    questions = build_questions(bank, "suspect", ["injury"], gate1=gate1)
+    supplemental = [item for item in questions if item.get("kind") == "supplemental"]
+    assert len(supplemental) == 4
+    assert all(item["source"]["status"] == "HUMAN_REVIEW_REQUIRED" for item in supplemental)
+    assert any("誰先動手" in item["text"] for item in supplemental)
 
 
 def test_max_selected_offenses_guard():

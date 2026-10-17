@@ -22,6 +22,7 @@ DEFAULT_BASE_URL = "https://api.iamhc.cn/v1"
 DEFAULT_MODEL = "glm-5.3-flash"
 TIMEOUT_SECONDS = 70
 MAX_ATTEMPTS = 4
+MAX_SUMMARY_CHARS_PER_CALL = 4000
 
 
 class AiUnavailable(RuntimeError):
@@ -147,13 +148,36 @@ def build_analyze_prompt(
     ]
 
 
-def analyze_candidates(
+def _summary_chunks(summary: str, limit: int = MAX_SUMMARY_CHARS_PER_CALL) -> list[str]:
+    """以句界切分長摘要，避免外部 AI 只收到前段而遺失後段事實。"""
+    normalized = summary.strip()
+    if len(normalized) <= limit:
+        return [normalized]
+    chunks: list[str] = []
+    remaining = normalized
+    while len(remaining) > limit:
+        boundary = max(
+            remaining.rfind(mark, 0, limit + 1)
+            for mark in ("。", "！", "？", "；", "\n")
+        )
+        if boundary < max(1, limit // 2):
+            boundary = limit
+        else:
+            boundary += 1
+        chunks.append(remaining[:boundary].strip())
+        remaining = remaining[boundary:].lstrip()
+    if remaining:
+        chunks.append(remaining)
+    return chunks
+
+
+def _analyze_candidates_once(
     summary: str,
     offenses: list[dict[str, Any]],
     max_candidates: int = 6,
     facts: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any] | None:
-    """回傳 {"candidates": [...], "model": str}；無法取得 AI 分析時回傳 None。
+    """對單一摘要片段呼叫一次分析；無法取得 AI 分析時回傳 None。
 
     facts：gate1 結構化事實（僅供提示注入；不得擴大判斷範圍）。
     """
@@ -196,6 +220,38 @@ def analyze_candidates(
         # 靜默退回規則引擎；UI 顯示「規則候選」即可辨識。
         return None
     return None
+
+
+def analyze_candidates(
+    summary: str,
+    offenses: list[dict[str, Any]],
+    max_candidates: int = 6,
+    facts: list[dict[str, Any]] | None = None,
+) -> dict[str, Any] | None:
+    """分析完整摘要；長摘要會分段呼叫並合併候選方向。"""
+    chunks = _summary_chunks(summary)
+    merged: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    model = ""
+    for chunk in chunks:
+        result = _analyze_candidates_once(chunk, offenses, max_candidates, facts)
+        if result is None:
+            return None
+        model = result.get("model", model)
+        for item in result.get("candidates", []):
+            if item["id"] in seen:
+                continue
+            seen.add(item["id"])
+            merged.append(item)
+            if len(merged) >= max_candidates:
+                break
+        if len(merged) >= max_candidates:
+            break
+    return {
+        "candidates": merged[:max_candidates],
+        "model": model,
+        "chunk_count": len(chunks),
+    }
 
 SEGMENT_SYSTEM = (
     "你是警察機關筆錄製作輔助系統的事實切分模組。"

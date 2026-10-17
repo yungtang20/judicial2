@@ -40,7 +40,7 @@ function createHarness({ fetchImpl }) {
     querySelectorAll() { return []; },
   });
   // Fill in the form.elements collection for gate1/profile forms
-  const gate1FormFields = ["people", "events", "times", "places", "objects", "behaviors", "unknowns", "causation"];
+  const gate1FormFields = ["people", "events", "times", "places", "objects", "behaviors", "results", "evidence", "unknowns", "causation"];
   const profileFormFields = ["profile-name", "profile-alias", "profile-gender", "profile-birth-date", "profile-birth-place", "profile-occupation", "profile-national-id", "profile-registered-address", "profile-current-address", "profile-education", "profile-phone", "session-start", "session-end", "session-location"];
   const makeFormElements = (ids) => {
     const map = {};
@@ -123,6 +123,27 @@ function createConflictHarness({ postStatus = 409, postBody = {}, getImpl, listI
   stateRef.current = { case_id: caseId, revision: sentRevision, state: "GATE1_REVIEW", interviews: {}, profiles: {}, question_role: "victim", questions: [] };
   return { context, elements, fetchLog, caseId, sentRevision, latestRevision, stateRef };
 }
+
+test("逐題流程只包含追加問句並另列摘要已知內容", () => {
+  const { context, elements } = createHarness({
+    fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({}), headers: new Headers() }),
+  });
+  const caseData = {
+    questions: [
+      { id: "known", text: "已知題", answer: "摘要答案", meta: { known_from_summary: true, known_answer: "摘要答案" } },
+      { id: "additional", text: "追加題", answer: "", meta: {} },
+    ],
+  };
+  const additional = context.additionalQuestions(caseData);
+  assert.equal(additional.length, 1);
+  assert.equal(additional[0].id, "additional");
+
+  context.renderKnownQuestions(caseData);
+  const summary = elements.get("known-question-summary");
+  assert.equal(summary.hidden, false);
+  assert.equal(summary.children.length, 2);
+  assert.match(summary.children[0].textContent, /1 題已自動帶入/);
+});
 
 test("年籍 payload 使用 HTML name 欄位並保留詢問時間", () => {
   const { context } = createHarness({
@@ -364,7 +385,7 @@ test("409 後使用者第二次明確操作：POST 總數為 1, 第二次使用�
   assert.equal(secondBody.revision, latestRevision, "第二次 POST 必須使用回載後的新 revision");
 });
 
-test("409 單案 GET 成功但 refreshCases 失敗：最新案件保留, 顯示清單未更新訊息", async () => {
+test("無案件清單模式：409 單案 GET 成功後保留最新案件", async () => {
   const fullCase = { case_id: "case-abc-123", revision: 2, state: "GATE1_REVIEW", interviews: {}, profiles: {}, question_role: "victim", gate1: { people: [], events: [], times: [], places: [], objects: [], behaviors: [], unknowns: [], causation: "UNKNOWN" }, candidates: [], selected_offenses: [], questions: [], case_numbers: { proof: "", women_child: "", case_165: "" }, brief_summary: "", intake: { has_victim: true, victim_is_code: false, victim_identifier: "" }, question_budget_warnings: [], candidate_contradictions: [], temporal_law_warnings: [] };
   const { context, elements, fetchLog, caseId, latestRevision, stateRef } = createConflictHarness({
     postStatus: 409,
@@ -381,7 +402,8 @@ test("409 單案 GET 成功但 refreshCases 失敗：最新案件保留, 顯示�
   try { await context.action("update_gate1", { gate1: {} }); } catch (e) { caught = e; }
   assert.ok(caught, "action() 應拋出 ApiError");
   assert.equal(stateRef.current.revision, latestRevision, "最新案件必須保留");
-  assert.equal(elements.get("status").textContent, "已載入最新案件，但案件清單暫時未更新，請核對後重試。");
+  assert.equal(elements.get("status").textContent, "案件已由其他分頁更新，已載入最新版本，請核對後重試。");
+  assert.equal(fetchLog.filter((entry) => entry.path === "/api/cases").length, 0, "不得讀取案件清單");
 });
 
 test("H: gate1-form submit handler 409 後不得顯示「Gate 1 已儲存」", async () => {

@@ -8,7 +8,7 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
-from .config import MAX_SUMMARY_LENGTH, MAX_TEXT_LENGTH
+from .config import MAX_BODY_BYTES, MAX_SUMMARY_LENGTH, MAX_TEXT_LENGTH
 from .ai import analyze_candidates
 from .acts import competition_relationships, extract_acts, link_acts_to_candidates
 from .company_templates import copy_identity
@@ -21,6 +21,7 @@ from .rules import (
     candidate_offenses,
     concise_summary,
     required_case_numbers,
+    truncate_summary,
 )
 
 
@@ -54,6 +55,18 @@ def _clean_text(value: Any, field: str, *, required: bool = True) -> str:
         raise WorkflowError(f"{field} 不得空白")
     if len(normalized) > MAX_TEXT_LENGTH:
         raise WorkflowError(f"{field} 超過 {MAX_TEXT_LENGTH} 字")
+    return normalized
+
+
+def _clean_summary(value: Any) -> str:
+    """保留完整原始案情；僅受 HTTP body 的安全上限約束，不套用條陳摘要上限。"""
+    if not isinstance(value, str):
+        raise WorkflowError("案情摘要 必須是文字")
+    normalized = value.strip()
+    if not normalized:
+        raise WorkflowError("案情摘要 不得空白")
+    if len(normalized.encode("utf-8")) > MAX_BODY_BYTES:
+        raise WorkflowError(f"案情摘要超過 {MAX_BODY_BYTES} bytes")
     return normalized
 
 
@@ -147,7 +160,7 @@ def _snapshot(case: dict[str, Any], reason: str) -> None:
 
 def create_case(raw: dict[str, Any], bank: dict[str, Any]) -> dict[str, Any]:
     has_victim = raw.get("has_victim") is True
-    summary = _clean_text(raw.get("summary"), "案情摘要")
+    summary = _clean_summary(raw.get("summary"))
     summary_context = _summary_context(summary)
     intake = {
         "event_kind": _provided_or_derived(raw, "event_kind", summary_context["event_kind"], "時間類型"),
@@ -164,11 +177,18 @@ def create_case(raw: dict[str, Any], bank: dict[str, Any]) -> dict[str, Any]:
         "jurisdiction": _clean_text(raw.get("jurisdiction", ""), "本案管轄", required=False),
         "disposition": _clean_text(raw.get("disposition", ""), "後續偵辦情形", required=False),
     }
-    # 在任何 AI／規則分析前先套用寫入邊界，避免超長內容被送往下游後才失敗。
-    intake["summary"] = concise_summary(intake["summary"], MAX_SUMMARY_LENGTH)
+    # 原始案情不限條陳摘要字數，完整保留供 Gate 1 回查；條陳另行產生 500 字摘要。
     # Gate 1 只在本機執行 deterministic segmentation。外部 AI 僅能由 Gate 2
     # 的明示操作觸發，避免僅因環境存在 API key 就外送案情摘要。
     gate1 = analyze_gate1(intake, use_ai=False)
+    if has_victim and not intake["victim_identifier"]:
+        derived_victim = next((
+            item for item in gate1.get("person_attributes", [])
+            if item.get("role") == "victim" and item.get("person_code")
+        ), None)
+        if derived_victim:
+            intake["victim_identifier"] = str(derived_victim["person_code"])
+            intake["victim_is_code"] = True
     candidates = candidate_offenses(intake["summary"], bank, gate1)
     acts = extract_acts(gate1)
     link_acts_to_candidates(acts, candidates)
@@ -199,7 +219,7 @@ def create_case(raw: dict[str, Any], bank: dict[str, Any]) -> dict[str, Any]:
         "profiles": {},
         "interview_sessions": {},
         "case_numbers": {},
-        "brief_summary": concise_summary(intake["summary"], MAX_SUMMARY_LENGTH),
+        "brief_summary": truncate_summary(intake["summary"], MAX_SUMMARY_LENGTH),
         "approvals": {},
         "documents": [],
         "snapshots": [],
@@ -348,7 +368,7 @@ def apply_action(
         if not isinstance(incoming, dict):
             raise WorkflowError("缺少 Gate 1 資料")
         gate1 = deepcopy(case.get("gate1", {}))
-        for key in ("people", "events", "times", "places", "objects", "behaviors", "unknowns"):
+        for key in ("people", "events", "times", "places", "objects", "behaviors", "results", "evidence", "unknowns"):
             if key not in incoming:
                 continue
             values = incoming[key]
@@ -378,9 +398,13 @@ def apply_action(
             ))
             gate1["people"] = list(dict.fromkeys(str(item.get("subject", "")).strip() for item in gate1["facts"] if str(item.get("subject", "")).strip()))
             gate1["objects"] = list(dict.fromkeys(str(item.get("object", "")).strip() for item in gate1["facts"] if str(item.get("object", "")).strip()))
+            gate1["results"] = list(dict.fromkeys(str(item.get("result", "")).strip() for item in gate1["facts"] if str(item.get("result", "")).strip()))
+            gate1["evidence"] = list(dict.fromkeys(str(item.get("value", "")).strip() for item in gate1["facts"] if item.get("fact_key") == "evidence" and str(item.get("value", "")).strip()))
             gate1["behaviors"] = list(dict.fromkeys(str(item.get("action", "")).strip() for item in gate1["facts"] if str(item.get("action", "")).strip()))
         separator = "" if "facts" in incoming else "；"
         current_summary = separator.join(gate1.get("events", []))
+        # Gate 1 更新的是條陳摘要來源，超過 500 字必須拒絕，
+        # 不得靜默截斷造成事實遺失；初始輸入仍可不限字數，僅由 brief_summary 截成 500 字。
         validated_summary = concise_summary(current_summary, MAX_SUMMARY_LENGTH) if current_summary.strip() else ""
         if "events" in incoming and "facts" not in incoming and current_summary.strip():
             refreshed = analyze_gate1({
@@ -408,6 +432,35 @@ def apply_action(
         case["fact_overlay"] = {}
         case["state"] = "GATE1_REVIEW"
         _invalidate(case, "gate1")
+
+    elif action == "auto_prepare":
+        if case["state"] != "GATE1_REVIEW":
+            raise WorkflowError("目前不可自動分析")
+        primary = [
+            item for item in case.get("candidates", [])
+            if item.get("selection_origin") != "related_hint"
+            and item.get("candidate_eligibility") == "ELIGIBLE_CANDIDATE"
+        ][:MAX_SELECTED_OFFENSES]
+        if not primary:
+            raise WorkflowError("目前摘要不足以產生候選罪章，請補充可辨識的事件、行為或結果")
+        offense_ids = [item["id"] for item in primary]
+        route_ids = []
+        for item in primary:
+            eligible_routes = [
+                route_id for route_id in item.get("suggested_legal_route_ids", [])
+                if item.get("legal_route_states", {}).get(route_id) == "ELIGIBLE_CANDIDATE"
+            ]
+            if eligible_routes:
+                route_ids.append(eligible_routes[0])
+        case["state"] = "GATE2_QA"
+        case = apply_action(case, "set_offenses", {
+            "offense_ids": offense_ids,
+            "legal_route_ids": route_ids,
+            "route_review_confirmed": True,
+            "role": case.get("question_role", "victim" if case["intake"].get("has_victim") else "transfer"),
+        }, bank)
+        case["preparation_mode"] = "SYSTEM_AUTO_PREPARED_HUMAN_REVIEW_REQUIRED"
+        case["preparation_notice"] = "系統已依摘要自動整理候選罪章、法律路由與問句。請直接審核結果，必要時再修改。"
 
     elif action == "approve_gate1":
         if case["state"] != "GATE1_REVIEW" or payload.get("confirmed") is not True:
@@ -525,7 +578,7 @@ def apply_action(
         case["constitutional_warnings"] = constitutional_warnings
         for item in case["questions"]:
             prior_item = prior.get(item["id"], {})
-            item["answer"] = prior_item.get("answer", "")
+            item["answer"] = prior_item.get("answer", item.get("answer", ""))
             if item.get("meta", {}).get("answer_map"):
                 item["answer_code"] = prior_item.get("answer_code", "UNKNOWN")
         from .questions import reevaluate_legal_routes_from_answers
@@ -607,7 +660,11 @@ def apply_action(
         if not case["selected_offenses"]:
             raise WorkflowError("尚未確認候選罪章")
         _validate_legal_route_review(case, bank)
-        unanswered = [item["id"] for item in case["questions"] if not item.get("answer", "").strip()]
+        unanswered = [
+            item["id"] for item in case["questions"]
+            if not item.get("answer", "").strip()
+            and not item.get("meta", {}).get("known_from_summary")
+        ]
         if unanswered:
             raise WorkflowError("所有問句均須作答；不清楚時請明確填寫 UNKNOWN")
         role = case["question_role"]
@@ -667,7 +724,7 @@ def apply_action(
         if not isinstance(summary, str) or not summary.strip():
             raise WorkflowError("案情摘要不得空白")
         result = analyze_candidates(
-            _clean_text(summary, "案情摘要")[:4000],
+            _clean_summary(summary),
             [{"id": item["id"], "name": item["name"]} for item in bank["offenses"]],
         )
         if result is None:

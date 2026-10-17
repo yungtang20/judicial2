@@ -12,7 +12,7 @@
   <a class="skip-link" href="#main">跳到主要內容</a>
   <header class="topbar">
     <div>
-      <p class="eyebrow">LOCAL · HUMAN GATE</p>
+      <p class="eyebrow">LOCAL · AUTO ANALYSIS</p>
       <h1>法律案件工作台</h1>
     </div>
     <div class="security-state" aria-label="安全狀態">
@@ -31,8 +31,8 @@
       <form id="intake-form" class="intake-card">
         <div class="field-stack">
           <label for="summary">案情摘要</label>
-          <textarea id="summary" name="summary" rows="10" maxlength="20000" required aria-describedby="summary-hint" placeholder="請在摘要中寫明：&#10;發生時間：民國115年10月15日10時許&#10;發生地點：臺北市○○區○○路○號&#10;案情經過：請依時間順序寫明已知事實&#10;&#10;破獲或查獲案件，請改寫成「破獲時間：」「破獲地點：」或「查獲時間：」「查獲地點：」。"></textarea>
-          <small id="summary-hint">請使用「發生時間：」「發生地點：」、「破獲時間：」「破獲地點：」或「查獲時間：」「查獲地點：」其中一組明確標籤；不知道的內容請填 UNKNOWN。系統不會從一般敘述自行猜測時間或地點。</small>
+          <textarea id="summary" name="summary" rows="10" required aria-describedby="summary-hint" placeholder="直接貼上完整案情摘要即可。系統會依原文自動拆解人、事、時、地、物、行為、結果、證據與因果關係。&#10;&#10;若已有結構化資料，也可使用「發生時間：」「發生地點：」「破獲時間：」「破獲地點：」等標籤。"></textarea>
+          <small id="summary-hint">不必另外重填細項。系統會先依摘要原文自動整理；原文沒有記載的內容才標示 UNKNOWN，供你最後一次檢視。</small>
         </div>
         <button class="primary" type="submit">建立案件並進入 Gate 1</button>
         <details class="advanced">
@@ -70,8 +70,8 @@
       </div>
       <div id="case-warnings" class="case-warnings" role="alert" hidden></div>
       <section id="gate1-panel" class="panel" aria-labelledby="gate1-title">
-        <p class="gate-label">GATE 1</p><h3 id="gate1-title">人、事、時、地、物與因果</h3>
-        <p>每行一項。系統初始內容只是一份待確認草稿。</p>
+        <p class="gate-label">GATE 1</p><h3 id="gate1-title">人、事、時、地、物、行為、結果、證據</h3>
+        <p>系統會先自動整理。你只需檢視最後結果，必要時直接修正原文對應欄位。</p>
         <div id="structured-facts" class="structured-facts" hidden>
           <p class="fact-label">結構化事實（含溯源；承辦人確認後始得核准）</p>
           <table id="facts-table"><thead><tr><th>ID</th><th>內容（原文摘錄）</th><th>狀態</th></tr></thead><tbody></tbody></table>
@@ -83,18 +83,23 @@
           <label>地<textarea name="places" rows="4"></textarea></label>
           <label>物<textarea name="objects" rows="4"></textarea></label>
           <label>行為<textarea name="behaviors" rows="4"></textarea></label>
+          <label>結果／傷勢<textarea name="results" rows="4"></textarea></label>
+          <label>證據<textarea name="evidence" rows="4"></textarea></label>
           <label class="wide">因果關係<textarea name="causation" rows="3"></textarea></label>
           <label class="wide">尚未確認<textarea name="unknowns" rows="4"></textarea></label>
           <div class="actions wide">
             <button class="secondary" type="submit">儲存 Gate 1</button>
-            <button id="approve-gate1" class="primary" type="button">我已核對，進入 Gate 2</button>
+            <button id="approve-gate1" class="primary" type="button">人工模式：進入 Gate 2</button>
+            <button id="auto-prepare" class="primary" type="button">重新執行系統分析</button>
           </div>
         </form>
       </section>
 
       <section id="gate2-panel" class="panel" aria-labelledby="gate2-title" hidden>
         <p class="gate-label">GATE 2</p><h3 id="gate2-title">候選罪章與中立問答</h3>
-        <div class="warning"><strong>非法律結論</strong><span>候選來自規則比對或 AI 分析。請先確認罪章，再作答。</span></div>
+        <div id="auto-review-banner" class="warning" hidden><strong>系統已完成初步分析</strong><span>候選罪章、法律路由與問句已由系統建立。請直接檢視結果，無須逐項選擇；必要時回到事實欄位修正。</span></div>
+        <div class="warning"><strong>分析方向，不是法律結論</strong><span>候選罪章與問句由系統依摘要自動整理；未知事項會保留 UNKNOWN，最終由你一次檢視。</span></div>
+        <div id="candidate-element-analysis" class="structured-facts" hidden></div>
 
         <div id="gate2-steps" class="gate2-steps">
           <button id="step-tab-offense" class="step-tab current" type="button">① 選罪章</button>
@@ -151,6 +156,7 @@
 
         <section id="gate2-step-qa" class="gate2-step" hidden aria-labelledby="qa-step-title">
           <h4 id="qa-step-title" class="visually-hidden">逐題問答</h4>
+          <section id="known-question-summary" class="warning" aria-label="摘要已知內容" hidden></section>
           <form id="answers-form">
             <div class="qa-layout">
               <nav id="question-outline" class="question-outline" aria-label="題目總覽"></nav>
@@ -206,14 +212,9 @@
           <button id="start-suspect" class="primary" type="button">下一步：製作涉嫌人筆錄 →</button>
           <button id="reopen-case" class="danger" type="button">重新開啟並修正事實</button>
         </div>
-        <p class="privacy-note">案件資料以目前 Windows 使用者的 DPAPI 金鑰加密。資料庫移到其他電腦或 Windows 帳號後通常無法解密。下載的 DOCX 是未加密明文。</p>
+        <p class="privacy-note">案件只暫存在目前本機服務的記憶體中；建立新案件或重啟服務後即不再保留。下載的 DOCX 是未加密明文。</p>
       </section>
     </section>
-
-    <aside class="case-drawer" aria-labelledby="saved-title">
-      <h2 id="saved-title">已保存案件</h2>
-      <ul id="case-list"></ul>
-    </aside>
   </main>
   <script src="/app.js" defer></script>
 </body>

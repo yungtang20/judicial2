@@ -22,6 +22,23 @@ def test_summary_labels_supply_time_kind_and_location_when_fields_are_omitted():
     assert case["gate1"]["places"][0] == "臺北市○○區○○路1號"
 
 
+def test_auto_prepare_selects_candidate_route_and_questions_from_summary():
+    summary = (
+        "曹富生、顏大鈞前與羅世亮在法務部矯正署新店戒治所中因抽煙問題生有嫌隙，"
+        "共同徒手毆打羅世亮，致羅世亮受有上唇瘀腫及門牙折斷等傷害。"
+    )
+    case = create_case(intake(summary=summary), BANK)
+
+    prepared = apply_action(case, "auto_prepare", {}, BANK)
+
+    assert prepared["state"] == "GATE2_QA"
+    assert prepared["selected_offenses"] == ["injury"]
+    assert prepared["selected_legal_routes"]
+    assert prepared["questions"]
+    assert prepared["preparation_mode"] == "SYSTEM_AUTO_PREPARED_HUMAN_REVIEW_REQUIRED"
+    assert prepared["audit"][-1]["event"] == "AUTO_PREPARE"
+
+
 def test_missing_summary_labels_fail_closed_to_unknown_without_guessing():
     case = create_case({"summary": "有人在某處拿走物品。", "has_victim": True}, BANK)
     assert case["intake"]["event_kind"] == "發生"
@@ -171,6 +188,13 @@ def test_create_case_gate1_never_calls_external_ai(monkeypatch):
     assert case["gate1"]["segmentation_source"] == "rules"
 
 
+def test_initial_case_summary_is_preserved_while_statement_brief_is_capped():
+    original = "發生時間：民國115年1月1日\n" + ("案情詳細經過。" * 120)
+    case = create_case(intake(summary=original), BANK)
+    assert case["intake"]["summary"] == original
+    assert len(case["brief_summary"]) == 500
+
+
 def test_ai_only_candidate_keeps_crosswalk_fail_closed_metadata():
     monkey_data = {"candidates": [{"id": "opium", "reason": "AI 建議辨識鴉片章"}], "model": "test-model"}
     monkeypatch_ai = lambda summary, offenses, max_candidates=6, facts=None: monkey_data
@@ -204,6 +228,27 @@ def test_company_questions_precede_common_questions():
     assert "company_offense" in kinds
     xlsm_texts = [item["text"] for item in case["questions"] if item["kind"] == "company_offense"]
     assert any("遭何人竊取" in text for text in xlsm_texts)
+
+
+def test_company_standard_offense_route_does_not_mix_local_chapter_questions():
+    for offense_id in ("sexual_harassment", "stalking"):
+        case = completed_case()
+        case = apply_action(case, "start_interview", {"role": "victim"}, BANK)
+        case = apply_action(
+            case,
+            "set_offenses",
+            {
+                "offense_ids": [offense_id],
+                "legal_route_ids": [],
+                "route_review_confirmed": True,
+                "role": "victim",
+            },
+            BANK,
+        )
+        assert all(
+            item["kind"] in {"company", "common", "company_offense"}
+            for item in case["questions"]
+        )
 
 
 def test_no_victim_case_cannot_enter_regular_suspect_branch():

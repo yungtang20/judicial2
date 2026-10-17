@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import sqlite3
+from copy import deepcopy
 from datetime import UTC, datetime
 from pathlib import Path
+from threading import RLock
 from typing import Any
 
 from .security import protect_json, unprotect_json
@@ -14,6 +16,48 @@ class RevisionConflict(RuntimeError):
 
 class CaseNotFound(KeyError):
     pass
+
+
+class EphemeralCaseStore:
+    """Single-case, process-memory store for the no-history browser workflow."""
+
+    def __init__(self) -> None:
+        self._cases: dict[str, dict[str, Any]] = {}
+        self._lock = RLock()
+
+    def list_cases(self) -> list[dict[str, Any]]:
+        return []
+
+    def list_cases_meta(self) -> list[dict[str, Any]]:
+        return []
+
+    def get(self, case_id: str) -> dict[str, Any]:
+        with self._lock:
+            case = self._cases.get(case_id)
+            if case is None:
+                raise CaseNotFound(case_id)
+            return deepcopy(case)
+
+    def create(self, case: dict[str, Any]) -> dict[str, Any]:
+        now = datetime.now(UTC).isoformat()
+        created = deepcopy(case)
+        created["revision"] = 1
+        created["updated_at"] = now
+        with self._lock:
+            self._cases.clear()
+            self._cases[created["case_id"]] = deepcopy(created)
+        return created
+
+    def save(self, case: dict[str, Any], expected_revision: int) -> dict[str, Any]:
+        with self._lock:
+            current = self._cases.get(case["case_id"])
+            if current is None or current.get("revision") != expected_revision:
+                raise RevisionConflict("案件已由其他操作更新，請重新載入")
+            updated = deepcopy(case)
+            updated["revision"] = expected_revision + 1
+            updated["updated_at"] = datetime.now(UTC).isoformat()
+            self._cases[updated["case_id"]] = deepcopy(updated)
+            return updated
 
 
 class CaseStore:
