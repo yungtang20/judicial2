@@ -1,0 +1,5 @@
+node_modules
+.next
+.env.local
+debug_last_api.json
+JUDICIAL2_CASE_V3
