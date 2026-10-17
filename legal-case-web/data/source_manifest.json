@@ -6,7 +6,7 @@
     {"template_id":"general-victim","path":"../../通用被害人筆錄.doc","sha256":"0ED21C08CFF93F47B3C7F7685B87733A0EF47116BE977DB30E6616C79526BABF","assigned_role":"victim","role_authority":"COMPANY_DESIGNATED","source_version":"UNKNOWN","extraction_version":"company-verbatim-2026-10-11"},
     {"template_id":"general-suspect","path":"../../通用涉嫌人筆錄.doc","sha256":"945BE1335EC6A48C5050EB4B66A84F88863843CA60AEA8716BE6048C59CC9096","assigned_role":"suspect","role_authority":"COMPANY_DESIGNATED","source_version":"UNKNOWN","extraction_version":"company-verbatim-2026-10-11"},
     {"template_id":"general-transfer","path":"../../通用涉嫌人筆錄（移送）.doc","sha256":"D0D0E82FD3A5665FBCE1F476ED2BD96B721F5A2FB8B31EA7FEBB938AC981224C","assigned_role":"transfer","role_authority":"COMPANY_DESIGNATED","source_version":"UNKNOWN","extraction_version":"company-verbatim-2026-10-11"},
-    {"path":"../../條陳.txt","sha256":"73390941F279F653E5AFD440FEB0F6858D5CE02FC8B1008D2FEDCC1D7D58FD3D"},
+    {"path":"../../條陳.txt","sha256":"BB440256A805863B09BCF153E6B86487D997B0040400B2A13FEB0CA28F0F1132","previous_recorded_sha256":"73390941F279F653E5AFD440FEB0F6858D5CE02FC8B1008D2FEDCC1D7D58FD3D","recorded_basis":"LF_AS_STORED_IN_GIT","rehash_reason":"原記錄值為 Windows CRLF 位元組的 hash，僅在 CRLF 工作區成立；repo 內 blob 為 LF，配合 .gitattributes eol=lf 政策改以 Git 內容記錄。檔案內容未變更。"},
     {"path":"../../家庭暴力罪筆錄範本.odt","sha256":"A54826161CEBCC30327B2A02C1B9B5B78415B25F62621660809EC5CA8390E27B","routing":"company_required"},
     {"path":"../../警詢筆錄例稿(違反保護令罪).doc","sha256":"137CD55D9542CA1380989675B103A16E9148A39D52D6B7AE697F6BD1B7F16B34","routing":"company_required"},
     {"path":"../../01(署頒)警詢筆錄例稿(跟蹤騷擾罪)-新.odt","sha256":"D81419CE233D2B5EB1F247315296AA675C46C577CE8C69F5DED108E29FD02E5D","routing":"company_required"},
