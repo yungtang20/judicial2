@@ -29,9 +29,9 @@ def local_server(tmp_path, monkeypatch):
         thread.join(timeout=3)
 
 
-def request(port, method, path, *, headers=None, body=None):
+def request(port, method, path, *, headers=None, body=None, may_retry=False):
     # Windows ThreadingHTTPServer teardown 偶發 ConnectionAbortedError（socket race）
-    # → 重試一次；僅重試冪等的 GET（mutation 重試會重複建案）
+    # → 重試一次；非 GET 只在呼叫端聲明「重試不會造成副作用」時才重試
     last_error: Exception | None = None
     for attempt in range(2):
         try:
@@ -45,7 +45,7 @@ def request(port, method, path, *, headers=None, body=None):
         except OSError as exc:  # ConnectionAborted/Reset/timeout 都是 OSError 子類
             last_error = exc
             connection.close()
-            if method != "GET" or attempt == 1:
+            if attempt == 1 or (method != "GET" and not may_retry):
                 raise
     raise last_error  # pragma: no cover
 
@@ -67,7 +67,10 @@ def test_invalid_host_and_origin_are_rejected(local_server):
     }
     raw = json.dumps(intake(), ensure_ascii=False).encode("utf-8")
     headers["Content-Length"] = str(len(raw))
-    status, _, _ = request(local_server, "POST", "/api/cases", headers=headers, body=raw)
+    # Origin 缺席時 origin 檢查在建立案件前即以 403 拒絕，重試無副作用
+    status, _, _ = request(
+        local_server, "POST", "/api/cases", headers=headers, body=raw, may_retry=True
+    )
     assert status == 403
 
 
