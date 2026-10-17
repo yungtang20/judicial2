@@ -28,10 +28,10 @@
     {"path": "tests/fixtures/legal_retrieval_replay.json", "sha256": "bd5a02f6251dd1afece388f4a49f3ea41f60e006e162f827e25088f1067987dd", "role": "synthetic_golden_corpus"}
   ],
   "runtime_surfaces": [
-    {"path": "app/server.py", "sha256": "b682f0918a302a2b6fadfe09796153d44421002a53b761aeae2e593a37a93d2c", "expected_references": 0},
-    {"path": "app/workflow.py", "sha256": "16d56593067715db80b70a0ddb7450d04bd250d25beef2930ac1d4022a1b2c8d", "expected_references": 0},
-    {"path": "app/rules.py", "sha256": "46e072fe69b08f53a1ad088289ef81d6a8c7152d2a4a2f63a79fd423cc7196dd", "expected_references": 0},
-    {"path": "app/static/app.js", "sha256": "07150f851366c98304b6c1a434d207a1b09c4fe45da253c7e2376d0425faeb0c", "expected_references": 0}
+    {"path": "app/server.py", "sha256": "8710bbfecf042b4923e9aa76d576bcfb86d1e8c7bd94588735109cd3169badf9", "expected_references": 0},
+    {"path": "app/workflow.py", "sha256": "c1fabe2ced69746bc19ad1fd1fcb39991d6892e7d4aab2b6bdd206253cf9d3ff", "expected_references": 0},
+    {"path": "app/rules.py", "sha256": "f331905266a8b4fc5283c463dacaccad93e01e95edd8901d8d7a162bac49a98b", "expected_references": 0},
+    {"path": "app/static/app.js", "sha256": "a3412a5f32ebb1fcc225d00925137f17d89371021120b9e121ccb8b127d6a30b", "expected_references": 0}
   ],
   "replay_evidence": {
     "scenario_count": 4,
