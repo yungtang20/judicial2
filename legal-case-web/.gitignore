@@ -9,3 +9,6 @@ output/
 
 .env
 .encryption_key
+
+# 可重建的中間產物（題庫填充輸出；產生腳本已版控）
+review/*.xlsx
