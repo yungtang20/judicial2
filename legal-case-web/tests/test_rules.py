@@ -46,7 +46,7 @@ def test_candidate_uses_route_element_matrix_with_traceable_gate1_facts():
     assert matrix["route_id"] == "theft_320_1_movable"
     assert matrix["supported_count"] >= 3
     assert candidate["supporting_fact_refs"]
-    assert all(row["status"] in {"SOURCE_SUPPORTED", "UNKNOWN"} for row in matrix["elements"])
+    assert all(row["status"] in {"SOURCE_SUPPORTED", "ABSENT", "NOT_CHECKABLE"} for row in matrix["elements"])
 
 
 def test_incapacity_indecency_route_is_ranked_from_direct_source_evidence():
@@ -700,17 +700,43 @@ def test_candidate_without_supported_elements_names_no_route():
     from app.rules import _attach_element_evidence
 
     offense = _synthetic_offense([
-        {"id": "unrelated_a", "name": "甲路線", "fact_elements": ["要件甲無法辨識"]},
-        {"id": "unrelated_b", "name": "乙路線", "fact_elements": ["要件乙無法辨識", "要件丙無法辨識"]},
+        {"id": "unrelated_a", "name": "甲路線", "fact_elements": ["他人動產及原持有狀態"]},
+        {"id": "unrelated_b", "name": "乙路線", "fact_elements": ["本工具無此要件的比對依據"]},
     ])
     candidate = {"matched_terms": ["偷"]}
-    _attach_element_evidence(candidate, offense, "摘要與這些要件毫無交集。", None)
+    _attach_element_evidence(candidate, offense, "本摘要與路線要件毫無交集。", None)
     assert candidate["suggested_legal_route_ids"] == []
     assert "甲路線" not in candidate["inclusion_reason"]
     assert "乙路線" not in candidate["inclusion_reason"]
     assert "路線須由人工判斷" in candidate["inclusion_reason"]
     # 待補問清單仍須保留（不得清空，否則後續補問與收縮失去依據）
-    assert candidate["unknown_elements"] == ["要件甲無法辨識", "要件乙無法辨識", "要件丙無法辨識"]
+    assert candidate["unknown_elements"] == ["他人動產及原持有狀態", "本工具無此要件的比對依據"]
+    # 「已比對而原文未見」與「本工具沒有比對依據」必須分開，不得同標 UNKNOWN
+    assert {
+        row["element"]: row["status"]
+        for route in candidate["route_element_matrix"]
+        for row in route["elements"]
+    } == {
+        "他人動產及原持有狀態": "ABSENT",
+        "本工具無此要件的比對依據": "NOT_CHECKABLE",
+    }
+
+
+def test_unmapped_element_is_not_checkable_even_when_quoted_verbatim():
+    """沒有受審查比對依據的要件標為 NOT_CHECKABLE；不得以「要件字面出現在摘要」充當比對。"""
+    from app.rules import _attach_element_evidence
+
+    element = "本工具無此要件的比對依據"
+    offense = _synthetic_offense([
+        {"id": "unmapped", "name": "未建表路線", "fact_elements": [element]},
+    ])
+    candidate = {"matched_terms": ["偷"]}
+    # 摘要逐字寫出要件字面（就像判決引用法條），仍不得算作有原文支持
+    _attach_element_evidence(candidate, offense, f"判決理由逐字引用：{element}。", None)
+    route = candidate["route_element_matrix"][0]
+    assert route["elements"][0]["status"] == "NOT_CHECKABLE"
+    assert route["supported_count"] == 0
+    assert route["not_checkable_count"] == 1
 
 
 def test_route_suggestion_requires_the_shared_minimum_support():
@@ -718,10 +744,14 @@ def test_route_suggestion_requires_the_shared_minimum_support():
     from app.rules import _attach_element_evidence, ROUTE_MIN_SUPPORTED_ELEMENTS
 
     offense = _synthetic_offense([
-        {"id": "half_supported", "name": "半支持路線", "fact_elements": ["要件甲無法辨識", "要件乙無法辨識"]},
+        {
+            "id": "half_supported",
+            "name": "半支持路線",
+            "fact_elements": ["他人動產及原持有狀態", "未經同意竊取並破壞原持有"],
+        },
     ])
     candidate = {"matched_terms": ["偷"]}
-    _attach_element_evidence(candidate, offense, "摘要只記載要件甲無法辨識。", None)
+    _attach_element_evidence(candidate, offense, "摘要只記載包包。", None)
     assert candidate["suggested_legal_route_ids"] == []
     assert "半支持路線" in candidate["inclusion_reason"]  # 有支持才說明該路線的支持程度
     assert "1/2" in candidate["inclusion_reason"]

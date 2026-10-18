@@ -340,12 +340,19 @@ function renderOffenses(caseData) {
           return section;
         }
         const routeName = document.createElement("p");
-        routeName.textContent = `優先檢視路由：${route.route_name}（原文支持 ${route.supported_count}/${route.total_count}；仍須人工核對）`;
+        const uncheckable = route.not_checkable_count
+          ? `；其中 ${route.not_checkable_count} 項本工具無比對依據`
+          : "";
+        routeName.textContent = `優先檢視路由：${route.route_name}（原文支持 ${route.supported_count}/${route.total_count}${uncheckable}；仍須人工核對）`;
         section.appendChild(routeName);
         const list = document.createElement("ul");
         for (const element of route.elements || []) {
           const item = document.createElement("li");
-          const status = element.status === "SOURCE_SUPPORTED" ? "有原文支持" : "UNKNOWN／需補問";
+          const status = element.status === "SOURCE_SUPPORTED"
+            ? "有原文支持"
+            : element.status === "NOT_CHECKABLE"
+              ? "本工具無比對依據（須人工閱讀）"
+              : "原文未見（已比對）";
           const excerpts = (element.source_excerpts || []).join("；");
           item.textContent = `${status}｜${element.element}${excerpts ? `｜${excerpts}` : ""}`;
           list.appendChild(item);

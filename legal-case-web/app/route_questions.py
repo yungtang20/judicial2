@@ -142,6 +142,64 @@ def _neutral_pack(
 
 
 ROUTE_QUESTION_PACKS.update({
+    "sexual_harassment_25_unwanted_touch": {
+        "offense_id": "sexual_harassment",
+        "offense_name": "性騷擾",
+        "version": "sexual-harassment-25-v1",
+        "review_status": "HUMAN_REVIEW_REQUIRED",
+        "questions": {
+            "victim": [{
+                "id": "V-SH25-CONTACT",
+                "text": "請以你能接受的程度說明，雙方有哪些身體接觸，以及接觸的身體部位。",
+                "fact_target": "sexual_harassment_contact",
+                "ask_policy": "ASK_IF_UNCOVERED",
+                "kind": "core",
+            }, {
+                "id": "V-SH25-RESPONSE",
+                "text": "事發時對方如何接近並開始接觸？你當時能做哪些反應，實際做了什麼？",
+                "fact_target": "sexual_harassment_response",
+                "ask_policy": "ASK_IF_UNCOVERED",
+                "kind": "core",
+            }, {
+                "id": "V-SH25-CONTEXT",
+                "text": "接觸前後，對方曾說什麼或做什麼？請說明你親自見聞的內容。",
+                "fact_target": "sexual_harassment_context",
+                "ask_policy": "ASK_IF_UNCOVERED",
+                "kind": "distinguishing",
+            }, {
+                "id": "V-SH25-COMPLAINT",
+                "text": "你是否已提出申訴或告訴？如有，何時向哪個機關或單位提出？",
+                "fact_target": "sexual_harassment_complaint",
+                "ask_policy": "ASK_IF_UNCOVERED",
+                "kind": "core",
+            }],
+            "suspect": [{
+                "id": "S-SH25-CONTACT",
+                "text": "請依時間順序說明你與對方當時有哪些身體接觸，以及接觸的身體部位。",
+                "fact_target": "sexual_harassment_contact",
+                "ask_policy": "ASK_IF_UNCOVERED",
+                "kind": "core",
+            }, {
+                "id": "S-SH25-RESPONSE",
+                "text": "接觸開始前後，對方有哪些言語、動作或反應？你當時如何觀察到？",
+                "fact_target": "sexual_harassment_response",
+                "ask_policy": "ASK_IF_UNCOVERED",
+                "kind": "core",
+            }, {
+                "id": "S-SH25-CONTEXT",
+                "text": "接觸前後，你曾說什麼或做什麼？請依時間順序說明。",
+                "fact_target": "sexual_harassment_context",
+                "ask_policy": "ASK_IF_UNCOVERED",
+                "kind": "distinguishing",
+            }, {
+                "id": "S-SH25-COMPLAINT",
+                "text": "你所知對方是否已提出申訴或告訴？你如何得知提出的時間與受理單位？",
+                "fact_target": "sexual_harassment_complaint",
+                "ask_policy": "ASK_IF_UNCOVERED",
+                "kind": "core",
+            }],
+        },
+    },
     "fraud_339_general": _neutral_pack("fraud", "詐欺", "fraud-339-v1", [
         ("Q-F339-SEQUENCE", "請依時間順序說明雙方如何開始聯絡，以及其後發生的事情。", "contact_sequence", "core"),
         ("Q-F339-REPRESENTATION", "對方曾說明哪些具體內容？你當時如何理解這些內容？", "representation_content", "core"),

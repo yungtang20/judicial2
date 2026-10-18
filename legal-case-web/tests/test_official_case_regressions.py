@@ -77,6 +77,11 @@ AUDIT_ROUTE_CASES = (
         {"defamation"},
         {"defamation_310_defamation"}, True,
     ),
+    (
+        "甲於114年3月8日18時許在公車上，趁乙不及抗拒，以手觸摸乙之大腿及臀部。",
+        {"sexual_harassment"},
+        {"sexual_harassment_25_unwanted_touch"}, True,
+    ),
 )
 
 
@@ -230,3 +235,11 @@ def test_audit_style_cases_choose_supported_parent_and_child_routes_without_manu
         assert set(case["selected_offenses"]) == expected_offenses
         assert {item["route_id"] for item in case["selected_legal_routes"]} == expected_routes
         _assert_selected_route_elements_are_connected_to_questions(case)
+
+
+def test_known_sexual_harassment_contact_is_read_only_and_not_asked_again():
+    summary, _, _, has_victim = AUDIT_ROUTE_CASES[-1]
+    case = _prepared(summary, has_victim)
+    question = next(item for item in case["questions"] if item["id"] == "V-SH25-CONTACT")
+    assert question["meta"]["known_from_summary"] is True
+    assert question["meta"]["display_mode"] == "READ_ONLY_KNOWN"

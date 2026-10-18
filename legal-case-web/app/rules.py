@@ -179,10 +179,10 @@ def _element_evidence_patterns(element: str) -> list[tuple[str, ...]]:
             patterns.append(signals)
     if patterns:
         return patterns
-    # For routes outside the explicit conservative map, accept only a literal
-    # legal-element phrase from the source narrative.  Do not use fuzzy guesses.
-    literal = element.strip(" ，、或及與之的")
-    return [(literal,)] if len(literal) >= 4 else []
+    # 沒有受審查的比對依據時回傳空清單，呼叫端據此標為 NOT_CHECKABLE。
+    # 不得退回「要求要件字面出現在摘要」：散文不會寫出法條字面，那是不可能命中的
+    # 假比對，只會把工具的覆蓋缺口誤導成「已比對而摘要未見」。
+    return []
 
 
 def _route_element_matrix(
@@ -194,10 +194,11 @@ def _route_element_matrix(
         rows: list[dict[str, Any]] = []
         supporting_refs: list[str] = []
         for element in route.get("fact_elements", []):
+            patterns = _element_evidence_patterns(element)
             matched_signals: list[str] = []
             refs: list[str] = []
             excerpts: list[str] = []
-            for signal_group in _element_evidence_patterns(element):
+            for signal_group in patterns:
                 for signal in signal_group:
                     if signal and signal in summary:
                         matched_signals.append(signal)
@@ -215,9 +216,18 @@ def _route_element_matrix(
             for ref in refs:
                 if ref not in supporting_refs:
                     supporting_refs.append(ref)
+            # 三值不得混為一談：NOT_CHECKABLE 是「本工具沒有這個要件的比對依據」
+            # （覆蓋缺口），ABSENT 才是「已比對而摘要未見」。前者不可被讀成事實
+            # 缺失，後者不可被讀成工具沒查。
+            if not patterns:
+                status = "NOT_CHECKABLE"
+            elif matched_signals:
+                status = "SOURCE_SUPPORTED"
+            else:
+                status = "ABSENT"
             rows.append({
                 "element": element,
-                "status": "SOURCE_SUPPORTED" if matched_signals else "UNKNOWN",
+                "status": status,
                 "supporting_fact_refs": refs,
                 "source_excerpts": excerpts[:3],
                 "matched_signals": list(dict.fromkeys(matched_signals)),
@@ -228,9 +238,10 @@ def _route_element_matrix(
             "route_name": route["name"],
             "review_status": route.get("review_status", "HUMAN_REVIEW_REQUIRED"),
             "supported_count": supported,
+            "not_checkable_count": sum(row["status"] == "NOT_CHECKABLE" for row in rows),
             "total_count": len(rows),
             "supporting_fact_refs": supporting_refs,
-            "unknown_elements": [row["element"] for row in rows if row["status"] == "UNKNOWN"],
+            "unknown_elements": [row["element"] for row in rows if row["status"] != "SOURCE_SUPPORTED"],
             "elements": rows,
         })
     return sorted(
@@ -281,8 +292,12 @@ def _attach_element_evidence(
             f"{supported}/{best['total_count']} 個構成要件有可回查原文；"
             "仍僅為候選分析方向。"
         )
+        uncheckable_note = (
+            f"（其中 {best['not_checkable_count']} 項本工具無比對依據，須由人工閱讀原文判斷）"
+            if best.get("not_checkable_count") else ""
+        )
         candidate["reservation_reason"] = (
-            "結構化事實尚待補問：" + "、".join(best["unknown_elements"])
+            "結構化事實尚待補問：" + "、".join(best["unknown_elements"]) + uncheckable_note
             if best["unknown_elements"]
             else "結構化事實均有摘要原文片段，但仍須人工核對真實性與法律評價"
         )
@@ -656,6 +671,8 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
         r"(將手伸入[^，。；]+撫摸[^，。；]+)",
         r"(試圖褪去[^，。；]+)",
         r"(強行親吻[^，。；]+)",
+        r"((?:以手|用手|徒手)?觸摸[^，。；]{1,40})",
+        r"(擁抱[^，。；]{1,40})",
         r"(欲強拉[^，。；]+)",
         r"(共同飲酒)",
         r"(飲用酒類)",
@@ -1479,9 +1496,9 @@ ROUTE_ELEMENT_QUESTION_SIGNALS: dict[str, dict[str, tuple[str, ...]]] = {
         "未遂或既遂": ("performance_and_discovery", "交付給何人", "後來如何履行"),
     },
     "sexual_harassment_25_unwanted_touch": {
-        "意圖性騷擾": ("目的", "性騷擾申訴事件", "為何要為上開行為"),
-        "乘被害人不及抗拒之際": ("不及抗拒", "突然", "當時情況"),
-        "親吻、擁抱或觸摸臀部、胸部或其他身體隱私處之行為": ("親吻", "擁抱", "觸摸", "身體隱私"),
+        "意圖性騷擾": ("目的", "性騷擾申訴事件", "為何要為上開行為", "接觸前後"),
+        "乘被害人不及抗拒之際": ("不及抗拒", "突然", "當時情況", "能做哪些反應", "有哪些言語、動作或反應"),
+        "親吻、擁抱或觸摸臀部、胸部或其他身體隱私處之行為": ("親吻", "擁抱", "觸摸", "身體隱私", "身體接觸"),
         "權勢性騷擾之加重關係": ("權勢性騷擾", "任職單位", "監督", "從屬"),
         "告訴意思與提出情形": ("提出告訴", "申訴", "報案"),
     },
@@ -1650,9 +1667,16 @@ def build_questions(
                 continue
             questions.append(question)
             seen.add(question["text"])
-        # 公司已有該角色／罪章的核定套表題時，只使用公司標準筆錄。
-        # 不再把本庫 md、補充題或 JSON 要件題混入同一路由。
+        # 公司固定題逐字保留；若 child route 有經審查的中性核心缺口題，
+        # 只插入該 route pack，不混入整套 md／JSON 題庫。
         if has_company_standard_questions(role, offense_id):
+            for question in route_questions_for(
+                role, offense_id, route_ids, offense["source"],
+            ):
+                if question["text"] in seen:
+                    continue
+                questions.append(question)
+                seen.add(question["text"])
             continue
         if focused_questions and offense_id in PROPERTY_ROUTE_IDS:
             continue
@@ -1890,6 +1914,15 @@ def mark_known_questions(questions: list[dict[str, Any]], gate1: dict[str, Any])
             any("撫摸" in item or "插入" in item for item in behaviors_list),
             "摘要已記載具體身體接觸方式",
             excerpts_for({"action"}, ("撫摸", "插入")),
+        ),
+        "sexual_harassment_contact": (
+            any(
+                signal in item
+                for item in behaviors_list
+                for signal in ("觸摸", "親吻", "擁抱", "臀部", "胸部", "大腿")
+            ),
+            "摘要已記載身體接觸方式與部位",
+            excerpts_for({"action"}, ("觸摸", "親吻", "擁抱", "臀部", "胸部", "大腿")),
         ),
     }
 
