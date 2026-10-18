@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "notice": "強制路線規格：與 question_audit_spec.json 同一組 12 案，每案皆指定 route_ids，使 set_offenses 使用規格指定的路線而非 pipeline 自己的選擇（app 端 route_mode 記為 forced）。路線 id 取自 data/legal_route_crosswalk.json 的 child route，且必須屬於該案已選罪章（workflow._resolve_legal_routes 會拒絕不屬於已選罪章的路線）。每案取該章與摘要事實最貼近的一條子路線。註：妨害性自主、跟蹤騷擾、公共危險三案在 114 年 3 月 1 日 11:49 的一次執行中曾 prepare FAILED（產不出候選罪章），其後各次執行皆可產出，該失敗無法重現；因現行可觀察的 app 版本對 12 案皆產出候選罪章，本規格不再保留任何 route_ids: []。",
+  "base_url": "http://127.0.0.1:8787",
+  "station": "○○所",
+  "officer": "○○○",
+  "cases": [
+    {
+      "label": "竊盜",
+      "summary": "甲於114年3月1日15時許，在○○市○○區○○路1段1號便利商店內，趁店員不注意，徒手拿取貨架上價值新臺幣500元之洗髮精1瓶放入背包，未結帳即離去，經店員發覺後報警查獲。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["theft_320_1_movable"],
+      "route_note": "罪章 theft。摘要為趁店員不注意取走貨架動產，正對刑法第320條第1項竊取他人動產；同章其餘子路線（第320條第2項不動產竊佔、第323條能量準動產、第324條親屬程序）與事實不合。"
+    },
+    {
+      "label": "傷害",
+      "summary": "甲與乙於114年2月10日20時許在○○夜市因碰撞發生口角，甲徒手毆打乙臉部數下，致乙鼻樑骨折及左眼瘀傷，經送醫診斷需休養二週。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["injury_277_general"],
+      "route_note": "罪章 injury。徒手毆打致傷、需休養二週，對刑法第277條普通傷害；摘要未載重傷結果之認定，故不取第278條重傷害。"
+    },
+    {
+      "label": "詐欺",
+      "summary": "甲於114年1月5日以電話向乙佯稱其網路購物分期付款設定錯誤，需依指示操作自動櫃員機始能解除，乙陷於錯誤，陸續匯款新臺幣共12萬元至甲指定之帳戶。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["fraud_339_general"],
+      "route_note": "罪章 fraud。乙自行依指示匯款，屬施用詐術使人交付財物之刑法第339條一般詐欺；非以不正方法由自動付款設備取款之第339條之2。"
+    },
+    {
+      "label": "性騷擾",
+      "summary": "甲於114年3月8日18時許在○○市公車上，趁乙不及抗拒，以手觸摸乙之大腿及臀部，乙當場驚嚇並報警處理。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["sexual_harassment_25_unwanted_touch"],
+      "route_note": "罪章 sexual_harassment。摘要為趁人不及抗拒之觸摸，正對性騷擾防治法第25條；其餘子路線為定義、防治與申訴程序，非本案行為條文。"
+    },
+    {
+      "label": "毒品",
+      "summary": "警方於114年4月2日10時許持搜索票至甲位於○○市○○區之住處執行搜索，當場查獲第二級毒品甲基安非他命1包（毛重0.5公克）及玻璃球吸食器1組，甲於警詢坦承於114年3月30日在上址以燒烤方式施用甲基安非他命1次。",
+      "has_victim": false,
+      "roles": ["transfer"],
+      "route_ids": ["drugs_10_use"],
+      "route_note": "罪章 drugs。摘要自承施用甲基安非他命，正對毒品危害防制條例第10條施用第二級毒品；扣得持有部分未載販賣意圖，故不取第5條。"
+    },
+    {
+      "label": "妨害性自主",
+      "summary": "甲於114年2月3日22時許，在○○市○○區住處內，違反乙之意願，以強暴方式對乙為性交行為得逞，乙趁隙報警處理。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["sexual_221_nonconsensual_intercourse"],
+      "route_note": "罪章 sexual。摘要為違反乙意願、以強暴方式性交，對刑法第221條違反意願性交；摘要未載第222條加重情狀，亦非第225條利用不能抗拒，故不取。註：本摘要於 114 年 3 月 1 日 11:49 的一次執行中 auto_prepare 產不出候選罪章（prepare FAILED），其後各次執行皆可產出並自動選中本路線，該失敗無法重現；本規格仍依 crosswalk 強制指定，不保留 route_ids: []。"
+    },
+    {
+      "label": "性影像",
+      "summary": "甲與乙交往期間經乙同意拍攝其性影像；分手後甲於114年4月間未經乙同意，將該性影像上傳至某網路論壇供人觀覽。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["privacy_319_3_sexual_image_distribution"],
+      "route_note": "罪章 privacy。拍攝經同意、上傳未經同意，正對刑法第319條之3未經同意重製散布性影像；非第319條之1未經同意攝錄。"
+    },
+    {
+      "label": "恐嚇",
+      "summary": "甲於114年3月12日以通訊軟體向乙傳送訊息，恫稱若不交付新臺幣5萬元，將至乙住處對其家人不利，致乙心生畏懼。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["intimidation_305_safety"],
+      "route_note": "罪章 intimidation。摘要僅載致乙心生畏懼、未載財物交付，對刑法第305條恐嚇危害安全；取財部分未載結果，故不取第346條。"
+    },
+    {
+      "label": "毀損",
+      "summary": "甲於114年1月20日凌晨，持球棒砸毀乙所有停放在○○市○○路之自小客車車窗及車燈。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["damage_354_property"],
+      "route_note": "罪章 damage。砸毀車輛車窗車燈屬毀損一般物品之刑法第354條；非第352條文書、第353條建築物。"
+    },
+    {
+      "label": "妨害名譽",
+      "summary": "甲於114年2月18日在某社群平台公開貼文，指稱乙於任職期間侵占公款並與客戶有不當往來，致乙名譽受損。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["defamation_310_defamation"],
+      "route_note": "貼文具指摘具體事實，對 defamation 罪章取刑法第310條誹謗（非第309條公然侮辱）。貼文雖提及侵占公款，但只因事實摘要產出的候選罪章為 defamation，embezzlement 不在該案已選罪章內；workflow._resolve_legal_routes 會拒絕不屬於已選罪章的路線，強制指定會使兩個角色的 set_offenses 皆失敗而產生無效個案列，故不指定。"
+    },
+    {
+      "label": "跟蹤騷擾",
+      "summary": "甲因追求乙遭拒，自114年1月起反覆至乙住處及工作地點等候、盯梢，並多次傳送訊息，乙心生畏怖。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["stalking_18_offense"],
+      "route_note": "罪章 stalking。摘要為反覆至住處及工作地點等候盯梢並多次傳訊，對跟蹤騷擾防制法第18條實行跟蹤騷擾行為；第3條僅為行為定義、第4條至第17條為保護程序、第19條為違反保護令，均非本案行為條文。app 自身 auto 選擇為 stalking_3_definition（定義），強制模式在此刻意改取行為條文。註：本摘要於 11:49 的一次執行中 auto_prepare 產不出候選罪章（prepare FAILED），其後各次執行皆可產出，該失敗無法重現；本規格仍依 crosswalk 強制指定。"
+    },
+    {
+      "label": "公共危險",
+      "summary": "甲於114年3月5日凌晨飲酒後騎乘普通重型機車上路，經警攔查測得吐氣酒精濃度每公升0.62毫克。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"],
+      "route_ids": ["public_danger_185_3_impaired_driving"],
+      "route_note": "罪章 public_danger。摘要為酒後騎乘機車、吐氣酒精濃度每公升0.62毫克，對刑法第185條之3酒後駕駛動力交通工具；第185條之4須有交通事故致人死傷逃逸之事實，摘要未載，故不取。註：本摘要於 11:49 的一次執行中 auto_prepare 產不出候選罪章（prepare FAILED），其後各次執行皆可產出並自動選中本路線，該失敗無法重現；本規格仍依 crosswalk 強制指定。"
+    }
+  ]
+}
