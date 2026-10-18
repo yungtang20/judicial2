@@ -179,6 +179,15 @@ def xlsm_questions_for(
         if offense_id == "fraud" and "fraud_339_general" in selected_routes:
             if "信用卡" in item["text"] and "信用卡" not in source_text and "盜刷" not in source_text:
                 continue
+        if offense_id == "sexual_harassment":
+            sexual_image_context = any(
+                term in source_text
+                for term in ("性影像", "偷拍", "拍攝", "攝錄", "散布", "上傳", "供人觀覽")
+            )
+            if item["offense_name"] == "妨害性隱私" and not sexual_image_context:
+                # 同一 XLSM 中的性騷擾與性影像欄共用 parent offense id；
+                # 保留公司原文，但沒有影像事實時不得把性影像題混入觸摸案件。
+                continue
         if normalize(item["text"]) in seen:
             continue
         questions.append({

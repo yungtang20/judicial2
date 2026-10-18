@@ -243,3 +243,11 @@ def test_known_sexual_harassment_contact_is_read_only_and_not_asked_again():
     question = next(item for item in case["questions"] if item["id"] == "V-SH25-CONTACT")
     assert question["meta"]["known_from_summary"] is True
     assert question["meta"]["display_mode"] == "READ_ONLY_KNOWN"
+    assert case["gate1"]["places"] == ["公車"]
+    assert all("114年" not in place for place in case["gate1"]["places"])
+    assert not any(
+        item.get("offense_name") == "妨害性隱私"
+        or any(term in item["text"] for term in ("性影像", "拍攝/散布", "散布平臺"))
+        for item in case["questions"]
+        if item.get("offense_id") == "sexual_harassment"
+    )

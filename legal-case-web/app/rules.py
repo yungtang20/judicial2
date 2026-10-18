@@ -509,6 +509,14 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
             r"前往|就診|接受|駕駛|匯款|施行", segment
         ):
             continue
+        # 「於114年…時許在○○市公車上」的第一個介系詞引出時間；
+        # 地點值只能保留第二個「在」之後的原文，不得混入日期時間。
+        segment = re.sub(
+            r"^(?:民國)?\d{2,3}[年年]\d{1,2}月\d{1,2}日"
+            r"(?:(?:凌晨|上午|下午|晚上)?(?:零|[0-9]{1,2})時(?:[0-5]?\d分)?(?:許)?)?在",
+            "",
+            segment,
+        )
         segment = re.split(r"(?:見|基於|遂|因|共同|以|將|徒手|欲|而|拍攝|委請|駕駛|就診|接受|施行|，)", segment, maxsplit=1)[0].strip()
         segment = segment.rstrip("上內中")
         if re.search(location_terms, segment):
