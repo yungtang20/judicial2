@@ -41,10 +41,48 @@ OBSTRUCTION_INJURY_SUMMARY = (
     "現場監視器及乙之診斷證明書可供查證。"
 )
 
+AUDIT_ROUTE_CASES = (
+    (
+        "甲於114年3月1日15時許，在便利商店內徒手拿取貨架上洗髮精1瓶放入背包，未結帳即離去。",
+        {"theft"},
+        {"theft_320_1_movable"}, True,
+    ),
+    (
+        "甲於114年2月3日22時許，在住處內違反乙之意願，以強暴方式對乙為性交行為得逞。",
+        {"sexual"},
+        {"sexual_221_nonconsensual_intercourse"}, True,
+    ),
+    (
+        "甲因追求乙遭拒，自114年1月起反覆至乙住處及工作地點等候、盯梢，並多次傳送訊息，乙心生畏怖。",
+        {"stalking"},
+        {"stalking_3_definition"}, True,
+    ),
+    (
+        "甲於114年3月5日凌晨飲酒後騎乘普通重型機車上路，經警攔查測得吐氣酒精濃度每公升0.62毫克。",
+        {"public_danger"},
+        {"public_danger_185_3_impaired_driving"}, True,
+    ),
+    (
+        "甲於114年1月20日凌晨，持球棒砸毀乙所有之自小客車車窗及車燈。",
+        {"damage"},
+        {"damage_354_property"}, True,
+    ),
+    (
+        "甲於114年4月2日在住處施用第二級毒品甲基安非他命，警方持搜索票查獲甲基安非他命及吸食器。",
+        {"drugs"},
+        {"drugs_10_use"}, False,
+    ),
+    (
+        "甲於114年2月18日在社群平台公開貼文，指稱乙侵占公款，致乙名譽受損。",
+        {"defamation"},
+        {"defamation_310_defamation"}, True,
+    ),
+)
 
-def _prepared(summary: str):
+
+def _prepared(summary: str, has_victim: bool = True):
     return apply_action(
-        create_case({"summary": summary, "has_victim": True}, BANK),
+        create_case({"summary": summary, "has_victim": has_victim}, BANK),
         "auto_prepare",
         {},
         BANK,
@@ -73,6 +111,21 @@ def _assert_source_offsets(case, summary):
         start = fact["source_start"]
         end = fact["source_end"]
         assert summary[start:end] == excerpt
+
+
+def _assert_selected_route_elements_are_connected_to_questions(case):
+    route_elements = {
+        route["id"]: set(route["fact_elements"])
+        for offense in BANK["offenses"]
+        for route in offense.get("legal_routes", [])
+    }
+    covered = {
+        element
+        for question in case["questions"]
+        for element in question.get("meta", {}).get("target_elements", [])
+    }
+    for route in case["selected_legal_routes"]:
+        assert route_elements[route["route_id"]] <= covered
 
 
 def test_official_fraud_case_has_complete_gate1_and_exact_route():
@@ -169,3 +222,11 @@ def test_official_regression_cases_are_deterministic_and_fresh():
         assert first["selected_offenses"] == second["selected_offenses"]
         assert first["selected_legal_routes"] == second["selected_legal_routes"]
         _assert_source_offsets(first, summary)
+
+
+def test_audit_style_cases_choose_supported_parent_and_child_routes_without_manual_selection():
+    for summary, expected_offenses, expected_routes, has_victim in AUDIT_ROUTE_CASES:
+        case = _prepared(summary, has_victim)
+        assert set(case["selected_offenses"]) == expected_offenses
+        assert {item["route_id"] for item in case["selected_legal_routes"]} == expected_routes
+        _assert_selected_route_elements_are_connected_to_questions(case)

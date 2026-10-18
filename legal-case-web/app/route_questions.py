@@ -169,6 +169,7 @@ ROUTE_QUESTION_PACKS.update({
         ("Q-PD1853-DRIVE", "其後於何時、何地駕駛何種動力交通工具？行駛經過為何？", "driving_details", "core"),
         ("Q-PD1853-TEST", "檢測於何時、何地進行？數值、單位及使用設備為何？", "impairment_test_details", "core"),
         ("Q-PD1853-INCIDENT", "駕駛期間是否發生碰撞或其他事故？請說明經過及結果。", "driving_incident", "core"),
+        ("Q-PD1853-PRIOR", "是否有資料可確認駕駛人過去十年內的酒駕前案及其確定情形？", "prior_dui_record", "distinguishing"),
         ("Q-PD1853-PERSONS", "車內及事故現場有哪些人？各自看到或經歷什麼？", "scene_persons", "distinguishing"),
         ("Q-PD1853-EVIDENCE", "有哪些檢測、攔查、事故、影像或車籍資料可供查證？", "dui_evidence_sources", "reinforce"),
     ]),

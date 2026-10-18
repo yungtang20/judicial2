@@ -22,6 +22,26 @@
         ],
         "witness": []
       }
+    },
+    {
+      "pack_id": "DRUGS_USE_EVIDENCE",
+      "offense_name": "毒品",
+      "route_ids": ["drugs"],
+      "status": "HUMAN_REVIEW_REQUIRED",
+      "source_label": "毒品施用證據補強問句",
+      "questions": {
+        "victim": [],
+        "suspect": [],
+        "transfer": [
+          {
+            "id": "SUP-DRUGS-USE-EVIDENCE-T-01",
+            "fact_categories": ["證據"],
+            "fact_target": "drug_use_evidence",
+            "target_elements": ["採尿、鑑驗或其他可回查證據"],
+            "text": "本案有無採尿、鑑驗、搜索扣押、查獲物品或其他可供查證的資料？各項資料的取得時間與來源為何？"
+          }
+        ]
+      }
     }
   ]
 }

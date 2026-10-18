@@ -24,6 +24,11 @@ MAX_SELECTED_OFFENSES = 3
 # 超出時 fail closed 提示承辦人縮小候選路由（不得靜默裁 core）
 MAX_OFFENSE_QUESTIONS = 78
 
+# 一條法規路線至少要能在摘要中找到幾個構成要件的可回查原文，才足以被「建議」
+# 為本案方向，也才列為合格候選（ELIGIBLE_CANDIDATE）。建議與狀態兩處必須共用
+# 同一門檻，否則會出現「建議某路線、該路線狀態卻是 HINT_ONLY」的自相矛盾。
+ROUTE_MIN_SUPPORTED_ELEMENTS = 2
+
 PROPERTY_TAKING_ACTIONS = ("拿走", "取走", "帶走", "搶走", "奪走", "偷走", "搬走")
 PROPERTY_ROUTE_IDS = {"theft", "embezzlement", "robbery"}
 
@@ -118,8 +123,8 @@ def _element_evidence_patterns(element: str) -> list[tuple[str, ...]]:
         (("利用該狀態",), ("利用", "乘", "趁", "不能抗拒", "不知抗拒", "睡著")),
         (("強暴、脅迫、恐嚇、催眠術或其他違反意願方法",), ("強暴", "脅迫", "恐嚇", "催眠", "威脅", "不同意")),
         (("本人意願與方法作用的具體事實",), ("不同意", "拒絕", "反抗", "不能抗拒", "不願意")),
-        (("他人動產及原持有狀態",), ("包包", "現金", "手機", "財物", "物品", "所有", "放置", "抽屜")),
-        (("未經同意竊取並破壞原持有",), ("竊取", "偷走", "拿走", "取走", "遭竊", "不翼而飛")),
+        (("他人動產及原持有狀態",), ("包包", "現金", "手機", "財物", "物品", "所有", "放置", "抽屜", "貨架", "洗髮精")),
+        (("未經同意竊取並破壞原持有",), ("竊取", "偷走", "拿走", "拿取", "取走", "未結帳", "遭竊", "不翼而飛")),
         (("為自己或第三人不法所有之意圖", "為自己或第三人不法所有意圖"), ("不法所有",)),
         (("搶奪他人動產行為",), ("搶奪", "搶取", "奪走")),
         (("先前竊盜或搶奪行為",), ("竊盜", "竊取", "搶奪", "搶取")),
@@ -148,11 +153,25 @@ def _element_evidence_patterns(element: str) -> list[tuple[str, ...]]:
         (("行為與結果間因果關係",), ("導致", "致", "使")),
         (("駕駛動力交通工具",), ("駕駛", "駕車", "騎乘", "行駛", "上路")),
         (("酒精濃度、不能安全駕駛",), ("吐氣酒精濃度", "酒精濃度", "毫克", "酒後")),
-        (("第352條及第353條以外之他人之物",), ("車窗", "玻璃", "物品", "財物")),
-        (("毀棄損壞或致令不堪用",), ("破壞", "毀損", "損壞", "不堪使用")),
+        (("第352條及第353條以外之他人之物",), ("車窗", "車燈", "自小客車", "玻璃", "物品", "財物", "所有")),
+        (("毀棄損壞或致令不堪用",), ("破壞", "毀損", "砸毀", "損壞", "不堪使用")),
         (("足以生損害於公眾或他人",), ("不堪使用", "受損", "損害")),
         (("公務員依法執行職務或特定職務目的",), ("公務員", "執行", "職務", "門禁")),
         (("強暴或脅迫行為",), ("揮打", "毆打", "攻擊", "強暴", "脅迫")),
+        (("意圖性騷擾",), ("性騷擾", "觸摸臀部", "觸摸胸部", "摸臀", "摸胸")),
+        (("乘被害人不及抗拒之際",), ("不及抗拒", "趁", "突然")),
+        (("親吻、擁抱或觸摸臀部、胸部或其他身體隱私處之行為",), ("親吻", "擁抱", "觸摸", "臀部", "胸部", "身體隱私處")),
+        (("施用行為、時間、地點及方法",), ("施用", "吸食", "燒烤方式")),
+        (("毒品品項及第一級或第二級分類", "毒品品項及級別"), ("第一級毒品", "第二級毒品", "甲基安非他命", "海洛因", "大麻")),
+        (("採尿、鑑驗或其他可回查證據",), ("採尿", "尿液", "鑑驗", "搜索票", "查獲", "坦承", "吸食器")),
+        (("指摘或傳述具體事項",), ("指稱", "貼文", "刊登", "傳述", "具體事項")),
+        (("足以毀損他人名譽",), ("名譽受損", "毀損名譽", "貶損名譽")),
+        (("散布於眾意圖及文字圖畫態樣",), ("公開貼文", "社群平台", "網路", "散布", "文字", "圖畫")),
+        (("以人員設備通訊網路或其他方法對特定人",), ("住處", "工作地點", "傳送訊息", "盯梢", "等候")),
+        (("反覆或持續且違反意願",), ("反覆", "持續", "多次", "遭拒")),
+        (("與性或性別有關，或對密切關係人之法定例外",), ("追求", "交往", "性別", "性")),
+        (("使人心生畏怖且足以影響日常生活或社會活動",), ("心生畏怖", "心生畏懼", "影響日常生活", "影響工作")),
+        (("八款法定行為態樣",), ("監視", "觀察", "跟蹤", "盯梢", "守候", "等候", "傳送訊息", "通訊")),
     ]
     patterns: list[tuple[str, ...]] = []
     for element_fragments, signals in rules:
@@ -220,6 +239,15 @@ def _route_element_matrix(
     )
 
 
+def _union_unknown_elements(matrix: list[dict[str, Any]]) -> list[str]:
+    """所有路線皆未被支持時，列出整章的待補問要件（去重、保留順序）。"""
+    union: dict[str, None] = {}
+    for row in matrix:
+        for element in row.get("unknown_elements", []):
+            union.setdefault(element, None)
+    return list(union)
+
+
 def _attach_element_evidence(
     candidate: dict[str, Any], offense: dict[str, Any], summary: str, gate1: dict[str, Any] | None
 ) -> None:
@@ -233,20 +261,40 @@ def _attach_element_evidence(
     if not matrix:
         return
     best = matrix[0]
-    candidate["suggested_legal_route_ids"] = [best["route_id"]] if best["supported_count"] else []
-    candidate["unknown_elements"] = best["unknown_elements"]
+    supported = best["supported_count"]
+    candidate["suggested_legal_route_ids"] = (
+        [best["route_id"]] if supported >= ROUTE_MIN_SUPPORTED_ELEMENTS else []
+    )
+    # 全部路線都沒有可回查原文時，matrix[0] 只是「元素最少」的排序結果，不代表
+    # 本案方向。此時不得指名任何路線，否則會把無關罪名的要件寫進候選說明
+    # （實例：竊盜案被說明成「電能、熱能或其他能量準動產」）。
+    candidate["unknown_elements"] = (
+        best["unknown_elements"] if supported else _union_unknown_elements(matrix)
+    )
     candidate["supporting_fact_refs"] = best["supporting_fact_refs"]
     if offense.get("crosswalk_status") != "SPLIT_REQUIRED":
         candidate["element_model_status"] = "SOURCE_EVIDENCE_MATRIX"
     keyword_note = "、".join(candidate.get("matched_terms", [])) or "無直接關鍵詞"
+    if supported:
+        candidate["inclusion_reason"] = (
+            f"關鍵詞提示：{keyword_note}；摘要對「{best['route_name']}」"
+            f"{supported}/{best['total_count']} 個構成要件有可回查原文；"
+            "仍僅為候選分析方向。"
+        )
+        candidate["reservation_reason"] = (
+            "結構化事實尚待補問：" + "、".join(best["unknown_elements"])
+            if best["unknown_elements"]
+            else "結構化事實均有摘要原文片段，但仍須人工核對真實性與法律評價"
+        )
+        return
     candidate["inclusion_reason"] = (
-        f"關鍵詞提示：{keyword_note}；摘要對「{best['route_name']}」"
-        f"{best['supported_count']}/{best['total_count']} 個構成要件有可回查原文；"
-        "仍僅為候選分析方向。"
+        f"關鍵詞提示：{keyword_note}；摘要尚無足以支持任何特定法規路線的可回查原文，"
+        "路線須由人工判斷；仍僅為候選分析方向。"
     )
     candidate["reservation_reason"] = (
-        "結構化事實尚待補問：" + "、".join(best["unknown_elements"])
-        if best["unknown_elements"] else "結構化事實均有摘要原文片段，但仍須人工核對真實性與法律評價"
+        "本罪章結構化事實尚待補問：" + "、".join(candidate["unknown_elements"])
+        if candidate["unknown_elements"]
+        else "結構化事實均有摘要原文片段，但仍須人工核對真實性與法律評價"
     )
 
 
@@ -1181,7 +1229,7 @@ def candidate_offenses(
                 hits = [item for item in hits if item != "偷"]
         # 性交且明示不同意、睡眠中或以影片威脅時，建立妨害性自主的分析方向。
         if offense["id"] == "sexual" and not hits and "性交" in summary:
-            if re.search(r"(不同意|睡著|偷拍|威脅|脅迫|偷偷)", summary):
+            if re.search(r"(不同意|違反.{0,3}意願|強暴|睡著|偷拍|威脅|脅迫|偷偷)", summary):
                 hits = ["非合意性交／性自主情境"]
         if offense["id"] == "sexual" and not hits:
             if re.search(r"(乘機猥褻|猥褻|不能抗拒|胸部|內衣)", summary):
@@ -1233,7 +1281,7 @@ def candidate_offenses(
             ):
                 hits = ["駕車事故後未停留處理情境"]
         if offense["id"] == "public_danger" and hits:
-            driving_signal = re.search(r"駕車|駕駛|行駛|操控車輛|酒駕|肇事|交通事故", summary)
+            driving_signal = re.search(r"駕車|駕駛|騎乘|行駛|上路|操控車輛|酒駕|肇事|交通事故", summary)
             if not driving_signal:
                 hits = []
         if offense["id"] == "fraud" and not hits:
@@ -1245,13 +1293,18 @@ def candidate_offenses(
             ):
                 hits = ["具體傷害結果／致傷行為情境"]
         if offense["id"] == "theft" and not hits:
-            if re.search(r"(?:取走|拿走|竊取|盜取)[^。；]{0,60}(?:現金|手機|電腦|財物|物品)", summary):
+            if re.search(r"(?:取走|拿走|拿取|竊取|盜取)[^。；]{0,60}(?:現金|手機|電腦|財物|物品|商品|貨架|洗髮精)", summary):
                 hits = ["取走他人動產情境"]
         if offense["id"] == "damage" and not hits:
-            if re.search(r"破壞|毀損|損壞|不堪使用", summary) and re.search(
+            if re.search(r"破壞|毀損|砸毀|損壞|不堪使用", summary) and re.search(
                 r"車窗|玻璃|物品|財物|器物|設備", summary
             ):
                 hits = ["物品毀損／不堪使用情境"]
+        if offense["id"] == "stalking" and not hits:
+            if re.search(r"反覆|持續|多次", summary) and re.search(
+                r"跟蹤|盯梢|守候|等候|尾隨|傳送訊息|住處|工作地點", summary
+            ) and re.search(r"心生畏怖|心生畏懼|害怕|恐懼", summary):
+                hits = ["反覆跟蹤騷擾／心生畏怖情境"]
         if offense["id"] == "obstruction" and not hits:
             if re.search(r"公務員|依法執行|執行[^。；]{0,12}職務", summary) and re.search(
                 r"攔阻|揮打|毆打|強暴|脅迫|妨害", summary
@@ -1263,6 +1316,13 @@ def candidate_offenses(
             hits = []
         if offense["id"] == "defamation" and hits:
             if not re.search(r"名譽|侮辱|誹謗|不實|貶損|公然|公開場合|辱罵|散布", summary):
+                hits = []
+        # 公開貼文中的「侵占」可能只是被指摘的內容，不等於摘要已描述
+        # 行為人實際持有或處分他人財物。此時不得把侵占罪章帶入正式候選。
+        if offense["id"] == "embezzlement" and hits:
+            allegation_context = re.search(r"(?:公開貼文|貼文|發文|指稱|指摘)[^。；]{0,60}侵占", summary)
+            possession_context = re.search(r"(?:保管|持有|代收|受託|業務上)[^。；]{0,60}(?:占為己有|拒不返還|侵占)", summary)
+            if allegation_context and not possession_context:
                 hits = []
         if hits:
             element_labels, candidate_status, element_status = candidate_element_state(offense)
@@ -1300,7 +1360,9 @@ def candidate_offenses(
             route_states: dict[str, str] = {}
             for route in matrix:
                 route_states[route["route_id"]] = (
-                    "ELIGIBLE_CANDIDATE" if route.get("supported_count", 0) >= 2 else "HINT_ONLY"
+                    "ELIGIBLE_CANDIDATE"
+                    if route.get("supported_count", 0) >= ROUTE_MIN_SUPPORTED_ELEMENTS
+                    else "HINT_ONLY"
                 )
             if offense["id"] == "sexual":
                 ages = [
@@ -1392,6 +1454,123 @@ def alternative_legal_routes(gate1: dict[str, Any]) -> list[dict[str, Any]]:
         ],
         "notice": "僅為非刑事替代檢查方向，不代表民事關係成立。",
     }]
+
+
+# 已審查 child route 的法律要件，必須連回實際問句。這份 sidecar 只增加
+# metadata，不改公司套表或既有題庫文字；值同時可比對問句本文與 fact_target。
+ROUTE_ELEMENT_QUESTION_SIGNALS: dict[str, dict[str, tuple[str, ...]]] = {
+    "theft_320_1_movable": {
+        "他人動產及原持有狀態": ("何人實際持有", "何人所有", "持有、保管或控制"),
+        "未經同意竊取並破壞原持有": ("允許，範圍", "是否曾同意", "如何竊取"),
+        "為自己或第三人不法所有之意圖": ("用途", "為何要拿取", "移轉、出售、隱匿"),
+        "未遂或既遂": ("物品不在", "取得後", "被取得後"),
+    },
+    "injury_277_general": {
+        "傷害身體或健康行為": ("具體動作", "如何遭人傷害", "用何種器具傷害"),
+        "傷害結果與因果關係": ("哪些傷勢", "使你何處受傷", "造成對方受傷"),
+        "死亡或重傷結果與因果關係": ("傷勢如何", "何種診療", "診斷證明書"),
+    },
+    "fraud_339_general": {
+        "詐術內容及實施": ("representation_content", "遭何人詐騙", "說明哪些具體內容"),
+        "相對人陷於錯誤": ("reliance_and_verification", "如何理解這些內容", "曾查證哪些事項"),
+        "交付財物或財產利益處分": ("property_dispositions", "各筆款項或財物", "具體損害金額"),
+        "財產流向與損害": ("property_dispositions", "performance_and_discovery", "具體損害金額"),
+        "不法所有意圖": ("履行", "準備", "取得款項", "為何"),
+        "未遂或既遂": ("performance_and_discovery", "交付給何人", "後來如何履行"),
+    },
+    "sexual_harassment_25_unwanted_touch": {
+        "意圖性騷擾": ("目的", "性騷擾申訴事件", "為何要為上開行為"),
+        "乘被害人不及抗拒之際": ("不及抗拒", "突然", "當時情況"),
+        "親吻、擁抱或觸摸臀部、胸部或其他身體隱私處之行為": ("親吻", "擁抱", "觸摸", "身體隱私"),
+        "權勢性騷擾之加重關係": ("權勢性騷擾", "任職單位", "監督", "從屬"),
+        "告訴意思與提出情形": ("提出告訴", "申訴", "報案"),
+    },
+    "drugs_10_use": {
+        "施用行為、時間、地點及方法": ("何時、在何處取得、持有或施用", "施用的種類、時間與次數", "做了什麼"),
+        "毒品品項及第一級或第二級分類": ("毒品種類", "第一級", "第二級", "甲基安非他命"),
+        "採尿、鑑驗或其他可回查證據": ("採尿", "尿液", "鑑驗", "搜索", "查獲", "證據"),
+    },
+    "sexual_221_nonconsensual_intercourse": {
+        "性交行為": ("性交", "發生了什麼", "行為經過", "實際有哪些身體接觸或其他行為"),
+        "強暴、脅迫、恐嚇、催眠術或其他違反意願方法": ("使用了什麼方法", "暴力、威脅", "強暴"),
+        "本人意願與方法作用的具體事實": ("是否同意", "確認對方同意", "表達方式"),
+        "未遂或既遂": ("發生了什麼", "事發後", "行為經過", "實際有哪些身體接觸或其他行為"),
+    },
+    "privacy_319_3_sexual_image_distribution": {
+        "重製、散布、播送、交付、公然陳列、供觀覽或販賣行為": ("重製、散布", "是否有散布", "散布的管道"),
+        "本人同意狀態與無故情形": ("是否曾同意", "取得了被攝錄", "同意的範圍"),
+        "性影像來源類型": ("取得影像或資料的來源", "攝錄的載體", "保存於何處"),
+        "營利意圖": ("營利", "獲取金錢", "收費、販售"),
+        "未遂或既遂": ("目前保存在何處", "是否曾將內容", "散布的管道與範圍"),
+    },
+    "intimidation_305_safety": {
+        "告知加害生命、身體、自由、名譽或財產之事": ("何種言語", "何種方式", "說出上開言語"),
+        "恐嚇內容及傳達對象": ("對你恐嚇", "平台或管道", "被害人說出"),
+        "致生安全危害的具體事實": ("心生畏懼", "感到害怕", "有何感受"),
+    },
+    "damage_354_property": {
+        "第352條及第353條以外之他人之物": ("damaged_property", "受影響的物品", "遭毀損何物", "何人所有"),
+        "毀棄損壞或致令不堪用": ("damage_action", "如何受到破壞", "如何毀損", "不堪用"),
+        "足以生損害於公眾或他人": ("damage_result", "能否正常使用", "毀損程度", "價值為何"),
+    },
+    "defamation_310_defamation": {
+        "指摘或傳述具體事項": ("具體事件或事實", "言論之內容", "原話或內容"),
+        "足以毀損他人名譽": ("損害你的名譽", "貶損他人名譽", "故意貶低"),
+        "散布於眾意圖及文字圖畫態樣": ("散布於眾", "公開場所發表", "散布管道"),
+        "真實性、公共利益與私德範圍": ("證明其為真實", "自衛、自辯", "可受公評"),
+        "相當理由確信為真實之證據資料": ("相當理由確信", "事前查證", "證據可提供", "證明其為真實"),
+    },
+    "stalking_3_definition": {
+        "以人員設備通訊網路或其他方法對特定人": ("電話、簡訊", "監視、觀察", "對被害人"),
+        "反覆或持續且違反意願": ("一共發生幾次", "反覆或持續", "明確表達不願"),
+        "與性或性別有關，或對密切關係人之法定例外": ("不當追求", "性別", "與你之關係", "為何要為上開行為"),
+        "使人心生畏怖且足以影響日常生活或社會活動": ("心生畏怖", "日常生活", "工作", "精神上"),
+        "八款法定行為態樣": ("監視、觀察、跟蹤", "電子設備對你進行干擾", "警告、威脅"),
+    },
+    "public_danger_185_3_impaired_driving": {
+        "駕駛動力交通工具": ("driving_details", "駕駛何種動力交通工具", "飲酒後騎乘何駕駛工具"),
+        "酒精濃度、不能安全駕駛，或毒品麻醉藥品品項濃度及不能安全駕駛之法定態樣": ("impairment_test_details", "數值、單位", "施測", "酒測"),
+        "死亡或重傷結果、因果關係及可預見性": ("driving_incident", "碰撞或其他事故", "造成任何人受傷"),
+        "十年內再犯與前案確定狀態": ("十年內", "前案", "前科", "酒駕紀錄"),
+    },
+}
+
+
+def _attach_route_elements_to_questions(
+    questions: list[dict[str, Any]],
+    offenses: dict[str, dict[str, Any]],
+    route_ids: list[str],
+) -> None:
+    """以人工審查 sidecar 把 child route 要件連到既有問句，不改題目本文。"""
+    route_parent: dict[str, str] = {}
+    route_elements: dict[str, list[str]] = {}
+    for offense_id, offense in offenses.items():
+        for route in offense.get("legal_routes", []):
+            route_parent[route["id"]] = offense_id
+            route_elements[route["id"]] = list(route.get("fact_elements", []))
+    for route_id in route_ids:
+        signals_by_element = ROUTE_ELEMENT_QUESTION_SIGNALS.get(route_id, {})
+        parent = route_parent.get(route_id)
+        if not parent:
+            continue
+        for element in route_elements.get(route_id, []):
+            signals = signals_by_element.get(element, ())
+            if not signals:
+                continue
+            for question in questions:
+                if question.get("offense_id") != parent:
+                    continue
+                meta = question.setdefault("meta", {})
+                haystack = "｜".join((str(question.get("text", "")), str(meta.get("fact_target", ""))))
+                if not any(signal in haystack for signal in signals):
+                    continue
+                targets = meta.setdefault("target_elements", [])
+                if element not in targets:
+                    targets.append(element)
+                legal_targets = meta.setdefault("legal_targets", [])
+                if route_id not in legal_targets:
+                    legal_targets.append(route_id)
+                meta["element_mapping_status"] = "REVIEWED_SIDECAR"
 
 
 def build_questions(
@@ -1545,6 +1724,7 @@ def build_questions(
         {"id": oid, "offense_id": oid} for oid in offense_ids
     ]
     questions = enrich_question_metadata(questions, gate1 or {}, pseudo_candidates)
+    _attach_route_elements_to_questions(questions, offenses, route_ids)
     mark_known_questions(questions, gate1 or {})
 
     # spec §7.2/§7.3 品質檢核（docs/QUESTION_DESIGN_AND_USE.md §8）：problems 即 fail closed

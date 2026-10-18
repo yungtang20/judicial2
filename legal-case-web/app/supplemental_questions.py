@@ -38,17 +38,19 @@ def supplemental_questions_for(
                 "kind": "supplemental",
                 "role": role,
                 "offense_id": offense_id,
-                "offense_name": "傷害",
+                "offense_name": pack.get("offense_name", offense_id),
                 "priority": 2,
                 "status": "PENDING",
                 "answer": "",
                 "source": {
-                    "label": "review/knowledge_base_v1.md：SINGLE_ASSAULT",
+                    "label": pack.get("source_label", f"supplemental:{pack['pack_id']}"),
                     "status": "HUMAN_REVIEW_REQUIRED",
                 },
                 "meta": {
                     "supplemental_pack_id": pack["pack_id"],
                     "fact_categories": item.get("fact_categories", []),
+                    "fact_target": item.get("fact_target", ""),
+                    "target_elements": item.get("target_elements", []),
                     "machine_effects": [],
                 },
             })

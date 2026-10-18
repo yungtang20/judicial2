@@ -679,3 +679,67 @@ def test_nonexistent_date_passthrough_is_visible():
     筆錄中承辦人可察覺（文件其余欄位皆民國格式）。"""
     from app.roc_time import format_roc_time
     assert format_roc_time("2026-02-29T10:00") == "2026-02-29T10:00"
+
+
+def _synthetic_offense(routes: list[dict]) -> dict:
+    return {
+        "id": "synthetic",
+        "name": "測試罪章",
+        "route_type": "substantive",
+        "crosswalk_status": "SPLIT_REQUIRED",
+        "legal_routes": routes,
+    }
+
+
+def test_candidate_without_supported_elements_names_no_route():
+    """全部路線都無可回查原文時，不得指名任何路線（RC-E2）。
+
+    matrix[0] 只是「元素最少」的排序結果，不代表本案方向；照抄會把無關罪名的
+    要件寫進候選說明（實例：竊盜案被說明成「電能、熱能或其他能量準動產」）。
+    """
+    from app.rules import _attach_element_evidence
+
+    offense = _synthetic_offense([
+        {"id": "unrelated_a", "name": "甲路線", "fact_elements": ["要件甲無法辨識"]},
+        {"id": "unrelated_b", "name": "乙路線", "fact_elements": ["要件乙無法辨識", "要件丙無法辨識"]},
+    ])
+    candidate = {"matched_terms": ["偷"]}
+    _attach_element_evidence(candidate, offense, "摘要與這些要件毫無交集。", None)
+    assert candidate["suggested_legal_route_ids"] == []
+    assert "甲路線" not in candidate["inclusion_reason"]
+    assert "乙路線" not in candidate["inclusion_reason"]
+    assert "路線須由人工判斷" in candidate["inclusion_reason"]
+    # 待補問清單仍須保留（不得清空，否則後續補問與收縮失去依據）
+    assert candidate["unknown_elements"] == ["要件甲無法辨識", "要件乙無法辨識", "要件丙無法辨識"]
+
+
+def test_route_suggestion_requires_the_shared_minimum_support():
+    """只有 1 個要件可回查原文時不得建議該路線；建議與合格候選共用門檻 2（RC-E3）。"""
+    from app.rules import _attach_element_evidence, ROUTE_MIN_SUPPORTED_ELEMENTS
+
+    offense = _synthetic_offense([
+        {"id": "half_supported", "name": "半支持路線", "fact_elements": ["要件甲無法辨識", "要件乙無法辨識"]},
+    ])
+    candidate = {"matched_terms": ["偷"]}
+    _attach_element_evidence(candidate, offense, "摘要只記載要件甲無法辨識。", None)
+    assert candidate["suggested_legal_route_ids"] == []
+    assert "半支持路線" in candidate["inclusion_reason"]  # 有支持才說明該路線的支持程度
+    assert "1/2" in candidate["inclusion_reason"]
+    assert ROUTE_MIN_SUPPORTED_ELEMENTS == 2
+
+
+def test_route_suggestion_and_state_share_one_threshold():
+    """被建議的路線，其候選狀態必為合格——建議與狀態不得各自設門檻。"""
+    summaries = (
+        "有人偷走物品",
+        "對方以假客服名義要求匯款，疑似詐騙",
+        "甲持刀砍傷乙，乙受有手臂撕裂傷。",
+        "甲在停車場破壞乙的車窗玻璃，並取走車內物品。",
+    )
+    for summary in summaries:
+        for item in candidate_offenses(summary, BANK):
+            states = item.get("legal_route_states")
+            if states is None:
+                continue
+            for route_id in item.get("suggested_legal_route_ids", []):
+                assert states.get(route_id) == "ELIGIBLE_CANDIDATE", (summary, route_id, states)
