@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0",
+  "notice": "僅為問句品質稽核的輸入規格；案情摘要不寫入 data/。roles 為 brief 指定的掃描角色；預設角色另由 API 回應記錄。",
+  "base_url": "http://127.0.0.1:8787",
+  "station": "○○所",
+  "officer": "○○○",
+  "cases": [
+    {
+      "label": "竊盜",
+      "summary": "甲於114年3月1日15時許，在○○市○○區○○路1段1號便利商店內，趁店員不注意，徒手拿取貨架上價值新臺幣500元之洗髮精1瓶放入背包，未結帳即離去，經店員發覺後報警查獲。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    },
+    {
+      "label": "傷害",
+      "summary": "甲與乙於114年2月10日20時許在○○夜市因碰撞發生口角，甲徒手毆打乙臉部數下，致乙鼻樑骨折及左眼瘀傷，經送醫診斷需休養二週。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    },
+    {
+      "label": "詐欺",
+      "summary": "甲於114年1月5日以電話向乙佯稱其網路購物分期付款設定錯誤，需依指示操作自動櫃員機始能解除，乙陷於錯誤，陸續匯款新臺幣共12萬元至甲指定之帳戶。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    },
+    {
+      "label": "性騷擾",
+      "summary": "甲於114年3月8日18時許在○○市公車上，趁乙不及抗拒，以手觸摸乙之大腿及臀部，乙當場驚嚇並報警處理。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    },
+    {
+      "label": "毒品",
+      "summary": "警方於114年4月2日10時許持搜索票至甲位於○○市○○區之住處執行搜索，當場查獲第二級毒品甲基安非他命1包（毛重0.5公克）及玻璃球吸食器1組，甲於警詢坦承於114年3月30日在上址以燒烤方式施用甲基安非他命1次。",
+      "has_victim": false,
+      "roles": ["transfer"]
+    },
+    {
+      "label": "妨害性自主",
+      "summary": "甲於114年2月3日22時許，在○○市○○區住處內，違反乙之意願，以強暴方式對乙為性交行為得逞，乙趁隙報警處理。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    },
+    {
+      "label": "性影像",
+      "summary": "甲與乙交往期間經乙同意拍攝其性影像；分手後甲於114年4月間未經乙同意，將該性影像上傳至某網路論壇供人觀覽。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    },
+    {
+      "label": "恐嚇",
+      "summary": "甲於114年3月12日以通訊軟體向乙傳送訊息，恫稱若不交付新臺幣5萬元，將至乙住處對其家人不利，致乙心生畏懼。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    },
+    {
+      "label": "毀損",
+      "summary": "甲於114年1月20日凌晨，持球棒砸毀乙所有停放在○○市○○路之自小客車車窗及車燈。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    },
+    {
+      "label": "妨害名譽",
+      "summary": "甲於114年2月18日在某社群平台公開貼文，指稱乙於任職期間侵占公款並與客戶有不當往來，致乙名譽受損。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    },
+    {
+      "label": "跟蹤騷擾",
+      "summary": "甲因追求乙遭拒，自114年1月起反覆至乙住處及工作地點等候、盯梢，並多次傳送訊息，乙心生畏怖。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    },
+    {
+      "label": "公共危險",
+      "summary": "甲於114年3月5日凌晨飲酒後騎乘普通重型機車上路，經警攔查測得吐氣酒精濃度每公升0.62毫克。",
+      "has_victim": true,
+      "roles": ["victim", "suspect"]
+    }
+  ]
+}
