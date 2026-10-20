@@ -2,7 +2,7 @@
 
 **獨立、本機優先**的 Gate 1–5 法律案件工作台。不復原父目錄已刪除的舊系統檔案。Gate 1 固定本機處理；Gate 2 外部 AI 預設關閉，需明確啟用且操作人員逐次同意才送出摘要。
 
-`legal-case-web` 支援本機 loopback 與 Koyeb Free 邀請制單人部署。核心目標是整理事實、保留多個候選法律路由、產生角色化問句及輸出筆錄；它不是自動定罪系統。
+`legal-case-web` 支援本機 loopback 與 Render Free 邀請制單人部署。核心目標是整理事實、保留多個候選法律路由、產生角色化問句及輸出筆錄；它不是自動定罪系統。
 
 ## 快速導覽
 
@@ -12,7 +12,7 @@
 | [核心流程](#核心流程-gate-15) | 12 步驟業務流程與 Mermaid 圖 |
 | [API 端點](#api-端點) | 完整 HTTP 介面規格 |
 | [法律與人工核准邊界](#法律與人工核准邊界) | 系統不做法律判斷的具體界線 |
-| [Koyeb Free 自用部署](#koyeb-free-自用部署) | Docker 部署、邀請制登入、免費層限制 |
+| [Render Free 自用部署](#render-free-自用部署) | Docker Blueprint、邀請制登入、免費層與資料限制 |
 | [外部 AI 邊界](#外部-ai-邊界) | 金鑰、同意機制、資料外送範圍 |
 | [問句來源與優先序](#問句來源與優先序) | 6 層題庫載入順序與去重 |
 | [文件規則](#文件規則) | DOCX 規格、頁數檢查、字數限制 |
@@ -37,25 +37,20 @@ py -3 -m pip install -r requirements.txt
 - `start.ps1` 會檢查原始碼異動並自動重啟，確保瀏覽器載入最新版本
 - 健康檢查：`GET /api/health` 回傳 `{ "status": "ok", "mode": "LOCAL_ONLY", "external_ai": false, "source_mtime": <unix> }`
 
-## Koyeb Free 自用部署
+## Render Free 自用部署
 
-本專案使用 GitHub + Dockerfile 部署至 Koyeb Free Web Service。部署設定由 Koyeb Dashboard 管理；repository 不含 Koyeb manifest。
+專案在 Render 以既有 Dockerfile 部署。根目錄 `render.yaml` 定義 Blueprint；Render service 現有網址為 [`https://legal-case-workbench.onrender.com`](https://legal-case-workbench.onrender.com)。
 
-1. 在 Koyeb 建立 **Web Service**，連結 GitHub repository `yungtang20/judicial2`，選 `main` 分支。
-2. Builder 選 `Dockerfile`；Work directory 填 `legal-case-web`，Dockerfile 填 `Dockerfile`。
-3. Instance 選 `Free`；只建立一個 instance，不掛載 volume。
-4. Exposed ports 設 `10000` / `HTTP`，route 設 `/`；`PORT` 設 `10000`，`HOST` 設 `0.0.0.0`。
-5. 環境變數設定 `AUTH_REQUIRED=true`、`AUTH_DATABASE_PATH=/tmp/accounts.sqlite3`、`ALLOW_EXTERNAL_AI=false`；先建立 Koyeb Secret `CASE_APP_INVITE_CODE`（至少 32 個隨機字元），再設 `REGISTRATION_INVITE_CODE={{ secret.CASE_APP_INVITE_CODE }}`。不要提交或傳送 Secret。
-6. Koyeb 提供 `KOYEB_PUBLIC_DOMAIN`；應用程式據此設定 HTTPS `APP_ORIGIN` 與允許的 Host。部署完成後，以 `.koyeb.app` 網址建立唯一帳號。
+若 Dashboard 中的 Blueprint 仍連接此 GitHub repository，推送 `main` 後會依 Blueprint 設定建置。若需手動部署：Render Dashboard → `legal-case-workbench` → **Manual Deploy** → **Deploy latest commit**。`REGISTRATION_INVITE_CODE` 必須在 Render Dashboard 的 Secret/Environment 設定至少 32 個隨機字元，不要提交或傳送此 Secret。
 
 **免費層與資料界線**：
 
-- Koyeb Free 每個 organization 限一個 instance，提供 512 MB RAM、0.1 vCPU、2 GB 暫存 SSD；僅限 Frankfurt 或 Washington, D.C.，閒置一小時後縮至零。需在 Dashboard 確認可用額度與付款設定。
-- Free 不支援持久 volume；本機檔案是暫存資料，可能在 instance 重排或重啟時遺失。帳號 SQLite 位於 `/tmp`，帳號資料消失後用保留的邀請碼重新註冊。
-- 案件內容只存在服務程序記憶體；新案件或服務重啟後，案件內容即清除。Koyeb Free 不是網路層私有服務。
-- 輸入與操作中的案件內容會傳送至 Koyeb 並在其服務程序記憶體處理；Koyeb 是案件資料處理邊界的一部分。外部 AI 在部署設定中關閉。
-- Koyeb Free 只有 512 MB RAM；LibreOffice 產製 DOCX 時可能受記憶體限制。實際部署與文件輸出需在 Koyeb 驗證。
-- 官方說明：[GitHub 部署](https://www.koyeb.com/docs/build-and-deploy/deploy-with-git)、[Port 設定](https://www.koyeb.com/docs/build-and-deploy/exposing-your-service)、[Free instance 限制](https://www.koyeb.com/docs/reference/instances)、[暫存儲存](https://www.koyeb.com/docs/reference/storage)。
+- Free Web Service 閒置 15 分鐘後休眠；下一個請求會喚醒服務，通常需約一分鐘。每個 workspace 每月有 750 小時 Free instance 時數；休眠時數不計入。
+- Free 沒有持久磁碟；本機檔案會在休眠、重新部署或重啟時遺失。帳號 SQLite 位於 `/tmp`，消失後需以保留的邀請碼重新註冊。
+- 案件只存在服務程序記憶體；程序重啟後案件清除。服務有公網網址並由登入保護，不是網路層私有服務。
+- 案件內容會傳送至 Render 並在服務記憶體處理；Render 是案件資料處理邊界的一部分。部署設定關閉外部 AI。
+- Free instance 為 512 MB RAM、0.1 CPU；LibreOffice 產製 DOCX 可能受記憶體限制，需在 Render 實際驗證。
+- 官方說明：[Blueprint](https://render.com/docs/blueprint-spec)、[Free Web Service 限制](https://render.com/docs/free)、[Docker 部署](https://render.com/docs/docker)。
 
 ---
 
@@ -203,12 +198,12 @@ flowchart TD
 
 ## 隱私與安全
 
-本機模式僅綁定 `127.0.0.1`；Koyeb 部署使用 HTTPS 公網網址與邀請制登入。未登入者不能進入工作台或案件 API，但服務網址仍可從網際網路連線。
+- 本機模式僅綁定 `127.0.0.1`；Render 使用 HTTPS 公網網址與邀請制登入。未登入者不能進入工作台或案件 API，但服務網址仍可從網際網路連線。
 - CORS 關閉；所有變更請求驗證同源 `Origin`。
-- 驗證依部署模式：本機 `X-Session-Token`；Koyeb 為 `HttpOnly`、`Secure`、`SameSite=Strict` session cookie；另檢查 Host 與 Body 大小。
+- 驗證依部署模式：本機 `X-Session-Token`；Render 為 `HttpOnly`、`Secure`、`SameSite=Strict` session cookie；另檢查 Host 與 Body 大小。
 - 回應：CSP、no-store、nosniff、frame-deny；登入模式啟用 HSTS。
 - **單案件記憶體工作區**：不顯示已保存案件、不寫入案件 SQLite；重啟不保留案件。
-- Koyeb Free 暫存 SQLite 僅保存帳號名稱、salt 與 PBKDF2 密碼雜湊；instance 重啟或儲存遺失後需重新註冊，不保存案件資料。
+- Render Free 暫存 SQLite 僅保存帳號名稱、salt 與 PBKDF2 密碼雜湊；休眠、重啟或重新部署後可能需重新註冊，不保存案件資料。
 - **稽核不落地**：不存姓名、案號、自由文字、問答內容。
 - `CaseStore`/`DPAPI`/`SQLite` 案件儲存模組僅為相容性模組與安全測試，**非啟用功能**。
 

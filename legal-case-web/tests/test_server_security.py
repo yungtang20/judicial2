@@ -81,11 +81,15 @@ def test_invalid_host_and_origin_are_rejected(local_server):
     assert status == 403
 
 
-def test_koyeb_public_domain_sets_app_origin_and_allowed_host():
+def test_render_hostname_sets_app_origin_and_ephemeral_auth_database():
     env = os.environ.copy()
-    for key in ("APP_ORIGIN", "HOST", "PORT", "AUTH_REQUIRED", "AUTH_DATABASE_PATH"):
+    for key in (
+        "APP_ORIGIN", "HOST", "PORT", "AUTH_REQUIRED", "AUTH_DATABASE_PATH",
+        "RENDER", "RENDER_EXTERNAL_HOSTNAME",
+    ):
         env.pop(key, None)
-    env["KOYEB_PUBLIC_DOMAIN"] = "workbench-personal-1234.koyeb.app"
+    env["RENDER"] = "true"
+    env["RENDER_EXTERNAL_HOSTNAME"] = "legal-case-workbench.onrender.com"
     result = subprocess.run(
         [
             sys.executable,
@@ -100,14 +104,17 @@ def test_koyeb_public_domain_sets_app_origin_and_allowed_host():
         text=True,
     )
     config = json.loads(result.stdout)
+    assert config["origin"] == "https://legal-case-workbench.onrender.com"
     assert config["auth_database"].replace("\\", "/") == "/tmp/accounts.sqlite3"
-    assert "workbench-personal-1234.koyeb.app" in config["allowed"]
+    assert "legal-case-workbench.onrender.com" in config["allowed"]
+
 
 def test_port_environment_keeps_default_listener_on_loopback():
     env = os.environ.copy()
     env.pop("HOST", None)
     env["PORT"] = "8787"
-    env.pop("KOYEB_PUBLIC_DOMAIN", None)
+    for key in ("RENDER", "RENDER_EXTERNAL_HOSTNAME"):
+        env.pop(key, None)
     result = subprocess.run(
         [sys.executable, "-c", "from app.config import HOST; print(HOST)"],
         cwd=ROOT,
