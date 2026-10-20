@@ -90,6 +90,14 @@ py -3 -m pip install -r requirements.txt
 - 稽核事件不保存姓名、案號、自由文字或問答內容。
 - `CaseStore`／DPAPI 僅保留為未接入 runtime 的相容性模組與安全測試，不代表目前有案件歷史功能。
 
+## 專案架構與維護界線
+
+- 正式啟動路徑為 `start.ps1` → `app.server`；HTTP API 將 Gate 與案件狀態交由 `app.workflow`，再串接規則、問句及文件模組。
+- Runtime 案件儲存使用 `EphemeralCaseStore`，只保留單一案件於程序記憶體。`CaseStore`／DPAPI 與 SQLite 相容程式碼不代表已啟用持久化案件功能。
+- `web_app/` 是獨立 Next.js 原型，不是上述正式啟動路徑；修改前應確認目標是本機工作台或原型。
+- 法律檢索與罪章關聯 PoC 維持離線／審查用途；未完成指定 Human Gate 前，不得接入 runtime 或宣稱已獲法律核准。
+- 法源可回查、測試通過與文件成功產生，均屬工程或來源證據，不等於法律內容完整或人工核准完成。
+
 ## 語意推理模組（2026-10-15）
 
 | 模組 | 職責 |
