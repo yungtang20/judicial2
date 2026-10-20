@@ -2,7 +2,7 @@
 
 ## 1. 架構定位
 
-`legal-case-web` 支援本機 loopback 與 Render 邀請制單人部署。核心目標是整理事實、保留多個候選法律路由、產生角色化問句及輸出筆錄；它不是自動定罪系統。
+`legal-case-web` 支援本機 loopback 與 Koyeb 邀請制單人部署。核心目標是整理事實、保留多個候選法律路由、產生角色化問句及輸出筆錄；它不是自動定罪系統。
 
 ```mermaid
 flowchart LR
@@ -42,7 +42,7 @@ flowchart LR
 
 | 元件 | 責任 | 不負責 |
 |---|---|---|
-| `app/server.py` | 本機/Render HTTP API、安全守衛、案件與文件端點、登入 session | 法律判斷 |
+| `app/server.py` | 本機/Koyeb HTTP API、安全守衛、案件與文件端點、登入 session | 法律判斷 |
 | `app/workflow.py` | Gate 狀態、核准失效、角色分支、案件快照 | 自行補足事實 |
 | `app/rules.py` | Gate 1 分析、規則候選、題目來源整合、題數限制 | 最終罪章認定 |
 | `app/questions.py` | 問句 metadata、預算、去重、答案 overlay、候選重評估 | 從自由文字直接定罪 |
@@ -87,7 +87,7 @@ flowchart LR
 
 ## 5. 信任與資料邊界
 
-- 本機模式的案件資料留在本機程序。Render Free 部署採邀請制單一帳號；案件與帳號資料都在 Render 程序／暫存檔案系統處理，休眠、重啟或重新部署後會清除。Render 是案件資料處理邊界的一部分。
+- Koyeb Free 部署使用邀請制單一帳號；案件在服務程序記憶體處理，帳號資料在暫存 SQLite，重啟或重新排程後都可能遺失。Koyeb 是案件資料處理邊界的一部分。
 - 外部 AI 僅能在使用者啟用且有金鑰時接收有長度限制的案情摘要，用於提出候選方向。
 - 外部 AI 結果與規則結果都只是候選，不是法律結論。
 - 公開書類只可在去識別、來源識別穩定、使用邊界與 Human Gate 都完成後匯入；目前起訴書維持 `NOT_INGESTED`。
@@ -101,7 +101,7 @@ flowchart LR
 - golden replay corpus 固定標記 `contains_case_data: false`，禁止姓名、地址、案件 payload、全文、摘要與節錄欄位。Replay 的 `PASS` 只表示目前程式輸出符合合成預期，不是官方 provider、法律內容、Human Gate 或 runtime 驗收。
 - Human Gate packet 凍結核心 PoC 與 runtime surface hash；任何 hash 漂移都使封包失效。五項 approval 未全部由對應人工角色核准前，`decision_status` 必須維持 `PENDING_HUMAN_APPROVAL`。
 - API 金鑰不得進入瀏覽器、題庫、文件、log 或版本控制。
-- Render 使用 Free Web Service，服務有公網入口但由登入保護；Free 暫存儲存不可作為帳號保存方案，休眠／重啟後需以保留的邀請碼重新註冊。這不是 Render Private Service，也不是網路層 IP 白名單；此部署設定不授權公開辦案或外部同步。
+- Koyeb Free 使用公網入口及登入保護；Free 暫存儲存不可作為帳號保存方案，休眠／重啟後需以保留的邀請碼重新註冊。這不是網路層私有服務或 IP 白名單；部署設定不授權公開辦案或外部同步。
 
 ## 6. 變更界線
 

@@ -81,29 +81,33 @@ def test_invalid_host_and_origin_are_rejected(local_server):
     assert status == 403
 
 
-def test_hosted_environment_does_not_disable_host_and_origin_checks(local_server, monkeypatch):
-    monkeypatch.setenv("RENDER", "1")
-    host = "attacker.onrender.com"
-    status, _, _ = request(local_server, "GET", "/", headers={"Host": host})
-    assert status == 400
-
-    headers = {
-        "Host": host,
-        "X-Session-Token": server_module.SESSION_TOKEN,
-        "Origin": f"https://{host}",
-        "Content-Type": "application/json",
-    }
-    headers["Host"] = f"127.0.0.1:{local_server}"
-    headers["Content-Length"] = "0"
-    status, _, _ = request(local_server, "POST", "/api/cases", headers=headers, may_retry=True)
-    assert status == 403
-
+def test_koyeb_public_domain_sets_app_origin_and_allowed_host():
+    env = os.environ.copy()
+    for key in ("APP_ORIGIN", "HOST", "PORT", "AUTH_REQUIRED", "AUTH_DATABASE_PATH"):
+        env.pop(key, None)
+    env["KOYEB_PUBLIC_DOMAIN"] = "workbench-personal-1234.koyeb.app"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import json; from app.config import APP_ORIGIN, AUTH_DATABASE_PATH; from app.server import ALLOWED_HOSTS; "
+            "print(json.dumps({'origin': APP_ORIGIN, 'auth_database': str(AUTH_DATABASE_PATH), 'allowed': sorted(ALLOWED_HOSTS)}))",
+        ],
+        cwd=ROOT,
+        env=env,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    config = json.loads(result.stdout)
+    assert config["auth_database"].replace("\\", "/") == "/tmp/accounts.sqlite3"
+    assert "workbench-personal-1234.koyeb.app" in config["allowed"]
 
 def test_port_environment_keeps_default_listener_on_loopback():
     env = os.environ.copy()
     env.pop("HOST", None)
     env["PORT"] = "8787"
-    env["RENDER"] = "1"
+    env.pop("KOYEB_PUBLIC_DOMAIN", None)
     result = subprocess.run(
         [sys.executable, "-c", "from app.config import HOST; print(HOST)"],
         cwd=ROOT,

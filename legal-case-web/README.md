@@ -2,7 +2,7 @@
 
 **獨立、本機優先**的 Gate 1–5 法律案件工作台。不復原父目錄已刪除的舊系統檔案。Gate 1 固定本機處理；Gate 2 外部 AI 預設關閉，需明確啟用且操作人員逐次同意才送出摘要。
 
----
+`legal-case-web` 支援本機 loopback 與 Koyeb Free 邀請制單人部署。核心目標是整理事實、保留多個候選法律路由、產生角色化問句及輸出筆錄；它不是自動定罪系統。
 
 ## 快速導覽
 
@@ -12,7 +12,7 @@
 | [核心流程](#核心流程-gate-15) | 12 步驟業務流程與 Mermaid 圖 |
 | [API 端點](#api-端點) | 完整 HTTP 介面規格 |
 | [法律與人工核准邊界](#法律與人工核准邊界) | 系統不做法律判斷的具體界線 |
-| [Render 自用部署](#render-自用部署) | 單人邀請制、雲端資料邊界與費用注意 |
+| [Koyeb Free 自用部署](#koyeb-free-自用部署) | Docker 部署、邀請制登入、免費層限制 |
 | [外部 AI 邊界](#外部-ai-邊界) | 金鑰、同意機制、資料外送範圍 |
 | [問句來源與優先序](#問句來源與優先序) | 6 層題庫載入順序與去重 |
 | [文件規則](#文件規則) | DOCX 規格、頁數檢查、字數限制 |
@@ -37,24 +37,25 @@ py -3 -m pip install -r requirements.txt
 - `start.ps1` 會檢查原始碼異動並自動重啟，確保瀏覽器載入最新版本
 - 健康檢查：`GET /api/health` 回傳 `{ "status": "ok", "mode": "LOCAL_ONLY", "external_ai": false, "source_mtime": <unix> }`
 
-## Render 自用部署
+## Koyeb Free 自用部署
 
-部署設定在 repository 根目錄 `render.yaml`，服務程式根目錄為 `legal-case-web/`。目前採 Render Free Web Service、Docker、HTTPS 與邀請制單一帳號；不配置持久磁碟，帳號資料與案件資料都會在服務休眠、重啟或重新部署後消失。
+本專案使用 GitHub + Dockerfile 部署至 Koyeb Free Web Service。部署設定由 Koyeb Dashboard 管理；repository 不含 Koyeb manifest。
 
-1. 將 repository 連接至 Render，從 Blueprint 建立 `render.yaml` 定義的服務。
-2. 建立服務時，在 Render Secret 中設定 `REGISTRATION_INVITE_CODE`（建議使用至少 32 個隨機字元；不要提交或傳送給他人）。
-3. Blueprint 選用 Free compute，不建立持久磁碟；部署前仍在 Dashboard 核對方案與可能的超額用量規則。
-4. 部署完成後，以 Render HTTPS 網址建立唯一帳號（帳號 3–32 個英數字、`.`、`_` 或 `-`；密碼至少 14 字元）。
-5. **保留** `REGISTRATION_INVITE_CODE` Secret。Free 服務休眠、重啟或重新部署後會失去 SQLite 帳號資料，須用此邀請碼重新註冊；12 小時後或服務重啟後也須重新登入。
+1. 在 Koyeb 建立 **Web Service**，連結 GitHub repository `yungtang20/judicial2`，選 `main` 分支。
+2. Builder 選 `Dockerfile`；Work directory 填 `legal-case-web`，Dockerfile 填 `Dockerfile`。
+3. Instance 選 `Free`；只建立一個 instance，不掛載 volume。
+4. Exposed ports 設 `10000` / `HTTP`，route 設 `/`；`PORT` 設 `10000`，`HOST` 設 `0.0.0.0`。
+5. 環境變數設定 `AUTH_REQUIRED=true`、`AUTH_DATABASE_PATH=/tmp/accounts.sqlite3`、`ALLOW_EXTERNAL_AI=false`；先建立 Koyeb Secret `CASE_APP_INVITE_CODE`（至少 32 個隨機字元），再設 `REGISTRATION_INVITE_CODE={{ secret.CASE_APP_INVITE_CODE }}`。不要提交或傳送 Secret。
+6. Koyeb 提供 `KOYEB_PUBLIC_DOMAIN`；應用程式據此設定 HTTPS `APP_ORIGIN` 與允許的 Host。部署完成後，以 `.koyeb.app` 網址建立唯一帳號。
 
-**網路與資料界線**：
+**免費層與資料界線**：
 
-- 這是供單一使用者登入的服務，但 Render Web Service 仍有公網網址；未登入者只能看到登入頁，不能存取案件 API。這不等同於網路層私有服務。
-- Render Private Service 無法由你電腦的瀏覽器直接連線；Render 對 Web Service 設 IP 白名單需要 Scale 或 Enterprise 方案。若要限制到固定 IP，需在 Render Dashboard 另外設定。
-- Render 是雲端主機：輸入與操作中的案件內容會傳送至 Render 並在其服務程序記憶體處理。它不寫入案件資料庫，服務重啟或重新部署後案件即清除；Render 仍是資料處理邊界的一部分。
-- 認證 SQLite 位於 Free 服務的暫存檔案系統，只存帳號名稱、salt 與 PBKDF2 密碼雜湊；服務休眠、重啟或重新部署後會消失。案件內容不寫入檔案，外部 AI 在 Blueprint 中關閉。
-- Render Free 服務閒置 15 分鐘後休眠，下次請求喚醒約需 1 分鐘；每個 workspace 每月有 750 Free instance hours，且有頻寬與建置額度限制。
-- Free compute 為 $0；超出用量後的停用或計費取決於 Render 額度、付款方式與帳戶設定，建立前請在 Dashboard 核對。參考：<https://render.com/docs/free>、<https://render.com/pricing>
+- Koyeb Free 每個 organization 限一個 instance，提供 512 MB RAM、0.1 vCPU、2 GB 暫存 SSD；僅限 Frankfurt 或 Washington, D.C.，閒置一小時後縮至零。需在 Dashboard 確認可用額度與付款設定。
+- Free 不支援持久 volume；本機檔案是暫存資料，可能在 instance 重排或重啟時遺失。帳號 SQLite 位於 `/tmp`，帳號資料消失後用保留的邀請碼重新註冊。
+- 案件內容只存在服務程序記憶體；新案件或服務重啟後，案件內容即清除。Koyeb Free 不是網路層私有服務。
+- 輸入與操作中的案件內容會傳送至 Koyeb 並在其服務程序記憶體處理；Koyeb 是案件資料處理邊界的一部分。外部 AI 在部署設定中關閉。
+- Koyeb Free 只有 512 MB RAM；LibreOffice 產製 DOCX 時可能受記憶體限制。實際部署與文件輸出需在 Koyeb 驗證。
+- 官方說明：[GitHub 部署](https://www.koyeb.com/docs/build-and-deploy/deploy-with-git)、[Port 設定](https://www.koyeb.com/docs/build-and-deploy/exposing-your-service)、[Free instance 限制](https://www.koyeb.com/docs/reference/instances)、[暫存儲存](https://www.koyeb.com/docs/reference/storage)。
 
 ---
 
@@ -94,7 +95,7 @@ flowchart TD
 
 ## API 端點
 
-> 本機模式的 API 需 `X-Session-Token`；Render 模式改用登入後的 `HttpOnly`、`Secure`、`SameSite=Strict` session cookie。所有變更請求都驗證同源 `Origin`；Body ≤ 256 KB；回應使用 CSP / no-store / nosniff / frame-deny。
+> 本機模式的 API 需 `X-Session-Token`；部署後使用登入 session cookie。所有變更請求都驗證同源 `Origin`；Body ≤ 256 KB；回應使用 CSP / no-store / nosniff / frame-deny。
 
 | 方法 | 路徑 | 說明 | 權限 |
 |------|------|------|------|
@@ -110,7 +111,7 @@ flowchart TD
 | `POST` | `/api/cases/:id/actions` | 執行動作（需 `revision`） | Token / 登入 session + Origin |
 | `GET` | `/api/cases/:id/documents/:role/:kind` | 下載 DOCX（`role=victim\\|suspect\\|transfer`，`kind=interview\\|brief`） | Token / 登入 session |
 | `GET` | `/api/cases/:id/brief/:role` | 取得條陳純文字 | Token / 登入 session |
-| `GET` | `/` `/login` `/app.js` `/auth.js` `/styles.css` `/auth.css` | 工作台或登入頁與靜態檔案 | 登入頁/資源公開；工作台需登入（Render） |
+| `GET` | `/` `/login` `/app.js` `/auth.js` `/styles.css` `/auth.css` | 工作台或登入頁與靜態檔案 | 登入頁/資源公開；工作台需登入 |
 
 ### 錯誤代碼
 
@@ -118,7 +119,7 @@ flowchart TD
 |------|------|----------|
 | `INVALID_HOST` | 400 | Host 不在允許清單 |
 | `INVALID_SESSION` | 401 | 本機 Token 不符 |
-| `LOGIN_REQUIRED` | 401 | Render 缺少有效登入 session |
+| `LOGIN_REQUIRED` | 401 | 部署模式缺少有效登入 session |
 | `INVALID_CREDENTIALS` | 400/401 | 帳號輸入格式或登入憑證錯誤 |
 | `INVALID_ORIGIN` | 403 | 非同源變更請求 |
 | `REGISTRATION_REJECTED` | 400 | 邀請碼或註冊資料錯誤 |
@@ -202,12 +203,12 @@ flowchart TD
 
 ## 隱私與安全
 
-本機模式僅綁定 `127.0.0.1`；Render 模式使用 HTTPS、公網網址與邀請制登入。Render 服務仍由網際網路連得到，未登入者不能進入工作台或案件 API。
+本機模式僅綁定 `127.0.0.1`；Koyeb 部署使用 HTTPS 公網網址與邀請制登入。未登入者不能進入工作台或案件 API，但服務網址仍可從網際網路連線。
 - CORS 關閉；所有變更請求驗證同源 `Origin`。
-- 驗證依部署模式：本機 `X-Session-Token`；Render 為 `HttpOnly`、`Secure`、`SameSite=Strict` session cookie；另檢查 Host 與 Body 大小。
-- 回應：CSP、no-store、nosniff、frame-deny；Render 啟用 HSTS。
+- 驗證依部署模式：本機 `X-Session-Token`；Koyeb 為 `HttpOnly`、`Secure`、`SameSite=Strict` session cookie；另檢查 Host 與 Body 大小。
+- 回應：CSP、no-store、nosniff、frame-deny；登入模式啟用 HSTS。
 - **單案件記憶體工作區**：不顯示已保存案件、不寫入案件 SQLite；重啟不保留案件。
-- Render Free 的暫存 SQLite 僅保存帳號名稱、salt 與 PBKDF2 密碼雜湊；服務重啟後即消失，不保存案件資料。
+- Koyeb Free 暫存 SQLite 僅保存帳號名稱、salt 與 PBKDF2 密碼雜湊；instance 重啟或儲存遺失後需重新註冊，不保存案件資料。
 - **稽核不落地**：不存姓名、案號、自由文字、問答內容。
 - `CaseStore`/`DPAPI`/`SQLite` 案件儲存模組僅為相容性模組與安全測試，**非啟用功能**。
 
