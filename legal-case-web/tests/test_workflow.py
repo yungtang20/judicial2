@@ -59,7 +59,9 @@ def test_legacy_intake_fields_override_summary_labels_and_gate1_can_correct_them
 
 def test_gate1_summary_change_recomputes_facts_and_candidates():
     case = create_case(intake(summary="他把我的手機拿走了。"), BANK)
-    assert {item["id"] for item in case["candidates"]} >= {"theft", "embezzlement", "robbery"}
+    # D1（人工核定 B 修正版，2026-10-20）：缺受託持有與強暴脅迫區辨事實，
+    # 不再自動帶出侵占／強盜 related。
+    assert {item["id"] for item in case["candidates"]} == {"theft"}
     case = apply_action(case, "update_gate1", {"gate1": {"events": ["事情發生了。"]}}, BANK)
     assert case["intake"]["summary"] == "事情發生了。"
     assert case["candidates"] == []
@@ -120,11 +122,44 @@ def test_same_case_can_continue_from_victim_to_suspect():
     assert case["state"] == "GATE2_QA"
     assert case["interviews"]["victim:default"] == victim_snapshot
     case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "suspect"}, BANK)
+    case = apply_action(case, "save_profile", {
+        "profile": {"name": "測試涉嫌人"},
+        "session": {"start_time": "2026-10-11T14:00", "end_time": "2026-10-11T14:30"},
+    }, BANK)
     answers = {item["id"]: "UNKNOWN" for item in case["questions"]}
     case = apply_action(case, "save_answers", {"answers": answers}, BANK)
     case = apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
     assert case["state"] == "OUTPUT_READY"
     assert set(case["interviews"]) == {"victim:default", "suspect:default"}
+
+
+def test_gate2_approval_requires_fields_needed_by_the_interview_document():
+    case = create_case(intake(), BANK)
+    case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
+    case = apply_action(case, "set_offenses", {
+        "offense_ids": ["theft"],
+        "legal_route_ids": [],
+        "route_review_confirmed": True,
+        "role": "suspect",
+    }, BANK)
+    answers = {question["id"]: "UNKNOWN" for question in case["questions"]}
+    case = apply_action(case, "save_answers", {"answers": answers}, BANK)
+
+    with pytest.raises(WorkflowError, match="缺少受詢問人姓名"):
+        apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
+
+    case = apply_action(case, "save_profile", {
+        "profile": {"name": "合成測試"},
+    }, BANK)
+    with pytest.raises(WorkflowError, match="缺少詢問起訖時間"):
+        apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
+
+    case = apply_action(case, "save_profile", {
+        "profile": {"name": "合成測試"},
+        "session": {"start_time": "2026-10-19T10:00", "end_time": "2026-10-19T10:30"},
+    }, BANK)
+    approved = apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
+    assert approved["state"] == "CASE_NUMBERS"
 
 
 def test_profile_save_and_invalidation():

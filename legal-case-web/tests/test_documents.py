@@ -7,8 +7,44 @@ import zipfile
 
 from docx import Document
 
-from app.documents import brief_text, checked_interview_docx, interview_docx
+from app.documents import brief_text, checked_interview_docx, interview_docx, _format_tw_time
 from tests.helpers import completed_case
+
+
+def test_format_tw_time_blocks_unparseable_free_text_in_formal_documents():
+    """正式文件時間門檻：ISO 與民國樣式原樣／轉換呈現；自由文字回退
+    UNKNOWN（例：「昨天下午(忘記幾點)」不得直接印入陳報單）。"""
+    assert _format_tw_time("2026-10-15T10:30") == "115年10月15日10時30分"
+    assert _format_tw_time("115年10月15日10時許") == "115年10月15日10時許"
+    assert _format_tw_time("民國115年10月15日") == "民國115年10月15日"
+    assert _format_tw_time("UNKNOWN") == "UNKNOWN"
+    assert _format_tw_time("昨天下午(忘記幾點)") == "UNKNOWN"
+    assert _format_tw_time("garbage") == "UNKNOWN"
+
+
+def test_brief_renders_unknown_for_free_text_event_time():
+    """探針 I 系列回歸：free-text event_time 曾直達陳報單「二、發生時間」。
+    現在文件層必須回退 UNKNOWN，交由人工補填，不以臆測時間入正式文件。"""
+    from tests.helpers import intake, BANK
+    from app.workflow import create_case, apply_action
+
+    info = intake()
+    info["event_time"] = "昨天下午(忘記幾點)"
+    case = create_case(info, BANK)
+    case = apply_action(case, "auto_prepare", {}, BANK)
+    case = apply_action(case, "save_profile", {
+        "profile": {"name": "測試受詢問人", "national_id": "A123456789", "sex": "男", "education": "大學"},
+        "session": {"start_time": "2026-10-11T14:00", "end_time": "2026-10-11T15:00", "location": "測試所"},
+    }, BANK)
+    answers = {q["id"]: "測試回答" for q in case["questions"]}
+    case = apply_action(case, "save_answers", {"answers": answers}, BANK)
+    case = apply_action(case, "approve_gate2", {"confirmed": True}, BANK)
+    case = apply_action(case, "save_case_numbers", {
+        "case_numbers": {"proof": "Z123456789", "women_child": "", "case_165": ""},
+    }, BANK)
+    text = brief_text(case, "victim")
+    assert "二、發生時間：UNKNOWN" in text
+    assert "昨天下午" not in text
 
 
 def test_docx_is_openable_and_contains_all_confirmed_questions():

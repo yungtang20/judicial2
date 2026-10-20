@@ -25,9 +25,19 @@ async function api(path, options = {}) {
   headers.set("X-Session-Token", token);
   if (options.body) headers.set("Content-Type", "application/json");
   let response;
+  let controller;
+  const timeoutMs = options.timeoutMs || 0;
+  if (timeoutMs > 0) {
+    controller = new AbortController();
+    options.signal = controller.signal;
+    setTimeout(() => controller.abort(), timeoutMs);
+  }
   try {
     response = await fetch(path, { ...options, headers, credentials: "same-origin" });
   } catch (cause) {
+    if (cause?.name === "AbortError") {
+      throw new ApiError("外部 AI 分析逾時，已回到規則候選。請人工檢閱規則結果，不代表犯罪成立。", 0, "AI_TIMEOUT", cause);
+    }
     // 本機服務停止或一般網路錯誤：不暴露瀏覽器英文錯誤或 stack
     throw new ApiError("無法連線到本機服務，請確認服務仍在執行。", 0, "NETWORK_ERROR", cause);
   }
@@ -47,8 +57,11 @@ async function api(path, options = {}) {
   return response;
 }
 
-async function jsonApi(path, options = {}) {
-  return (await api(path, options)).json();
+async function jsonApi(path, options = {}, onHeaders) {
+  const response = await api(path, options);
+  const data = await response.json();
+  if (onHeaders) onHeaders(response.headers);
+  return data;
 }
 
 function formObject(form) {
@@ -329,35 +342,93 @@ function renderOffenses(caseData) {
       .filter((candidate) => candidate.selection_origin !== "related_hint")
       .map((candidate) => {
         const section = document.createElement("section");
+        section.className = "candidate-analysis";
+
+        // 三層級分類
+        const tier = candidate.candidate_eligibility === "ELIGIBLE_CANDIDATE"
+          ? "主要候選"
+          : candidate.candidate_eligibility === "HINT_ONLY"
+            ? "待區辨"
+            : "欠缺核心要件";
         const heading = document.createElement("h4");
-        heading.textContent = `${candidate.name}｜構成要件原文對照`;
+        heading.textContent = `${candidate.name}｜${tier}`;
         section.appendChild(heading);
-        const route = (candidate.route_element_matrix || [])[0];
-        if (!route) {
+
+        // 列入原因
+        const inclusion = document.createElement("p");
+        inclusion.className = "inclusion-reason";
+        inclusion.textContent = `列入原因：${candidate.inclusion_reason || "未記載"}`;
+        section.appendChild(inclusion);
+
+        // 來源
+        const sourceInfo = candidate.source || {};
+        const sourceLabel = sourceInfo.status === "VERIFIED_CURRENT"
+          ? "規則比對（法條已核實）"
+          : sourceInfo.status === "AI_GENERATED"
+            ? "AI 分析"
+            : "規則比對";
+        const source = document.createElement("p");
+        source.className = "candidate-source";
+        source.textContent = `來源：${sourceLabel}${sourceInfo.law_name ? `（${sourceInfo.law_name} ${sourceInfo.article_no || ""}）` : ""}`;
+        section.appendChild(source);
+
+        // 所有路由（不再只顯示第一條）
+        const routes = candidate.route_element_matrix || [];
+        if (!routes.length) {
           const note = document.createElement("p");
           note.textContent = "此候選尚無可用的構成要件矩陣。";
           section.appendChild(note);
-          return section;
+        } else {
+          for (const route of routes) {
+            const routeSection = document.createElement("div");
+            routeSection.className = "route-analysis";
+            const routeName = document.createElement("p");
+            const uncheckable = route.not_checkable_count
+              ? `；其中 ${route.not_checkable_count} 項本工具無比對依據`
+              : "";
+            routeName.textContent = `路由：${route.route_name}（原文支持 ${route.supported_count}/${route.total_count}${uncheckable}；仍須人工核對）`;
+            routeSection.appendChild(routeName);
+            const list = document.createElement("ul");
+            for (const element of route.elements || []) {
+              const item = document.createElement("li");
+              const status = element.status === "SOURCE_SUPPORTED"
+                ? "有原文支持"
+                : element.status === "NOT_CHECKABLE"
+                  ? "本工具無比對依據（須人工閱讀）"
+                  : "原文未見（已比對）";
+              const excerpts = (element.source_excerpts || []).join("；");
+              item.textContent = `${status}｜${element.element}${excerpts ? `｜${excerpts}` : ""}`;
+              list.appendChild(item);
+            }
+            routeSection.appendChild(list);
+            section.appendChild(routeSection);
+          }
         }
-        const routeName = document.createElement("p");
-        const uncheckable = route.not_checkable_count
-          ? `；其中 ${route.not_checkable_count} 項本工具無比對依據`
-          : "";
-        routeName.textContent = `優先檢視路由：${route.route_name}（原文支持 ${route.supported_count}/${route.total_count}${uncheckable}；仍須人工核對）`;
-        section.appendChild(routeName);
-        const list = document.createElement("ul");
-        for (const element of route.elements || []) {
-          const item = document.createElement("li");
-          const status = element.status === "SOURCE_SUPPORTED"
-            ? "有原文支持"
-            : element.status === "NOT_CHECKABLE"
-              ? "本工具無比對依據（須人工閱讀）"
-              : "原文未見（已比對）";
-          const excerpts = (element.source_excerpts || []).join("；");
-          item.textContent = `${status}｜${element.element}${excerpts ? `｜${excerpts}` : ""}`;
-          list.appendChild(item);
+
+        // 欠缺要件
+        const unknowns = candidate.unknown_elements || [];
+        if (unknowns.length) {
+          const unknownBox = document.createElement("p");
+          unknownBox.className = "unknown-elements";
+          unknownBox.textContent = `欠缺要件：${unknowns.join("、")}`;
+          section.appendChild(unknownBox);
         }
-        section.appendChild(list);
+
+        // 矛盾事實
+        const contradictions = candidate.contradicting_fact_refs || [];
+        if (contradictions.length) {
+          const contraBox = document.createElement("p");
+          contraBox.className = "contradicting-facts";
+          contraBox.textContent = `矛盾事實：${contradictions.join("、")}`;
+          section.appendChild(contraBox);
+        }
+
+        // 保留聲明
+        const notice = document.createElement("p");
+        notice.className = "candidate-notice";
+        notice.textContent = "候選不代表犯罪成立。";
+        section.appendChild(notice);
+
         return section;
       });
     analysisBox.hidden = candidateNodes.length === 0;
@@ -388,6 +459,9 @@ function renderOffenses(caseData) {
 function fillProfileForm(caseData) {
   const form = $("#profile-form");
   const role = caseData.question_role;
+  $("#profile-name").required = true;
+  $("#session-start").required = role === "suspect" || role === "transfer";
+  $("#session-end").required = role === "suspect" || role === "transfer";
   const profile = (caseData.profiles || {})[`${role}:default`] || {};
   const session = (caseData.interview_sessions || {})[`${role}:default`] || {};
   const fieldMap = {
@@ -604,13 +678,14 @@ function renderCase(caseData) {
   renderCurrentQuestion(caseData);
   renderNumbers(caseData);
   const autoPrepared = caseData.preparation_mode === "SYSTEM_AUTO_PREPARED_HUMAN_REVIEW_REQUIRED";
+  const hasAutoPreparedQuestions = autoPrepared && caseData.questions.length > 0;
   const autoBanner = $("#auto-review-banner");
   if (autoBanner) {
-    autoBanner.hidden = !autoPrepared;
-    if (autoPrepared && caseData.preparation_notice) autoBanner.querySelector("span").textContent = caseData.preparation_notice;
+    autoBanner.hidden = !hasAutoPreparedQuestions;
+    if (hasAutoPreparedQuestions && caseData.preparation_notice) autoBanner.querySelector("span").textContent = caseData.preparation_notice;
   }
-  $("#step-tab-offense").hidden = autoPrepared;
-  $("#gate2-step-offense").hidden = autoPrepared || state.gate2Step === "offense";
+  $("#step-tab-offense").hidden = hasAutoPreparedQuestions;
+  $("#gate2-step-offense").hidden = hasAutoPreparedQuestions || state.gate2Step !== "offense";
   $("#approve-gate1").hidden = autoPrepared;
   $("#auto-prepare").hidden = autoPrepared;
   setVisible("#gate1-panel", ["GATE1_REVIEW", "GATE2_QA"].includes(caseData.state));
@@ -638,7 +713,7 @@ async function reloadLatestCaseAfterConflict(caseId) {
   }
 }
 
-async function action(name, payload = {}) {
+async function action(name, payload = {}, timeoutMs = 0, onHeaders) {
   if (!state.current) throw new Error("尚未選擇案件");
   const caseId = state.current.case_id;
   const sentRevision = state.current.revision;
@@ -647,7 +722,8 @@ async function action(name, payload = {}) {
     updated = await jsonApi(`/api/cases/${caseId}/actions`, {
       method: "POST",
       body: JSON.stringify({ action: name, revision: sentRevision, payload }),
-    });
+      timeoutMs,
+    }, onHeaders);
   } catch (error) {
     if (error instanceof ApiError && error.status === 409 && error.code === "REVISION_CONFLICT") {
       const result = await reloadLatestCaseAfterConflict(caseId);
@@ -723,16 +799,63 @@ $("#approve-gate1").addEventListener("click", async () => {
   catch (error) { announce(error.message, true); }
 });
 
+let aiRetryCount = 0;
+
 $("#ai-analyze").addEventListener("click", async () => {
   const button = $("#ai-analyze");
   button.disabled = true;
-  button.textContent = "AI 分析中…（約 30 秒）";
+  let startTime = Date.now();
+  let timer;
+  let requestId = "";
+
+  function updateTimer() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    button.textContent = `AI 分析中…（已等待 ${elapsed} 秒）`;
+  }
+
+  timer = setInterval(updateTimer, 1000);
+  updateTimer();
+
   try {
-    await action("analyze_candidates", { external_ai_consent: true });
-    announce("AI 分析完成。候選僅供人工選擇，不代表犯罪成立。 ");
-  } catch (error) { announce(error.message, true); }
-  finally {
+    const result = await action("analyze_candidates", { external_ai_consent: true }, 30000, (headers) => {
+      requestId = headers.get("X-Request-ID") || "";
+    });
+    clearInterval(timer);
     button.textContent = "AI 分析候選罪章";
+    aiRetryCount = 0;
+    if (requestId) announce(`AI 分析完成（請求 ID：${requestId}）。候選僅供人工選擇，不代表犯罪成立。 `);
+    else announce("AI 分析完成。候選僅供人工選擇，不代表犯罪成立。 ");
+  } catch (error) {
+    clearInterval(timer);
+    button.textContent = "AI 分析候選罪章";
+
+    if (error.code === "AI_TIMEOUT") {
+      // 逾時降級：保留規則候選，不清除 Gate 1 資料，不回傳案情原文
+      announce("外部 AI 分析逾時。已回到規則候選；請人工檢閱規則結果，不代表犯罪成立。 ", false);
+      if (aiRetryCount === 0) {
+        aiRetryCount = 1;
+        button.disabled = false;
+        button.textContent = "AI 分析候選罪章（重試，尚剩 1 次）";
+      } else {
+        button.disabled = true;
+        button.textContent = "AI 分析候選罪章（重試次數已用完）";
+      }
+      const fallback = document.createElement("p");
+      fallback.className = "muted ai-fallback";
+      fallback.textContent = "改用規則候選：請從上方「候選罪章」手動選擇，或點「建立問句」直接進入年籍。";
+      const existing = $("#ai-fallback-msg");
+      if (existing) {
+        existing.textContent = fallback.textContent;
+        existing.className = fallback.className;
+      } else {
+        document.body.appendChild(fallback);
+        fallback.id = "ai-fallback-msg";
+      }
+    } else {
+      announce(error.message, true);
+    }
+  } finally {
+    button.disabled = false;
     refreshAiConsent();
   }
 });
@@ -779,7 +902,7 @@ $("#profile-form").addEventListener("submit", async (event) => {
   const raw = formObject(event.currentTarget);
   try {
     await action("save_profile", profilePayload(raw, state.current.question_role));
-    announce("年籍與詢問時間已加密保存。 ");
+    announce("年籍與詢問時間已暫存於本機服務記憶體。 ");
   } catch (error) { announce(error.message, true); }
 });
 
@@ -806,11 +929,20 @@ $("#answers-form").addEventListener("submit", async (event) => {
   }
   try {
     await action("save_answers", { answers, answer_codes: answerCodes });
-    announce("回答已加密保存。 ");
+    announce("回答已暫存於本機服務記憶體。 ");
   } catch (error) { announce(error.message, true); }
 });
 
 $("#approve-gate2").addEventListener("click", async () => {
+  const role = state.current.question_role;
+  const profile = state.current.profiles?.[`${role}:default`] || {};
+  const session = state.current.interview_sessions?.[`${role}:default`] || {};
+  if (!profile.name?.trim() || ((role === "suspect" || role === "transfer") && (!session.start_time || !session.end_time))) {
+    setGate2Step("profile");
+    announce("請先填寫受詢問人姓名；涉嫌人及移送筆錄另須填寫詢問起訖時間。 ", true);
+    $("#profile-name").focus();
+    return;
+  }
   const unanswered = state.current.questions.filter((q) => !(q.answer || "").trim() && !q.meta?.known_from_summary);
   if (unanswered.length) {
     const goFirst = window.confirm(`尚有 ${unanswered.length} 題未作答（不清楚可填 UNKNOWN）。要跳到第一個未作答的題目嗎？`);

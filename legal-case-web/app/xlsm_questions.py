@@ -49,6 +49,18 @@ OFFENSE_NAME_TO_ID: dict[str, str] = {
     "撤回告訴": "complaint",
     "刑事相驗": "homicide",
     "聲請保護令": "stalking",
+    # ── AI_* 欄位映射（2026-10-20 P2 階段）──
+    # 這些欄名以 AI_ 開頭，代表由 AI 輔助生成而非公司既有套表；
+    # 映射到既有 offense_id，使 runtime 可載入，但 source.status 標為 AI_GENERATED
+    # 而非 COMPANY_VERBATIM，避免與公司核定逐字題混淆。
+    "AI_少年事件": "juvenile",
+    "AI_賭博": "gambling",
+    "AI_公然猥褻": "public_indecency",
+    "AI_槍砲": "firearms",
+    "AI_毒品危害": "drugs",
+    "AI_妨害性自主": "sexual_assault",
+    "AI_兒少性剝削": "child_exploitation",
+    "AI_圖利賄賂": "bribery",
 }
 
 # xlsm 通用欄對應之系統角色
@@ -61,6 +73,23 @@ _FORMULA_SKIP_MARKERS = ("CONCATENATE", "MID(", "LEFT(")
 # 同罪章的 markdown 或 JSON 問句。其他 XLSM 罪章題仍可依 company-standard.md
 # 規則補充未涵蓋的法定要件。
 COMPANY_STANDARD_ONLY_OFFENSES = frozenset({"sexual_harassment", "stalking"})
+
+
+def _render_verified_placeholders(text: str) -> str:
+    """只代入已由主管機關公開資料核對的固定服務專線。
+
+    題庫原文及順序維持不變；不認得的占位符仍原樣保留，讓下游驗證
+    fail closed，而不是猜測內容。
+    """
+    replacements = (
+        ("衛生福利部〈代號〉安心專線", "衛生福利部1925安心專線"),
+        ("撥打〈代號〉福利諮詢專線", "撥打1957福利諮詢專線"),
+        ("法律扶助基金會412-〈代號〉轉2", "法律扶助基金會412-8518轉2"),
+    )
+    rendered = text
+    for placeholder, value in replacements:
+        rendered = rendered.replace(placeholder, value)
+    return rendered
 
 
 def _quarantine_record(
@@ -114,12 +143,14 @@ def load_xlsm_questions(path: Path | None = None) -> dict[str, list[dict[str, An
                 quarantine[role].append(_quarantine_record(text, role, item, verdict))
                 continue
             seen.add(key)
+            is_ai_generated = offense_name.startswith("AI_")
             result[role].append({
                 "offense_id": offense_id,
                 "offense_name": offense_name,
                 "text": text,
                 "col": item.get("col", ""),
                 "row": item.get("row", 0),
+                "source_status": "AI_GENERATED" if is_ai_generated else "COMPANY_VERBATIM",
             })
     return result
 
@@ -190,15 +221,19 @@ def xlsm_questions_for(
                 continue
         if normalize(item["text"]) in seen:
             continue
+        rendered_text = _render_verified_placeholders(item["text"])
+        is_ai = item.get("source_status") == "AI_GENERATED"
+        source_label = "新套表.xlsm AI 輔助生成題" if is_ai else "新套表.xlsm 公司核定套表題"
+        source_status = "AI_GENERATED" if is_ai else "COMPANY_VERBATIM"
         questions.append({
             "id": f"XLSM-{role[0].upper()}-{offense_id}-{item['row']}{item['col']}",
-            "text": item["text"],
+            "text": rendered_text,
             "kind": "company_offense",
             "role": role,
             "offense_id": offense_id,
             "offense_name": item["offense_name"],
             "priority": 1,
-            "source": {"label": "新套表.xlsm 公司核定套表題", "status": "COMPANY_VERBATIM"},
+            "source": {"label": source_label, "status": source_status},
             "status": "PENDING",
             "answer": "",
             "meta": {
@@ -208,9 +243,13 @@ def xlsm_questions_for(
                 "machine_effects": [],
                 "source_cell": {"row": item.get("row", 0), "col": item.get("col", "")},
                 "applicability_route_ids": sorted(selected_routes),
+                "template_text": item["text"],
+                "interpolation_status": (
+                    "VERIFIED_FIXED_VALUE" if rendered_text != item["text"] else "NOT_APPLICABLE"
+                ),
             },
         })
-        seen.add(normalize(item["text"]))
+        seen.add(normalize(rendered_text))
     return questions
 
 

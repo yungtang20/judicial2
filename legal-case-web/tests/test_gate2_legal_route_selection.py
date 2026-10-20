@@ -181,6 +181,7 @@ def test_gate2_approval_rechecks_route_contract_and_snapshots_interview():
     case = select(gate2_case(), ["theft"], [THEFT_ROUTE])
     answers = {question["id"]: "UNKNOWN" for question in case["questions"]}
     case = apply_action(case, "save_answers", {"answers": answers}, BANK)
+    case = apply_action(case, "save_profile", {"profile": {"name": "合成測試"}}, BANK)
     stale = deepcopy(case)
     stale["legal_route_review"]["crosswalk_version"] = "stale-version"
     with pytest.raises(WorkflowError, match="版本"):

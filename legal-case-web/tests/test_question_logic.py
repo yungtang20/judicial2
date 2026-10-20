@@ -9,6 +9,7 @@ from app.questions import (
     THEFT_320_1_MOVABLE_PACK_VERSION,
     QuestionBudgetExceeded,
     apply_question_budget,
+    classify_answer,
     deduplicate_questions,
     enrich_question_metadata,
     filter_active_questions,
@@ -513,7 +514,9 @@ def test_bidirectional_convergence_uses_explicit_answer_codes():
     """自由文字只保存；封閉 answer_code 才更新中性事實與候選狀態。"""
     from tests.helpers import BANK, intake
     from app.workflow import create_case, apply_action
-    case = create_case(intake(), BANK)
+    # D1（人工核定 B 修正版，2026-10-20）：測侵占雙向收斂需要侵占敘述本體，
+    # 不能再依賴竊盜句自動帶出侵占 related 候選。
+    case = create_case(intake(summary="他將代為保管的公款拒不返還。"), BANK)
     case = apply_action(case, "approve_gate1", {"confirmed": True}, BANK)
     case = apply_action(case, "set_offenses", {"offense_ids": ["embezzlement"], "legal_route_ids": [], "route_review_confirmed": True, "role": "victim"}, BANK)
     case = apply_action(case, "save_profile", {"profile": {"name": "測試", "national_id": "A123456789", "sex": "男", "education": "大學"}, "session": {"start_time": "2026-10-11T14:00", "end_time": "2026-10-11T15:00", "location": "測試所"}}, BANK)
@@ -727,3 +730,25 @@ def test_route_reducer_keeps_cross_role_provenance_and_conflict():
     observations = result["route_fact_observations"]["theft_320_1_movable"]["possession_before_taking"]
     assert {item["role"] for item in observations} == {"victim", "suspect"}
     assert result["selected_legal_route_states"]["theft_320_1_movable"]["state"] == "NEED_REVIEW"
+
+
+def test_classify_answer_openers_and_exact_single_words():
+    """探針發現缺口修復回歸：筆錄封閉題最常見的「有，…」開頭
+    （含半形逗號）與整句單字回覆必須視為明確肯定（spec §7.4），
+    含否定提示的混合句維持否定／矛盾保守分類，不得晉升肯定。"""
+    assert classify_answer("有") == "affirmative"
+    assert classify_answer("有的") == "affirmative"
+    assert classify_answer("是") == "affirmative"
+    assert classify_answer("對") == "affirmative"
+    assert classify_answer("有，我當時在場。") == "affirmative"
+    assert classify_answer("有的，之後又有跟蹤兩次。") == "affirmative"
+    assert classify_answer("有,我當時在場。") == "affirmative"
+    # 混合句：含否定提示 → 維持 negative（不得晉升肯定）
+    assert classify_answer("有，不過我沒有看到他拿現金") == "negative"
+    assert classify_answer("有，我確定他沒有跟我拿錢。") == "negative"
+    # 混合句：含 unknown 提示 → unknown 優先（不知道 ≠ 否認）
+    assert classify_answer("有，不過我不知道金額。") == "unknown"
+    # 空白與標點不猜測
+    assert classify_answer("") == "other"
+    assert classify_answer("？？") == "other"
+    assert classify_answer("沒有") == "negative"

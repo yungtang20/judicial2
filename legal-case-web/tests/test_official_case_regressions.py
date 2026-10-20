@@ -41,6 +41,21 @@ OBSTRUCTION_INJURY_SUMMARY = (
     "現場監視器及乙之診斷證明書可供查證。"
 )
 
+PUBLIC_INSULT_SUMMARY = (
+    "丁立文係加美診所醫師，曾為張芸瑋進行抽脂及豐胸手術，嗣張芸瑋因不滿手術結果，"
+    "於民國105年11月13日12時至臺北市○○區○○路0段00號00樓之0加美診所協商後續處理問題時，"
+    "丁立文竟基於公然侮辱之犯意，於不特定人可共見共聞之休息室內，"
+    "對張芸瑋辱罵「豬八戒」等言語，足以貶損張芸瑋之人格評價。"
+    "證據有丁立文供述、張芸瑋指訴、案發錄影光碟及勘驗筆錄。"
+)
+
+PUBLIC_INSULT_PLAIN_SUMMARY = (
+    "丁立文於民國105年11月13日12時，在臺北市○○區○○路0段00號00樓之0加美診所內，"
+    "與張芸瑋協商手術問題時，在不特定人可共見共聞之休息室內，"
+    "以「豬八戒」等言語辱罵張芸瑋，足以貶損其人格評價。"
+    "證據有被告供述、張芸瑋指訴、案發錄影光碟及勘驗筆錄。"
+)
+
 AUDIT_ROUTE_CASES = (
     (
         "甲於114年3月1日15時許，在便利商店內徒手拿取貨架上洗髮精1瓶放入背包，未結帳即離去。",
@@ -147,6 +162,9 @@ def test_official_fraud_case_has_complete_gate1_and_exact_route():
     _assert_contains(gate1["behaviors"], "佯稱", "轉帳匯款")
     _assert_contains(gate1["results"], "遲未收到商品", "受騙")
     _assert_contains(gate1["evidence"], "網路對話訊息截圖", "帳戶交易清單")
+    assert not any(item.startswith("證據有") for item in gate1["evidence"])
+    assert "陷於錯誤" in gate1["causation"]
+    assert "匯款" in gate1["causation"]
     assert case["selected_offenses"] == ["fraud"]
     assert [route["route_id"] for route in case["selected_legal_routes"]] == ["fraud_339_general"]
     assert _pack_ids(case) == {"fraud_339_general"}
@@ -158,6 +176,22 @@ def test_official_fraud_case_has_complete_gate1_and_exact_route():
     assert {question["id"] for question in case["questions"] if question.get("meta", {}).get("known_from_summary")} >= {
         "Q-F339-REPRESENTATION", "Q-F339-DISPOSITION", "Q-F339-NONPERFORMANCE", "Q-F339-EVIDENCE",
     }
+    disposition = next(question for question in case["questions"] if question["id"] == "Q-F339-DISPOSITION")
+    assert "即可降價" not in disposition["answer"]
+    route = next(
+        route for route in case["candidates"][0]["route_element_matrix"]
+        if route["route_id"] == "fraud_339_general"
+    )
+    completion = next(element for element in route["elements"] if element["element"] == "未遂或既遂")
+    assert completion["status"] == "SOURCE_SUPPORTED"
+    hotline = next(
+        question for question in case["questions"]
+        if question["id"] == "XLSM-V-fraud-6P"
+    )
+    assert all(value in hotline["text"] for value in ("1925", "1957", "412-8518轉2"))
+    assert "〈代號〉" not in hotline["text"]
+    assert "〈代號〉" in hotline["meta"]["template_text"]
+    assert hotline["meta"]["interpolation_status"] == "VERIFIED_FIXED_VALUE"
 
 
 def test_official_medical_negligence_case_is_not_blocked_or_place_polluted():
@@ -169,6 +203,8 @@ def test_official_medical_negligence_case_is_not_blocked_or_place_polluted():
     _assert_contains(gate1["times"], "民國104年2月12日", "104年2月14日")
     _assert_contains(gate1["results"], "大腸穿孔", "腹膜炎", "敗血症")
     _assert_contains(gate1["evidence"], "診斷證明書", "醫事審議委員會鑑定書")
+    assert "醫事審議委員會" not in gate1["evidence"]
+    assert not any(item.startswith("證據有") for item in gate1["evidence"])
     assert case["selected_offenses"] == ["injury"]
     assert [route["route_id"] for route in case["selected_legal_routes"]] == ["injury_284_negligent"]
     assert _pack_ids(case) == {"injury_284_negligent"}
@@ -210,6 +246,59 @@ def test_obstruction_injury_case_keeps_both_offenses_and_one_route_each():
     _assert_contains(case["gate1"]["people"], "甲", "乙")
     _assert_contains(case["gate1"]["behaviors"], "徒手揮打")
     _assert_contains(case["gate1"]["results"], "左側顏面挫傷", "左前臂挫傷")
+
+
+def test_public_insult_case_extracts_neutral_facts_and_substantive_route():
+    for summary in (PUBLIC_INSULT_SUMMARY, PUBLIC_INSULT_PLAIN_SUMMARY):
+        case = _prepared(summary)
+        gate1 = case["gate1"]
+        _assert_contains(gate1["people"], "丁立文", "張芸瑋")
+        assert all("共聞" not in person for person in gate1["people"])
+        _assert_contains(gate1["behaviors"], "辱罵")
+        assert not any("人格評價" in result for result in gate1["results"])
+        assert any("足以貶損" in item["value"] for item in gate1["legal_characterizations"])
+        _assert_contains(gate1["evidence"], "錄影光碟", "勘驗筆錄")
+        assert all("協商後續處理問題時" not in place for place in gate1["places"])
+        assert "休息室" in gate1["places"]
+        assert all("共見共聞" not in place for place in gate1["places"])
+        assert case["selected_offenses"] == ["defamation"]
+        assert [route["route_id"] for route in case["selected_legal_routes"]] == [
+            "defamation_309_public_insult"
+        ]
+        assert _pack_ids(case) == {"defamation_309_public_insult"}
+        known = {
+            question["id"]
+            for question in case["questions"]
+            if question.get("meta", {}).get("known_from_summary")
+        }
+        assert {
+            "Q-DF309-WORDS", "Q-DF309-AUDIENCE", "Q-DF309-EVIDENCE",
+        } <= known
+        assert "Q-DF309-EFFECT" not in known
+        route = next(
+            route for route in case["candidates"][0]["route_element_matrix"]
+            if route["route_id"] == "defamation_309_public_insult"
+        )
+        threshold = next(
+            element for element in route["elements"]
+            if element["element"] == "是否逾越一般人可合理忍受範圍"
+        )
+        assert threshold["status"] == "NOT_CHECKABLE"
+        assert not any(
+            question.get("meta", {}).get("pack_id") == "defamation_314_complaint"
+            for question in case["questions"]
+        )
+
+
+def test_public_insult_concrete_impact_can_answer_the_effect_question():
+    case = _prepared("甲在公開場所辱罵乙。乙因此連續失眠並請假就醫。")
+
+    assert any("失眠" in result for result in case["gate1"]["results"])
+    assert "Q-DF309-EFFECT" in {
+        question["id"]
+        for question in case["questions"]
+        if question.get("meta", {}).get("known_from_summary")
+    }
 
 
 def test_official_regression_cases_are_deterministic_and_fresh():

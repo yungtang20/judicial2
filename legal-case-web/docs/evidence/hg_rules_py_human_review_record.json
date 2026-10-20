@@ -1,0 +1,36 @@
+{
+  "schema_version": "hg-rules-py-human-review-record-v1",
+  "record_id": "HG-RULES-REVIEW-20261019-01",
+  "recorded_on": "2026-10-19",
+  "recorded_by": "AGENT_MECHANICAL_RECORD",
+  "record_type": "MECHANICAL_BOOKKEEPING_NOT_APPROVAL",
+  "packet_id": "LR-HG-20261015-04",
+  "reviewer_role": "SYSTEM_OWNER_HUMAN",
+  "event": "Human reported completion of the working-tree app/rules.py review on 2026-10-19.",
+  "review_scope": {
+    "target_path": "app/rules.py",
+    "target_sha256_at_review": "454eefcb8981526ef969ecedf106f23aa5e20922991d2cb26f0d429d68b9b716",
+    "diff_scope": "working tree vs HEAD (+339/-13), organized as themes R1-R8 in review/1/rules_py_review_notes.md",
+    "review_notes_tool": "review/1/rules_py_review_notes.md",
+    "sampling_worksheet_tool": "review/1/rules_sampling_worksheet.md",
+    "decision_reference": "Option A selected by human on 2026-10-19 (see review/1/hg_chain_notice.md)"
+  },
+  "not_recorded_by_agent": [
+    "Reviewer per-theme conclusions (R1-R8 checkboxes); the human's own completed records hold the conclusions and are not reproduced here.",
+    "Any approval status: HG-LR-01 and HG-LR-02 decision_status values are unchanged and remain the human's action."
+  ],
+  "chain_note": "The packet schema is frozen by tests/test_legal_retrieval_human_gate_packet.py EXPECTED_PACKET_KEYS, so this review-completion record is stored as a sibling evidence file instead of a new packet key. No packet field and no HG-LR evidence file were modified by this record; the hash chain stays as verified on 2026-10-19.",
+  "status_unchanged_declaration": {
+    "packet_decision_status": "PENDING_HUMAN_APPROVAL",
+    "hg_lr_01_decision_status": "PARTIAL_REVIEW_HUMAN_APPROVAL_REQUIRED",
+    "hg_lr_02_decision_status": "CHANGES_REQUIRED_HUMAN_APPROVAL_PENDING",
+    "all_gate_statuses": "PENDING (as of this record)"
+  },
+  "claims_not_made": [
+    "HG_LR_01_APPROVED",
+    "HG_LR_02_APPROVED",
+    "LEGAL_CORRECTNESS_APPROVED",
+    "RUNTIME_ENABLED",
+    "DEPLOYMENT_AUTHORIZED"
+  ]
+}

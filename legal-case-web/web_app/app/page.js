@@ -14,6 +14,7 @@ export default function Home() {
   const [caseNo, setCaseNo] = useState('');
   const [victimCode, setVictimCode] = useState('');
   const [fraudNo, setFraudNo] = useState('');
+  const [externalAiConsent, setExternalAiConsent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -29,21 +30,27 @@ export default function Home() {
         setAnswers(p.answers || {});
         setMemo(p.memo || '');
         setDocMode(p.docMode || 'victim');
-      } catch {}
+        setCaseNo(p.caseNo || '');
+        setVictimCode(p.victimCode || '');
+        setFraudNo(p.fraudNo || '');
+      } catch {
+        setError('暫存資料格式錯誤，請重新輸入。');
+      }
     }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('JUD2_SIMPLE_V1', JSON.stringify({
-      caseSummary, step, facts, questions, answers, memo, docMode
+      caseSummary, step, facts, questions, answers, memo, docMode,
+      caseNo, victimCode, fraudNo
     }));
-  }, [caseSummary, step, facts, questions, answers, memo, docMode]);
+  }, [caseSummary, step, facts, questions, answers, memo, docMode, caseNo, victimCode, fraudNo]);
 
   async function callApi(gate, extra = {}) {
     const res = await fetch('/api/llm-proxy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ gate, caseSummary, ...extra }),
+      body: JSON.stringify({ gate, caseSummary, consentToExternalAI: externalAiConsent, ...extra }),
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || 'API 失敗');
@@ -53,6 +60,10 @@ export default function Home() {
   async function analyze() {
     if (!caseSummary.trim()) {
       alert('請先輸入案情摘要');
+      return;
+    }
+    if (!externalAiConsent) {
+      setError('請先閱讀資料處理說明並勾選同意，才會將案情摘要送至外部 AI。');
       return;
     }
     setLoading(true); setError('');
@@ -77,10 +88,29 @@ export default function Home() {
   }
 
   function consolidate() {
+    setMemo(buildFullStatement());
+    setStep(2);
+  }
+
+  function buildFullStatement() {
     const memoText = buildMemo(docMode, caseSummary, { caseNo, victimCode, fraudNo });
     const qaText = questions.map((q, i) => `${i + 1}. ${q}\n答: ${answers[i] || '（未填）'}`).join('\n');
-    setMemo(memoText + '\n\n\n【問答整理】\n' + qaText);
-    setStep(2);
+    return `${memoText}\n\n\n【問答整理】\n${qaText}`;
+  }
+
+  function resetCase() {
+    setCaseSummary('');
+    setFacts(null);
+    setQuestions([]);
+    setAnswers({});
+    setMemo('');
+    setDocMode('victim');
+    setCaseNo('');
+    setVictimCode('');
+    setFraudNo('');
+    setExternalAiConsent(false);
+    setError('');
+    setStep(0);
   }
 
   function downloadText(content, name) {
@@ -102,7 +132,7 @@ export default function Home() {
         body: JSON.stringify({
           templateType: docMode,
           caseSummary,
-          caseNumber: { caseNo: '', victimCode: '', fraudNo: '' },
+          caseNumber: { caseNo, victimCode, fraudNo },
           supplemental: questions.map((q, i) => ({ q, a: answers[i] || '' }))
         }),
       });
@@ -135,12 +165,21 @@ export default function Home() {
         {step === 0 && (
           <section className="rounded bg-slate-800 p-4 space-y-3">
             <p className="text-slate-300 text-sm">輸入案情摘要（含時間/地點/人物/動作）。字數不限。</p>
+            <p className="text-amber-200 text-sm">摘要與問答會保存在此瀏覽器的 localStorage。分析時，摘要會送到外部 AI 服務；請勿輸入不必要的個人資料。</p>
             <textarea
               className="w-full h-40 p-3 rounded bg-slate-700 text-white placeholder:text-slate-400"
               placeholder="例如：甲在咖啡廳趁乙上廁所時，拿未鎖屏手機做 3000 元小額付費儲值..."
               value={caseSummary}
               onChange={(e) => setCaseSummary(e.target.value)}
             />
+            <label className="flex gap-2 items-start text-sm">
+              <input
+                type="checkbox"
+                checked={externalAiConsent}
+                onChange={(e) => setExternalAiConsent(e.target.checked)}
+              />
+              <span>我已閱讀資料處理說明，並同意將案情摘要送至外部 AI 服務進行分析。</span>
+            </label>
             <button onClick={analyze} disabled={loading || !caseSummary.trim()}
               className="px-4 py-2 bg-blue-600 rounded text-white disabled:opacity-40">
               {loading ? '分析中...' : '開始分析 (自動 Gate1 + Gate2)'}
@@ -191,7 +230,12 @@ export default function Home() {
           <div className="space-y-3">
             <section className="rounded bg-slate-800 p-4">
               <h2 className="font-semibold mb-2">條陳 / 筆錄 scaffold（Gate 3 自動）</h2>
-              <pre className="text-sm whitespace-pre-wrap">{memo}</pre>
+              <div className="grid gap-3 md:grid-cols-3 mb-4">
+                <label className="grid gap-1 text-sm">證明單案號<input value={caseNo} onChange={(e) => setCaseNo(e.target.value)} className="px-2 py-1 rounded bg-slate-700 text-white" /></label>
+                <label className="grid gap-1 text-sm">婦幼案號<input value={victimCode} onChange={(e) => setVictimCode(e.target.value)} className="px-2 py-1 rounded bg-slate-700 text-white" /></label>
+                <label className="grid gap-1 text-sm">165 案號<input value={fraudNo} onChange={(e) => setFraudNo(e.target.value)} className="px-2 py-1 rounded bg-slate-700 text-white" /></label>
+              </div>
+              <pre className="text-sm whitespace-pre-wrap">{buildFullStatement()}</pre>
               <div className="flex flex-wrap gap-2 mt-3">
                 <select value={docMode} onChange={(e) => setDocMode(e.target.value)}
                   className="px-2 py-1 rounded bg-slate-700 text-white">
@@ -209,7 +253,7 @@ export default function Home() {
                 </button>
               </div>
             </section>
-            <button onClick={() => setStep(0)} className="px-4 py-2 bg-slate-700 rounded text-white">
+            <button onClick={resetCase} className="px-4 py-2 bg-slate-700 rounded text-white">
               重新開始
             </button>
           </div>

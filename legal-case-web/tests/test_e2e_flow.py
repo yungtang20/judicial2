@@ -13,13 +13,13 @@ from http.server import ThreadingHTTPServer
 import pytest
 
 from app import server as server_module
-from app.storage import CaseStore
+from app.storage import EphemeralCaseStore
 from tests.helpers import intake
 
 
 @pytest.fixture()
-def e2e_server(tmp_path, monkeypatch):
-    monkeypatch.setattr(server_module, "STORE", CaseStore(tmp_path / "e2e.sqlite3"))
+def e2e_server(monkeypatch):
+    monkeypatch.setattr(server_module, "STORE", EphemeralCaseStore())
     instance = ThreadingHTTPServer(("127.0.0.1", 0), server_module.Handler)
     port = instance.server_address[1]
     monkeypatch.setattr(server_module, "ALLOWED_HOSTS", {f"127.0.0.1:{port}"})
@@ -87,6 +87,7 @@ def test_e2e_full_gate_flow_with_question_metadata_and_document(e2e_server):
 
     def _act(action, payload):
         nonlocal revision
+        sent_revision = revision
         h = _headers(port)
         h["Origin"] = f"http://127.0.0.1:{port}"
         payload_full = {"revision": revision, "action": action, "payload": payload}
@@ -95,6 +96,7 @@ def test_e2e_full_gate_flow_with_question_metadata_and_document(e2e_server):
         status, _, body = _request(port, "POST", f"/api/cases/{case_id}/actions", headers=h, body=raw)
         assert status == 200, f"{action} 失敗：{body[:200]}"
         updated = json.loads(body)
+        assert updated["revision"] == sent_revision + 1
         revision = updated["revision"]
         return updated
 

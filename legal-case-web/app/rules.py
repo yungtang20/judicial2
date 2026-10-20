@@ -106,6 +106,8 @@ def _element_evidence_patterns(element: str) -> list[tuple[str, ...]]:
     narrative.  They never prove the element or turn the candidate into a legal
     conclusion.  The element wording itself comes from legal_route_crosswalk.json.
     """
+    if element == "是否逾越一般人可合理忍受範圍":
+        return []
     if element == "性交未遂或既遂":
         return [("性交", "性交未遂", "性交既遂")]
     if element == "性影像附著物或物品":
@@ -130,12 +132,15 @@ def _element_evidence_patterns(element: str) -> list[tuple[str, ...]]:
         (("先前竊盜或搶奪行為",), ("竊盜", "竊取", "搶奪", "搶取")),
         (("防護贓物、脫免逮捕或湮滅罪證目的",), ("防護贓物", "脫免逮捕", "湮滅罪證")),
         (("當場施以強暴脅迫",), ("當場", "強暴", "脅迫", "毆打", "拉扯")),
-        (("未遂或既遂", "性交未遂或既遂", "結果加重、預備、未遂或既遂"), ("得手", "得逞", "未遂", "既遂", "始停止")),
+        (("未遂或既遂", "性交未遂或既遂", "結果加重、預備、未遂或既遂"), ("得手", "得逞", "得款", "轉帳匯款", "再次匯款", "已交付", "未遂", "既遂", "始停止")),
         (("家庭成員關係",), ("老婆", "妻子", "丈夫", "配偶", "同居", "家人")),
         (("身體、精神或經濟上騷擾、控制、脅迫或其他不法侵害",), ("毆打", "傷害", "威脅", "脅迫", "不同意", "偷拍", "性交")),
         (("私行拘禁或其他非法方法",), ("拘禁", "限制行動自由", "剝奪行動自由", "圍堵", "綑綁", "束帶")),
         (("被害人行動自由遭剝奪的期間與程度",), ("限制行動自由", "剝奪行動自由", "不能離開", "無法離開")),
         (("強暴或脅迫方法",), ("強暴", "脅迫", "毆打", "恫嚇", "持槍", "持刀")),
+        (("強暴、脅迫、藥劑、催眠術或其他方法",), ("強暴", "脅迫", "持刀", "持槍", "捆綁", "勒住", "毆打")),
+        (("被害人達不能抗拒程度",), ("不能抗拒", "無法抗拒")),
+        (("取物、使交付或取得財產上不法利益",), ("搶走", "奪走", "取走", "交付現金", "交付財物", "交付金錢")),
         (("使人行無義務之事或妨害權利行使",), ("迫使", "強迫", "妨害", "要求")),
         (("被害人行為時年齡及年齡證據", "兒童或少年年齡與身分", "被害人未滿十八歲及年齡分層"), ("未滿18歲", "未滿十八歲", "少年", "兒童", "歲")),
         (("攝錄性影像的科技方法", "攝錄或使本人攝錄性影像", "性影像來源類型"), ("性影像", "裸體照片", "偷拍", "影片")),
@@ -156,8 +161,8 @@ def _element_evidence_patterns(element: str) -> list[tuple[str, ...]]:
         (("第352條及第353條以外之他人之物",), ("車窗", "車燈", "自小客車", "玻璃", "物品", "財物", "所有")),
         (("毀棄損壞或致令不堪用",), ("破壞", "毀損", "砸毀", "損壞", "不堪使用")),
         (("足以生損害於公眾或他人",), ("不堪使用", "受損", "損害")),
-        (("公務員依法執行職務或特定職務目的",), ("公務員", "執行", "職務", "門禁")),
-        (("強暴或脅迫行為",), ("揮打", "毆打", "攻擊", "強暴", "脅迫")),
+        (("公務員依法執行職務或特定職務目的",), ("公務員", "員警", "警察", "執勤", "依法執行", "執行", "職務", "門禁")),
+        (("強暴或脅迫行為",), ("推開", "推打", "推擠", "扯住", "拉扯", "揮打", "毆打", "攻擊", "強暴", "脅迫")),
         (("意圖性騷擾",), ("性騷擾", "觸摸臀部", "觸摸胸部", "摸臀", "摸胸")),
         (("乘被害人不及抗拒之際",), ("不及抗拒", "趁", "突然")),
         (("親吻、擁抱或觸摸臀部、胸部或其他身體隱私處之行為",), ("親吻", "擁抱", "觸摸", "臀部", "胸部", "身體隱私處")),
@@ -167,6 +172,9 @@ def _element_evidence_patterns(element: str) -> list[tuple[str, ...]]:
         (("指摘或傳述具體事項",), ("指稱", "貼文", "刊登", "傳述", "具體事項")),
         (("足以毀損他人名譽",), ("名譽受損", "毀損名譽", "貶損名譽")),
         (("散布於眾意圖及文字圖畫態樣",), ("公開貼文", "社群平台", "網路", "散布", "文字", "圖畫")),
+        (("故意發表公然貶損他人名譽之言論",), ("辱罵", "侮辱", "貶損", "貶低")),
+        (("個案表意脈絡及公然性",), ("不特定人", "共見共聞", "公開場合", "公開場所")),
+        (("是否逾越一般人可合理忍受範圍",), ("辱罵", "侮辱", "貶損人格", "人格評價")),
         (("以人員設備通訊網路或其他方法對特定人",), ("住處", "工作地點", "傳送訊息", "盯梢", "等候")),
         (("反覆或持續且違反意願",), ("反覆", "持續", "多次", "遭拒")),
         (("與性或性別有關，或對密切關係人之法定例外",), ("追求", "交往", "性別", "性")),
@@ -185,10 +193,32 @@ def _element_evidence_patterns(element: str) -> list[tuple[str, ...]]:
     return []
 
 
+def _unnegated_signal_occurrences(
+    signal: str, summary: str, source_segments: list[tuple[str, int, int]]
+) -> list[tuple[str, int, int, int, int]]:
+    """Return source-backed, individually unnegated literal signal spans."""
+    occurrences: list[tuple[str, int, int, int, int]] = []
+    for segment, segment_start, segment_end in source_segments:
+        for match in re.finditer(re.escape(signal), segment):
+            local_start, local_end = match.span()
+            context = segment[max(0, local_start - 14):local_end]
+            if _keyword_negated(signal, context):
+                continue
+            occurrences.append((
+                segment,
+                segment_start,
+                segment_end,
+                segment_start + local_start,
+                segment_start + local_end,
+            ))
+    return occurrences
+
+
 def _route_element_matrix(
     offense: dict[str, Any], summary: str, gate1: dict[str, Any] | None
 ) -> list[dict[str, Any]]:
     facts = (gate1 or {}).get("facts", [])
+    source_segments = _source_segments(summary)
     analyses: list[dict[str, Any]] = []
     for route in offense.get("legal_routes", []):
         rows: list[dict[str, Any]] = []
@@ -200,19 +230,28 @@ def _route_element_matrix(
             excerpts: list[str] = []
             for signal_group in patterns:
                 for signal in signal_group:
-                    if signal and signal in summary:
-                        matched_signals.append(signal)
-                        for fact in facts:
-                            excerpt = str(fact.get("source_excerpt", ""))
-                            if signal in excerpt:
-                                ref = str(fact.get("fact_id", ""))
-                                if ref and ref not in refs:
-                                    refs.append(ref)
-                                if excerpt and excerpt not in excerpts:
-                                    excerpts.append(excerpt)
+                    occurrences = _unnegated_signal_occurrences(signal, summary, source_segments) if signal else []
+                    if not occurrences:
+                        continue
+                    matched_signals.append(signal)
+                    for segment, _, _, _, _ in occurrences:
+                        if segment not in excerpts:
+                            excerpts.append(segment)
+                    for fact in facts:
+                        source_start = fact.get("source_start")
+                        source_end = fact.get("source_end")
+                        if not isinstance(source_start, int) or not isinstance(source_end, int):
+                            continue
+                        if not any(
+                            source_start < occurrence_end and source_end > occurrence_start
+                            for _, _, _, occurrence_start, occurrence_end in occurrences
+                        ):
+                            continue
+                        ref = str(fact.get("fact_id", ""))
+                        if ref and ref not in refs:
+                            refs.append(ref)
             if matched_signals and not refs:
                 refs = ["intake.summary"]
-                excerpts = [next((segment for segment, _, _ in _source_segments(summary) if any(s in segment for s in matched_signals)), summary)]
             for ref in refs:
                 if ref not in supporting_refs:
                     supporting_refs.append(ref)
@@ -334,13 +373,22 @@ def _source_segments(summary: str) -> list[tuple[str, int, int]]:
 
 def _property_taking_values(summary: str) -> dict[str, str] | None:
     action = next((item for item in PROPERTY_TAKING_ACTIONS if item in summary), "")
+    # 侵占／拒不返還敘述（「保管公款後拒不返還」）沒有「拿走」類動作詞；
+    # 需同時具備持有／保管訊號才視為摘要自身描述的財產處分行為，
+    # 引述指控句（他人說我侵占）不觸發本路徑。
+    embezzle_action = ""
     if not action:
+        possession_signal = re.search(r"保管|代管|寄放|經手|代收|受託|持有", summary)
+        embezzle_match = re.search(r"侵占|拒不返還", summary)
+        if possession_signal and embezzle_match:
+            embezzle_action = embezzle_match.group(0)
+    if not action and not embezzle_action:
         return None
     actor_match = re.search(r"(?:^|[，。；！？\s])([^，。；！？\s]{1,8})把", summary)
     actor = actor_match.group(1) if actor_match else next(
         (item for item in ("對方", "他", "她", "行為人") if item in summary), "UNKNOWN"
     )
-    action_pattern = "|".join(PROPERTY_TAKING_ACTIONS)
+    action_pattern = "|".join(PROPERTY_TAKING_ACTIONS) + (f"|{embezzle_action}" if embezzle_action else "")
     object_match = re.search(
         rf"(?:我的|他的|她的|其)([^，。；！？\s]{{1,12}}?)(?:被)?(?:{action_pattern})",
         summary,
@@ -360,7 +408,7 @@ def _property_taking_values(summary: str) -> dict[str, str] | None:
     evidence = "YES" if any(item in summary for item in ("訊息", "錄影", "監視器", "證人", "照片")) else "UNKNOWN"
     return {
         "actor": actor,
-        "action": "取走物品",
+        "action": "取走物品" if action else (embezzle_action or "取走物品"),
         "object": obj,
         "original_possession": "UNKNOWN",
         "consent": consent,
@@ -369,6 +417,53 @@ def _property_taking_values(summary: str) -> dict[str, str] | None:
         "return_agreement": return_agreement,
         "intent": "UNKNOWN",
         "evidence": evidence,
+    }
+
+
+# 財物罪章共用錨點（E4 輪，2026-10-20）：區辨訊號與候選閘門共用同一
+# 份取財／使人交付錨點。「要／喊著要」引導的搶奪只是表達意圖，不作為
+# 已描述之取財事實（lookbehind 排除）。
+# E5 輪（人工複審 2026-10-20 第四輪 ✗）：泛用「交(出|付|給)」會讓無關的
+# 「不能抗拒」語境＋任意「交付」（契約義務、文件往來）誤觸 robbery；
+# 交付面改為綁定財物對象（交出錢包／交付財物／使人交付）。
+_ROBBERY_TAKE_ANCHOR = (
+    r"(?<!要)(?<!喊著)(?:搶(走|奪|取|劫|得)|強搶|(強|奪)(取|走))"
+    r"|劫(走|取|財)"
+    r"|交出.{0,3}(現金|錢包|皮包|財物|手機|錢|鑰匙|存摺|車|證件|珠寶|金器)"
+    r"|交付(財物|金錢|現金|贓款|款項|皮包|手機|車)"
+    r"|使人(不能抗拒)?(而)?交付(財物|金錢|現金|贓款|款項|皮包|手機|車|鑰匙|存摺|證件|珠寶|金器)"
+    r"|(?<!要)(?<!喊著)強行.{0,8}(拿|帶)"
+    r"|把.{0,10}(現金|錢包|皮包|手機|錢|車).{0,10}(交|奪|搶)"
+)
+
+
+def _property_discriminators(summary: str) -> dict[str, bool]:
+    """財物罪章三路區辨訊號（人工核定 D1「B 修正版」，2026-10-20）。
+
+    只回報摘要中是否存在對應的「區辨事實語句」，不判定任何法律要件
+    成立，也不改變 candidate 狀態語義。三路依人工審查定案：
+    - consent_take：未經同意取走／破壞原持有（theft 方向）。
+    - entrusted_possession：先前合法持有／受託保管（embezzlement 前提）。
+    - conversion：變易持有、處分或拒不返還（embezzlement 方向）。
+    - violence_take：強暴／脅迫等手段＋奪取或使人交付（robbery 方向）。
+    缺對應區辨事實時，對應 related 候選不會被建立。
+    E4 輪（人工複審 2026-10-20）：全部改用 14 字元否定窗口評估
+    （_patterns_unnegated），「沒有侵占／沒有搶走」等否定敘述不得
+    作為區辨事實把 related 候選帶回。
+    """
+    return {
+        "consent_take": _patterns_unnegated([
+            r"未經.{0,8}(同意|允許)|沒有同意|擅自|偷偷|悄悄|趁.{0,10}不(注意|備)|偷(走|拿|翻)|闖入",
+        ], summary),
+        "entrusted_possession": _patterns_unnegated([
+            r"保管|代管|代收|受託|經手|業務上|公款|拾得|撿到",
+        ], summary),
+        "conversion": _patterns_unnegated([
+            r"拒不返還|占為己有|據為己有|花用|侵吞|轉(到|入|進)自己(的)?(帳戶|名下)",
+        ], summary),
+        "violence_take": _patterns_unnegated([
+            r"強暴|脅迫|持(刀|槍|械)|菜刀|兇器|捅|行兇|捆綁|勒住|毆打",
+        ], summary) and _patterns_unnegated([_ROBBERY_TAKE_ANCHOR], summary),
     }
 
 
@@ -410,6 +505,7 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
             "時間", "地點", "倉庫", "公眾", "所有", "所管", "起訴", "被告",
             "告訴人", "爭點", "自用小客車", "營業用大客車", "車牌", "之詞",
             "之攔", "竟仍", "徵其", "如附", "花用", "於應", "公共托",
+            "共聞", "不特定人",
         ))):
             return
         resolved_start = summary.find(text) if start is None else start
@@ -494,8 +590,15 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
 
     for match in re.finditer(r"位在([^，。；]+?)(?=拍攝|經營)", summary):
         add("place", match.group(1))
+    for match in re.finditer(
+        r"(?:在|於)(?:不特定人可共見共聞之)?([^，。；]{1,30}?(?:休息室|辦公室|包廂|廁所))(?:內)?",
+        summary,
+    ):
+        place = re.sub(r"^不特定人可共見共聞之", "", match.group(1))
+        add("place", match.group(0), value=place, start=match.start(), fields={"place": place})
     for match in re.finditer(r"在([^，。；]+?)(?:中|上|內|附近)(?=[因，。；])", summary):
-        add("place", match.group(1))
+        place = re.sub(r"^不特定人可共見共聞之", "", match.group(1))
+        add("place", match.group(1), value=place, fields={"place": place})
     for match in re.finditer(r"(?:前往|位在)([^，。；]+?)(?:中|上|內|附近)(?=[因，。；])", summary):
         add("place", match.group(1))
     # 裁判書常以「在○○工寮，…」或「於○○病房，…」直接接逗號，
@@ -505,6 +608,8 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
         segment = match.group(1)
         # 「於某日赴醫院就診／於某時駕駛」的介系詞引出時間或行為，
         # 不得把後面的完整動作誤當成地點。
+        if re.match(r"(?:民國)?\d{2,3}[年年]", segment) and "至" in segment:
+            segment = segment.split("至", 1)[1]
         if re.match(r"(?:民國)?\d{2,3}[年年]", segment) and re.search(
             r"前往|就診|接受|駕駛|匯款|施行", segment
         ):
@@ -517,7 +622,7 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
             "",
             segment,
         )
-        segment = re.split(r"(?:見|基於|遂|因|共同|以|將|徒手|欲|而|拍攝|委請|駕駛|就診|接受|施行|，)", segment, maxsplit=1)[0].strip()
+        segment = re.split(r"(?:見|基於|遂|因|共同|以|將|徒手|欲|而|拍攝|委請|駕駛|就診|接受|施行|協商|，)", segment, maxsplit=1)[0].strip()
         segment = segment.rstrip("上內中")
         if re.search(location_terms, segment):
             add("place", segment)
@@ -580,6 +685,7 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
         r"下稱([\u4e00-\u9fffA-Za-z0-9-]{1,20})",
         r"^([\u4e00-\u9fff]{2,5})(?=因)",
         r"^([\u4e00-\u9fff]{2,5})(?=意圖)",
+        r"^([\u4e00-\u9fff]{2,5})(?=係)",
         r"我與(?:老婆|妻子|丈夫)?([\u4e00-\u9fff]{2,4})(?=因|，|。)",
         r"老婆([\u4e00-\u9fff]{2,4})(?=因|，|。)",
         r"中文名：([\u4e00-\u9fff○]{2,5})",
@@ -592,13 +698,15 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
         r"由([\u4e00-\u9fff]{2,5})(?=負責|駕駛)",
         r"撞擊([\u4e00-\u9fff]{2,5})(?=駕駛|所駕駛)",
         r"(?:使|致)([\u4e00-\u9fff]{2,5}?)(?:因而)?(?=受有)",
+        r"與([\u4e00-\u9fff○]{2,5})(?=協商|爭執|共同)",
+        r"對([\u4e00-\u9fff○]{2,5})(?=辱罵|侮辱|指稱|指摘|傳述)",
         r"(?:醫師|被告|告訴人)([\u4e00-\u9fff]{2,4}?)(?=於|（|，|。|係|為)",
     ):
         for match in re.finditer(pattern, summary):
             name = match.group(1)
             if name == alias_name:
                 continue
-            if name not in {"我", "他", "她", "性交", "內射"} and not (
+            if name not in {"我", "他", "她", "性交", "內射", "共聞"} and not (
                 name.startswith("○") and any("\u4e00" <= char <= "\u9fff" for char in name)
             ):
                 add("person", name, fields={"subject": name})
@@ -701,6 +809,8 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
         r"(開啟[^，。；]{1,35})",
         r"(取走[^，。；]{1,50})",
         r"(徒手揮打[^，。；]{1,35})",
+        r"((?:以「[^」]+」等言語)?辱罵[^，。；]{1,40})",
+        r"((?:指摘|傳述|指稱)[^，。；]{1,60})",
     ):
         for match in re.finditer(pattern, summary):
             action_text = match.group(1)
@@ -748,6 +858,7 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
         r"(無人受傷)",
         r"(吐氣酒精濃度(?:為)?每公升\s*\d+(?:\.\d+)?毫克)",
         r"([^，。；]{1,20}不堪使用)",
+        r"([^。；]{1,60}(?:失眠|請假就醫|工作受影響|生活受影響|人際關係受影響)[^。；]{0,60})",
     ):
         for match in re.finditer(pattern, summary):
             add("result", match.group(1), fields={"result": match.group(1)})
@@ -756,6 +867,7 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
     if causation_match:
         add("causation", causation_match.group(1))
     for pattern in (
+        r"(致[^。；]{1,120}?陷於錯誤[^。；]{0,100}?(?:匯款|轉帳|交付)[^。；]{0,60})",
         r"(致[^，。；]{1,100}(?:匯款|轉帳|交付)[^，。；]{0,60})",
         r"(導致[^。；]{1,100})",
     ):
@@ -820,9 +932,21 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
             add("object", object_text, fields={"object": object_text})
 
     evidence_terms = ("監視器", "錄影", "照片", "訊息", "證人", "診斷證明", "病歷", "影片", "偷拍", "男友")
-    evidence_match = re.search(r"([^，。；]{0,20}(?:" + "|".join(evidence_terms) + r")[^，。；]{0,20})", summary)
-    if evidence_match:
-        add("evidence", evidence_match.group(1))
+    explicit_evidence = list(re.finditer(r"證據(?:有|包括|如下)[:：]?([^。；]+)", summary))
+    for evidence_group in explicit_evidence:
+        for raw_item in re.split(r"、|及(?=[^、，。；]{2,})", evidence_group.group(1)):
+            evidence_item = raw_item.strip(" ，、；。")
+            if not evidence_item:
+                continue
+            item_start = summary.find(evidence_item, evidence_group.start(1), evidence_group.end(1))
+            add(
+                "evidence", evidence_item, start=item_start,
+                fields={"subtype": "listed_evidence"}, assertion_status="SOURCE_LEAD_TO_VERIFY",
+            )
+    if not explicit_evidence:
+        evidence_match = re.search(r"([^，。；]{0,20}(?:" + "|".join(evidence_terms) + r")[^，。；]{0,20})", summary)
+        if evidence_match:
+            add("evidence", evidence_match.group(1))
     wireless_match = re.search(r"([^，。；]{0,20}無線電通報[^，。；]{0,20})", summary)
     if wireless_match:
         add("evidence", wireless_match.group(1))
@@ -831,6 +955,7 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
         "診斷證明書", "手術紀錄", "住院病歷", "手術照片", "醫療影像光碟",
         "醫事審議委員會鑑定書", "酒精測定紀錄表", "酒測器檢定合格證書",
         "道路交通事故現場圖", "事故調查報告表", "現場照片", "現場監視器",
+        "被告供述", "丁立文供述", "張芸瑋指訴", "案發錄影光碟", "勘驗筆錄",
     )
     for evidence_name in evidence_names:
         for match in re.finditer(re.escape(evidence_name), summary):
@@ -848,7 +973,10 @@ def _narrative_fact_candidates(summary: str) -> list[dict[str, Any]]:
             add("evidence", match.group(1), start=match.start(1), fields={"subtype": subtype}, assertion_status="SOURCE_LEAD_TO_VERIFY")
 
     # 法律評價留供回查，不得投影成「事／行為／結果」的中性事實。
-    for match in re.finditer(r"((?:意圖|基於)[^，。；]{1,40}(?:犯意|所有)|(?:性交|猥褻)(?:行為)?得逞)", summary):
+    for match in re.finditer(
+        r"((?:意圖|基於)[^，。；]{1,40}(?:犯意|所有)|(?:性交|猥褻)(?:行為)?得逞|足以貶損[^，。；]{1,50}(?:人格評價|名譽))",
+        summary,
+    ):
         add(
             "legal_characterization",
             match.group(1),
@@ -1194,13 +1322,21 @@ def analyze_gate1(intake: dict[str, Any], *, use_ai: bool = True) -> dict[str, A
     return gate1
 
 
-_NEGATION_MARKERS = ("並未", "並非", "未提及", "沒有", "尚未", "非因", "不曾", "無證據", "無人", "未遂", "謊稱並無")
+# E5 輪（人工複審 2026-10-20 第四輪 ✗）：否定詞表補「從未」群——
+# 「我從未騷擾她，她也從未明確拒絕」「從未攔阻或脅迫」「從未脅迫／
+# 從未搶走」等完整否定句，原 14 字元窗口沒有任何標記可擋，導致
+# 錨點／區辨訊號被誤判為已建立事實。
+_NEGATION_MARKERS = (
+    "並未", "並非", "未提及", "沒有", "沒", "尚未", "非因", "不曾", "無證據",
+    "無人", "未遂", "謊稱並無",
+    "從未", "未曾", "從沒", "從來沒有", "從來不", "從來未",
+)
 
 
 def _keyword_negated(keyword: str, summary: str) -> bool:
     """檢查關鍵字是否只出現在否定語句中（spec §5.1：關鍵字不得為唯一機制）。
 
-    找出關鍵字出現位置，向前看 12 個字元內是否有否定標記。
+    找出關鍵字出現位置，向前看 14 個字元內是否有否定標記。
     若全部命中位置都被否定，回傳 True（視為未命中）。
     """
     lowered = summary.casefold()
@@ -1216,7 +1352,7 @@ def _keyword_negated(keyword: str, summary: str) -> bool:
     if not positions:
         return True  # 沒出現 = 未命中
     window = 14
-    sentence_breaks = ("。", "；", "！", "？")
+    sentence_breaks = ("。", "；", "！", "？", "，", ",")
     for pos in positions:
         context = lowered[max(0, pos - window):pos]
         # 跨句不算否定：從否定標記到關鍵字之間不得有句讀
@@ -1228,6 +1364,476 @@ def _keyword_negated(keyword: str, summary: str) -> bool:
     return True  # 全部命中都在否定語句內
 
 
+_OBSTRUCTION_PHYSICAL_FORCE = r"推開|推打|推擠|扯住|撞開|揮打|毆打|拉扯|強暴|脅迫"
+_OBSTRUCTION_FORCE = rf"(?:{_OBSTRUCTION_PHYSICAL_FORCE})|攔阻"
+
+
+# 白話情境語句提示（recall 補強，基於 R1 探針實測漏失的表述）。
+# 只在對應罪章「零關鍵字命中」時評估；patterns 必須全部命中才觸發。
+# 這裡只建立候選方向（NEED_REVIEW），不把任何語句要件視為已證明；
+# 正式定性仍須 Gate 1 回查原文與人工審查。不改動已審查的題庫關鍵字。
+_PHRASE_HINTS: list[dict[str, Any]] = [
+    {
+        "offense_id": "injury",
+        "hint": "動手傷害情境",
+        "patterns": [
+            r"動手打|打了(我|人)|被打|被揍|推我撞|撞到(桌|牆|柱|電線桿)",
+            r"瘀青|腫起|腫了|流血|破皮|骨折|驗傷|受傷|傷口|撕裂",
+        ],
+    },
+    {
+        "offense_id": "intimidation",
+        "hint": "加害言詞恫嚇情境",
+        # 刑法 §305：以「通知將加惡害之旨」為要件。「小心一點」等一般提醒
+        # （如警衛值勤提醒）沒有惡害內容，不是惡害通知，不觸發（人工審查
+        # E-1 ✗ 修正，2026-10-20）。
+        "patterns": [
+            r"(要|會)讓(我|你|他|她|妳)好看|不會放過(你|我|他|她|妳)|知道我(住|家)|知道你(住|家)|我知道你(住|家)|記得(我|你)(家|住)哪|不告訴就傷害|報警就.{0,8}(傷害|找|打)|捅(你|死)|砍(你|死)|弄死你|處理你",
+        ],
+        # 新聞／聽聞不是本案事實：摘要只在敘述自己遭惡害通知時才觸發。
+        "exclude": r"新聞|報導|聽說|聽到有人|電影|小說|歷史",
+    },
+    {
+        "offense_id": "damage",
+        "hint": "摔毀／損壞他人物品情境",
+        "patterns": [
+            r"摔(在|到)(地|牆|桌)|摔破|摔壞|踹壞|踩破|踩壞",
+            r"手機|螢幕|眼鏡|車|電腦|花瓶|杯子",
+        ],
+    },
+    {
+        "offense_id": "fraud",
+        "hint": "匯款未交付／交易失聯情境",
+        "patterns": [
+            r"匯錢|匯款|轉錢|下訂|付訂金|付款",
+            r"沒(到|收到)|未到貨|未收到|人(不回|消失|失聯)|被封鎖|沒消?息",
+        ],
+    },
+    {
+        "offense_id": "public_danger",
+        "hint": "酒後駕駛情境",
+        "patterns": [
+            r"喝酒|喝了酒|酒後|飲酒|酒精",
+            r"自己開車|自己騎車|開車回家|騎車回家|開車上路|騎車上路|駕車上路|駕駛上路",
+        ],
+    },
+    {
+        "offense_id": "obstruction",
+        "hint": "妨害公務／阻撓執行職務情境",
+        # 刑法 §135 第 1 項：以「施強暴脅迫」為要件。單純拒絕配合或口頭
+        # 辱罵不是強暴脅迫，不觸發（人工審查 E-3 ✗ 修正，2026-10-20）。
+        "patterns": [
+            r"公務員|警察|員警|交警|交通警察|執勤|依法執行|執行職務|查封|封印",
+            _OBSTRUCTION_FORCE,
+        ],
+        # 新聞／聽聞不是本案事實：摘要只在敘述自己阻撓執勤時才觸發。
+        "exclude": r"新聞|報導|聽說|聽到有人|電影|小說|歷史",
+    },
+    {
+        "offense_id": "stalking",
+        "hint": "尾隨／持續接近情境",
+        # 跟騷法 §3：反覆或持續「違反其意願」為要件。缺少拒絕／反對事實
+        # 的日常串門敘述（如同事相約吃飯）不觸發（人工審查 E-2 ✗ 修正，
+        # 2026-10-20）。
+        "patterns": [
+            r"跟(在)?(我|人)(的)?(後面|身後)|尾隨|守候|徘徊|守在|等候|等在|(到|來)(我|你|人)(家|學校|公司|工作|住處|門口|樓下|附近)|在門口|等在門口",
+            r"反覆|一直|老是|多次|持續|每天|一週|每個月|常常|經常|連續",
+            r"明確拒絕|拒絕(過)?|不要再(來|跟|找|聯絡)|別再(來|找|跟|聯絡)|叫我不要再|早就拒絕",
+        ],
+        "exclude": r"新聞|報導|聽說|聽到有人|電影|小說|歷史|包裹|外送|快遞|郵件|簽收|派送",
+    },
+    {
+        "offense_id": "robbery",
+        "hint": "強搶／搶奪財物情境",
+        # 刑法 §328：以強暴、脅迫等「使人不能抗拒」之手段＋奪取財物或
+        # 「使人交付」為要件。只有威脅而無取財／使交付事實（如威脅公開
+        # 照片）不觸發（人工審查 E-4 ✗ 修正，2026-10-20）。
+        "patterns": [
+            r"強暴|脅迫|持(刀|槍|械)|菜刀|兇器|捅|砍.{0,4}(你|人)|行兇|捆綁|勒住|毆打|搶走|強搶|搶劫",
+            # E5 輪：交付面綁定財物對象（與候選閘門共用 _ROBBERY_TAKE_ANCHOR），
+            # 裸「交付」配合無關的「不能抗拒」語境不得觸發。
+            _ROBBERY_TAKE_ANCHOR,
+        ],
+        # 新聞／聽聞不是本案事實：摘要只在敘述自己遭搶時才觸發。
+        "exclude": r"新聞|報導|聽說|聽到有人|電影|小說|歷史",
+    },
+    {
+        "offense_id": "embezzlement",
+        "hint": "保管他人財物後拒不返還／占為己有情境",
+        # 刑法 §335：侵占「自己持有之他人之物」。僅職稱（會計／財務）或
+        # 第三人欠款往來（客戶不還欠款）不構成受託持有可能，不觸發
+        # （人工審查 E-5 ✗ 修正，2026-10-20）。
+        "patterns": [
+            r"保管|代管|代收|受託|經手|業務上|公款|拾得|撿到",
+            r"拒不返還|占為己有|據為己有|花用|侵吞|轉(到|入|進)自己(的)?(帳戶|名下)",
+        ],
+        # 新聞／聽聞與金錢借貸往來不是受託持有事實。
+        "exclude": r"新聞|報導|聽說|聽到有人|電影|小說|歷史|欠款|借款|貸款",
+    },
+    {
+        "offense_id": "defamation",
+        "hint": "公開場合辱罵情境",
+        "patterns": [
+            r"群組|網路上|公開|臉書|IG|論壇|留言板",
+            r"罵(我|他|人)|羞辱|辱罵|不要臉",
+        ],
+    },
+]
+
+
+def _phrase_hint_for(offense_id: str, summary: str) -> str | None:
+    """評估白話情境語句提示；全部 patterns 命中且各 pattern 至少
+    有一處未在否定語句內的命中時，回傳提示詞。"""
+    for rule in _PHRASE_HINTS:
+        if rule["offense_id"] != offense_id:
+            continue
+        if not _patterns_unnegated(rule["patterns"], summary):
+            continue
+        exclude = rule.get("exclude")
+        if exclude and re.search(exclude, summary):
+            continue
+        return rule["hint"]
+    return None
+
+
+def _patterns_unnegated(patterns: list[str], summary: str) -> bool:
+    for pattern in patterns:
+        matches = list(re.finditer(pattern, summary))
+        if not matches:
+            return False
+        if all(_keyword_negated(match.group(0), summary) for match in matches):
+            return False
+    return True
+
+
+# E3 輪（人工複審 2026-10-20）構成要件最小錨點閘門。
+# 題庫關鍵字（凍結）與結構式規則會在提示層之前建立候選，即使缺構成
+# 要件對應事實也會命中；故在程式碼層要求該章「最小構成要件錨點」
+# 存在（沿用 14 字元否定窗口的 _patterns_unnegated），缺任一錨點即
+# 清除該章候選。錨點只回報摘要是否「含有對應區辨事實語句」，不判定
+# 任何法律要件成立；正式定性仍須 Gate 1 回查原文與人工審查。
+# 外層 list＝全部必備；內層 list＝任一即可（同反義群組）。
+# E3→E4 輪（人工複審 2026-10-20）構成要件最小錨點閘門。
+# 題庫關鍵字（凍結）、結構式規則與提示層都可能在缺構成要件對應事實時
+# 建立候選；故在程式碼層要求該章「最小構成要件錨點」存在。
+# - patterns 型：外層 list＝全部必備；內層 list＝任一即可（同反義群組）。
+# - bound 型：行為語句與錨點必須落在「同一句」（依 。；！？分行），
+#   且兩者皆未落在否定窗口內——避免「機關安排強制休假」「公司通知我
+#   無須再填寫報告」等無關句放行（人工複審第三輪 ✗ 事由）。
+# 關鍵字回顯豁免（整句＝單一關鍵字即不套閘門）已依人工裁定撤除：
+# 該豁免是全題庫關鍵字的全域例外，會讓「性騷擾」「冒充公務員」等
+# 其他章關鍵字漏出錨點檢查；佈線測試改用關鍵字＋最小事實敘述。
+# 錨點只回報摘要是否「含有對應區辨事實語句」，不判定任何法律要件
+# 成立；正式定性仍須 Gate 1 回查原文與人工審查。
+_STALKING_ACT = (
+    r"跟蹤|騷擾|尾隨|守候|徘徊|盯梢|守在|等在|等候"
+    r"|聯絡|聯繫|傳(送)?訊息|來訊|接近|到我家|到住處"
+)
+# 裁定③（ACCEPT_WITH_MODIFICATIONS）＋E5 輪修正：「無須再」不可裸用，
+# 限縮於聯繫／接觸／傳訊／接近語境；害怕／保護令須與行為同句才
+# 有關聯；「拒絕」須指向聯繫／接觸類對象或句尾收束，避免同句其他
+# 主體的無關邀約（「他騷擾同事，我明確拒絕另一人的邀約」）放行。
+_STALKING_ANCHOR = (
+    r"拒絕(過)?(見面|聯絡|聯繫|接觸|來往|跟蹤|騷擾|傳訊|來電|通話|相見|靠近|繼續(聯絡|接觸))"
+    r"|明確拒絕(?=[，,。；！？]|$)"
+    # E6 輪（人工複審 2026-10-20 第五輪 ✗）：裸「拒絕過」未綁接觸對象，
+    # 「他騷擾同事，我拒絕過另一人的邀約」仍回填；改為僅承認頻率補語
+    # （拒絕過很多次／多次…）之拒絕。
+    r"|拒絕過(很多次|多次|好幾次|無數次|一次又一次|一再)"
+    r"|早(已|就|曾)拒絕(?=[，,。；！？]|$|見面|聯絡|聯繫|接觸)"
+    r"|不要再(來|跟|找|聯絡|聯繫|傳|送|打)"
+    r"|別再(來|找|跟|聯絡|聯繫)|叫我不要再|違反.{0,6}意願"
+    r"|無須再(私下)?(聯繫|聯絡|傳|接觸|來)|不必再(聯繫|聯絡|傳|接觸)"
+    r"|不用再(聯絡|聯繫|傳|接觸)"
+    r"|心生畏怖|心生畏懼|嚇得|不敢出門|保護令"
+)
+_OBSTRUCTION_ACT = r"公務員|員警|警察|依法執行|執行[^。；]{0,8}職務|執勤|查封|封印"
+# 裁定②修正（第三輪 ✗）：裸「強制」會讓「強制休假」等無衝突敘述放行，
+# 移除；錨點限物理性強暴脅迫動作。E5 輪：法律程序／救濟語境的
+# 「攔阻」（程序攔阻／依法聲明異議等）不是物理強暴脅迫，以 veto 剔除。
+_OBSTRUCTION_FORCE_VETO = r"程序|法律途徑|聲明異議|訴願|行政救濟|訴訟|聲請停止執行|依法聲請|聲請"
+
+_ELEMENT_ANCHOR_GATES: dict[str, dict[str, Any]] = {
+    # 跟騷法 §3：反覆或持續「違反其意願」之行為並使之心生畏怖。
+    "stalking": {"bound": [(_STALKING_ACT, _STALKING_ANCHOR, None)]},
+    # 刑法 §135 第 1 項：對執行職務之公務員施強暴脅迫。
+    "obstruction": {
+        "bound": [
+            (_OBSTRUCTION_ACT, _OBSTRUCTION_PHYSICAL_FORCE, None),
+            (_OBSTRUCTION_ACT, r"攔阻", _OBSTRUCTION_FORCE_VETO),
+        ],
+    },
+    # 刑法 §328：使人不能抗拒之手段而奪取財物或使人交付。
+    "robbery": {"patterns": [[_ROBBERY_TAKE_ANCHOR]]},
+    # 刑法 §335：變易持有為所有、處分或拒不返還。「沒有占為己有」
+    # 「沒有侵占」等否定敘述由否定窗口擋掉，已完成返還者不觸發。
+    "embezzlement": {"patterns": [[
+        r"侵占|拒不返還|拒絕返還|自行處分|占為己有|據為己有|花用|侵吞|轉(到|入|進)自己|當(作|成)自己|變賣|逾期未還|取走",
+    ]]},
+}
+
+_SENTENCE_SPLIT_RE = re.compile(r"[。；！？\n]")
+
+
+def _sentence_bound_anchor(
+    act_pattern: str,
+    anchor_pattern: str,
+    summary: str,
+    anchor_veto: str | None = None,
+) -> bool:
+    # E6 輪（人工複審 2026-10-20 第五輪 ✗）：逐一列舉同句內所有
+    # act×anchor 配對（原實作找到第一個未否定 act 即 break，未真正
+    # 逐一枚舉配對）。任一配對成立（兩者皆未否定、錨點未落 veto）
+    # 即視為同句綁定成立。
+    for sentence in _SENTENCE_SPLIT_RE.split(summary):
+        for act_match in re.finditer(act_pattern, sentence):
+            if _keyword_negated(act_match.group(0), sentence):
+                continue
+            for anchor_match in re.finditer(anchor_pattern, sentence):
+                if _keyword_negated(anchor_match.group(0), sentence):
+                    continue
+                if anchor_veto:
+                    preceding = sentence[max(0, anchor_match.start() - 12):anchor_match.start()]
+                    if re.search(anchor_veto, preceding):
+                        continue
+                return True
+    return False
+
+
+def _element_anchor_ok(offense_id: str, summary: str) -> bool:
+    gate = _ELEMENT_ANCHOR_GATES.get(offense_id)
+    if not gate:
+        return True
+    if "bound" in gate:
+        return any(
+            _sentence_bound_anchor(act_pattern, anchor_pattern, summary, anchor_veto)
+            for act_pattern, anchor_pattern, anchor_veto in gate["bound"]
+        )
+    return all(
+        _patterns_unnegated(group, summary)
+        for group in gate.get("patterns", [])
+    )
+
+
+# ── 階段 2（2026-10-20）：actor—conduct—target 關係綁定 ──
+# 結構化匹配結果：識別摘要中「誰對誰做了什麼」，避免同句不同主體的
+# 污染（跨人物拒絕、程序性攔阻、非財物交付）。無法可靠配對時回傳
+# UNKNOWN_RELATION，不得自動選入 ELIGIBLE_CANDIDATE。
+#
+# 本階段新增結構化匹配，不破壞既有布林函式；由現有 gate 逐步改用。
+_CLAUSE_SPLIT_RE = re.compile(r"[，、；]")
+_ACTOR_RE = re.compile(r"(?:甲|乙|丙|丁|戊|己|庚|辛|壬|癸|他|她|它|他們|她們|員警|警察|公務員|行為人|被害人)")
+
+
+def _identify_clause_actor(clause: str) -> str | None:
+    """識別子句的主體（actor）。回傳人名/代詞或 None。"""
+    match = _ACTOR_RE.search(clause)
+    return match.group(0) if match else None
+
+
+def _bound_relation_matches(summary: str, offense_id: str) -> list[dict[str, Any]]:
+    """回傳結構化 actor—conduct—target 匹配結果。
+
+    每個結果包含：sentence_id、actor、conduct、target、object、negated、
+    veto_reason、source_excerpt。無法可靠配對時回傳 UNKNOWN_RELATION。
+    """
+    matches: list[dict[str, Any]] = []
+    sentences = _SENTENCE_SPLIT_RE.split(summary)
+    for sent_idx, sentence in enumerate(sentences):
+        clauses = _CLAUSE_SPLIT_RE.split(sentence)
+        for clause in clauses:
+            clause = clause.strip()
+            if not clause:
+                continue
+            actor = _identify_clause_actor(clause)
+            if not actor:
+                continue
+            # 檢查是否被否定
+            negated = False
+            for neg_marker in _NEGATION_MARKERS:
+                if neg_marker in clause:
+                    negated = True
+                    break
+            # 檢查是否為程序語境（veto）
+            veto_reason = None
+            if offense_id == "obstruction":
+                if re.search(r"程序|法律途徑|聲明異議|訴願|行政救濟|訴訟|聲請停止執行|依法聲請|聲請", clause):
+                    veto_reason = "法律程序語境"
+            # 檢查是否為跨主體（子句中有另一個不同的人名）
+            other_actors = [a for a in _ACTOR_RE.findall(clause) if a != actor]
+            if other_actors:
+                # 子句中有多個不同主體，無法確認配對
+                matches.append({
+                    "sentence_id": sent_idx,
+                    "actor": actor,
+                    "conduct": clause,
+                    "target": None,
+                    "object": None,
+                    "negated": negated,
+                    "veto_reason": "UNKNOWN_RELATION：子句含多主體",
+                    "source_excerpt": clause,
+                })
+                continue
+            matches.append({
+                "sentence_id": sent_idx,
+                "actor": actor,
+                "conduct": clause,
+                "target": None,
+                "object": None,
+                "negated": negated,
+                "veto_reason": veto_reason,
+                "source_excerpt": clause,
+            })
+    return matches
+
+
+def _relation_binding_ok(offense_id: str, summary: str) -> bool:
+    """檢查 actor—conduct—target 關係綁定是否成立。
+
+    跟騷：接觸行為人、被接觸對象、拒絕者必須相符。
+    妨害公務：強暴脅迫行為必須指向正在依法執行職務的公務員。
+    強盜：強暴脅迫、不能抗拒及財物取得必須屬於同一事件鏈。
+    無法可靠配對時回傳 False（UNKNOWN_RELATION）。
+    """
+    matches = _bound_relation_matches(summary, offense_id)
+    if not matches:
+        return False
+    # 檢查是否有任何有效的（非 UNKNOWN、非 veto、非否定）匹配
+    for match in matches:
+        if match.get("veto_reason") and "UNKNOWN_RELATION" in match["veto_reason"]:
+            continue
+        if match.get("veto_reason"):
+            continue
+        if match.get("negated"):
+            continue
+        return True
+    return False
+
+
+# 轉述指控護欄資料表（依 R-fuzz 探針實測雜訊罪章建立）。
+# attribution + (我|我方) + verbs 命中、且摘要無 independent 事實訊號時，
+# 清除該罪章關鍵字命中；被指控的內容由妨害名譽／誣告方向處理。
+ATTRIBUTION_PREDICATE = (
+    r"(?:跟別人|跟他人|跟公司|跟主管|向老師|向學校|向警察|跟警察|到處|逢人"
+    r"|在群組|在網路上|發文|留言|貼文|指稱|指摘|指控|聲稱|他說"
+    r"|向[^。；]{0,6}(?:公司|主管|警方|警察|學校|老師)[^。；]{0,10}說"
+    # 家屬／長官等特定第三者轉述（探針 B 組：我媽跟訓導主任說我偷同學的錢）
+    r"|(?:我(?:媽|爸|母親|父親|老師|主管|老闆|同事|同學|太太|先生|老婆|老公)"
+    r"|訓導主任|導師|教官|上司|親友|家人)[^。；]{0,10}說)"
+)
+ATTRIBUTED_ALLEGATION_GUARDS: list[dict[str, str]] = [
+    {
+        "offense_id": "theft",
+        "verbs": r"偷|竊|拿走",
+        # 拿走本身可能出現在引述句內（說我拿走）也可能出現在真實事實
+        # （另一名同事拿走了營業款）；以引述區間外的出現位置為準。
+        "independent": r"取走|遭竊|失竊|不翼而飛|闖入|未結帳|盜取|竊取|拿走|短少|不見|少了|消失|減少",
+    },
+    {
+        "offense_id": "fraud",
+        "verbs": r"騙|詐",
+        "independent": r"匯款|轉帳|付款|訂金|到貨|未收到|交付",
+    },
+    {
+        "offense_id": "intimidation",
+        "verbs": r"恐嚇|威脅",
+        "independent": r"揚言|害怕|恐懼|心生畏|不敢",
+    },
+    {
+        "offense_id": "injury",
+        "verbs": r"打|傷害",
+        "independent": r"驗傷|瘀青|受傷|骨折|傷口|流血",
+    },
+    {
+        "offense_id": "embezzlement",
+        "verbs": r"侵占",
+        "independent": r"保管|代管|受託|經手",
+    },
+    {
+        "offense_id": "stalking",
+        "verbs": r"跟蹤|騷擾",
+        "independent": r"守候|尾隨|反覆|訊息",
+    },
+    {
+        "offense_id": "robbery",
+        "verbs": r"搶劫|搶了|搶走|強搶|搶奪",
+        "independent": r"遭搶|被搶|失竊|盜走|短少|不見|少了|消失",
+    },
+]
+
+
+def _has_independent_outside(rule: dict[str, str], summary: str, attributed: re.Match) -> bool:
+    """獨立事實訊號只有出現在引述句（predicate 起、動詞止）之外才算數。
+
+    引述句中間重複出現的行為詞（「說我拿走」的「拿走」）不能當成摘要
+    自己描述的獨立事實；引述句前後的真實敘述（例如監視器畫面證實他人
+    拿走）才構成獨立事實。
+    """
+    start, end = attributed.start(), attributed.end()
+    for match in re.finditer(rule["independent"], summary):
+        if match.start() < start or match.start() >= end:
+            return True
+    return False
+
+
+def _attributed_allegation_guard(offense_id: str, summary: str) -> bool:
+    """摘要只是引述他人對本人的指控（且無獨立事實）時回傳 True。"""
+    rule = next(
+        (item for item in ATTRIBUTED_ALLEGATION_GUARDS if item["offense_id"] == offense_id),
+        None,
+    )
+    if rule is None:
+        return False
+    attributed = re.search(
+        ATTRIBUTION_PREDICATE + r"[^。；]{0,40}(?:我|我方)(?:" + rule["verbs"] + r")",
+        summary,
+    )
+    if not attributed:
+        return False
+    return not _has_independent_outside(rule, summary, attributed)
+
+
+def _attribution_spans(summary: str) -> list[tuple[int, int]]:
+    """在無獨立事實時，回傳「轉述指控」句段的字元區間。
+
+    區間內出現的其他罪章關鍵詞（例如引述句裡的場景名詞「倉庫」）只是
+    被指控內容的一部分，不得作為該罪章的關鍵字命中。
+    """
+    spans: list[tuple[int, int]] = []
+    for rule in ATTRIBUTED_ALLEGATION_GUARDS:
+        attributed = re.search(
+            ATTRIBUTION_PREDICATE + r"[^。；]{0,40}(?:我|我方)(?:" + rule["verbs"] + r")",
+            summary,
+        )
+        if attributed and not _has_independent_outside(rule, summary, attributed):
+            # 區間延伸到句末標點：受詞或情境名詞（倉庫、存貨、金錢）也是被
+            # 指控內容的一部分，一起納入引述區間。
+            tail = re.search(r"[。；！？]", summary[attributed.end():])
+            end = attributed.end() + tail.start() if tail else len(summary)
+            spans.append((attributed.start(), end))
+    return spans
+
+
+def _hits_inside_attributed_spans(
+    hits: list[str], summary: str, spans: list[tuple[int, int]]
+) -> bool:
+    """所有命中詞的出現位置都落在轉述指控區間內時回傳 True。"""
+    for term in hits:
+        occurrences = list(re.finditer(re.escape(term), summary))
+        # 命中詞在原文找不到（例如提示語句本身）時，無法證明它位於引述
+        # 區間內，不得清除。
+        if not occurrences:
+            return False
+        # 摘要中另有區間外的實際命中時，視為摘要本身的事實敘述，保留候選。
+        inside_only = all(
+            any(not (match.end() <= span_start or match.start() >= span_end) for span_start, span_end in spans)
+            for match in occurrences
+        )
+        if not inside_only:
+            return False
+    return True
+
+
 def candidate_offenses(
     summary: str, bank: dict[str, Any], gate1: dict[str, Any] | None = None
 ) -> list[dict[str, Any]]:
@@ -1235,6 +1841,7 @@ def candidate_offenses(
     lowered = summary.casefold()
     by_id = {item["id"]: item for item in bank["offenses"]}
     matched_ids: set[str] = set()
+    attributed_spans = _attribution_spans(summary)
     for offense in bank["offenses"]:
         hits = [
             keyword for keyword in offense["keywords"]
@@ -1259,6 +1866,13 @@ def candidate_offenses(
         if offense["id"] == "sexual" and not hits:
             if re.search(r"(乘機猥褻|猥褻|不能抗拒|胸部|內衣)", summary):
                 hits = ["乘機猥褻／不能抗拒情境"]
+        # 失能／不能抗拒只是狀態，未與明確性行為同時出現時，
+        # 不得單獨建立妨害性自主候選。純猥褻／強行親吻等明確行為仍保留。
+        if offense["id"] == "sexual" and hits and not re.search(
+            r"性侵害|強制性交|強制猥褻|性交|猥褻|撫摸胸部|觸摸胸部|摸胸|伸入內衣|強行親吻|親吻性部位",
+            summary,
+        ):
+            hits = []
         # 配偶、家庭成員間的未合意性行為或威脅，另列家庭暴力防治法檢視方向。
         if offense["id"] == "domestic_violence" and not hits:
             if re.search(r"(老婆|妻子|丈夫|配偶|同居|家人)", summary) and re.search(
@@ -1318,7 +1932,9 @@ def candidate_offenses(
             ):
                 hits = ["具體傷害結果／致傷行為情境"]
         if offense["id"] == "theft" and not hits:
-            if re.search(r"(?:取走|拿走|拿取|竊取|盜取)[^。；]{0,60}(?:現金|手機|電腦|財物|物品|商品|貨架|洗髮精)", summary):
+            if re.search(r"(?:取走|拿走|拿取|竊取|盜取)[^。；]{0,60}(?:現金|手機|電腦|財物|物品|商品|貨架|洗髮精)", summary) or re.search(
+                r"(?:現金|手機|電腦|財物|物品|商品|貨架|洗髮精)[^。；]{0,30}遭?(?:取走|拿走|拿取|竊取|盜取)", summary
+            ):
                 hits = ["取走他人動產情境"]
         if offense["id"] == "damage" and not hits:
             if re.search(r"破壞|毀損|砸毀|損壞|不堪使用", summary) and re.search(
@@ -1335,6 +1951,9 @@ def candidate_offenses(
                 r"攔阻|揮打|毆打|強暴|脅迫|妨害", summary
             ):
                 hits = ["執行職務公務員／強暴脅迫情境"]
+        if offense["id"] == "obstruction" and not hits:
+            if re.search(_OBSTRUCTION_ACT, summary) and re.search(_OBSTRUCTION_FORCE, summary):
+                hits = ["執行職務公務員／強暴脅迫情境"]
         # 「電腦」可能只是地點或設備描述。單獨命中時不建立妨害電腦使用候選，
         # 仍保留「登入、刪除資料、駭客」等具體行為關鍵字供人工檢視。
         if offense["id"] == "computer" and hits == ["電腦"]:
@@ -1348,6 +1967,36 @@ def candidate_offenses(
             allegation_context = re.search(r"(?:公開貼文|貼文|發文|指稱|指摘)[^。；]{0,60}侵占", summary)
             possession_context = re.search(r"(?:保管|持有|代收|受託|業務上)[^。；]{0,60}(?:占為己有|拒不返還|侵占)", summary)
             if allegation_context and not possession_context:
+                hits = []
+        # E3→E4 輪（人工複審 2026-10-20）：構成要件最小錨點閘門。
+        # keyword／結構式 fallback 建立的候選若缺對應構成要件區辨事實
+        # （否定窗口生效；stalking／obstruction 另要求行為與錨點同句
+        # 綁定），在此清除；清除後若白話敘述另含完整要件仍可能由下方
+        # 的提示層觸發。
+        if hits and not _element_anchor_ok(offense["id"], summary):
+            hits = []
+        # 白話情境語句提示：僅在零關鍵字命中時建立候選方向，
+        # 供人工從白話描述回查法定要件，不升級為任何正式結論。
+        if not hits:
+            hint = _phrase_hint_for(offense["id"], summary)
+            if hint:
+                hits = [hint]
+                # 第三輪複審 ✗（E-4）：gate 清除 keyword 命中後，提示層
+                # 不得繞過相同錨點檢查重新帶回候選；hint 命中同樣套用。
+                if not _element_anchor_ok(offense["id"], summary):
+                    hits = []
+        # 轉述指控護欄：被罵或被爆料時引述的「（他們）說我偷／說我拿走」
+        # 屬於妨害名譽爭執中被指控的內容，不是摘要對該罪章事實的敘述；
+        # 摘要另有獨立事實描述時不觸發本護欄（鏡射既有侵占護欄精神）。
+        if hits:
+            attributed = _attributed_allegation_guard(offense["id"], summary)
+            if attributed:
+                hits = []
+        # 引述句內的場景名詞（如「說我拿走倉庫的存貨」的「倉庫」）只是被
+        # 指控內容的一部分：當命中的所有出現位置都落在轉述區間內時，
+        # 該罪章的關鍵字命中不得成立。
+        if hits and attributed_spans:
+            if _hits_inside_attributed_spans(hits, summary, attributed_spans):
                 hits = []
         if hits:
             element_labels, candidate_status, element_status = candidate_element_state(offense)
@@ -1380,7 +2029,6 @@ def candidate_offenses(
             })
             _attach_element_evidence(matches[-1], offense, summary, gate1)
             matrix = matches[-1].get("route_element_matrix", [])
-            best_supported = matrix[0].get("supported_count", 0) if matrix else 0
             matches[-1]["candidate_eligibility"] = "ELIGIBLE_CANDIDATE"
             route_states: dict[str, str] = {}
             for route in matrix:
@@ -1406,9 +2054,33 @@ def candidate_offenses(
         for related in by_id[offense_id].get("related", [])
         if related not in matched_ids and related in by_id
     }
-    if _property_taking_values(summary) is not None:
+    # 財物走向的關聯擴展只在「真的有財物罪章命中」或「摘要沒有被轉述
+    # 指控區間主導」時進行：引述句中的財物名詞（存貨、金錢）不是摘要
+    # 自己描述的取財事實。
+    property_family_matched = any(
+        offense_id in PROPERTY_ROUTE_IDS or "aggravated_theft" == offense_id
+        for offense_id in matched_ids
+    )
+    property_wanted = (
+        _property_taking_values(summary) is not None
+        or bool(matched_ids & PROPERTY_ROUTE_IDS)
+    )
+    if property_wanted and (not attributed_spans or property_family_matched):
+        # D1（人工核定「B 修正版」，2026-10-20）：財物三路區辨——
+        # theft＝未經同意取走／破壞原持有；embezzlement＝先前合法持有／
+        # 受託後變易持有、處分或拒不返還；robbery＝強暴／脅迫等手段＋
+        # 奪取或使人交付。缺對應區辨事實時不新增，並撤銷 bank related
+        # 帶入的該 routes 相關候選（不修改 legal_route_crosswalk.json）。
+        signals = _property_discriminators(summary)
         related_ids.discard("aggravated_theft")
-        related_ids.update(PROPERTY_ROUTE_IDS - matched_ids)
+        related_ids -= PROPERTY_ROUTE_IDS
+        if signals["consent_take"]:
+            related_ids.add("theft")
+        if signals["entrusted_possession"] and signals["conversion"]:
+            related_ids.add("embezzlement")
+        if signals["violence_take"]:
+            related_ids.add("robbery")
+        related_ids -= matched_ids
     for offense_id in sorted(related_ids):
         offense = by_id[offense_id]
         element_labels, candidate_status, element_status = candidate_element_state(offense)
@@ -1544,6 +2216,13 @@ ROUTE_ELEMENT_QUESTION_SIGNALS: dict[str, dict[str, tuple[str, ...]]] = {
         "散布於眾意圖及文字圖畫態樣": ("散布於眾", "公開場所發表", "散布管道"),
         "真實性、公共利益與私德範圍": ("證明其為真實", "自衛、自辯", "可受公評"),
         "相當理由確信為真實之證據資料": ("相當理由確信", "事前查證", "證據可提供", "證明其為真實"),
+    },
+    "defamation_309_public_insult": {
+        "故意發表公然貶損他人名譽之言論": ("insult_words", "說了哪些原話", "人格評價"),
+        "個案表意脈絡及公然性": ("insult_context", "public_audience", "哪些人可能聽見或看見"),
+        "是否逾越一般人可合理忍受範圍": ("insult_words", "reputation_effect", "人格評價造成哪些具體影響"),
+        "名譽權與公共事務、文學藝術、學術專業等言論價值之權衡": ("speech_value_context", "公共事務、評論"),
+        "強暴態樣": ("insult_force_details", "推擠、毆打或其他強暴行為"),
     },
     "stalking_3_definition": {
         "以人員設備通訊網路或其他方法對特定人": ("電話、簡訊", "監視、觀察", "對被害人"),
@@ -1966,8 +2645,26 @@ def mark_known_questions(questions: list[dict[str, Any]], gate1: dict[str, Any])
         ("injury_evidence_sources", {"evidence"}, ("診斷", "照片", "監視器", "影像", "目擊"), "摘要已列出傷害證據"),
         ("force_or_threat_details", {"action"}, ("揮打", "毆打", "強暴", "脅迫"), "摘要已記載具體強暴或脅迫行為"),
         ("obstruction_evidence_sources", {"evidence"}, ("監視器", "執勤", "通聯", "目擊"), "摘要已列出妨害公務證據"),
+        ("insult_words", {"action"}, ("辱罵", "侮辱", "言語"), "摘要已記載言語原文或內容"),
+        ("public_audience", {"place"}, ("不特定人", "共見共聞", "公開", "休息室"), "摘要已記載發表場所及公然情境"),
+        (
+            "reputation_effect", {"result"},
+            ("失眠", "請假就醫", "工作受影響", "生活受影響", "人際關係受影響"),
+            "摘要已記載言語造成的具體生活影響",
+        ),
+        ("defamation_evidence_sources", {"evidence"}, ("錄音", "錄影", "指訴", "供述", "勘驗", "在場"), "摘要已列出可供查證資料"),
     ):
         add_coverage(target, keys, signals, reason)
+    disposition_rows = [
+        row for row in excerpts_for({"action", "object"}, ("匯款", "轉帳", "交付", "付款"))
+        if not any(
+            marker in str(row.get("source_excerpt", ""))
+            for marker in ("佯稱", "即可", "要求", "指示")
+        )
+    ]
+    route_coverage["property_dispositions"] = (
+        bool(disposition_rows), "摘要已記載實際財產處分", disposition_rows
+    )
     for question in questions:
         text = str(question.get("text", ""))
         if question.get("kind") in {"company", "common"}:

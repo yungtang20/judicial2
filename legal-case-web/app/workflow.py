@@ -437,22 +437,32 @@ def apply_action(
     elif action == "auto_prepare":
         if case["state"] != "GATE1_REVIEW":
             raise WorkflowError("目前不可自動分析")
-        primary = [
-            item for item in case.get("candidates", [])
-            if item.get("selection_origin") != "related_hint"
-            and item.get("candidate_eligibility") == "ELIGIBLE_CANDIDATE"
-        ][:MAX_SELECTED_OFFENSES]
+        primary: list[dict[str, Any]] = []
+        route_ids: list[str] = []
+        for item in case.get("candidates", []):
+            if item.get("selection_origin") == "related_hint":
+                continue
+            if item.get("candidate_eligibility") != "ELIGIBLE_CANDIDATE":
+                continue
+            route_states = item.get("legal_route_states") or {}
+            eligible_routes = [
+                route_id for route_id in item.get("suggested_legal_route_ids") or []
+                if route_states.get(route_id) == "ELIGIBLE_CANDIDATE"
+            ]
+            # 構成要件矩陣不適用（程序／保護令類路線，states 為空）時仍可自動選取；
+            # 但矩陣適用卻沒有任何路線達到門檻者，只代表關鍵詞命中，不足以代表本案方向。
+            # 這種候選若一併自動選取，會連帶產生整組無關問句
+            # （例：「強制採驗尿液許可書」命中妨害自由、「下注」命中賭博）。
+            if route_states and not eligible_routes:
+                continue
+            primary.append(item)
+            if eligible_routes:
+                route_ids.append(eligible_routes[0])
+            if len(primary) >= MAX_SELECTED_OFFENSES:
+                break
         if not primary:
             raise WorkflowError("目前摘要不足以產生候選罪章，請補充可辨識的事件、行為或結果")
         offense_ids = [item["id"] for item in primary]
-        route_ids = []
-        for item in primary:
-            eligible_routes = [
-                route_id for route_id in item.get("suggested_legal_route_ids", [])
-                if item.get("legal_route_states", {}).get(route_id) == "ELIGIBLE_CANDIDATE"
-            ]
-            if eligible_routes:
-                route_ids.append(eligible_routes[0])
         case["state"] = "GATE2_QA"
         case = apply_action(case, "set_offenses", {
             "offense_ids": offense_ids,
@@ -672,6 +682,9 @@ def apply_action(
         if not case["selected_offenses"]:
             raise WorkflowError("尚未確認候選罪章")
         _validate_legal_route_review(case, bank)
+        role = case.get("question_role")
+        if role not in {"victim", "suspect", "transfer"}:
+            raise WorkflowError("請先選擇本次筆錄身分")
         unanswered = [
             item["id"] for item in case["questions"]
             if not item.get("answer", "").strip()
@@ -679,7 +692,13 @@ def apply_action(
         ]
         if unanswered:
             raise WorkflowError("所有問句均須作答；不清楚時請明確填寫 UNKNOWN")
-        role = case["question_role"]
+        profile = case.get("profiles", {}).get(f"{role}:default", {})
+        if not profile.get("name", "").strip():
+            raise WorkflowError("缺少受詢問人姓名")
+        if role in {"suspect", "transfer"}:
+            session = case.get("interview_sessions", {}).get(f"{role}:default", {})
+            if not session.get("start_time") or not session.get("end_time"):
+                raise WorkflowError("缺少詢問起訖時間")
         interview_id = f"{role}:default"
         if interview_id in case["interviews"]:
             _snapshot(case, f"replace_interview:{role}")

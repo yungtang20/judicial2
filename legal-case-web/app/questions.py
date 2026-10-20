@@ -21,7 +21,7 @@ DEFAULT_QUESTION_META = {
     "purpose": "",              # "補齊事實" | "區分競爭假設" | "確認構成要件" | "核對矛盾" | "尋找證據"
     "trigger_condition": "always",  # "always" | "answer:<qid>:<value>" | "candidate:<cid>:present" | "fact:<fid>:status"
     "expected_distinction": "", # 預期區分的情況
-    "evidence_to_verify": [],   # 可查證的證據
+    "evidence_to_verify": [],   # 保留欄位：須待公司／人工審核核定證據清單後才填入，生成流程不得自動補值
 }
 
 PROPERTY_FACT_TARGETS = {
@@ -643,6 +643,11 @@ def filter_active_questions(
 ANSWER_AFFIRMATIVE_HINTS = ("有看到", "我看到", "有發生", "有交付", "有收", "有拿", "有同意", "有使用", "他有拿走", "有遭")
 # 明確肯定句式：開頭「是，」「對，」或「我曾／我之前／我有／我有過」（spec §7.4 明確肯定）
 ANSWER_AFFIRMATIVE_PREFIXES = ("是，", "是的", "是的，", "對，", "是的，", "我曾", "我之前", "我有")
+# 筆錄封閉題最常見的「有，…」開頭；僅在無否定提示同時出現時視為肯定，
+# 含否定提示（例：「有，不過我沒有看到…」）維持原否定／矛盾保守分類。
+ANSWER_AFFIRMATIVE_YES_OPENERS = ("有，", "有的，", "有,", "有 ")
+# 單字回覆只在整句完全相等時視為明確肯定（不再以子字串寬鬆比對）。
+ANSWER_AFFIRMATIVE_EXACT_WORDS = frozenset({"有", "有的", "是", "對"})
 ANSWER_NEGATIVE_HINTS = ("沒有", "並非", "並未", "無證據", "不確定是否", "未曾")
 ANSWER_UNKNOWN_HINTS = ("不知道", "不記得", "不清楚", "忘記")
 ANSWER_NA_HINTS = ("不適用",)
@@ -661,6 +666,12 @@ def classify_answer(text: str) -> str:
         return "unknown"
     if any(h in cleaned for h in ANSWER_NA_HINTS):
         return "not_applicable"
+    if cleaned in ANSWER_AFFIRMATIVE_EXACT_WORDS:
+        return "affirmative"
+    if cleaned.startswith(ANSWER_AFFIRMATIVE_YES_OPENERS) and not any(
+        h in cleaned for h in ANSWER_NEGATIVE_HINTS
+    ):
+        return "affirmative"
     if any(h in cleaned for h in ANSWER_NEGATIVE_HINTS):
         return "negative"
     if any(h in cleaned for h in ANSWER_AFFIRMATIVE_HINTS):

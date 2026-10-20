@@ -27,7 +27,9 @@ def test_candidate_engine_is_deterministic_and_can_return_zero():
     assert first[0]["status"] == "NEED_LEGAL_ROUTE_MAPPING"
     assert first[0]["unknown_elements"]
     theft = candidate_offenses("有人偷走物品", BANK)
-    assert {item["id"] for item in theft} >= {"theft", "embezzlement", "robbery"}
+    # D1（人工核定 B 修正版，2026-10-20）：財物三路區辨——普通竊盜句不再
+    # 自動帶出侵占／強盜 related（真實書類竊盜案典型只連 §320／§47）。
+    assert {item["id"] for item in theft} == {"theft"}
 
 
 def test_hyphenated_women_child_victim_code_is_recognized():
@@ -132,7 +134,9 @@ def test_phone_taken_keeps_competing_routes_and_separate_civil_alternative():
     }
     gate1 = analyze_gate1(raw, use_ai=False)
     candidates = candidate_offenses(raw["summary"], BANK, gate1)
-    assert {item["id"] for item in candidates} >= {"theft", "embezzlement", "robbery"}
+    # D1（人工核定 B 修正版，2026-10-20）：「把我的手機拿走了」缺受託持有
+    # 與強暴脅迫區辨事實，不再自動帶出侵占／強盜 related。
+    assert {item["id"] for item in candidates} == {"theft"}
     assert all(item["candidate_state"] == "NEED_REVIEW" for item in candidates)
     alternatives = alternative_legal_routes(gate1)
     assert [item["route_id"] for item in alternatives] == ["civil_possession_dispute"]
@@ -182,6 +186,21 @@ def test_opium_route_uses_criminal_code_chapter_twenty_source():
         "第256條", "第257條", "第258條", "第259條", "第260條",
         "第261條", "第262條", "第263條", "第264條", "第265條",
     ]
+
+
+# E3→E4 輪（人工複審 2026-10-20）：關鍵字回顯豁免已依人工裁定撤除，
+# 單一關鍵字不再保證建立候選。佈線測試的探針改為「關鍵字＋最小事實
+# 敘述」，滿足各錨點章「行為與錨點同句」要求；未列出的章不受閘門影響。
+_PROBE_NARRATIVE_SUFFIX = {
+    "stalking": "，被害人心生畏怖並已明確拒絕。",
+    "obstruction": "，公務員執行職務時遭攔阻。",
+    "robbery": "，行為人強行把被害人的錢包搶走。",
+    "embezzlement": "，將代管物品拒不返還。",
+}
+
+
+def _kw_probe(offense: dict) -> str:
+    return offense["keywords"][0] + _PROBE_NARRATIVE_SUFFIX.get(offense["id"], "")
 
 
 def test_first_child_route_batch_has_reviewable_fact_models():
@@ -239,7 +258,7 @@ def test_first_child_route_batch_has_reviewable_fact_models():
         assert all(item["fact_elements"] for item in routes)
         assert all(item["review_status"] == "HUMAN_REVIEW_REQUIRED" for item in routes)
         candidate = next(
-            item for item in candidate_offenses(offenses[offense_id]["keywords"][0], BANK)
+            item for item in candidate_offenses(_kw_probe(offenses[offense_id]), BANK)
             if item["id"] == offense_id
         )
         assert candidate["legal_routes"] == routes
@@ -292,7 +311,7 @@ def test_empty_or_split_routes_fail_closed_in_candidate_metadata():
     for offense in BANK["offenses"]:
         if not offense.get("elements") or offense["crosswalk_status"] == "SPLIT_REQUIRED":
             candidate = next(
-                item for item in candidate_offenses(offense["keywords"][0], BANK)
+                item for item in candidate_offenses(_kw_probe(offense), BANK)
                 if item["id"] == offense["id"]
             )
             expected = (

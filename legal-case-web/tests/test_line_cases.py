@@ -33,6 +33,10 @@ def test_line_case_drunk_driving_no_victim_flow():
     # Answers & Gate 2
     answers = {q["id"]: "現場查獲屬實，坦承不諱" for q in case["questions"]}
     case = apply_action(case, "save_answers", {"answers": answers, "role": "transfer"}, BANK)
+    case = apply_action(case, "save_profile", {
+        "profile": {"name": "測試移送人"},
+        "session": {"start_time": "2026-10-19T10:00", "end_time": "2026-10-19T10:30"},
+    }, BANK)
     case = apply_action(case, "approve_gate2", {"confirmed": True, "role": "transfer"}, BANK)
 
     # Numbers
@@ -56,6 +60,7 @@ def test_line_case_theft_caught_victim_to_suspect_flow():
 
     answers = {q["id"]: "商品遭竊未結帳屬實" for q in case["questions"]}
     case = apply_action(case, "save_answers", {"answers": answers, "role": "victim"}, BANK)
+    case = apply_action(case, "save_profile", {"profile": {"name": "測試被害人"}}, BANK)
     case = apply_action(case, "approve_gate2", {"confirmed": True, "role": "victim"}, BANK)
     case = apply_action(case, "save_case_numbers", {"case_numbers": {"proof": "北市警證字第1150003號"}}, BANK)
     assert case["state"] == "OUTPUT_READY"
@@ -66,6 +71,10 @@ def test_line_case_theft_caught_victim_to_suspect_flow():
     case = apply_action(case, "set_offenses", {"offense_ids": ["theft"], "legal_route_ids": [], "route_review_confirmed": True, "role": "suspect"}, BANK)
     s_answers = {q["id"]: "坦承行竊，深感後悔" for q in case["questions"]}
     case = apply_action(case, "save_answers", {"answers": s_answers, "role": "suspect"}, BANK)
+    case = apply_action(case, "save_profile", {
+        "profile": {"name": "測試涉嫌人"},
+        "session": {"start_time": "2026-10-19T10:00", "end_time": "2026-10-19T10:30"},
+    }, BANK)
     case = apply_action(case, "approve_gate2", {"confirmed": True, "role": "suspect"}, BANK)
     assert case["state"] == "OUTPUT_READY"
     assert "victim:default" in case["interviews"]

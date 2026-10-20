@@ -34,12 +34,15 @@
           <textarea id="summary" name="summary" rows="10" required aria-describedby="summary-hint" placeholder="直接貼上完整案情摘要即可。系統會依原文自動拆解人、事、時、地、物、行為、結果、證據與因果關係。&#10;&#10;若已有結構化資料，也可使用「發生時間：」「發生地點：」「破獲時間：」「破獲地點：」等標籤。"></textarea>
           <small id="summary-hint">不必另外重填細項。系統會先依摘要原文自動整理；原文沒有記載的內容才標示 UNKNOWN，供你最後一次檢視。</small>
         </div>
+        <fieldset class="case-branch">
+          <legend>案件分支</legend>
+          <label class="check"><input id="has-victim" name="has_victim" type="checkbox" checked> 本案有被害人</label>
+        </fieldset>
         <button class="primary" type="submit">建立案件並進入 Gate 1</button>
         <details class="advanced">
           <summary>進階欄位（選填）</summary>
           <fieldset>
-            <legend>案件分支</legend>
-            <label class="check"><input id="has-victim" name="has_victim" type="checkbox" checked> 本案有被害人</label>
+            <legend>被害人資料</legend>
             <label class="check"><input id="victim-is-code" name="victim_is_code" type="checkbox"> 被害人使用代號</label>
           </fieldset>
           <div class="details-grid">

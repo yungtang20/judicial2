@@ -1,0 +1,36 @@
+{
+  "status": "UNAPPROVED_CANDIDATE",
+  "captured_at": "2026-10-20T11:57:01+00:00",
+  "files": [
+    "desktop.png",
+    "gate1_desktop.png",
+    "tablet.png",
+    "gate1_tablet.png",
+    "mobile.png",
+    "gate1_mobile.png"
+  ],
+  "states": [
+    "home",
+    "gate1_<viewport>",
+    "gate2_<viewport>"
+  ],
+  "transient_hidden": "#status（右下角提示框）擷取前一律隱藏",
+  "limitations": [
+    "基準僅涵蓋本工具擷取的畫面狀態（首頁＋Gate 1 合成摘要檢視＋Gate 2 合成候選檢視）；",
+    "其他 Gate 畫面尚無基準，核准後回歸門檻也只保護已擷取狀態；",
+    "合成摘要內容非真實案情，不得作為法律內容證據。",
+    "動態 ID 已遮罩為 [MASKED_DYNAMIC_ID]，資產 hash 綁定於 STATUS.json。",
+    "Gate 2 視圖 PNG 待重擷取後補上；重擷取需啟動本機伺服器＋playwright。"
+  ],
+  "approval_note": "候選基準未經人工核准；不得作為正式視覺回歸門檻。動態 ID 遮罩與資產 hash 綁定已加入；重擷取（Gate 2）待人工觸發。",
+  "dynamic_id_masked": [
+    "meta[name=\"session-token\"]",
+    "#case-heading",
+    "#qa-progress"
+  ],
+  "asset_hashes": {
+    "app/static/app.js": "84e095d66d6362fb85ecd4b8909422fae79cf7ebaff845550df456ad8f167930",
+    "app/static/index.html": "b500dbe6c48c95c66773507718278c38c0ae092b65858586a546205c878f0cd7",
+    "app/static/styles.css": "98346d08769409edd535b07e607fd73e45b3472c7e0936bba14ef0c0650edad0"
+  }
+}

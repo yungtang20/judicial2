@@ -1,23 +1,8 @@
 import { execFileSync } from "child_process";
 
-export async function GET() {
-  return Response.json(globalThis.__lastApiDebug || { message: "尚未收到任何請求" });
-}
-
-function safeJsonParse(text) {
-  const raw = String(text || "").trim();
-  const fenced = raw.replace(/^```json\s*/i, "").replace(/^```/i, "").replace(/\s*```$/i, "").trim();
-  const start = fenced.indexOf("{");
-  const end = fenced.lastIndexOf("}");
-  if (start >= 0 && end > start) {
-    return JSON.parse(fenced.slice(start, end + 1));
-  }
-  throw new Error("Upstream response is not valid JSON");
-}
-
 function callCurl(apiKey, payload) {
   const body = JSON.stringify(payload);
-  let stdout = "";
+  let stdout;
   try {
     stdout = execFileSync("curl", [
       "-sS", "-X", "POST", "https://api.hcnsec.cn/v1/chat/completions",
@@ -29,15 +14,15 @@ function callCurl(apiKey, payload) {
       "-d", body,
       "-w", "\nHTTPSTATUS:%{http_code}"
     ], { encoding: "utf8", maxBuffer: 10 * 1024 * 1024, timeout: 290000 });
-  } catch (err) {
-    throw new Error(`curl failed: ${err.code || ""} ${err.message || err}`);
+  } catch {
+    throw new Error("External AI request failed");
   }
 
   const splitIndex = stdout.lastIndexOf("HTTPSTATUS:");
   const httpCodeStr = splitIndex >= 0 ? stdout.slice(splitIndex + "HTTPSTATUS:".length).trim() : "0";
   const status = parseInt(httpCodeStr, 10) || 0;
   const raw = splitIndex >= 0 ? stdout.slice(0, splitIndex).trim() : stdout.trim();
-  let upstream = {};
+  let upstream;
   try { upstream = JSON.parse(raw); } catch { upstream = { raw }; }
   return { status, upstream };
 }
@@ -45,14 +30,19 @@ function callCurl(apiKey, payload) {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const gate = body.gate ?? Number(body.gate) ?? 1;
-    const caseSummary = body.caseSummary || "";
+    const gate = Number(body.gate ?? 1);
+    const caseSummary = typeof body.caseSummary === "string" ? body.caseSummary : "";
+
+    if (body.consentToExternalAI !== true) {
+      return Response.json({ error: "未取得外部 AI 資料傳送同意。" }, { status: 403, headers: { "Cache-Control": "no-store" } });
+    }
+    if (![1, 2].includes(gate) || !caseSummary.trim()) {
+      return Response.json({ error: "請確認分析步驟及案情摘要。" }, { status: 400, headers: { "Cache-Control": "no-store" } });
+    }
     const apiKey = process.env.HCNSEC_API_KEY;
 
     if (!apiKey || apiKey === "your_actual_api_key_here") {
-      const payload = { error: "伺服器未設定有效 HCNSEC_API_KEY", request_id: null };
-      globalThis.__lastApiDebug = payload;
-      return Response.json(payload, { status: 500 });
+      return Response.json({ error: "外部 AI 服務尚未設定。" }, { status: 503, headers: { "Cache-Control": "no-store" } });
     }
 
     let systemPrompt;
@@ -122,12 +112,7 @@ Few-shot style（quest-to-gap）：
       null;
 
     if (status < 200 || status >= 300) {
-      const msg = (typeof upstream?.error === "string"
-        ? upstream.error
-        : (upstream?.error?.message || upstream?.message || `API ${status}`));
-      const detail = { error: msg, request_id: requestId, upstream_status: status, upstream_detail: upstream };
-      globalThis.__lastApiDebug = detail;
-      return Response.json(detail, { status: 502 });
+      return Response.json({ error: "外部 AI 服務暫時無法完成分析。", request_id: requestId }, { status: 502, headers: { "Cache-Control": "no-store" } });
     }
 
     const content = upstream.choices?.[0]?.message?.content;
@@ -137,18 +122,32 @@ Few-shot style（quest-to-gap）：
     let parsed;
     try {
       parsed = JSON.parse(start >= 0 && end > start ? cleaned.slice(start, end + 1) : cleaned);
-    } catch (parseErr) {
-      const detail = { error: `JSON Parse 失敗: ${parseErr.message}`, request_id: requestId, raw_upstream_text: content };
-      globalThis.__lastApiDebug = detail;
-      return Response.json(detail, { status: 502 });
+    } catch {
+      return Response.json({ error: "外部 AI 回應格式無法辨識，請稍後重試。", request_id: requestId }, { status: 502, headers: { "Cache-Control": "no-store" } });
     }
 
-    const success = { ok: true, request_id: requestId, data: parsed };
-    globalThis.__lastApiDebug = success;
-    return Response.json(success);
-  } catch (error) {
-    const fallback = { error: error.message || "內部伺服器錯誤" };
-    globalThis.__lastApiDebug = fallback;
-    return Response.json(fallback, { status: 500 });
+    let data;
+    if (gate === 1) {
+      const allowedTypes = new Set(["人", "事", "時", "地", "物"]);
+      const allowedStatuses = new Set(["已知", "未知", "待查"]);
+      if (!Array.isArray(parsed.facts) || parsed.facts.length > 7 || parsed.facts.some((fact) =>
+        !fact || !allowedTypes.has(fact.fact_type) || !allowedStatuses.has(fact.epistemic_status) ||
+        typeof fact.content !== "string" || !fact.content.trim() || fact.content.length > 200
+      )) {
+        return Response.json({ error: "外部 AI 回應缺少可用的事實清單，請重試或人工整理。", request_id: requestId }, { status: 502, headers: { "Cache-Control": "no-store" } });
+      }
+      data = { facts: parsed.facts };
+    } else {
+      if (!Array.isArray(parsed.generated_questions) || parsed.generated_questions.length > 100 || parsed.generated_questions.some((question) =>
+        typeof question !== "string" || !question.trim() || question.length > 500
+      )) {
+        return Response.json({ error: "外部 AI 回應缺少可用的問句清單，請重試或人工整理。", request_id: requestId }, { status: 502, headers: { "Cache-Control": "no-store" } });
+      }
+      data = { generated_questions: parsed.generated_questions };
+    }
+
+    return Response.json({ ok: true, request_id: requestId, data }, { headers: { "Cache-Control": "no-store" } });
+  } catch {
+    return Response.json({ error: "請求處理失敗，請確認輸入內容後重試。" }, { status: 400, headers: { "Cache-Control": "no-store" } });
   }
 }

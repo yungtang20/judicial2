@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import io
+import re
 import shutil
 import subprocess
 import tempfile
@@ -101,7 +102,20 @@ def _offense_names(interview: dict[str, Any]) -> str:
 
 
 def _format_tw_time(value: str) -> str:
-    return format_roc_time(value)
+    """正式文件時間門檻：ISO 可解析 → 民國格式；本身即民國樣式
+    （Gate 1 摘要擷取）→ 原樣；其餘自由文字（例：「昨天下午(忘記幾點)」）
+    不得直接印入正式文件，回退 UNKNOWN 由人工補填。"""
+    formatted = format_roc_time(value)
+    text = (value or "").strip()
+    if formatted == text and text and text != "UNKNOWN" and not _TIME_PASSTHROUGH.match(text):
+        return "UNKNOWN"
+    return formatted
+
+
+# 民國樣式時間：115年10月15日10時許／民國115年10月15日／115年10月10日10時30分
+_TIME_PASSTHROUGH = re.compile(
+    r"^(?:民國前)?(?:民國)?\d{1,3}年\d{1,2}月\d{1,3}日(?:\d{1,2}時(?:\d{1,2}分?)?)?許?$"
+)
 
 
 def _format_roc_date(value: str) -> str:

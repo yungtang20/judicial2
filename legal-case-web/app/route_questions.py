@@ -238,6 +238,15 @@ ROUTE_QUESTION_PACKS.update({
         ("Q-D354-CONTEXT", "事件發生前後，相關人員曾說什麼或做什麼？", "damage_context", "distinguishing"),
         ("Q-D354-EVIDENCE", "有哪些照片、影像、估價、維修或其他資料可供查證？", "damage_evidence_sources", "reinforce"),
     ]),
+    "defamation_309_public_insult": _neutral_pack("defamation", "公然侮辱", "defamation-309-v1", [
+        ("Q-DF309-CONTEXT", "請依時間順序說明言語發生前後的完整經過。", "insult_context", "core"),
+        ("Q-DF309-WORDS", "當時說了哪些原話？請說明你親自聽到的內容。", "insult_words", "core"),
+        ("Q-DF309-AUDIENCE", "言語發生在何處？當時有哪些人可能聽見或看見？", "public_audience", "core"),
+        ("Q-DF309-EFFECT", "這些言語對你的生活、人際關係或人格評價造成哪些具體影響？", "reputation_effect", "distinguishing"),
+        ("Q-DF309-VALUE", "這些言語是否與公共事務、評論、文學藝術、學術或專業意見有關？請說明具體脈絡。", "speech_value_context", "distinguishing"),
+        ("Q-DF309-FORCE", "言語發生前後是否伴隨推擠、毆打或其他強暴行為？如有，請說明。", "insult_force_details", "distinguishing"),
+        ("Q-DF309-EVIDENCE", "有哪些錄音、錄影、訊息、在場人員或其他資料可供查證？", "defamation_evidence_sources", "reinforce"),
+    ]),
     "obstruction_135_violence_threat": _neutral_pack("obstruction", "妨害公務", "obstruction-135-v1", [
         ("Q-O135-DUTY", "事發時相關人員正在執行何種職務？其身分及職務依據如何辨識？", "official_duty", "core"),
         ("Q-O135-NOTICE", "執行職務的人員曾如何表明身分、目的或要求？現場人員如何回應？", "official_notice", "core"),

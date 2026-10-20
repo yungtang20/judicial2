@@ -16,22 +16,78 @@
     "review_status": "HUMAN_REVIEW_REQUIRED"
   },
   "frozen_files": [
-    {"path": "app/offense_linkage.py", "sha256": "95872c79a789f827157578d46968951b90021b6b91666198a3009ee5385aa493", "role": "linkage_validator"},
-    {"path": "data/offense_linkage_poc.json", "sha256": "8e4ee141f7986faff1c7f3a29a79597c77c0469581ceb5e18f8726f7187ab928", "role": "review_only_linkage_pack"},
-    {"path": "app/legal_retrieval.py", "sha256": "8fba2acecc4490be61983f7724f930b92aaf76a38f64b859646938b8ae18ee9b", "role": "deidentified_query"},
-    {"path": "app/legal_retrieval_cache.py", "sha256": "d5bf61f228d107098943424e3eaac57442a2380dcba0d116931d8c6b23a1bfde", "role": "metadata_cache"},
-    {"path": "app/legal_provider_fixtures.py", "sha256": "4c6556e3940fc10e84af53106276e6ff06af764701c6af05304d4beffdd64a2d", "role": "offline_provider_contracts"},
-    {"path": "app/legal_retrieval_reconciliation.py", "sha256": "02e2ded070ddf8c1359a7df33063706ffb738cc3c25fcd86adea8baa8ce8210d", "role": "removal_reconciliation"},
-    {"path": "app/legal_retrieval_sync.py", "sha256": "8ae83d94d1deeacf1a8b46846f8b71bd0c2a910b166e99b21bf46f245c30c0a2", "role": "offline_sync"},
-    {"path": "app/legal_retrieval_batch.py", "sha256": "952f11ba63209c2084408531d1b73eea2cf4112efd2e94d0228dd7e3d0928384", "role": "atomic_batch"},
-    {"path": "app/legal_retrieval_replay.py", "sha256": "0297c308561e984833c1581d2cf9197f3dbf29dd0531f989d28f8954954d181a", "role": "golden_replay"},
-    {"path": "tests/fixtures/legal_retrieval_replay.json", "sha256": "bd5a02f6251dd1afece388f4a49f3ea41f60e006e162f827e25088f1067987dd", "role": "synthetic_golden_corpus"}
+    {
+      "path": "app/offense_linkage.py",
+      "sha256": "95872c79a789f827157578d46968951b90021b6b91666198a3009ee5385aa493",
+      "role": "linkage_validator"
+    },
+    {
+      "path": "data/offense_linkage_poc.json",
+      "sha256": "8e4ee141f7986faff1c7f3a29a79597c77c0469581ceb5e18f8726f7187ab928",
+      "role": "review_only_linkage_pack"
+    },
+    {
+      "path": "app/legal_retrieval.py",
+      "sha256": "8fba2acecc4490be61983f7724f930b92aaf76a38f64b859646938b8ae18ee9b",
+      "role": "deidentified_query"
+    },
+    {
+      "path": "app/legal_retrieval_cache.py",
+      "sha256": "d5bf61f228d107098943424e3eaac57442a2380dcba0d116931d8c6b23a1bfde",
+      "role": "metadata_cache"
+    },
+    {
+      "path": "app/legal_provider_fixtures.py",
+      "sha256": "4c6556e3940fc10e84af53106276e6ff06af764701c6af05304d4beffdd64a2d",
+      "role": "offline_provider_contracts"
+    },
+    {
+      "path": "app/legal_retrieval_reconciliation.py",
+      "sha256": "02e2ded070ddf8c1359a7df33063706ffb738cc3c25fcd86adea8baa8ce8210d",
+      "role": "removal_reconciliation"
+    },
+    {
+      "path": "app/legal_retrieval_sync.py",
+      "sha256": "8ae83d94d1deeacf1a8b46846f8b71bd0c2a910b166e99b21bf46f245c30c0a2",
+      "role": "offline_sync"
+    },
+    {
+      "path": "app/legal_retrieval_batch.py",
+      "sha256": "952f11ba63209c2084408531d1b73eea2cf4112efd2e94d0228dd7e3d0928384",
+      "role": "atomic_batch"
+    },
+    {
+      "path": "app/legal_retrieval_replay.py",
+      "sha256": "0297c308561e984833c1581d2cf9197f3dbf29dd0531f989d28f8954954d181a",
+      "role": "golden_replay"
+    },
+    {
+      "path": "tests/fixtures/legal_retrieval_replay.json",
+      "sha256": "bd5a02f6251dd1afece388f4a49f3ea41f60e006e162f827e25088f1067987dd",
+      "role": "synthetic_golden_corpus"
+    }
   ],
   "runtime_surfaces": [
-    {"path": "app/server.py", "sha256": "8710bbfecf042b4923e9aa76d576bcfb86d1e8c7bd94588735109cd3169badf9", "expected_references": 0},
-    {"path": "app/workflow.py", "sha256": "d4ebb567c57f715bc2b9f60ab450f648b15661e6d45e558c8ceb075a79071864", "expected_references": 0},
-    {"path": "app/rules.py", "sha256": "b6a349924d66e9db69383516968ad5664e87997c0de9ddf367abd1a6ef87c7e7", "expected_references": 0},
-    {"path": "app/static/app.js", "sha256": "44884f890e16b44431ddc1e3b9b107b1aec2173c0521bf04c4bc3cadaf35949c", "expected_references": 0}
+    {
+      "path": "app/server.py",
+      "sha256": "3e1c0a9b22d6f164fc5ff97b968e78061751d8d6c683a53449b91a882f2bfc64",
+      "expected_references": 0
+    },
+    {
+      "path": "app/workflow.py",
+      "sha256": "a3d486840d75c48d230ecbbbf4bb7ae089147f19ee9291711e93b55f028387e9",
+      "expected_references": 0
+    },
+    {
+      "path": "app/rules.py",
+      "sha256": "84f100e12dda047a9b85588e286b220673d40ee8150e8b777e009a5e86eefcec",
+      "expected_references": 0
+    },
+    {
+      "path": "app/static/app.js",
+      "sha256": "84e095d66d6362fb85ecd4b8909422fae79cf7ebaff845550df456ad8f167930",
+      "expected_references": 0
+    }
   ],
   "replay_evidence": {
     "scenario_count": 4,
@@ -42,18 +98,73 @@
     "suite_evidence_sha256": "eb7638295f9b9265ade2c9a35791894d9aeafcd49d0a7f7cf02f5db996a50b9b"
   },
   "verification": [
-    {"id": "V01", "command": "py -3 -X utf8 -m pytest -q", "status": "PASS", "result": "289 passed", "passed": 289},
-    {"id": "V02", "command": "py -3 -X utf8 -m compileall -q app tests", "status": "PASS", "result": "PASS", "passed": null},
-    {"id": "V03", "command": "node --check app/static/app.js", "status": "PASS", "result": "PASS", "passed": null},
-    {"id": "V04", "command": "node tests/test_frontend_api_errors.mjs", "status": "PASS", "result": "20 passed", "passed": 20},
-    {"id": "V05", "command": "git diff --check", "status": "PASS", "result": "PASS", "passed": null}
+    {
+      "id": "V01",
+      "command": "py -3 -X utf8 -m pytest -q",
+      "status": "PASS",
+      "result": "289 passed",
+      "passed": 289
+    },
+    {
+      "id": "V02",
+      "command": "py -3 -X utf8 -m compileall -q app tests",
+      "status": "PASS",
+      "result": "PASS",
+      "passed": null
+    },
+    {
+      "id": "V03",
+      "command": "node --check app/static/app.js",
+      "status": "PASS",
+      "result": "PASS",
+      "passed": null
+    },
+    {
+      "id": "V04",
+      "command": "node tests/test_frontend_api_errors.mjs",
+      "status": "PASS",
+      "result": "20 passed",
+      "passed": 20
+    },
+    {
+      "id": "V05",
+      "command": "git diff --check",
+      "status": "PASS",
+      "result": "PASS",
+      "passed": null
+    }
   ],
   "approvals_required": [
-    {"id": "HG-LR-01", "topic": "外部 provider 端點、回應 schema、認證與服務條款", "required_role": "SYSTEM_OWNER", "status": "PENDING"},
-    {"id": "HG-LR-02", "topic": "去識別查詢與 cache metadata 的隱私審查", "required_role": "PRIVACY_OR_SECURITY_REVIEWER", "status": "PENDING"},
-    {"id": "HG-LR-03", "topic": "正式 cache 路徑、保存期限、tombstone 解除與事故復原", "required_role": "SYSTEM_OWNER", "status": "PENDING"},
-    {"id": "HG-LR-04", "topic": "Gate 2 候選罪章與來源證據的法律使用邊界", "required_role": "LEGAL_REVIEWER", "status": "PENDING"},
-    {"id": "HG-LR-05", "topic": "runtime 接線、UI 呈現、稽核與失敗回復驗收", "required_role": "PRODUCT_OWNER", "status": "PENDING"}
+    {
+      "id": "HG-LR-01",
+      "topic": "外部 provider 端點、回應 schema、認證與服務條款",
+      "required_role": "SYSTEM_OWNER",
+      "status": "PENDING"
+    },
+    {
+      "id": "HG-LR-02",
+      "topic": "去識別查詢與 cache metadata 的隱私審查",
+      "required_role": "PRIVACY_OR_SECURITY_REVIEWER",
+      "status": "PENDING"
+    },
+    {
+      "id": "HG-LR-03",
+      "topic": "正式 cache 路徑、保存期限、tombstone 解除與事故復原",
+      "required_role": "SYSTEM_OWNER",
+      "status": "PENDING"
+    },
+    {
+      "id": "HG-LR-04",
+      "topic": "Gate 2 候選罪章與來源證據的法律使用邊界",
+      "required_role": "LEGAL_REVIEWER",
+      "status": "PENDING"
+    },
+    {
+      "id": "HG-LR-05",
+      "topic": "runtime 接線、UI 呈現、稽核與失敗回復驗收",
+      "required_role": "PRODUCT_OWNER",
+      "status": "PENDING"
+    }
   ],
   "unknowns": [
     "LIVE_PROVIDER_RESPONSE_SCHEMA_AND_AVAILABILITY",

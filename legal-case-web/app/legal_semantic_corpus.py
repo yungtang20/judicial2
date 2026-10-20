@@ -44,9 +44,11 @@ CORPUS: list[dict[str, Any]] = [
         "id": "A-01",
         "summary": "被害人發現店內財物遭人取走，無人目擊取走過程，也不知道是誰拿走。",
         "expected_candidates": {"theft"},
-        # 取走方式、原持有關係與強制手段均未知；保留侵占及搶奪／強盜區分方向。
-        # 無任何加重竊盜具體事實，不因 related 關係自動擴張。
-        "expected_related": {"embezzlement", "robbery"},
+        # D1（人工核定 B 修正版，2026-10-20）：摘要缺「未經同意取走／受託
+        # 變易持有／強暴脅迫奪取」任一區辨事實，不再帶侵占、強盜 related
+        # （真實書類竊盜案典型只連 §320／§47）。無任何加重竊盜具體事實，
+        # 不因 related 關係自動擴張。
+        "expected_related": set(),
         "must_not_conclude": ["犯罪成立", "行為人身分"],
         "prohibited": True,
     },
@@ -54,7 +56,9 @@ CORPUS: list[dict[str, Any]] = [
         "id": "A-02",
         "summary": "被害人將物品交由友人代為保管，事後友人拒絕返還並自行處分該物品。",
         "expected_candidates": {"embezzlement"},
-        "expected_related": {"theft"},
+        # D1：受託後拒不返還／自行處分＝侵占（§335），不以 theft 為 related
+        #（無未經同意取走／破壞原持有事實）。
+        "expected_related": set(),
         "must_not_conclude": ["侵占故意", "不法所有意圖"],
         "prohibited": True,
     },
@@ -178,7 +182,8 @@ CORPUS: list[dict[str, Any]] = [
         "id": "A-06",
         "summary": "被害人將機車借給友人使用，友人逾期未還並變賣機車。",
         "expected_candidates": {"embezzlement"},
-        "expected_related": {"theft"},
+        # D1：變賣借用物＝侵占（§335），不以 theft 為 related。
+        "expected_related": set(),
         "must_not_conclude": ["侵占故意", "變賣事實"],
     },
     {
@@ -220,7 +225,8 @@ CORPUS: list[dict[str, Any]] = [
         "id": "C-09",
         "summary": "行為人闖入被害人在夜間無人看管的倉庫並取走工具。",
         "expected_candidates": {"theft", "aggravated_theft"},
-        "expected_related": {"embezzlement"},
+        # D1：無受託持有／變易持有事實，不帶 embezzlement related。
+        "expected_related": set(),
         "must_not_conclude": ["夜間侵入加重條件", "建築物附連圍繞地"],
     },
     {
@@ -247,9 +253,12 @@ CORPUS: list[dict[str, Any]] = [
     {
         "id": "C-13",
         "summary": "行為人在被害人住處門口反覆徘徊守候長達三小時。",
-        "expected_candidates": {"stalking"},
+        # E3 輪（人工複審 2026-10-20）：保安關鍵字（徘徊守候）建立的候選，
+        # 缺「違反其意願／畏怖」區辨事實（跟騷法 §3），依人工審查標準
+        # 清除為空候選；正式定性仍需補足意願事實後人工確認。
+        "expected_candidates": set(),
         "expected_related": set(),
-        "must_not_conclude": ["跟蹤騷擾行為成立", "性或性別有關"],
+        "must_not_conclude": ["跟蹤騷擾行為成立", "性或性別有關", "違反其意願"],
     },
     {
         "id": "C-14",
@@ -276,8 +285,9 @@ CORPUS: list[dict[str, Any]] = [
         "id": "C-17",
         "summary": "行為人拾獲被害人遺失錢包後將現金取走，錢包丟棄現場。",
         # 第六輪：embezzlement 補「拾獲/遺失」關鍵詞；§337 侵占遺失物經核實加入 related_articles
+        # D1：拾得遺失物後變易持有＝侵占（§335／§337），不以 theft 為 related。
         "expected_candidates": {"embezzlement"},
-        "expected_related": {"theft"},
+        "expected_related": set(),
         "must_not_conclude": ["侵占遺失物成立", "意圖為自己不法所有"],
     },
     {

@@ -4,7 +4,20 @@ import { buildMemo } from "../../../lib/memoTemplates";
 
 export async function POST(req) {
   try {
-    const { templateType = "victim", caseSummary = "", supplemental = [], caseNumber } = await req.json();
+    const body = await req.json();
+    const templateType = body.templateType || "victim";
+    const caseSummary = typeof body.caseSummary === "string" ? body.caseSummary : "";
+    const supplemental = Array.isArray(body.supplemental) ? body.supplemental : [];
+    const caseNumber = body.caseNumber && typeof body.caseNumber === "object" ? body.caseNumber : {};
+
+    if (!["victim", "suspect", "suspect-transfer"].includes(templateType)) {
+      return Response.json({ error: "不支援的筆錄範本。" }, { status: 400, headers: { "Cache-Control": "no-store" } });
+    }
+    if (!caseSummary.trim() || supplemental.length > 100 || supplemental.some((item) =>
+      !item || typeof item.q !== "string" || typeof item.a !== "string"
+    )) {
+      return Response.json({ error: "案情摘要或問答資料格式不正確。" }, { status: 400, headers: { "Cache-Control": "no-store" } });
+    }
 
     const isSuspect = templateType === "suspect" || templateType === "suspect-transfer";
     const generic = isSuspect ? SUSPECT_GENERIC : VICTIM_GENERIC;
@@ -39,8 +52,8 @@ export async function POST(req) {
 
     const buffer = await Packer.toBuffer(doc);
     const base64 = buffer.toString("base64");
-    return Response.json({ ok: true, base64 });
-  } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ ok: true, base64 }, { headers: { "Cache-Control": "no-store" } });
+  } catch {
+    return Response.json({ error: "文件產生失敗，請檢查輸入資料後重試。" }, { status: 500, headers: { "Cache-Control": "no-store" } });
   }
 }

@@ -1,0 +1,380 @@
+{
+  "schema_version": "1.0",
+  "record_id": "HG-RULES-REVIEW-E2-CORRECTION-20261020",
+  "record_kind": "SUPERSEDING_HUMAN_DECISION_RECORD",
+  "created_on": "2026-10-20",
+  "decision_status": "REVISIONS_REQUESTED_AND_APPLIED_FOR_RE_REVIEW",
+  "human_gate_id": "HG-RULES-REVIEW-20261019-01",
+  "supersedes_note": "本記錄為補充（superseding/correction）記錄，不修改、不回填日期、不覆寫原有 hg_rules_py_human_review_record.json。原記錄保留原狀，其歷史性限制（無法證明本輪已完成審查）以上段原文保留。",
+  "corrections": [
+    "原記錄 created_on 為 2026-10-19，E 輪審閱筆記（review/1/e_round_rules_py_review_notes.md）建立於 2026-10-20，原記錄不得作為 E 輪審查已執行之證明。",
+    "原記錄在 E 輪審查前已機械刷新指向 sha256 9bd6474d…；該 hash 更新為機械記帳（人工授權），非審查核准。",
+    "原記錄引用之 review/1/rules_py_review_notes.md 與 review/1/hg_chain_notice.md 在 review/1 重整時移除；本輪審閱筆記為 e_round_rules_py_review_notes.md（已於本記錄記載審查結論）。"
+  ],
+  "reviewed_version": {
+    "target_sha256_at_review": "9bd6474d90031ab75ff900321375ef44e2e6eefa2df258d01c219707086be7ea",
+    "review_notes": "review/1/e_round_rules_py_review_notes.md",
+    "reviewed_on": "2026-10-20"
+  },
+  "human_decision": {
+    "decision": "CHANGES_REQUESTED",
+    "decided_on": "2026-10-20",
+    "items": {
+      "E-1_intimidation_hint": {
+        "verdict": "REJECTED",
+        "reason": "「警衛提醒晚上小心、在門口值勤」也誤觸 intimidation；缺『通知加惡害之旨』區辨事實（刑法 §305）"
+      },
+      "E-2_stalking_hint": {
+        "verdict": "REJECTED",
+        "reason": "「每天到公司等同事」也誤觸 stalking；缺『違反其意願』區辨事實（跟蹤騷擾防制法 §3）"
+      },
+      "E-3_obstruction_hint": {
+        "verdict": "REJECTED",
+        "reason": "單純拒絕配合或辱罵警察，未有強暴脅迫，仍會誤觸（刑法 §135 第 1 項）"
+      },
+      "E-4_robbery_hint": {
+        "verdict": "REJECTED",
+        "reason": "「威脅公開手機照片」沒有取財或使人交付行為，仍會誤觸 robbery（刑法 §328）"
+      },
+      "E-5_embezzlement_hint": {
+        "verdict": "REJECTED",
+        "reason": "「會計說客戶不還欠款」沒有受託持有關係，仍會誤觸（刑法 §335）"
+      },
+      "E-6_intent_element_signals": {
+        "verdict": "REJECTED",
+        "reason": "訊號非純展示：會改變 supported_count、suggested route 與 ELIGIBLE_CANDIDATE；要求回退"
+      }
+    },
+    "related_decisions": {
+      "D1": {
+        "decision": "OPTION_B_MODIFIED",
+        "content": "財物罪章相關擴展改為 three-way：theft＝未經同意取走或破壞原持有；embezzlement＝先前合法持有／受託保管，再變易持有、處分或拒不返還；robbery＝強暴／脅迫等手段＋奪取或使人交付財物。缺少對應區辨事實時不新增該 related 候選。不得修改 legal_route_crosswalk.json 的人工審查狀態。"
+      },
+      "tldr_corrections": "11 個正向合成句均召回對應主要候選（接受）；『全 11 章品質通過、無反向矛盾』不接受：不能證明 precision、要件完整性與章級品質。"
+    }
+  },
+  "applied_revision": {
+    "result_sha256": "42f63e3526ad5e4d3478ffeea79fb95f7b08542a91232772d757bad46012d3ad",
+    "applied_on": "2026-10-20",
+    "content": [
+      "E-1～E-5 hint 依構成要件區辨事實收緊（§305／跟騷法 §3／§135 第1項／§328／§335），人工審查五反例不觸發，原 15 正例召回不退化。",
+      "E-6 intent 元素訊號回退為僅「不法所有」。",
+      "D1「B 修正版」依三路區辨實作：_property_discriminators(summary)（rules.py）＋ related 擴展閘門（缺對應區辨事實不新增，並撤銷 bank related 帶入的財物 id）；corpus A-01/A-02/A-06/C-09/C-17 期望值同步為 D1 後行為。",
+      "theft structural rule 補反向語序『財物…遭取走』，避免 D1 關閉污染路徑後「被害人發現物品遭取走」摘要零候選。"
+    ],
+    "verification": {
+      "pytest": "391 passed（含 hash 鏈自檢＋新增近鄰負例測試 test_near_miss_statute_elements_do_not_create_candidates）",
+      "frontend": "node tests/test_frontend_api_errors.mjs 22/22",
+      "hash_chain": "packet 9939e7a2…／hg01 010a188a…／hg02／review record target 五節點對等；frozen_files 10/10"
+    }
+  },
+  "re_review": {
+    "notes_for_human": "review/1/e2_round_rules_py_review_notes.md",
+    "status": "PENDING_HUMAN_RE_REVIEW"
+  },
+  "claims_not_made": [
+    "本記錄不宣稱 DUAL_MODEL_PASS。",
+    "外部檢索（tw-legal-rag）語料之官方原文逐字一致性為 UNKNOWN（僅核對查詢條件與 citation_ids 清單）。",
+    "HG-LR-01／HG-LR-02、visual baseline、XLSM 狀態均未變動。"
+  ],
+  "second_review_round": {
+    "reviewed_on": "2026-10-20",
+    "reviewed_version_sha256": "42f63e3526ad5e4d3478ffeea79fb95f7b08542a91232772d757bad46012d3ad",
+    "decision": "CHANGES_REQUESTED",
+    "verdicts": {
+      "E-1_intimidation": "ACCEPTED",
+      "E-6_intent_signal_revert": "ACCEPTED",
+      "E-2_stalking": {
+        "verdict": "REJECTED",
+        "reason": "bank keywords (守候/反覆徘徊/騷擾) create the candidate before the hint layer; agreed-appointment narratives without refusal still hit (Stalking Act s.3 violates-will element bypass)"
+      },
+      "E-3_obstruction": {
+        "verdict": "REJECTED",
+        "reason": "bank keyword 公務員 creates the candidate directly and the structural fallback still accepts 妨害; candidates without force or threat persist (Criminal Code s.135 para.1)"
+      },
+      "E-4_robbery": {
+        "verdict": "REJECTED",
+        "reason": "hint acceptance of bare property nouns (脅迫+手機) hits without seizure or delivery; knife narratives with negated taking could also hit via fallback (Criminal Code s.328)"
+      },
+      "E-5_embezzlement": {
+        "verdict": "REJECTED",
+        "reason": "bank keywords 代管/保管/拾得 create the candidate before conversion-element check; returned-and-explicitly-not-appropriated narratives still hit (Criminal Code s.335)"
+      }
+    },
+    "verification_by_reviewer": {
+      "pytest_targeted": "18 passed",
+      "pytest_full": "391 passed",
+      "frontend": "22/22",
+      "hash_delta": "none this round"
+    },
+    "model_governance": "REVIEWED_PIPELINE; external review accepted R1-R6 after independent reproduction; runtime identity UNVERIFIED, DUAL_MODEL_PASS not claimed",
+    "not_run": [
+      "P1 visual baselines",
+      "P2 XLSM 514 sample re-check"
+    ]
+  },
+  "second_fix_round": {
+    "applied_on": "2026-10-20",
+    "result_sha256": "3e46456d8a47b657abd9cf6120238f76e8ff946aae86a116666123e396e35d24",
+    "content": [
+      "new rules.py _ELEMENT_ANCHOR_GATES + candidate-loop gate: element-anchor requirement at code layer (bank frozen, untouched) applied to keyword/structural hits using _patterns_unnegated (14-char negation window); stalking requires refusal/fear/protection-order fact (any), obstruction requires physical force, robbery requires seizure-or-delivery act (intent phrasing 要/喊著要 blocked by lookbehind), embezzlement requires conversion fact (negation-aware, so returned / no-appropriation narratives fail the gate)",
+      "robbery hint acceptance reworked: bare property nouns removed; acceptance now requires seizure/delivery verbs (強搶/搶走/交出/交給/強取…)",
+      "echo exemption: a summary that exactly equals a single frozen bank keyword is treated as a keyword-lookup display, no gate (no narrative to discriminate); this ruling is listed for re-review on the E3 checklist",
+      "corpus C-13 expectation updated to empty (proximity+duration without unwillingness evidence per human review standard); stalking corpora C-06/C-14 remain accepted via protection-order anchor; real-cases book narrative anchor 無須再 added",
+      "new regression anchors: 8 new NEAR_MISS_CASES (second review round bypass reproductions) + real-narrative positive in test_candidate_phrase_hints"
+    ],
+    "verification": {
+      "pytest_full": "391 passed (incl. hash chain self-check)",
+      "frontend": "node tests/test_frontend_api_errors.mjs 22/22",
+      "hash_chain": "rules.py 3e46456d / packet c6511bf0 / hg01 731899df / hg02 / record target aligned; frozen_files 10/10",
+      "question_bank_diff": "EMPTY"
+    },
+    "known_limitations": [
+      "E-4 denied-taking phrasing other than 要/喊著要 or 沒有取走 (after another no-negation take phrase later in same sentence) is not separately vetoed; anchors report listed fact sentences only, no element-completion judgment",
+      "robbery narratives whose only taking signal is bare 搶了 remain rejected unless another seizure-or-delivery verb present",
+      "second review round adopted the finder's R1-R6 but runtime identity remains UNVERIFIED"
+    ]
+  },
+  "third_review_round": {
+    "reviewed_on": "2026-10-20",
+    "reviewed_version_sha256": "3e46456d8a47b657abd9cf6120238f76e8ff946aae86a116666123e396e35d24",
+    "decision": "CHANGES_REQUESTED",
+    "verdicts": {
+      "E-2_stalking": {
+        "verdict": "REJECTED",
+        "reason": "bare 無須再 / unbound 很害怕 or 保護令 could admit the candidate without any link to the same actor's repeated proximity or contact (repro: 公司通知我無須再填寫報告)"
+      },
+      "E-3_obstruction": {
+        "verdict": "REJECTED",
+        "reason": "bare 強制 anchor admits no-conflict narratives (repro: 公務員依法執行職務，機關安排強制休假，全程沒有衝突)"
+      },
+      "E-4_robbery": {
+        "verdict": "REJECTED",
+        "reason": "after the anchor gate cleared keyword hits, the phrase hint re-added robbery without re-applying the same gate (repro: 他持刀喊著要搶奪，但最後沒有取走任何財物 -> robbery/keyword_hint)"
+      },
+      "E-5_embezzlement_and_related": {
+        "verdict": "REJECTED",
+        "reason": "_property_discriminators used raw re.search without negation awareness, so negated sentences re-added robbery/embezzlement related candidates after the gate (repros: 他沒有脅迫，也沒有搶走任何財物 -> robbery/related_hint; 我保管客戶物品，沒有侵占，也沒有拒不返還 -> embezzlement/related_hint)"
+      },
+      "ruling_1_keyword_echo_exemption": {
+        "verdict": "REJECTED",
+        "reason": "exemption was global across all bank keywords and leaked gate bypasses (性騷擾 -> extra stalking; 冒充公務員 -> obstruction; 聲請保護令 -> stalking); no formal runtime exception should exist for two metadata tests"
+      },
+      "ruling_2_corpus_C13_expectation": {
+        "verdict": "ACCEPTED"
+      },
+      "ruling_3_無須再_anchor": {
+        "verdict": "ACCEPTED_WITH_MODIFICATIONS",
+        "reason": "bare 無須再 unacceptable; restrict to 聯繫/接觸/傳訊/接近 context linked to the same actor's continuing conduct"
+      },
+      "known_limitation_intent_vs_completed": {
+        "verdict": "ACCEPTED_BUT_NOT_COVERING",
+        "reason": "limitation acceptable yet must not cover the current pure-negation robbery re-add defect"
+      },
+      "known_limitation_搶了_only": {
+        "verdict": "ACCEPTED",
+        "reason": "precision first, keep as documented recall loss"
+      }
+    },
+    "p1_visual": {
+      "status": "VISUAL_CONTENT_PASS / BASELINE_APPROVAL_FAIL",
+      "blockers": [
+        "random case/fact ids not masked or fixed",
+        "STATUS.json not bound to HTML/JS/CSS hash",
+        "only home + Gate 1 covered"
+      ]
+    },
+    "p2_xlsm": {
+      "status": "DIFF_LIST_PASS / BATCH_RUNTIME_FAIL",
+      "blockers": [
+        "77 duplicate text groups (83 extra cells)",
+        "7 English/mixed cells",
+        "9 AI_* columns (102 cells) unmapped",
+        "cross-case contamination in some offense columns",
+        "source hash does not prove company approval"
+      ]
+    },
+    "verification_by_reviewer": {
+      "pytest_targeted": "85 passed",
+      "pytest_full": "391 passed",
+      "frontend": "22/22 PASS",
+      "visual_tool_tests": "5 passed",
+      "xlsm_diff_tool_tests": "3 passed",
+      "frozen_diffs": "question_bank/crosswalk/xlsm_questions EMPTY",
+      "runtime_model_identity": "UNVERIFIED; DUAL_MODEL_PASS not claimed"
+    }
+  },
+  "third_fix_round": {
+    "applied_on": "2026-10-20",
+    "result_sha256": "9e062b21534d4ba1d61bdcd542bf04385071e0d55bf63f82878273996d922562",
+    "content": [
+      "ruling 1 executed: keyword-echo exemption fully removed (_bank_keyphrase_set deleted) - no runtime exception; tests/test_rules.py metadata wiring probes reworked from bare keyword to keyword + minimal fact narrative via _PROBE_NARRATIVE_SUFFIX (satisfies same-sentence anchors for the four gated chapters)",
+      "E-2: stalking anchor re-bound - act word (跟蹤/騷擾/尾隨/守候/徘徊/聯絡/聯繫/傳訊息/來訊/接近...) and anchor must be in the SAME sentence (。；！？ split) and both unnegated; 無須再 restricted to contact context (無須再(私下)?(聯繫|聯絡|傳|接觸|來)); standalone 很害怕 dropped; 保護令 must share the sentence with the act",
+      "E-3: bare 強制 removed from obstruction anchors; anchors now physical force only (推開/攔阻/撞開/揮打/毆打/拉扯/強暴/脅迫) AND must share a sentence with a duty context act (公務員/執行職務/執勤/查封...)",
+      "E-4: anchor gate now applied TWICE - after keyword/structural hits and again after any phrase hint (hint cannot bypass the same element gate); robbery take anchor shared constant _ROBBERY_TAKE_ANCHOR with lookbehinds blocking 要/喊著要 intent phrasing on 搶(走|奪|取|劫|得)/強搶/(強|奪)(取|走)/強行",
+      "E-5/related: _property_discriminators rewritten onto _patterns_unnegated (14-char negation window) for all four signals; violence_take reuses _ROBBERY_TAKE_ANCHOR so negated 脅迫/搶走 sentences can no longer re-add robbery or embezzlement related candidates; D1 gate (related -= PROPERTY_ROUTE_IDS then signal-gated adds) unchanged"
+    ],
+    "verification": {
+      "repro_negatives": "all five round-3 reproduced bypasses now yield empty or non-target chapters (R3-E2..E5, ruling-1 leaks 性騷擾/冒充公務員/聲請保護令)",
+      "positive_battery": "23 positives incl. stalking refusals/fear/protection-order/book-narrative, obstruction push/block/strike/statutory, robbery 捅+搶/超商/抽象/交現金, embezzlement 拒還/轉帳花用/拒絕返還處分/遺失物 all recalled",
+      "pytest_full": "391 passed (incl. hash chain self-check)",
+      "frontend": "node tests/test_frontend_api_errors.mjs 22/22",
+      "hash_chain": "rules.py 9e062b21... / packet 90982f23... / hg01 f79f4aa1... / hg02 / record target aligned; frozen_files 10/10",
+      "question_bank_diff": "EMPTY"
+    },
+    "known_limitations": [
+      "intent-vs-completed-taking mixed sentences still cannot be resolved word-by-word (documented, accepted by reviewer as long as pure negation cannot re-add - now fixed)",
+      "搶了-only taking narratives remain untriggered (accepted recall loss, precision first)",
+      "same-sentence binding may lose cross-sentence legitimate narratives for stalking/obstruction (precision first per reviewer direction)"
+    ]
+  },
+  "fourth_review_round": {
+    "reviewed_on": "2026-10-20",
+    "reviewed_version_sha256": "9e062b21534d4ba1d61bdcd542bf04385071e0d55bf63f82878273996d922562",
+    "decision": "CHANGES_REQUESTED",
+    "result_label": "EXACT_REPRO_PASS / GENERAL_GATE_FAIL",
+    "verdicts": {
+      "E-2_stalking": {
+        "verdict": "REJECTED",
+        "new_repros": [
+          "我從未騷擾她，她也從未明確拒絕。",
+          "他騷擾同事，我明確拒絕另一人的邀約。"
+        ],
+        "reason": "從未 outside negation marker set; refusal anchor does not bind to contact object so another-subject invite passes"
+      },
+      "E-3_obstruction": {
+        "verdict": "REJECTED",
+        "new_repros": [
+          "從未攔阻或脅迫未被否定窗口擋下",
+          "法律程序攔阻仍被當成物理強暴脅迫"
+        ],
+        "reason": "negation set gap + bare 攔阻 accepts procedural block"
+      },
+      "E-4_robbery": {
+        "verdict": "REJECTED",
+        "new_repros": [
+          "從未脅迫／從未搶走仍命中",
+          "裸交付被無關的不能抗拒語境帶入 robbery"
+        ],
+        "reason": "negation set gap + generic 交(出|付|給) anchor"
+      },
+      "E-5_related": {
+        "verdict": "REJECTED",
+        "new_repros": [
+          "共用否定詞表未涵蓋從未，robbery/embezzlement related 仍回填"
+        ],
+        "reason": "_patterns_unnegated depends on _NEGATION_MARKERS which lacked 從未群"
+      },
+      "ruling_1_keyword_echo_removal": {
+        "verdict": "ACCEPTED",
+        "reason": "runtime exception removed; _PROBE_NARRATIVE_SUFFIX only in tests; three known keyword-echo leaks did not return"
+      }
+    },
+    "p1_visual": {
+      "status": "BASELINE_APPROVAL_FAIL (maintained)"
+    },
+    "p2_xlsm": {
+      "status": "BATCH_RUNTIME_FAIL (maintained)"
+    },
+    "verification_by_reviewer": {
+      "direct_repro": "PASS",
+      "pytest_targeted": "61 passed",
+      "pytest_full": "391 passed",
+      "frontend": "22/22",
+      "runtime_model_identity": "UNVERIFIED (Sol requested gpt-5.6-sol; Luna UNVERIFIED; DUAL_MODEL_PASS not claimed)"
+    }
+  },
+  "fourth_fix_round": {
+    "applied_on": "2026-10-20",
+    "result_sha256": "255da7152efcdea211f141424f066615002c8eded82b3ae3a28de51cd371498a",
+    "content": [
+      "_NEGATION_MARKERS extended with 從未/未曾/從沒/從來沒有/從來不/從來未 (shared negation window semantics; no 從未 occurrences existed in tests/app/data so zero collision surface)",
+      "stalking refusal anchors re-bound to contact objects (拒絕+見面|聯絡|聯繫|接觸|來往|跟蹤|騷擾|傳訊|來電|通話...), plain 明確拒絕 only at sentence end or pause boundary, 拒絕過 and 早(已|就|曾)拒絕 keep sentence-final binding - blocks 他騷擾同事，我明確拒絕另一人的邀約",
+      "obstruction: 攔阻 split into its own bound pair with legal-procedure veto (程序|法律途徑|聲明異議|訴願|行政救濟|訴訟 within 12 chars before the occurrence disqualifies it as physical force); force alternatives (推開|撞開|揮打|毆打|拉扯|強暴|脅迫) keep plain same-sentence binding",
+      "_sentence_bound_anchor upgraded to iterate ALL act and anchor matches per sentence with per-match negation checks and anchor veto windows (previously took first match only)",
+      "robbery take anchor: generic 交(出|付|給) removed; delivery now property-bound (交出+財物名詞／交付+財物名詞／使人(不能抗拒)(而)交付), plus existing 搶/強取/強搶/劫/強行/把…交 forms; hint pat2 references the shared constant so hint, gate and discriminators share one contract"
+    ],
+    "verification": {
+      "reviewer_named_repros": "all four R4 classes cleared to empty or non-target chapters (從未騷擾/跨主體邀約/從未攔阻/法律程序攔阻/從未脅迫搶走/無關交付+不能抗拒/從未侵占)",
+      "r3_repros_retained": "all five round-3 repros still cleared",
+      "ruling1_retained": "性騷擾/聲請保護令/冒充公務員 keep their own-conduct chapters only",
+      "positive_battery": "22 positives recalled incl. new 攔去路 and 致使被害人不能抗拒而交付 formal delivery",
+      "pytest_full": "391 passed x2 (incl. hash chain self-check)",
+      "frontend": "node tests/test_frontend_api_errors.mjs 22/22",
+      "hash_chain": "rules.py 255da715... / packet b77cf72e... / hg01 a9fd439f... / hg02 / record target aligned; frozen 10/10",
+      "question_bank_diff": "EMPTY"
+    },
+    "known_limitations": [
+      "legal-procedure 攔阻 veto is a 12-character window scan; procedural phrasings outside the veto list need reviewer-provided exact sentences",
+      "從未 negation now applies globally to all keyword/hint/gate/discriminator windows (consistent semantics, precision-first)",
+      "same-sentence binding remains precision-first for cross-sentence legitimate narratives"
+    ]
+  },
+  "fifth_review_round": {
+    "reviewed_on": "2026-10-20",
+    "reviewed_version_sha256": "255da7152efcdea211f141424f066615002c8eded82b3ae3a28de51cd371498a",
+    "decision": "CHANGES_REQUESTED",
+    "result_label": "EXACT_REPRO_PASS / GENERAL_GATE_FAIL",
+    "verdicts": {
+      "item_1_從未_negation": {
+        "verdict": "ACCEPTED",
+        "reason": "six markers tested individually across keyword/hint/anchor/D1 layers, all suppress hits"
+      },
+      "item_2_stalking_refusal": {
+        "verdict": "REJECTED",
+        "new_repro": "他騷擾同事，我拒絕過另一人的邀約。",
+        "reason": "bare 拒絕過 still admitted without contact-object binding"
+      },
+      "item_3_obstruction_veto": {
+        "verdict": "REJECTED",
+        "new_repro": "員警執行職務時，我依法聲請停止執行，以攔阻該執行。",
+        "reason": "veto list did not cover 聲請停止執行"
+      },
+      "item_4_robbery_delivery": {
+        "verdict": "REJECTED",
+        "new_repro": "他以脅迫方式使人交付報告。",
+        "reason": "使人(不能抗拒)?(而)?交付 not bound to property object; 報告 passed"
+      },
+      "item_5_pair_enumeration": {
+        "verdict": "REJECTED",
+        "reason": "_sentence_bound_anchor broke after first unnegated act instead of enumerating all act×anchor pairs"
+      }
+    },
+    "p1_ruling": "A - fix dynamic ID masking, asset hash binding, re-capture, expand coverage beyond home+Gate1; maintain BASELINE_APPROVAL_FAIL until done",
+    "p2_ruling": "A - dedup, English translation confirmation, AI_* mapping, cross-case contamination fix, then re-sample; maintain BATCH_RUNTIME_FAIL until done",
+    "verification_by_reviewer": {
+      "pytest_targeted": "12 passed (test_candidate_phrase_hints)",
+      "pytest_full": "391 passed",
+      "frontend": "22/22",
+      "rules_py_sha": "255da715 maintained",
+      "git_diff_check": "PASS",
+      "runtime_model_identity": "UNVERIFIED"
+    }
+  },
+  "fifth_fix_round": {
+    "applied_on": "2026-10-20",
+    "result_sha256": "9360d5b516d3ddcd6174776b6385390f87f06384104c2b292b00a8261ea7f43c",
+    "content": [
+      "stalking: bare 拒絕過 removed; only frequency-bound 拒絕過(很多次|多次|好幾次|無數次|一次又一次|一再) survives - blocks 他騷擾同事，我拒絕過另一人的邀約",
+      "obstruction: veto list extended with 聲請停止執行|依法聲請|聲請 - blocks 員警執行職務時，我依法聲請停止執行，以攔阻該執行",
+      "robbery: 使人(不能抗拒)?(而)?交付 now requires property object (財物|金錢|現金|贓款|款項|皮包|手機|車|鑰匙|存摺|證件|珠寶|金器) - blocks 他以脅迫方式使人交付報告; hint/gate/D1 share the same constant",
+      "_sentence_bound_anchor rewritten to literally enumerate ALL act×anchor pairs per sentence (no early break); any pair with both unnegated and anchor not vetoed satisfies binding"
+    ],
+    "verification": {
+      "reviewer_named_repros": "all three R5 counterexamples cleared (拒絕過另一人邀約/聲請停止執行攔阻/使人交付報告)",
+      "r4_repros_retained": "從未騷擾/從未攔阻/從未脅迫搶走/從未侵占 all still cleared",
+      "r3_repros_retained": "all five round-3 repros still cleared",
+      "ruling1_retained": "性騷擾/聲請保護令/冒充公務員 keep own-conduct chapters only",
+      "positive_battery": "22 positives recalled incl. 拒絕過很多次 frequency-bound refusal and 致使被害人不能抗拒而交付財物 formal delivery",
+      "pytest_full": "391 passed (incl. hash chain self-check)",
+      "frontend": "node tests/test_frontend_api_errors.mjs 22/22",
+      "hash_chain": "rules.py 9360d5b5... / packet 3bc8777e... / hg01 d6bbba8a... / hg02 / record target aligned; frozen 10/10",
+      "question_bank_diff": "EMPTY"
+    },
+    "known_limitations": [
+      "frequency-bound 拒絕過 still relies on the same-sentence act context; cross-sentence legitimate refusals remain precision-first losses",
+      "veto list is keyword-based; unusual procedural phrasings outside the list need reviewer-provided exact sentences",
+      "actor-conduct-target role binding (LawBank-style constraint matching) remains the next architectural step, not yet implemented"
+    ]
+  }
+}

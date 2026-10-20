@@ -1,0 +1,23 @@
+{
+  "status": "UNAPPROVED_CANDIDATE",
+  "captured_at": "2026-10-19T15:37:14+00:00",
+  "files": [
+    "desktop.png",
+    "gate1_desktop.png",
+    "tablet.png",
+    "gate1_tablet.png",
+    "mobile.png",
+    "gate1_mobile.png"
+  ],
+  "states": [
+    "home",
+    "gate1_<viewport>"
+  ],
+  "transient_hidden": "#status（右下角提示框）擷取前一律隱藏",
+  "limitations": [
+    "基準僅涵蓋本工具擷取的畫面狀態（首頁＋Gate 1 合成摘要檢視）；",
+    "其他 Gate 畫面尚無基準，核准後回歸門檻也只保護已擷取狀態；",
+    "合成摘要內容非真實案情，不得作為法律內容證據。"
+  ],
+  "approval_note": "候選基準未經人工核准；不得作為正式視覺回歸門檻。"
+}

@@ -71,7 +71,12 @@ function createHarness({ fetchImpl }) {
     window,
     fetch: spyFetch,
     Headers,
+    AbortController,
     URL,
+    setTimeout,
+    clearTimeout,
+    setInterval,
+    clearInterval,
     FormData: class { constructor() { this.entries = () => []; } },
     navigator: { clipboard: { writeText: async () => {} } },
     console,
@@ -143,6 +148,26 @@ test("逐題流程只包含追加問句並另列摘要已知內容", () => {
   assert.equal(summary.hidden, false);
   assert.equal(summary.children.length, 2);
   assert.match(summary.children[0].textContent, /1 題已自動帶入/);
+});
+
+test("profile and answer saves describe the actual in-memory retention", async () => {
+  const { context, elements } = createHarness({
+    fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({}), headers: new Headers() }),
+  });
+  vm.runInContext("state", context).current = {
+    case_id: "case-id",
+    revision: 1,
+    question_role: "victim",
+    questions: [],
+  };
+  vm.runInContext("renderCase = () => {};", context);
+
+  const profileForm = elements.get("profile-form");
+  await profileForm._handlers.submit({ preventDefault() {}, currentTarget: profileForm });
+  assert.equal(elements.get("status").textContent, "年籍與詢問時間已暫存於本機服務記憶體。 ");
+
+  await elements.get("answers-form")._handlers.submit({ preventDefault() {} });
+  assert.equal(elements.get("status").textContent, "回答已暫存於本機服務記憶體。 ");
 });
 
 test("年籍 payload 使用 HTML name 欄位並保留詢問時間", () => {
@@ -572,4 +597,143 @@ test("O: 問句畫面顯示中立提問方式與人工確認邊界", () => {
   assert.match(method.textContent, /區分競爭假設/);
   assert.match(method.textContent, /一次只確認一項事實/);
   assert.match(method.textContent, /不得把候選罪章當成已成立/);
+});
+
+test("P: Gate 2 候選分析顯示列入原因、欠缺要件、來源與三層級", () => {
+  const { context, elements } = createHarness({
+    fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({}), headers: new Headers() }),
+  });
+  const stateRef = vm.runInContext("state", context);
+  stateRef.bank = {
+    offenses: [
+      { id: "robbery", name: "搶奪／強盜／海盜" },
+      { id: "theft", name: "竊盜" },
+    ],
+  };
+  const candidate = {
+    id: "robbery",
+    name: "搶奪／強盜／海盜",
+    selection_origin: "keyword_hint",
+    candidate_eligibility: "ELIGIBLE_CANDIDATE",
+    inclusion_reason: "案情摘要含有本罪章的關鍵詞：脅迫、搶走",
+    source: { status: "VERIFIED_CURRENT", law_name: "中華民國刑法", article_no: "第328條" },
+    route_element_matrix: [
+      {
+        route_id: "robbery_328_1_violence",
+        route_name: "強盜（強暴脅迫至使不能抗拒）",
+        supported_count: 2,
+        total_count: 4,
+        not_checkable_count: 1,
+        elements: [
+          { element: "強暴脅迫", status: "SOURCE_SUPPORTED", source_excerpts: ["甲持刀脅迫乙"] },
+          { element: "至使不能抗拒", status: "ABSENT", source_excerpts: [] },
+          { element: "不法所有意圖", status: "NOT_CHECKABLE", source_excerpts: [] },
+        ],
+      },
+      {
+        route_id: "robbery_330_1_aggravated",
+        route_name: "加重強盜（兇器）",
+        supported_count: 3,
+        total_count: 4,
+        not_checkable_count: 0,
+        elements: [
+          { element: "兇器", status: "SOURCE_SUPPORTED", source_excerpts: ["甲持刀"] },
+        ],
+      },
+    ],
+    unknown_elements: ["不法所有意圖"],
+    contradicting_fact_refs: [],
+  };
+  const caseData = {
+    candidates: [candidate],
+    selected_offenses: ["robbery"],
+    alternative_routes: [],
+    question_role: "victim",
+    candidates_source: "rules",
+  };
+  stateRef.current = caseData;
+  context.renderOffenses(caseData);
+  const analysis = elements.get("candidate-element-analysis");
+  assert.ok(analysis, "應有候選分析區塊");
+  assert.equal(analysis.hidden, false, "候選分析應顯示");
+  const getText = (node) => {
+    if (!node) return "";
+    let text = node.textContent || "";
+    for (const child of node.children || []) {
+      text += "\n" + getText(child);
+    }
+    return text;
+  };
+  const text = analysis.children.map(getText).join("\n");
+  assert.match(text, /主要候選/, "應標示主要候選");
+  assert.match(text, /列入原因：案情摘要含有本罪章的關鍵詞：脅迫、搶走/, "應顯示列入原因");
+  assert.match(text, /規則比對（法條已核實）/, "應顯示來源");
+  assert.match(text, /中華民國刑法 第328條/, "應顯示法條名稱與條號");
+  assert.match(text, /欠缺要件：不法所有意圖/, "應顯示欠缺要件");
+  assert.match(text, /路由：強盜（強暴脅迫至使不能抗拒）/, "應顯示所有路由");
+  assert.match(text, /路由：加重強盜（兇器）/, "應顯示第二條路由");
+  assert.match(text, /候選不代表犯罪成立/, "應保留候選聲明");
+});
+
+test("Q: AI 分析逾時：顯示降級訊息並可重試一次，第二次逾時則禁用", async () => {
+  const { context, elements } = createHarness({
+    fetchImpl: async () => {
+      const err = new Error("aborted");
+      err.name = "AbortError";
+      throw err;
+    },
+  });
+  const stateRef = vm.runInContext("state", context);
+  stateRef.current = { case_id: "case-abc-123", revision: 1, state: "GATE2_QA" };
+  stateRef.bank = { external_ai_enabled: true };
+
+  const button = elements.get("ai-analyze");
+  const handler = button._handlers["click"];
+  assert.ok(handler, "應有 ai-analyze click handler");
+
+  // 第一次點擊：逾時
+  await handler();
+  assert.match(elements.get("status").textContent, /外部 AI 分析逾時/);
+  assert.match(button.textContent, /重試，尚剩 1 次/);
+
+  // 第二次點擊：再次逾時，應禁用
+  await handler();
+  assert.match(button.textContent, /重試次數已用完/);
+});
+
+test("R: AI 分析成功：顯示請求 ID", async () => {
+  const { context, elements } = createHarness({
+    fetchImpl: async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        case_id: "case-abc-123",
+        revision: 2,
+        state: "GATE2_QA",
+        candidates: [],
+        selected_offenses: [],
+        bank: { offenses: [] },
+        gate1: {
+          people: [], events: [], times: [], places: [], objects: [],
+          behaviors: [], results: [], evidence: [], unknowns: [],
+          causation: "UNKNOWN", facts: [],
+        },
+        intake: {},
+        interviews: {},
+        questions: [],
+        preparation_mode: "MANUAL",
+        case_numbers: { proof: "", women_child: "", case_165: "" },
+      }),
+      headers: new Headers({ "X-Request-ID": "req-abc123" }),
+    }),
+  });
+  const stateRef = vm.runInContext("state", context);
+  stateRef.current = { case_id: "case-abc-123", revision: 1, state: "GATE2_QA" };
+  stateRef.bank = { external_ai_enabled: true, offenses: [] };
+
+  const button = elements.get("ai-analyze");
+  const handler = button._handlers["click"];
+  await handler();
+  assert.match(elements.get("status").textContent, /req-abc123/);
+  assert.match(elements.get("status").textContent, /不代表犯罪成立/);
 });

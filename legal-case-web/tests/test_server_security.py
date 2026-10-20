@@ -2,14 +2,21 @@ from __future__ import annotations
 
 import http.client
 import json
+import os
+import subprocess
+import sys
 import threading
 from http.server import ThreadingHTTPServer
+from pathlib import Path
 
 import pytest
 
 from app import server as server_module
 from app.storage import CaseStore
 from tests.helpers import intake
+
+
+ROOT = Path(__file__).parents[1]
 
 
 @pytest.fixture()
@@ -72,6 +79,40 @@ def test_invalid_host_and_origin_are_rejected(local_server):
         local_server, "POST", "/api/cases", headers=headers, body=raw, may_retry=True
     )
     assert status == 403
+
+
+def test_hosted_environment_does_not_disable_host_and_origin_checks(local_server, monkeypatch):
+    monkeypatch.setenv("RENDER", "1")
+    host = "attacker.onrender.com"
+    status, _, _ = request(local_server, "GET", "/", headers={"Host": host})
+    assert status == 400
+
+    headers = {
+        "Host": host,
+        "X-Session-Token": server_module.SESSION_TOKEN,
+        "Origin": f"https://{host}",
+        "Content-Type": "application/json",
+    }
+    headers["Host"] = f"127.0.0.1:{local_server}"
+    headers["Content-Length"] = "0"
+    status, _, _ = request(local_server, "POST", "/api/cases", headers=headers, may_retry=True)
+    assert status == 403
+
+
+def test_port_environment_keeps_default_listener_on_loopback():
+    env = os.environ.copy()
+    env.pop("HOST", None)
+    env["PORT"] = "8787"
+    env["RENDER"] = "1"
+    result = subprocess.run(
+        [sys.executable, "-c", "from app.config import HOST; print(HOST)"],
+        cwd=ROOT,
+        env=env,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert result.stdout.strip() == "127.0.0.1"
 
 
 def test_valid_same_origin_request_and_csp(local_server):

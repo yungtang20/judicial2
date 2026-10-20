@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
 import re
 import secrets
 from copy import deepcopy
@@ -104,8 +103,6 @@ class Handler(BaseHTTPRequestHandler):
 
     def _host_allowed(self) -> bool:
         host = self.headers.get("Host", "")
-        if os.environ.get("RENDER") or ".onrender.com" in host or host.startswith("0.0.0.0"):
-            return True
         return host in ALLOWED_HOSTS or host.split(":")[0] in ALLOWED_HOSTS
 
     def _token_allowed(self) -> bool:
@@ -115,8 +112,6 @@ class Handler(BaseHTTPRequestHandler):
         origin = self.headers.get("Origin", "")
         if not origin:
             return False
-        if os.environ.get("RENDER") or ".onrender.com" in origin:
-            return True
         return origin == APP_ORIGIN or origin == f"http://localhost:{PORT}" or origin == f"http://127.0.0.1:{PORT}"
     def _begin(self, status: int, content_type: str, length: int = 0, **headers: str) -> None:
         self.send_response(status)
@@ -259,7 +254,7 @@ class Handler(BaseHTTPRequestHandler):
                     payload.get("payload") if isinstance(payload.get("payload"), dict) else {},
                     BANK,
                 )
-                STORE.save(updated, expected_revision)
+                updated = STORE.save(updated, expected_revision)
                 self._json(HTTPStatus.OK, public_case(updated))
                 return
             self._error(HTTPStatus.NOT_FOUND, "NOT_FOUND", "找不到資源")

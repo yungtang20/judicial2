@@ -27,7 +27,7 @@ py -3 -m pip install -r requirements.txt
 9. Gate 3 產生被害人筆錄及條陳。
 10. 同一案件可繼續 Gate 4 的涉嫌人問答及文件。
 11. 無被害人案件使用 Gate 5 移送分支。
-12. 重新開啟案件時保存舊核准快照，並使後續核准失效。
+12. 目前案件可在同一個瀏覽器流程內退回修正；建立下一件案件時，前一件即自記憶體工作區移除。
 
 ## 法律與人工核准邊界
 
@@ -81,14 +81,14 @@ py -3 -m pip install -r requirements.txt
 
 ## 隱私與安全
 
-- 僅綁定 IPv4 `127.0.0.1`。
+- 預設僅綁定 IPv4 `127.0.0.1`；人工覆寫 `HOST` 會改變網路暴露面，不屬於本機模式的安全保證。
 - CORS 關閉；例外：Gate 2 罪章候選可送案情摘要至外部 AI（見「外部 AI 邊界」）。
 - API 驗證記憶體 session token、`Host`、`Origin` 及 body 大小。
 - 回應使用 CSP、`no-store`、`nosniff` 與 frame deny。
-- 案件 payload 使用 Windows DPAPI current-user scope 加密後存入 SQLite。
-- SQLite metadata 只保存隨機案件 ID、revision、Gate 狀態及時間。
+- Runtime 使用單案件記憶體工作區，不顯示「已保存案件」，也不把案件內容寫入 SQLite。
+- 每次建立新案件都會清除上一件的記憶體工作區；服務重啟後案件亦不保留。
 - 稽核事件不保存姓名、案號、自由文字或問答內容。
-- DPAPI 資料通常不能移到其他 Windows 帳號或電腦解密。密文損壞時系統 fail closed，不會建立空案件取代原資料。
+- `CaseStore`／DPAPI 僅保留為未接入 runtime 的相容性模組與安全測試，不代表目前有案件歷史功能。
 
 ## 語意推理模組（2026-10-15）
 
@@ -147,13 +147,13 @@ py -3 -X utf8 -m pytest -q
 node --check app\static\app.js
 ```
 
-**目前基準（2026-10-15）：289 passed**（單一序列完整 pytest）＋ golden replay 4/4 passed ＋ Node 前端行為測試 20 passed ＋ Python compileall／JavaScript syntax PASS。合成案件的本機瀏覽器流程另已實際走完「摘要建案 → 候選罪章 → 37 題被害人問答 → 案號 → 205 字條陳 → 4 頁筆錄 DOCX」；首頁已改為只輸入案情摘要，時間與地點由摘要明示標籤帶入。桌面、768px 與 375px 均無水平溢位；因沒有既有視覺基準圖，視覺回歸仍為 `INCONCLUSIVE`。這些是程式與本機操作證據，不是法律內容完整或 Human Gate 通過證據。
+**最近驗證（2026-10-19）：364 passed**（完整 pytest）＋ `node --check`、Python `compileall`、`git diff --check`、Next.js production build 與 ESLint 通過；prototype `npm audit --audit-level=moderate` 為 0 vulnerabilities。Edge 實際走過被害人、同案涉嫌人續辦、無被害人移送三種分支，分別下載並檢查 35／33／28 題生成的 DOCX；Next.js 原型以 mocked AI 驗證 Gate 1/2、TXT 與 DOCX 產出。桌面、768px 與 375px 均無水平溢位。外部 AI 未實際呼叫；以上是程式與本機操作證據，不代表法律內容完整、視覺回歸基準存在或 Human Gate 通過。
 
 ### 前端錯誤恢復說明
 
 - API 非 2xx 回應：安全解析 JSON `message`／`error`（code）；非 JSON 或 HTML 一律使用安全預設訊息，不顯示 raw body。
 - `fetch` 失敗（斷線）：顯示繁中「無法連線到本機服務，請確認服務仍在執行。」，不洩漏瀏覽器英文錯誤或 stack。
 - 409 `REVISION_CONFLICT`：原 POST 精確 1 次、**不自動重送 mutation**；僅在仍指向同一案件時載入並渲染最新案件，提示「已載入最新版本，請核對後重試」；回載失敗則保留原版本並提示重新選取或重試。
-- 永久行為測試：`tests/test_frontend_api_errors.mjs`（20 案例，Node vm 載入實際 app.js）＋ `tests/test_frontend_api_errors.py`（pytest wrapper，UTF-8 fail closed）。
+- 永久行為測試：`tests/test_frontend_api_errors.mjs`（22 案例，Node vm 載入實際 app.js）＋ `tests/test_frontend_api_errors.py`（pytest wrapper，UTF-8 fail closed）。
 
-測試涵蓋：零候選、AI 候選解析與失敗退回、關聯候選、問句單一判斷、公司必問逐字輸出、xlsm 公司罪章題載入、權利告知與提審告知、案號條件、500 字摘要、Gate 禁止跳過、年籍儲存、向後修改失效、同案被害人至涉嫌人流程、無被害人分支、DPAPI 明文 sentinel、revision 衝突、密文損壞、DOCX 完整性、LibreOffice 實際頁數、session token、Host、Origin、CSP、CORS 及路徑穿越、前端 409 安全回載。
+測試涵蓋：零候選、AI 候選解析與失敗退回、關聯候選、問句單一判斷、公司必問逐字輸出、xlsm 公司罪章題載入、權利告知與提審告知、案號條件、500 字摘要、Gate 禁止跳過、年籍儲存、向後修改失效、同案被害人至涉嫌人流程、無被害人分支、單案件記憶體隔離、revision 衝突、DOCX 完整性、LibreOffice 實際頁數、session token、Host、Origin、CSP、CORS 及路徑穿越、前端 409 安全回載；未接線的 DPAPI／SQLite 相容模組另有獨立安全測試。
