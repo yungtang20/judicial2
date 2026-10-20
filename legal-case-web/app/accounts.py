@@ -49,7 +49,7 @@ class AccountStore:
         username = username.strip()
         if not _USERNAME_RE.fullmatch(username):
             return False
-        if len(password) < 14 or len(password) > 256:
+        if len(password) < 8 or len(password) > 256:
             return False
         if len(expected_invite) < 32 or not hmac.compare_digest(invite_code, expected_invite):
             return False

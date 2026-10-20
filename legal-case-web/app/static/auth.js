@@ -38,7 +38,7 @@ toggle.addEventListener("click", () => {
   submit.textContent = registering ? "註冊並登入" : "登入";
   toggle.textContent = registering ? "返回登入" : "建立帳號";
   status.textContent = registering
-    ? "限建立一個帳號；需要管理員提供的邀請碼，密碼至少 14 字元。"
+    ? "限建立一個帳號；需要管理員提供的邀請碼，密碼至少 8 字元。"
     : "";
   status.classList.remove("error");
 });
