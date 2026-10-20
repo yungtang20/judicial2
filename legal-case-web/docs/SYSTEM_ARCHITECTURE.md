@@ -57,7 +57,7 @@ flowchart LR
 | `app/legal_retrieval_batch.py` | 驗證 deterministic manifest，於記憶體依序套用多 provider 項目並一次提交 | 部分提交、忽略 cache 漂移、保存案件內容、排程執行或接入 runtime |
 | `app/legal_retrieval_replay.py` | 驗證合成 golden corpus、重播 allowlist provider 並產生固定結果投影與證據 hash | 接受案件資料、輸出 fixture／錯誤內文、覆寫既有 scratch cache 或宣稱法律驗收 |
 | `app/documents.py` | 筆錄、條陳與頁數驗證 | 決定罪章成立 |
-| `app/storage.py` | 本機加密儲存、revision | 外部同步或跨帳號解密保證 |
+| `app/storage.py` | Runtime 使用程序記憶體的 `EphemeralCaseStore`；`CaseStore` 為未接線的持久化相容模組 | 案件歷史持久化或外部同步 |
 | `app/rcq_loader.py` | 解析 RCQ 審查稿、品質檢核、產生人工工作表 | 未核准前接入 runtime |
 
 ## 3. Runtime 資料來源
