@@ -39,10 +39,12 @@ py -3 -m pip install -r requirements.txt
 
 ## Render Free 自用部署
 
-專案在 Render 以既有 Dockerfile 部署。根目錄 `render.yaml` 定義 Blueprint；Render service 現有網址為 [`https://legal-case-workbench.onrender.com`](https://legal-case-workbench.onrender.com)。
+- **服務名稱**：`legal-case-workbench`
+- **線上工作台網址**：[https://legal-case-workbench.onrender.com](https://legal-case-workbench.onrender.com)
+- **登入 / 首次註冊入口**：[https://legal-case-workbench.onrender.com/login](https://legal-case-workbench.onrender.com/login)
+- **健康檢查端點**：[https://legal-case-workbench.onrender.com/api/health](https://legal-case-workbench.onrender.com/api/health)
 
-若 Dashboard 中的 Blueprint 仍連接此 GitHub repository，推送 `main` 後會依 Blueprint 設定建置。若需手動部署：Render Dashboard → `legal-case-workbench` → **Manual Deploy** → **Deploy latest commit**。`REGISTRATION_INVITE_CODE` 必須在 Render Dashboard 的 Secret/Environment 設定至少 32 個隨機字元，不要提交或傳送此 Secret。
-
+專案在 Render 以既有 Dockerfile 部署。根目錄 `render.yaml` 定義 Blueprint；推送 `main` 分支會自動建置最新版本。若需手動部署：Render Dashboard → `legal-case-workbench` → **Manual Deploy** → **Deploy latest commit**。首次帳號註冊需設定至少 32 個字元的 `REGISTRATION_INVITE_CODE`。
 **免費層與資料界線**：
 
 - Free Web Service 閒置 15 分鐘後休眠；下一個請求會喚醒服務，通常需約一分鐘。每個 workspace 每月有 750 小時 Free instance 時數；休眠時數不計入。
