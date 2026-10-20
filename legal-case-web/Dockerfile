@@ -11,10 +11,13 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/*
 
+WORKDIR /srv
+COPY questions ./questions
+
 WORKDIR /srv/legal-case-web
-COPY requirements.txt ./requirements.txt
+COPY legal-case-web/requirements.txt ./requirements.txt
 RUN python -m pip install --no-cache-dir -r requirements.txt
-COPY . .
+COPY legal-case-web .
 
 EXPOSE 10000
 CMD ["python", "-m", "app.server"]

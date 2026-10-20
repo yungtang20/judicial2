@@ -4,8 +4,8 @@ services:
     runtime: docker
     plan: free
     branch: main
-    rootDir: legal-case-web
-    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerfilePath: legal-case-web/Dockerfile
     healthCheckPath: /api/health
     autoDeployTrigger: commit
     envVars:
