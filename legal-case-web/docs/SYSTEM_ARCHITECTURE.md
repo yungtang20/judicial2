@@ -87,7 +87,7 @@ flowchart LR
 
 ## 5. 信任與資料邊界
 
-- 本機模式的案件資料留在本機程序。Render 部署採邀請制單一帳號；案件內容會在 Render 服務記憶體處理，不寫入保存帳號資料的持久磁碟，因此 Render 是案件資料處理邊界的一部分。
+- 本機模式的案件資料留在本機程序。Render Free 部署採邀請制單一帳號；案件與帳號資料都在 Render 程序／暫存檔案系統處理，休眠、重啟或重新部署後會清除。Render 是案件資料處理邊界的一部分。
 - 外部 AI 僅能在使用者啟用且有金鑰時接收有長度限制的案情摘要，用於提出候選方向。
 - 外部 AI 結果與規則結果都只是候選，不是法律結論。
 - 公開書類只可在去識別、來源識別穩定、使用邊界與 Human Gate 都完成後匯入；目前起訴書維持 `NOT_INGESTED`。
@@ -101,7 +101,7 @@ flowchart LR
 - golden replay corpus 固定標記 `contains_case_data: false`，禁止姓名、地址、案件 payload、全文、摘要與節錄欄位。Replay 的 `PASS` 只表示目前程式輸出符合合成預期，不是官方 provider、法律內容、Human Gate 或 runtime 驗收。
 - Human Gate packet 凍結核心 PoC 與 runtime surface hash；任何 hash 漂移都使封包失效。五項 approval 未全部由對應人工角色核准前，`decision_status` 必須維持 `PENDING_HUMAN_APPROVAL`。
 - API 金鑰不得進入瀏覽器、題庫、文件、log 或版本控制。
-- Render 部署使用付費 Web Service 與保存帳號資料的持久磁碟。服務有公網入口但由登入保護；這不是 Render Private Service，也不是網路層 IP 白名單。此部署設定不授權公開辦案或外部同步。
+- Render 使用 Free Web Service，服務有公網入口但由登入保護；Free 暫存儲存不可作為帳號保存方案，休眠／重啟後需以保留的邀請碼重新註冊。這不是 Render Private Service，也不是網路層 IP 白名單；此部署設定不授權公開辦案或外部同步。
 
 ## 6. 變更界線
 

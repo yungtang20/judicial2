@@ -24,6 +24,6 @@ APP_ORIGIN = os.environ.get(
 AUTH_REQUIRED = os.environ.get("AUTH_REQUIRED", "false").strip().lower() == "true"
 AUTH_DATABASE_PATH = Path(os.environ.get(
     "AUTH_DATABASE_PATH",
-    "/var/data/accounts.sqlite3" if os.environ.get("RENDER") else DATA_DIR / "accounts.sqlite3",
+    "/tmp/accounts.sqlite3" if os.environ.get("RENDER") else DATA_DIR / "accounts.sqlite3",
 ))
 REGISTRATION_INVITE_CODE = os.environ.get("REGISTRATION_INVITE_CODE", "")

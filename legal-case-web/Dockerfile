@@ -4,7 +4,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     HOST=0.0.0.0 \
     AUTH_REQUIRED=true \
-    AUTH_DATABASE_PATH=/var/data/accounts.sqlite3 \
+    AUTH_DATABASE_PATH=/tmp/accounts.sqlite3 \
     ALLOW_EXTERNAL_AI=false
 
 RUN apt-get update \

@@ -39,21 +39,22 @@ py -3 -m pip install -r requirements.txt
 
 ## Render 自用部署
 
-部署設定位於 repository 根目錄 `render.yaml`，服務程式根目錄為 `legal-case-web/`。Render 使用 Docker、TLS、邀請制單一帳號，以及 1 GB 持久磁碟保存帳號驗證資料；案件本身仍只在程序記憶體中處理。
+部署設定在 repository 根目錄 `render.yaml`，服務程式根目錄為 `legal-case-web/`。目前採 Render Free Web Service、Docker、HTTPS 與邀請制單一帳號；不配置持久磁碟，帳號資料與案件資料都會在服務休眠、重啟或重新部署後消失。
 
 1. 將 repository 連接至 Render，從 Blueprint 建立 `render.yaml` 定義的服務。
 2. 建立服務時，在 Render Secret 中設定 `REGISTRATION_INVITE_CODE`（建議使用至少 32 個隨機字元；不要提交或傳送給他人）。
-3. 確認 Render 顯示的 Starter 服務與持久磁碟費用後再建立；Render 持久磁碟需要付費服務。
-4. 部署完成後，以 Render 提供的 HTTPS 網址註冊唯一帳號（帳號 3–32 個英數字、`.`、`_` 或 `-`；密碼至少 14 字元）。註冊後可移除邀請碼 Secret，關閉首次註冊入口。
-5. 以該帳號登入；12 小時後或服務重啟後需重新登入。登出會清除工作階段。
+3. Blueprint 選用 Free compute，不建立持久磁碟；部署前仍在 Dashboard 核對方案與可能的超額用量規則。
+4. 部署完成後，以 Render HTTPS 網址建立唯一帳號（帳號 3–32 個英數字、`.`、`_` 或 `-`；密碼至少 14 字元）。
+5. **保留** `REGISTRATION_INVITE_CODE` Secret。Free 服務休眠、重啟或重新部署後會失去 SQLite 帳號資料，須用此邀請碼重新註冊；12 小時後或服務重啟後也須重新登入。
 
 **網路與資料界線**：
 
 - 這是供單一使用者登入的服務，但 Render Web Service 仍有公網網址；未登入者只能看到登入頁，不能存取案件 API。這不等同於網路層私有服務。
 - Render Private Service 無法由你電腦的瀏覽器直接連線；Render 對 Web Service 設 IP 白名單需要 Scale 或 Enterprise 方案。若要限制到固定 IP，需在 Render Dashboard 另外設定。
 - Render 是雲端主機：輸入與操作中的案件內容會傳送至 Render 並在其服務程序記憶體處理。它不寫入案件資料庫，服務重啟或重新部署後案件即清除；Render 仍是資料處理邊界的一部分。
-- 持久磁碟只存帳號名稱、隨機 salt 與 PBKDF2 密碼雜湊，不存案件內容；外部 AI 在 Blueprint 中關閉。
-- Render 服務與磁碟會產生費用；金額依 Render 方案及帳單為準，建立前請在 Dashboard 核對。
+- 認證 SQLite 位於 Free 服務的暫存檔案系統，只存帳號名稱、salt 與 PBKDF2 密碼雜湊；服務休眠、重啟或重新部署後會消失。案件內容不寫入檔案，外部 AI 在 Blueprint 中關閉。
+- Render Free 服務閒置 15 分鐘後休眠，下次請求喚醒約需 1 分鐘；每個 workspace 每月有 750 Free instance hours，且有頻寬與建置額度限制。
+- Free compute 為 $0；超出用量後的停用或計費取決於 Render 額度、付款方式與帳戶設定，建立前請在 Dashboard 核對。參考：<https://render.com/docs/free>、<https://render.com/pricing>
 
 ---
 
@@ -206,7 +207,7 @@ flowchart TD
 - 驗證依部署模式：本機 `X-Session-Token`；Render 為 `HttpOnly`、`Secure`、`SameSite=Strict` session cookie；另檢查 Host 與 Body 大小。
 - 回應：CSP、no-store、nosniff、frame-deny；Render 啟用 HSTS。
 - **單案件記憶體工作區**：不顯示已保存案件、不寫入案件 SQLite；重啟不保留案件。
-- Render 持久磁碟僅保存帳號名稱、salt 與 PBKDF2 密碼雜湊；不保存案件資料。
+- Render Free 的暫存 SQLite 僅保存帳號名稱、salt 與 PBKDF2 密碼雜湊；服務重啟後即消失，不保存案件資料。
 - **稽核不落地**：不存姓名、案號、自由文字、問答內容。
 - `CaseStore`/`DPAPI`/`SQLite` 案件儲存模組僅為相容性模組與安全測試，**非啟用功能**。
 
