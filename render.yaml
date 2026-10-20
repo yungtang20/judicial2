@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: legal-case-workbench
+    runtime: docker
+    plan: starter
+    rootDir: legal-case-web
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+    disk:
+      name: account-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: AUTH_REQUIRED
+        value: "true"
+      - key: AUTH_DATABASE_PATH
+        value: /var/data/accounts.sqlite3
+      - key: ALLOW_EXTERNAL_AI
+        value: "false"
+      - key: REGISTRATION_INVITE_CODE
+        sync: false

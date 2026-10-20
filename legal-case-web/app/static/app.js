@@ -22,7 +22,7 @@ class ApiError extends Error {
 
 async function api(path, options = {}) {
   const headers = new Headers(options.headers || {});
-  headers.set("X-Session-Token", token);
+  if (token && token !== "__SESSION_TOKEN__") headers.set("X-Session-Token", token);
   if (options.body) headers.set("Content-Type", "application/json");
   let response;
   let controller;
@@ -51,6 +51,9 @@ async function api(path, options = {}) {
       else if (typeof body.code === "string" && body.code) code = body.code;
     } catch (_) {
       // JSON 無效或回應是 HTML：維持安全預設訊息
+    }
+    if (response.status === 401 && code === "LOGIN_REQUIRED") {
+      window.location.replace("/login");
     }
     throw new ApiError(message, response.status, code);
   }
@@ -1001,10 +1004,25 @@ $("#new-case").addEventListener("click", () => {
 
 async function initialize() {
   try {
+    const auth = await jsonApi("/api/auth/status");
+    if (auth.auth_required) {
+      $("#logout").hidden = false;
+      $("#runtime-mode").textContent = "PRIVATE · SINGLE USER";
+      document.querySelector(".security-state").textContent = "● 帳號登入 · 案件不持久保存";
+    }
     state.bank = await jsonApi("/api/question-bank");
     refreshAiConsent();
     announce("準備就緒。案件採無保存模式；建立新案件或重啟服務後即不再保留。 ");
   } catch (error) { announce(error.message, true); }
 }
+
+$("#logout").addEventListener("click", async () => {
+  try {
+    await jsonApi("/api/auth/logout", { method: "POST", body: "{}" });
+    window.location.replace("/login");
+  } catch (error) {
+    announce(error.message, true);
+  }
+});
 
 initialize();

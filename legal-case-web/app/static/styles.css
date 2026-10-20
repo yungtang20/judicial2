@@ -33,6 +33,7 @@ h4 { font-size: 1rem; }
 .eyebrow, .gate-label { margin: 0 0 .2rem; color: var(--forest); font-size: .7rem; letter-spacing: .14em; font-weight: 800; }
 .security-state { color: var(--forest); font-size: .8rem; font-weight: 700; }
 .security-state span { color: #168757; }
+.header-actions { display: flex; align-items: center; gap: .75rem; }
 .status { position: fixed; right: 1rem; bottom: 1rem; max-width: min(400px, calc(100vw - 2rem)); background: var(--ink); color: #fff; padding: .65rem .9rem; border-radius: .6rem; z-index: 30; box-shadow: var(--shadow); font-size: .9rem; }
 main { max-width: 1200px; margin: 0 auto; padding: 0 clamp(1rem, 3vw, 2.5rem) 4rem; }
 /* 首頁：工作台定位，不走行銷 landing 大字 */

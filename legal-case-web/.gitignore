@@ -2,6 +2,9 @@ __pycache__/
 .pytest_cache/
 *.pyc
 data/cases.sqlite3
+data/accounts.sqlite3
+data/accounts.sqlite3-wal
+data/accounts.sqlite3-shm
 data/cases.sqlite3-wal
 data/cases.sqlite3-shm
 output/

@@ -12,6 +12,7 @@
 | [核心流程](#核心流程-gate-15) | 12 步驟業務流程與 Mermaid 圖 |
 | [API 端點](#api-端點) | 完整 HTTP 介面規格 |
 | [法律與人工核准邊界](#法律與人工核准邊界) | 系統不做法律判斷的具體界線 |
+| [Render 自用部署](#render-自用部署) | 單人邀請制、雲端資料邊界與費用注意 |
 | [外部 AI 邊界](#外部-ai-邊界) | 金鑰、同意機制、資料外送範圍 |
 | [問句來源與優先序](#問句來源與優先序) | 6 層題庫載入順序與去重 |
 | [文件規則](#文件規則) | DOCX 規格、頁數檢查、字數限制 |
@@ -35,6 +36,24 @@ py -3 -m pip install -r requirements.txt
 - 服務網址：**`http://127.0.0.1:8787/`**（僅綁定 `127.0.0.1`，不對外）
 - `start.ps1` 會檢查原始碼異動並自動重啟，確保瀏覽器載入最新版本
 - 健康檢查：`GET /api/health` 回傳 `{ "status": "ok", "mode": "LOCAL_ONLY", "external_ai": false, "source_mtime": <unix> }`
+
+## Render 自用部署
+
+部署設定位於 repository 根目錄 `render.yaml`，服務程式根目錄為 `legal-case-web/`。Render 使用 Docker、TLS、邀請制單一帳號，以及 1 GB 持久磁碟保存帳號驗證資料；案件本身仍只在程序記憶體中處理。
+
+1. 將 repository 連接至 Render，從 Blueprint 建立 `render.yaml` 定義的服務。
+2. 建立服務時，在 Render Secret 中設定 `REGISTRATION_INVITE_CODE`（建議使用至少 32 個隨機字元；不要提交或傳送給他人）。
+3. 確認 Render 顯示的 Starter 服務與持久磁碟費用後再建立；Render 持久磁碟需要付費服務。
+4. 部署完成後，以 Render 提供的 HTTPS 網址註冊唯一帳號（帳號 3–32 個英數字、`.`、`_` 或 `-`；密碼至少 14 字元）。註冊後可移除邀請碼 Secret，關閉首次註冊入口。
+5. 以該帳號登入；12 小時後或服務重啟後需重新登入。登出會清除工作階段。
+
+**網路與資料界線**：
+
+- 這是供單一使用者登入的服務，但 Render Web Service 仍有公網網址；未登入者只能看到登入頁，不能存取案件 API。這不等同於網路層私有服務。
+- Render Private Service 無法由你電腦的瀏覽器直接連線；Render 對 Web Service 設 IP 白名單需要 Scale 或 Enterprise 方案。若要限制到固定 IP，需在 Render Dashboard 另外設定。
+- Render 是雲端主機：輸入與操作中的案件內容會傳送至 Render 並在其服務程序記憶體處理。它不寫入案件資料庫，服務重啟或重新部署後案件即清除；Render 仍是資料處理邊界的一部分。
+- 持久磁碟只存帳號名稱、隨機 salt 與 PBKDF2 密碼雜湊，不存案件內容；外部 AI 在 Blueprint 中關閉。
+- Render 服務與磁碟會產生費用；金額依 Render 方案及帳單為準，建立前請在 Dashboard 核對。
 
 ---
 
@@ -74,27 +93,36 @@ flowchart TD
 
 ## API 端點
 
-> 所有 `/api/*` 需 `X-Session-Token`；變更請求需 `Origin` 同源；Body ≤ 256 KB；CSP / no-store / nosniff / frame-deny。
+> 本機模式的 API 需 `X-Session-Token`；Render 模式改用登入後的 `HttpOnly`、`Secure`、`SameSite=Strict` session cookie。所有變更請求都驗證同源 `Origin`；Body ≤ 256 KB；回應使用 CSP / no-store / nosniff / frame-deny。
 
 | 方法 | 路徑 | 說明 | 權限 |
 |------|------|------|------|
-| `GET` | `/api/health` | 服務狀態、模式、外部 AI、source_mtime | 公開 |
-| `GET` | `/api/cases` | 回傳空陣列（單案件模式） | Token |
-| `GET` | `/api/question-bank` | 題庫版本、審核狀態、罪章清單 | Token |
-| `GET` | `/api/cases/:id` | 取得案件公開快照 | Token |
-| `POST` | `/api/cases` | 建立新案件 | Token + Origin |
-| `POST` | `/api/cases/:id/actions` | 執行動作（需 `revision`） | Token + Origin |
-| `GET` | `/api/cases/:id/documents/:role/:kind` | 下載 DOCX（`role=victim\|suspect\|transfer`，`kind=interview\|brief`） | Token |
-| `GET` | `/api/cases/:id/brief/:role` | 取得條陳純文字 | Token |
-| `GET` | `/` `/app.js` `/styles.css` | 靜態檔案（`index.html` 注入 `SESSION_TOKEN`） | 公開 |
+| `GET` | `/api/health` | 服務狀態、模式、外部 AI、source_mtime | 公開（健康檢查） |
+| `GET` | `/api/auth/status` | 登入狀態、首次註冊是否開放 | 公開（不含帳號資料） |
+| `POST` | `/api/auth/register` | 以邀請碼建立唯一帳號 | Origin + 一次性註冊條件 |
+| `POST` | `/api/auth/login` | 登入；錯誤嘗試達 5 次後鎖定 15 分鐘 | Origin |
+| `POST` | `/api/auth/logout` | 清除目前登入 session | Origin |
+| `GET` | `/api/cases` | 回傳空陣列（單案件模式） | Token / 登入 session |
+| `GET` | `/api/question-bank` | 題庫版本、審核狀態、罪章清單 | Token / 登入 session |
+| `GET` | `/api/cases/:id` | 取得案件公開快照 | Token / 登入 session |
+| `POST` | `/api/cases` | 建立新案件 | Token / 登入 session + Origin |
+| `POST` | `/api/cases/:id/actions` | 執行動作（需 `revision`） | Token / 登入 session + Origin |
+| `GET` | `/api/cases/:id/documents/:role/:kind` | 下載 DOCX（`role=victim\\|suspect\\|transfer`，`kind=interview\\|brief`） | Token / 登入 session |
+| `GET` | `/api/cases/:id/brief/:role` | 取得條陳純文字 | Token / 登入 session |
+| `GET` | `/` `/login` `/app.js` `/auth.js` `/styles.css` `/auth.css` | 工作台或登入頁與靜態檔案 | 登入頁/資源公開；工作台需登入（Render） |
 
 ### 錯誤代碼
 
 | 代碼 | HTTP | 觸發情境 |
 |------|------|----------|
-| `INVALID_HOST` | 400 | Host 非 loopback |
-| `INVALID_SESSION` | 401 | Token 不符 |
+| `INVALID_HOST` | 400 | Host 不在允許清單 |
+| `INVALID_SESSION` | 401 | 本機 Token 不符 |
+| `LOGIN_REQUIRED` | 401 | Render 缺少有效登入 session |
+| `INVALID_CREDENTIALS` | 400/401 | 帳號輸入格式或登入憑證錯誤 |
 | `INVALID_ORIGIN` | 403 | 非同源變更請求 |
+| `REGISTRATION_REJECTED` | 400 | 邀請碼或註冊資料錯誤 |
+| `REGISTRATION_CLOSED` | 409 | 唯一帳號已建立或邀請碼未設定 |
+| `LOGIN_THROTTLED` | 429 | 登入錯誤達上限，暫停 15 分鐘 |
 | `NOT_FOUND` | 404 | 路徑/案件不存在 |
 | `REVISION_CONFLICT` | 409 | `revision` 不符（不自動重送） |
 | `VALIDATION_ERROR` | 422 | 業務規則驗證失敗 |
@@ -173,14 +201,14 @@ flowchart TD
 
 ## 隱私與安全
 
-- 僅綁定 `127.0.0.1`（覆寫 `HOST` 非本機模式保證）
-- CORS 關閉（僅 Gate 2 AI 例外）
-- API 驗證：session token、Host、Origin、Body 大小
-- 回應：CSP、no-store、nosniff、frame-deny
-- **單案件記憶體工作區**：不顯示已保存案件、不寫入 SQLite
-- **自動清除**：新案件清除舊案件；重啟不保留
-- **稽核不落地**：不存姓名、案號、自由文字、問答內容
-- `CaseStore`/`DPAPI`/`SQLite` 僅為相容性模組與安全測試，**非啟用功能**
+本機模式僅綁定 `127.0.0.1`；Render 模式使用 HTTPS、公網網址與邀請制登入。Render 服務仍由網際網路連得到，未登入者不能進入工作台或案件 API。
+- CORS 關閉；所有變更請求驗證同源 `Origin`。
+- 驗證依部署模式：本機 `X-Session-Token`；Render 為 `HttpOnly`、`Secure`、`SameSite=Strict` session cookie；另檢查 Host 與 Body 大小。
+- 回應：CSP、no-store、nosniff、frame-deny；Render 啟用 HSTS。
+- **單案件記憶體工作區**：不顯示已保存案件、不寫入案件 SQLite；重啟不保留案件。
+- Render 持久磁碟僅保存帳號名稱、salt 與 PBKDF2 密碼雜湊；不保存案件資料。
+- **稽核不落地**：不存姓名、案號、自由文字、問答內容。
+- `CaseStore`/`DPAPI`/`SQLite` 案件儲存模組僅為相容性模組與安全測試，**非啟用功能**。
 
 ---
 

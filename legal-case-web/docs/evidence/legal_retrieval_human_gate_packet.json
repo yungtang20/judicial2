@@ -70,7 +70,7 @@
   "runtime_surfaces": [
     {
       "path": "app/server.py",
-      "sha256": "3e1c0a9b22d6f164fc5ff97b968e78061751d8d6c683a53449b91a882f2bfc64",
+      "sha256": "a02374716ee82fef21e11065afe37d09b07ea3bea293a9c1b8efb2f108b6970c",
       "expected_references": 0
     },
     {
@@ -85,7 +85,7 @@
     },
     {
       "path": "app/static/app.js",
-      "sha256": "84e095d66d6362fb85ecd4b8909422fae79cf7ebaff845550df456ad8f167930",
+      "sha256": "f5999c275faed8e99a848e4d0e7b9c94b2818003980fdabfc88671d9491caecc",
       "expected_references": 0
     }
   ],

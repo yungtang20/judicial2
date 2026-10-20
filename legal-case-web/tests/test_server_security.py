@@ -160,3 +160,108 @@ def test_safe_error_message_allows_known_business_hints():
     from app.server import _safe_error_message
     assert _safe_error_message("目前不可選擇候選罪章") == "目前不可選擇候選罪章"
     assert _safe_error_message("某未知內部訊息-ID-12345") == "操作未完成，請確認輸入內容或稍後再試"
+@pytest.fixture()
+def auth_server(tmp_path, monkeypatch):
+    from app.accounts import AccountStore
+
+    monkeypatch.setattr(server_module, "AUTH_REQUIRED", True)
+    monkeypatch.setattr(server_module, "ACCOUNT_STORE", AccountStore(tmp_path / "accounts.sqlite3"))
+    monkeypatch.setattr(server_module, "REGISTRATION_INVITE_CODE", "invite-code-for-private-test-0123456789")
+    monkeypatch.setattr(server_module, "AUTH_SESSIONS", {})
+    monkeypatch.setattr(server_module, "LOGIN_FAILURES", {})
+    instance = ThreadingHTTPServer(("127.0.0.1", 0), server_module.Handler)
+    port = instance.server_address[1]
+    host = f"127.0.0.1:{port}"
+    monkeypatch.setattr(server_module, "ALLOWED_HOSTS", {host})
+    monkeypatch.setattr(server_module, "APP_ORIGIN", f"http://{host}")
+    thread = threading.Thread(target=instance.serve_forever, daemon=True)
+    thread.start()
+    try:
+        yield port
+    finally:
+        instance.shutdown()
+        instance.server_close()
+        thread.join(timeout=3)
+
+
+def test_invite_account_gates_app_api_and_logout(auth_server):
+    host = f"127.0.0.1:{auth_server}"
+    headers = {"Host": host}
+
+    status, _, body = request(auth_server, "GET", "/", headers=headers)
+    assert status == 200
+    assert b"PRIVATE" in body
+    status, _, body = request(auth_server, "GET", "/api/question-bank", headers=headers)
+    assert status == 401
+    assert json.loads(body)["error"] == "LOGIN_REQUIRED"
+
+    status, _, body = request(auth_server, "GET", "/api/auth/status", headers=headers)
+    assert status == 200
+    assert json.loads(body)["registration_available"] is True
+
+    base_headers = {
+        "Host": host,
+        "Origin": f"http://{host}",
+        "Content-Type": "application/json",
+    }
+    register = json.dumps({
+        "username": "owner",
+        "password": "correct-horse-battery-staple",
+        "invite_code": "invite-code-for-private-test-0123456789",
+    })
+    status, response_headers, _ = request(
+        auth_server, "POST", "/api/auth/register",
+        headers={**base_headers, "Content-Length": str(len(register))},
+        body=register,
+    )
+    assert status == 201
+    cookie = response_headers["Set-Cookie"].split(";", 1)[0]
+    assert "HttpOnly" in response_headers["Set-Cookie"]
+    assert "SameSite=Strict" in response_headers["Set-Cookie"]
+    assert "Secure" in response_headers["Set-Cookie"]
+
+    status, _, body = request(
+        auth_server, "GET", "/api/question-bank",
+        headers={"Host": host, "Cookie": cookie},
+    )
+    assert status == 200
+    assert json.loads(body)["review_status"] == "HUMAN_REVIEW_REQUIRED"
+
+    status, _, body = request(auth_server, "GET", "/api/auth/status", headers=headers)
+    assert status == 200
+    assert json.loads(body)["registration_available"] is False
+
+    logout = "{}"
+    status, response_headers, _ = request(
+        auth_server, "POST", "/api/auth/logout",
+        headers={**base_headers, "Cookie": cookie, "Content-Length": str(len(logout))},
+        body=logout,
+    )
+    assert status == 200
+    assert "Max-Age=0" in response_headers["Set-Cookie"]
+    status, _, _ = request(
+        auth_server, "GET", "/api/question-bank",
+        headers={"Host": host, "Cookie": cookie},
+    )
+    assert status == 401
+
+    login = json.dumps({"username": "owner", "password": "wrong-password"})
+    status, _, _ = request(
+        auth_server, "POST", "/api/auth/login",
+        headers={**base_headers, "Content-Length": str(len(login))},
+        body=login,
+    )
+    assert status == 401
+    login = json.dumps({"username": "owner", "password": "correct-horse-battery-staple"})
+    status, response_headers, _ = request(
+        auth_server, "POST", "/api/auth/login",
+        headers={**base_headers, "Content-Length": str(len(login))},
+        body=login,
+    )
+    assert status == 200
+    new_cookie = response_headers["Set-Cookie"].split(";", 1)[0]
+    status, _, _ = request(
+        auth_server, "GET", "/api/question-bank",
+        headers={"Host": host, "Cookie": new_cookie},
+    )
+    assert status == 200

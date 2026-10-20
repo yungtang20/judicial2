@@ -16,4 +16,14 @@ MAX_BODY_BYTES = 256_000
 MAX_TEXT_LENGTH = 20_000
 MAX_SUMMARY_LENGTH = 500
 MAX_DOCX_PAGES = 8
-APP_ORIGIN = os.environ.get("APP_ORIGIN", f"http://{HOST}:{PORT}")
+RENDER_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "")
+APP_ORIGIN = os.environ.get(
+    "APP_ORIGIN",
+    f"https://{RENDER_HOSTNAME}" if RENDER_HOSTNAME else f"http://{HOST}:{PORT}",
+)
+AUTH_REQUIRED = os.environ.get("AUTH_REQUIRED", "false").strip().lower() == "true"
+AUTH_DATABASE_PATH = Path(os.environ.get(
+    "AUTH_DATABASE_PATH",
+    "/var/data/accounts.sqlite3" if os.environ.get("RENDER") else DATA_DIR / "accounts.sqlite3",
+))
+REGISTRATION_INVITE_CODE = os.environ.get("REGISTRATION_INVITE_CODE", "")

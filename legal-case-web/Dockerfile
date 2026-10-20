@@ -1,0 +1,20 @@
+FROM python:3.12-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    HOST=0.0.0.0 \
+    AUTH_REQUIRED=true \
+    AUTH_DATABASE_PATH=/var/data/accounts.sqlite3 \
+    ALLOW_EXTERNAL_AI=false
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /srv/legal-case-web
+COPY requirements.txt ./requirements.txt
+RUN python -m pip install --no-cache-dir -r requirements.txt
+COPY . .
+
+EXPOSE 10000
+CMD ["python", "-m", "app.server"]
