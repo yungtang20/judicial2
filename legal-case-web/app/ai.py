@@ -4,7 +4,8 @@
 - key/模型由 .env（IAMHC_API_KEY、IAMHC_BASE_URL、IAMHC_MODEL）提供。
 - 只送出案情摘要（承辦人已寫入 intake.summary），不送年籍、案號或問答內容。
 - key 未設定、網路失敗或回應不可解析時回傳 None，由呼叫端退回規則引擎。
-- 每次呼叫 70 秒逾時；總嘗試次數最多 4 次。
+- 每次呼叫 70 秒逾時；正式 Gate 2 v3 契約為首次加最多 2 次重試。
+- 舊版相容函式仍保留原有最多 4 次嘗試，不再由正式 Gate 2 呼叫。
 """
 
 from __future__ import annotations
@@ -16,6 +17,17 @@ from pathlib import Path
 from typing import Any
 from urllib import request as urlrequest
 from urllib.error import URLError
+from uuid import uuid4
+
+from .v3_contracts import (
+    ContractContext,
+    ContractValidationError,
+    MAX_STAGE_ATTEMPTS,
+    SCHEMA_VERSION,
+    STAGE_CANDIDATE_ANALYSIS,
+    build_request_envelope,
+    validate_candidate_analysis_response,
+)
 
 ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
 DEFAULT_BASE_URL = "https://api.iamhc.cn/v1"
@@ -67,11 +79,19 @@ def ai_configured() -> bool:
     return _settings() is not None
 
 
-def _chat(api_key: str, base_url: str, model: str, messages: list[dict[str, str]], max_tokens: int) -> str:
+def _chat(
+    api_key: str,
+    base_url: str,
+    model: str,
+    messages: list[dict[str, str]],
+    max_tokens: int,
+    *,
+    temperature: float = 0.2,
+) -> str:
     payload = json.dumps({
         "model": model,
         "messages": messages,
-        "temperature": 0.2,
+        "temperature": temperature,
         "max_tokens": max_tokens,
     }).encode("utf-8")
     req = urlrequest.Request(
@@ -136,13 +156,16 @@ def build_analyze_prompt(
                 f"{facts_block}"
                 "候選罪章目錄（id：名稱）：\n"
                 f"{catalog}\n\n"
-                "任務：從目錄中選出案情摘要可能涉及的罪章 id（0 至 6 個，依可能性排序）。\n"
+                "任務：從目錄中選出案情摘要最相關的 1 至 4 個罪章 id，依可能性排序；完全沒有相關方向時才回傳空陣列。\n"
                 "規則：\n"
                 "1. 只依摘要文字判斷，不得假設摘要外的事實。\n"
-                "2. 語意相近或易混淆的罪章（例如竊盜與侵占）都應列出供承辦人區辨。\n"
-                "3. 摘要資訊不足以對應任何罪章時，回傳空陣列。\n"
-                "4. 不得輸出犯罪成立、故意成立、因果關係成立或競合成立等結論；僅列候選方向。\n"
-                '輸出格式：{"candidates":[{"id":"罪章id","reason":"30字內理由"}]}'
+                "2. 即使事實不完整或主體不明，仍盡力提出最接近候選，並把欠缺要件放入 missing。\n"
+                "3. 代稱不明（他、對方、有人等）時仍可列候選，但 missing 必須含主體不明。\n"
+                "4. 有姓名、可辨識監視器畫面或已鎖定對象時，subject_identified 為 true。\n"
+                "5. 已鎖定行為人但贓物尚未尋獲時，is_solved 可為 true，missing 加入贓物流向待查。\n"
+                "6. 沒有對人施強暴或使人不能抗拒的行為，即使有取財，也不要優先列強盜。\n"
+                "7. 可使用可能涉及、高度可能涉及，不得輸出犯罪成立、構成、該當或應論以等最終法律結論。\n"
+                '輸出格式：{"candidates":[{"id":"罪章id","reason":"一句話引用案情","missing":["欠缺要件"]}],"status":{"subject_identified":"true|false|unknown","has_victim":"true|false|unknown","is_solved":"true|false|unknown"}}'
             ),
         },
     ]
@@ -252,6 +275,229 @@ def analyze_candidates(
         "model": model,
         "chunk_count": len(chunks),
     }
+
+
+V3_CANDIDATE_SYSTEM = (
+    "你是案件分類器，只提出候選罪章，不做犯罪成立判斷。"
+    "只能依 request.input_payload.case_text 與 offense_catalog 判斷。"
+    "必須逐字回傳案情引句及其 Python 字元索引。"
+    "只輸出單一 JSON object，不得輸出 Markdown、程式碼圍欄或其他文字。"
+)
+
+
+def build_v3_candidate_prompt(
+    request_envelope: dict[str, Any],
+    offenses: list[dict[str, Any]],
+    *,
+    prior_error: ContractValidationError | None = None,
+) -> list[dict[str, str]]:
+    """建立 v3 候選分類提示；metadata 由程式產生並要求逐欄原樣回傳。"""
+
+    response_template = {
+        key: request_envelope[key]
+        for key in (
+            "schema_version",
+            "stage",
+            "request_id",
+            "case_revision",
+            "attempt",
+            "input_hash",
+            "source_snapshot_hashes",
+        )
+    }
+    response_template["response_payload"] = {
+        "candidates": [
+            {
+                "offense_id": "清單中的 id",
+                "reason": "一句話，引用案情原文說明為何可能涉及",
+                "basis_quote": "案情逐字引句",
+                "basis_start": 0,
+                "basis_end": 0,
+                "missing": ["仍缺的關鍵事實"],
+            }
+        ],
+        "status": {
+            "subject_identified": "true|false|unknown",
+            "has_victim": "true|false|unknown",
+            "is_solved": "true|false|unknown",
+        },
+    }
+    correction = ""
+    if prior_error is not None:
+        correction = (
+            "\n前次輸出未通過契約驗證："
+            f"{prior_error.code}，欄位 {prior_error.path}。請修正後完整重送。\n"
+        )
+    user_content = (
+        "【程式產生的 request】\n"
+        f"{json.dumps(request_envelope, ensure_ascii=False, separators=(',', ':'))}\n\n"
+        "【offense_catalog】\n"
+        f"{json.dumps(offenses, ensure_ascii=False, separators=(',', ':'))}\n\n"
+        "規則：\n"
+        "1. 從 offense_catalog 選 1 至 4 個 offense_id，不得自創；完全沒有相關方向時才回傳空陣列。\n"
+        "2. 只根據 case_text 明載事實，不補人物、時間、地點或動機。\n"
+        "3. 即使事實不完整或主體不明，仍盡力提出最接近候選，並把欠缺要件放入 missing。\n"
+        "4. 代稱無法辨識時，missing 必須包含「主體不明」。\n"
+        "5. reason 與 missing 不得使用「成立、構成、該當、應論以」，只寫可能涉及或待確認。\n"
+        "6. basis_quote 必須是 case_text 的連續逐字原文，basis_start/basis_end 使用 Python 字元索引。\n"
+        "7. 相對時間照抄，不換算日期。\n"
+        "8. 已明示姓名、可辨識監視器畫面或已鎖定對象時，subject_identified 為 true。\n"
+        "9. 已鎖定行為人但贓物未尋獲時，is_solved 可為 true，且 missing 加入「贓物流向待查」。\n"
+        "10. 沒有對人施強暴或使人不能抗拒的行為，即使有取財，也不要優先列強盜。\n"
+        "11. 三個 status 只能是字串 true、false、unknown。\n"
+        f"{correction}"
+        "【唯一允許的回應形狀；metadata 必須原樣回傳】\n"
+        f"{json.dumps(response_template, ensure_ascii=False, separators=(',', ':'))}"
+    )
+    return [
+        {"role": "system", "content": V3_CANDIDATE_SYSTEM},
+        {"role": "user", "content": user_content},
+    ]
+
+
+def build_lawbank_analysis_prompt(
+    case_text: str,
+    candidate_result: dict[str, Any],
+    law_text: str,
+) -> list[dict[str, str]]:
+    """建立法源風格的第二階段分析提示。
+
+    此提示只負責產生分析 JSON。法條內容由程式注入，判決字號不得由模型
+    憑記憶補入。正式 runtime 仍須經 v3 route contract 與人工審核。
+    """
+    payload = {
+        "summary": "2～4 句的專業簡述",
+        "per_offence": [{
+            "name": "罪名（含條號）",
+            "elements": [{
+                "element": "要件名稱",
+                "status": "已具備|待確認|高度可能",
+                "basis": "案情依據或案情未述",
+            }],
+            "similar_crimes_excluded": ["排除的罪名與簡要理由"],
+            "prosecution": "告訴乃論|非告訴乃論|待確認",
+            "evidence_hints": ["具體補證建議"],
+            "practical_risk": "實務風險評估（1～2句）",
+        }],
+        "detailed_analysis": {
+            "1_行為定性": "",
+            "2_與類似罪名區別": "",
+            "3_程序要件與告訴乃論": "",
+            "4_證據缺口與補證方向": "",
+            "5_實務見解參考": "",
+        },
+        "conclusion": "總結性結論，結尾必須含僅供參考，須人工審核",
+    }
+    user = (
+        "你是資深刑事法務分析助理，輸出風格接近法源法律網。\n"
+        "即使案情不完整或主體不明，也要分析可能方向並標示缺口。\n"
+        "只能依案情、候選結果與法條原文判斷，不得補人物、時間、地點、動機。\n"
+        "每個候選拆解要件，status 只能是已具備、待確認或高度可能。\n"
+        "主動比較相似罪名並說明排除理由，評估告訴乃論、告訴期間及實務風險。\n"
+        "無法確認判決字號時，只能寫實務上（參考類似判決精神），不得虛構字號。\n"
+        "相對時間照抄，不換算。沒有對人施強暴或使人不能抗拒，即使有取財，也不要論以強盜。\n"
+        "只輸出 JSON，結論必須含「僅供參考，須人工審核」。\n\n"
+        f"【案情】\n{case_text}\n\n"
+        f"【候選罪名結果】\n{json.dumps(candidate_result, ensure_ascii=False)}\n\n"
+        f"【法條原文】\n{law_text}\n\n"
+        f"【唯一允許的 JSON 形狀】\n{json.dumps(payload, ensure_ascii=False)}"
+    )
+    return [
+        {"role": "system", "content": "你只輸出單一 JSON object，不輸出 Markdown 或其他文字。"},
+        {"role": "user", "content": user},
+    ]
+
+
+def analyze_candidates_v3(
+    summary: str,
+    offenses: list[dict[str, Any]],
+    *,
+    case_revision: int,
+    source_snapshot_hashes: dict[str, str],
+) -> dict[str, Any] | None:
+    """以 v3 fail-closed 契約分析 Gate 2 候選；失敗時由工作流退回規則路徑。"""
+
+    settings = _settings()
+    if settings is None or not summary.strip() or len(summary) > MAX_SUMMARY_CHARS_PER_CALL:
+        return None
+    api_key, base_url, model = settings
+    catalog = [{"id": item["id"], "name": item["name"]} for item in offenses]
+    input_payload = {"case_text": summary, "offense_catalog": catalog}
+    request_id = str(uuid4())
+    prior_error: ContractValidationError | None = None
+
+    for attempt in range(1, MAX_STAGE_ATTEMPTS + 1):
+        request_envelope = build_request_envelope(
+            stage=STAGE_CANDIDATE_ANALYSIS,
+            request_id=request_id,
+            case_revision=case_revision,
+            attempt=attempt,
+            input_payload=input_payload,
+            source_snapshot_hashes=source_snapshot_hashes,
+        )
+        context = ContractContext(
+            request_id=request_id,
+            case_revision=case_revision,
+            input_hash=request_envelope["input_hash"],
+            source_snapshot_hashes=source_snapshot_hashes,
+            case_text=summary,
+            expected_attempt=attempt,
+            allowed_offense_ids=frozenset(item["id"] for item in catalog),
+        )
+        try:
+            content = _chat(
+                api_key,
+                base_url,
+                model,
+                build_v3_candidate_prompt(
+                    request_envelope, catalog, prior_error=prior_error
+                ),
+                max_tokens=1400,
+                temperature=0,
+            )
+            response = json.loads(content)
+            validated = validate_candidate_analysis_response(response, context)
+            payload = validated["response_payload"]
+            return {
+                "candidates": [
+                    {
+                        "id": item["offense_id"],
+                        "reason": item["reason"],
+                        "basis_quote": item["basis_quote"],
+                        "basis_start": item["basis_start"],
+                        "basis_end": item["basis_end"],
+                        "missing": item["missing"],
+                        "source": "ai",
+                    }
+                    for item in payload["candidates"]
+                ],
+                "status": payload["status"],
+                "model": model,
+                "contract": {
+                    "schema_version": SCHEMA_VERSION,
+                    "stage": STAGE_CANDIDATE_ANALYSIS,
+                    "request_id": request_id,
+                    "case_revision": case_revision,
+                    "attempt_count": attempt,
+                    "input_hash": request_envelope["input_hash"],
+                    "source_snapshot_hashes": dict(source_snapshot_hashes),
+                },
+            }
+        except ContractValidationError as exc:
+            prior_error = exc
+        except (
+            AiUnavailable,
+            json.JSONDecodeError,
+            URLError,
+            OSError,
+            KeyError,
+            IndexError,
+            AttributeError,
+            TimeoutError,
+            TypeError,
+        ):
+            prior_error = None
+    return None
 
 SEGMENT_SYSTEM = (
     "你是警察機關筆錄製作輔助系統的事實切分模組。"

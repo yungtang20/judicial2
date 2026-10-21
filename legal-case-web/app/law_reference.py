@@ -39,6 +39,17 @@ def load_cache() -> dict[str, Any]:
     return {}
 
 
+def get_cached_law_article(law_name: str, article_no: str) -> dict[str, Any] | None:
+    """只讀取離線法條快照；查無資料時不得觸發網路或憑記憶補文。"""
+
+    cache = load_cache()
+    for key in _candidate_keys(law_name, article_no):
+        entry = cache.get(key)
+        if isinstance(entry, dict) and not entry.get("abolished"):
+            return dict(entry)
+    return None
+
+
 def save_cache(cache: dict[str, Any]) -> None:
     CACHE_PATH.write_text(
         json.dumps(cache, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8"

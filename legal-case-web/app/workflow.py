@@ -9,10 +9,11 @@ from typing import Any
 from uuid import uuid4
 
 from .config import MAX_BODY_BYTES, MAX_SUMMARY_LENGTH, MAX_TEXT_LENGTH
-from .ai import analyze_candidates
+from .ai import analyze_candidates_v3
 from .acts import competition_relationships, extract_acts, link_acts_to_candidates
 from .company_templates import copy_identity
 from .xlsm_questions import xlsm_quarantine
+from .v3_contracts import canonical_sha256
 from .rules import (
     MAX_SELECTED_OFFENSES,
     analyze_gate1,
@@ -20,6 +21,7 @@ from .rules import (
     build_questions,
     candidate_element_state,
     candidate_offenses,
+    classify_candidates,
     concise_summary,
     required_case_numbers,
     truncate_summary,
@@ -27,7 +29,7 @@ from .rules import (
 
 
 CURRENT_TEMPLATE_VERSION = "company-verbatim-2026-10-11"
-CURRENT_CANDIDATE_ENGINE = "rules-v2+ai"
+CURRENT_CANDIDATE_ENGINE = "rules-v3+ai-contract-v1"
 MAX_PROFILE_FIELD_LENGTH = 200
 MAX_FACTS = 50
 MACHINE_STATUSES = {"FACT", "INFERENCE", "UNKNOWN", "DISPUTED"}
@@ -112,6 +114,8 @@ def _audit(case: dict[str, Any], event: str, **metadata: Any) -> None:
     allowed = {
         "from_state", "to_state", "role", "rule_id", "reason_code",
         "question_count", "offense_count", "document_type", "quarantine_count",
+        "schema_version", "request_id", "input_hash", "source_snapshot_hashes",
+        "attempt_count",
     }
     case.setdefault("audit", []).append({
         "event": event,
@@ -754,14 +758,42 @@ def apply_action(
         summary = payload.get("summary", case["intake"]["summary"])
         if not isinstance(summary, str) or not summary.strip():
             raise WorkflowError("案情摘要不得空白")
-        result = analyze_candidates(
-            _clean_summary(summary),
-            [{"id": item["id"], "name": item["name"]} for item in bank["offenses"]],
+        clean_summary = _clean_summary(summary)
+        offense_catalog = [
+            {"id": item["id"], "name": item["name"]} for item in bank["offenses"]
+        ]
+        source_snapshot_hashes = {
+            "question_bank": canonical_sha256({"version": bank["library_version"]}),
+            "legal_route_crosswalk": canonical_sha256(
+                {"version": bank["legal_route_crosswalk_version"]}
+            ),
+            "offense_catalog": canonical_sha256(offense_catalog),
+        }
+        result = analyze_candidates_v3(
+            clean_summary,
+            offense_catalog,
+            case_revision=int(case.get("revision", 0)),
+            source_snapshot_hashes=source_snapshot_hashes,
         )
+        rule_candidates = candidate_offenses(clean_summary, bank)
         if result is None:
-            raise WorkflowError("AI 分析無法使用（未設定金鑰或服務失敗）；請改用規則候選或人工選擇")
+            # 外部 AI 不可用時仍回傳可回查的規則候選；不把失敗轉成空候選。
+            fallback = classify_candidates(clean_summary, bank)
+            rule_candidates = fallback["candidates"]
+            result = {
+                "candidates": [],
+                "status": fallback["status"],
+                "model": "rules-fallback",
+                "contract": {
+                    "schema_version": "rules-fallback-v1",
+                    "request_id": "rules-fallback",
+                    "input_hash": canonical_sha256({"case_text": clean_summary}),
+                    "source_snapshot_hashes": source_snapshot_hashes,
+                    "attempt_count": 0,
+                },
+            }
         by_id = {item["id"]: item for item in bank["offenses"]}
-        merged = {item["id"]: item for item in candidate_offenses(summary, bank)}
+        merged = {item["id"]: item for item in rule_candidates}
         for item in merged.values():
             item["candidate_sources"] = ["rules"]
         for item in result["candidates"]:
@@ -771,6 +803,12 @@ def apply_action(
                 candidate["candidate_sources"].append("ai")
                 candidate["notice"] = f"AI 候選（{item['reason']}）；規則亦命中；不代表犯罪成立。"
                 candidate["inclusion_reason"] = item["reason"] or candidate.get("inclusion_reason", "")
+                candidate["classification_basis"] = {
+                    "quote": item["basis_quote"],
+                    "start": item["basis_start"],
+                    "end": item["basis_end"],
+                }
+                candidate["classification_missing"] = item["missing"]
                 continue
             element_labels, candidate_status, element_status = candidate_element_state(offense)
             merged[item["id"]] = {
@@ -796,15 +834,33 @@ def apply_action(
                 "competition_analysis": "待人工評估",
                 "prohibited_conclusions": ["犯罪成立", "故意成立", "因果關係成立", "競合成立"],
                 "candidate_sources": ["ai"],
+                "classification_basis": {
+                    "quote": item["basis_quote"],
+                    "start": item["basis_start"],
+                    "end": item["basis_end"],
+                },
+                "classification_missing": item["missing"],
                 "source": offense["source"],
             }
-        case["candidates_source"] = "ai+rules"
+        case["candidates_source"] = "ai+rules" if result["model"] != "rules-fallback" else "rules"
+        case["candidate_classification_status"] = result["status"]
+        case["candidate_analysis_contract"] = deepcopy(result["contract"])
         ai_order = [item["id"] for item in result["candidates"]]
         remaining = [item for oid, item in merged.items() if oid not in ai_order]
         case["candidates"] = [merged[oid] for oid in ai_order if oid in merged] + remaining
         link_acts_to_candidates(case.get("acts", []), case["candidates"])
         competition_relationships(case["candidates"])
-        _audit(case, "AI_ANALYZE", rule_id=result["model"])
+        contract = result["contract"]
+        _audit(
+            case,
+            "AI_ANALYZE",
+            rule_id=result["model"],
+            schema_version=contract["schema_version"],
+            request_id=contract["request_id"],
+            input_hash=contract["input_hash"],
+            source_snapshot_hashes=contract["source_snapshot_hashes"],
+            attempt_count=contract["attempt_count"],
+        )
 
     elif action == "start_interview":
         if case["state"] != "OUTPUT_READY":

@@ -70,22 +70,22 @@
   "runtime_surfaces": [
     {
       "path": "app/server.py",
-      "sha256": "a02374716ee82fef21e11065afe37d09b07ea3bea293a9c1b8efb2f108b6970c",
+      "sha256": "ff0b05873b20eccdecdbddd2665024e6001ab4a3bcbe22d9d20dc6990300f1af",
       "expected_references": 0
     },
     {
       "path": "app/workflow.py",
-      "sha256": "a3d486840d75c48d230ecbbbf4bb7ae089147f19ee9291711e93b55f028387e9",
+      "sha256": "496bd902ddad27ffb9d8bed75c08a10b585c74563ea87eb486c5f9b68f3707ea",
       "expected_references": 0
     },
     {
       "path": "app/rules.py",
-      "sha256": "84f100e12dda047a9b85588e286b220673d40ee8150e8b777e009a5e86eefcec",
+      "sha256": "515b68d9709e8a9142115aaa6adbcac6fb0530b86fcc7b793116dd286884186f",
       "expected_references": 0
     },
     {
       "path": "app/static/app.js",
-      "sha256": "f5999c275faed8e99a848e4d0e7b9c94b2818003980fdabfc88671d9491caecc",
+      "sha256": "66d5e624f3a8b310c06926fcc88ba945a662f6c7dc7272f5e0e9fc7788fe677f",
       "expected_references": 0
     }
   ],
@@ -102,36 +102,43 @@
       "id": "V01",
       "command": "py -3 -X utf8 -m pytest -q",
       "status": "PASS",
-      "result": "289 passed",
-      "passed": 289
+      "result": "444 passed",
+      "passed": 444,
+      "verified_on": "2026-10-22",
+      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15."
     },
     {
       "id": "V02",
       "command": "py -3 -X utf8 -m compileall -q app tests",
       "status": "PASS",
       "result": "PASS",
-      "passed": null
+      "passed": null,
+      "verified_on": "2026-10-22"
     },
     {
       "id": "V03",
       "command": "node --check app/static/app.js",
       "status": "PASS",
       "result": "PASS",
-      "passed": null
+      "passed": null,
+      "verified_on": "2026-10-22"
     },
     {
       "id": "V04",
       "command": "node tests/test_frontend_api_errors.mjs",
       "status": "PASS",
-      "result": "20 passed",
-      "passed": 20
+      "result": "26 passed",
+      "passed": 26,
+      "verified_on": "2026-10-22",
+      "note": "Frontend error-handling suite re-verified 2026-10-22; supersedes the 20-passed baseline recorded on 2026-10-15."
     },
     {
       "id": "V05",
       "command": "git diff --check",
       "status": "PASS",
       "result": "PASS",
-      "passed": null
+      "passed": null,
+      "verified_on": "2026-10-22"
     }
   ],
   "approvals_required": [

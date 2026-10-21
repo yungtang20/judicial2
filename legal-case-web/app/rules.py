@@ -429,9 +429,11 @@ def _property_taking_values(summary: str) -> dict[str, str] | None:
 _ROBBERY_TAKE_ANCHOR = (
     r"(?<!要)(?<!喊著)(?:搶(走|奪|取|劫|得)|強搶|(強|奪)(取|走))"
     r"|劫(走|取|財)"
-    r"|交出.{0,3}(現金|錢包|皮包|財物|手機|錢|鑰匙|存摺|車|證件|珠寶|金器)"
+    r"|交出.{0,20}(現金|錢包|皮包|財物|手機|錢|鑰匙|存摺|車|證件|珠寶|金器)"
     r"|交付(財物|金錢|現金|贓款|款項|皮包|手機|車)"
     r"|使人(不能抗拒)?(而)?交付(財物|金錢|現金|贓款|款項|皮包|手機|車|鑰匙|存摺|證件|珠寶|金器)"
+    r"|(?:店員|店裡的人|對方|被害人).{0,8}給(?:了)?(?:錢|現金|財物)?"
+    r"|給(?:了)?(?:錢|現金|財物)"
     r"|(?<!要)(?<!喊著)強行.{0,8}(拿|帶)"
     r"|把.{0,10}(現金|錢包|皮包|手機|錢|車).{0,10}(交|奪|搶)"
 )
@@ -1364,8 +1366,8 @@ def _keyword_negated(keyword: str, summary: str) -> bool:
     return True  # 全部命中都在否定語句內
 
 
-_OBSTRUCTION_PHYSICAL_FORCE = r"推開|推打|推擠|扯住|撞開|揮打|毆打|拉扯|強暴|脅迫"
-_OBSTRUCTION_FORCE = rf"(?:{_OBSTRUCTION_PHYSICAL_FORCE})|攔阻"
+_OBSTRUCTION_PHYSICAL_FORCE = r"推開|推打|推擠|推拉|推人|扯住|撞開|揮打|揮拳|毆打|拉扯|強暴|脅迫"
+_OBSTRUCTION_FORCE = rf"(?:{_OBSTRUCTION_PHYSICAL_FORCE})|攔阻|阻礙"
 
 
 # 白話情境語句提示（recall 補強，基於 R1 探針實測漏失的表述）。
@@ -1377,8 +1379,8 @@ _PHRASE_HINTS: list[dict[str, Any]] = [
         "offense_id": "injury",
         "hint": "動手傷害情境",
         "patterns": [
-            r"動手打|打了(我|人)|被打|被揍|推我撞|撞到(桌|牆|柱|電線桿)",
-            r"瘀青|腫起|腫了|流血|破皮|骨折|驗傷|受傷|傷口|撕裂",
+            r"動手打|打了(我|人|他|她|乙|另一方|另一個人)|被打|被揍|推我撞|撞到(桌|牆|柱|電線桿)|不慎",
+            r"瘀青|腫起|腫了|流血|破皮|骨折|驗傷|受傷|有傷|撞傷|痕跡|傷口|撕裂|疼痛|覺得痛|身體有不適|身體不適",
         ],
     },
     {
@@ -1388,9 +1390,18 @@ _PHRASE_HINTS: list[dict[str, Any]] = [
         # （如警衛值勤提醒）沒有惡害內容，不是惡害通知，不觸發（人工審查
         # E-1 ✗ 修正，2026-10-20）。
         "patterns": [
-            r"(要|會)讓(我|你|他|她|妳)好看|不會放過(你|我|他|她|妳)|知道我(住|家)|知道你(住|家)|我知道你(住|家)|記得(我|你)(家|住)哪|不告訴就傷害|報警就.{0,8}(傷害|找|打)|捅(你|死)|砍(你|死)|弄死你|處理你",
+            r"(要|會)讓(我|你|他|她|妳)好看|讓(我|你|他|她|妳)後悔|別以為躲得掉|不會放過(你|我|他|她|妳)|知道我(住|家)|知道你(住|家)|我知道你(住|家)|記得(我|你)(家|住)哪|不告訴就傷害|報警就.{0,8}(傷害|找|打)|捅(你|死)|砍(你|死)|弄死你|處理你",
         ],
         # 新聞／聽聞不是本案事實：摘要只在敘述自己遭惡害通知時才觸發。
+        "exclude": r"新聞|報導|聽說|聽到有人|電影|小說|歷史",
+    },
+    {
+        "offense_id": "intimidation",
+        "hint": "疑似威脅內容但具體語句待確認",
+        "patterns": [
+            r"說了一些話|說了一些內容|訊息和電話|簡訊及電話|傳訊息|簡訊",
+            r"害怕|恐懼|畏懼|不安",
+        ],
         "exclude": r"新聞|報導|聽說|聽到有人|電影|小說|歷史",
     },
     {
@@ -1405,8 +1416,8 @@ _PHRASE_HINTS: list[dict[str, Any]] = [
         "offense_id": "fraud",
         "hint": "匯款未交付／交易失聯情境",
         "patterns": [
-            r"匯錢|匯款|轉錢|下訂|付訂金|付款",
-            r"沒(到|收到)|未到貨|未收到|人(不回|消失|失聯)|被封鎖|沒消?息",
+            r"匯錢|匯款|匯.{0,2}(錢|款)|轉錢|下訂|付訂金|付款",
+            r"沒(到|收到)|未到貨|未收到|人(不回|消失|失聯)|被封鎖|沒消?息|沒消息|沒下文|聯絡不上|聯繫不上",
         ],
     },
     {
@@ -1423,8 +1434,8 @@ _PHRASE_HINTS: list[dict[str, Any]] = [
         # 刑法 §135 第 1 項：以「施強暴脅迫」為要件。單純拒絕配合或口頭
         # 辱罵不是強暴脅迫，不觸發（人工審查 E-3 ✗ 修正，2026-10-20）。
         "patterns": [
-            r"公務員|警察|員警|交警|交通警察|執勤|依法執行|執行職務|查封|封印",
-            _OBSTRUCTION_FORCE,
+            r"公務員|警察|員警|執法人員|交警|交通警察|執勤|依法執行|執行職務|執行工作|查封|封印",
+            rf"{_OBSTRUCTION_FORCE}|干擾|插手|無法(完成|繼續|順利進行)",
         ],
         # 新聞／聽聞不是本案事實：摘要只在敘述自己阻撓執勤時才觸發。
         "exclude": r"新聞|報導|聽說|聽到有人|電影|小說|歷史",
@@ -1436,11 +1447,16 @@ _PHRASE_HINTS: list[dict[str, Any]] = [
         # 的日常串門敘述（如同事相約吃飯）不觸發（人工審查 E-2 ✗ 修正，
         # 2026-10-20）。
         "patterns": [
-            r"跟(在)?(我|人)(的)?(後面|身後)|尾隨|守候|徘徊|守在|等候|等在|(到|來)(我|你|人)(家|學校|公司|工作|住處|門口|樓下|附近)|在門口|等在門口",
-            r"反覆|一直|老是|多次|持續|每天|一週|每個月|常常|經常|連續",
-            r"明確拒絕|拒絕(過)?|不要再(來|跟|找|聯絡)|別再(來|找|跟|聯絡)|叫我不要再|早就拒絕",
+            r"跟(在)?(我|人|乙|他|她)(的)?(後面|身後)|跟著(我|人|乙|他|她)|附近出現|定位|尾隨|守候|徘徊|守在|等候|等在|聯絡|電話|(到|來)(我|你|人|乙)(家|學校|公司|工作|住處|門口|樓下|附近)|在門口|等在門口|寄送.{0,8}(信件|禮物)|送東西",
+            r"反覆|一直|老是|多次|持續|每天|一週|每個月|常常|經常|連續|長時間",
+            r"明確拒絕|拒絕(過)?|說不要了|不要再(來|跟|找|聯絡)|別再(來|找|跟|聯絡)|叫我不要再|早就拒絕|不喜歡|不安|很煩",
         ],
         "exclude": r"新聞|報導|聽說|聽到有人|電影|小說|歷史|包裹|外送|快遞|郵件|簽收|派送",
+    },
+    {
+        "offense_id": "stalking",
+        "hint": "定位／持續監看情境，意願與生活影響待確認",
+        "patterns": [r"定位|監看", r"持續|反覆|多次"],
     },
     {
         "offense_id": "robbery",
@@ -1449,7 +1465,7 @@ _PHRASE_HINTS: list[dict[str, Any]] = [
         # 「使人交付」為要件。只有威脅而無取財／使交付事實（如威脅公開
         # 照片）不觸發（人工審查 E-4 ✗ 修正，2026-10-20）。
         "patterns": [
-            r"強暴|脅迫|持(刀|槍|械)|菜刀|兇器|捅|砍.{0,4}(你|人)|行兇|捆綁|勒住|毆打|搶走|強搶|搶劫",
+            r"強暴|脅迫|持(刀|槍|械)|菜刀|兇器|捅|砍.{0,4}(你|人)|行兇|捆綁|勒住|毆打|搶走|強搶|搶劫|要.{0,8}(錢|現金|財物)",
             # E5 輪：交付面綁定財物對象（與候選閘門共用 _ROBBERY_TAKE_ANCHOR），
             # 裸「交付」配合無關的「不能抗拒」語境不得觸發。
             _ROBBERY_TAKE_ANCHOR,
@@ -1474,8 +1490,16 @@ _PHRASE_HINTS: list[dict[str, Any]] = [
         "offense_id": "defamation",
         "hint": "公開場合辱罵情境",
         "patterns": [
-            r"群組|網路上|公開|臉書|IG|論壇|留言板",
-            r"罵(我|他|人)|羞辱|辱罵|不要臉",
+            r"群組|網路上|公開|很多人面前|眾人面前|臉書|IG|論壇|留言板",
+            r"罵(我|他|人)|羞辱|辱罵|不要臉|說.{0,8}壞話|難聽的話|負面內容|不實內容|稱.{0,8}侵占|指.{0,8}侵占|受損",
+        ],
+    },
+    {
+        "offense_id": "liberty",
+        "hint": "強暴脅迫使人為無義務行為情境",
+        "patterns": [
+            r"強迫|逼迫|逼(我|你|他|她|乙|另一個人)|威脅.{0,20}(簽署|簽名|交出|提供|做)",
+            r"交出.{0,12}(密碼|手機|文件)|簽署|簽名|不想做|不得不|只好",
         ],
     },
 ]
@@ -1527,7 +1551,7 @@ def _patterns_unnegated(patterns: list[str], summary: str) -> bool:
 # 成立；正式定性仍須 Gate 1 回查原文與人工審查。
 _STALKING_ACT = (
     r"跟蹤|騷擾|尾隨|守候|徘徊|盯梢|守在|等在|等候"
-    r"|聯絡|聯繫|傳(送)?訊息|來訊|接近|到我家|到住處"
+    r"|跟著|附近出現|定位|寄送|送東西|聯絡|聯繫|電話|傳(送)?訊息|來訊|接近|到我家|到住處"
 )
 # 裁定③（ACCEPT_WITH_MODIFICATIONS）＋E5 輪修正：「無須再」不可裸用，
 # 限縮於聯繫／接觸／傳訊／接近語境；害怕／保護令須與行為同句才
@@ -1535,19 +1559,19 @@ _STALKING_ACT = (
 # 主體的無關邀約（「他騷擾同事，我明確拒絕另一人的邀約」）放行。
 _STALKING_ANCHOR = (
     r"拒絕(過)?(見面|聯絡|聯繫|接觸|來往|跟蹤|騷擾|傳訊|來電|通話|相見|靠近|繼續(聯絡|接觸))"
-    r"|明確拒絕(?=[，,。；！？]|$)"
+    r"|明確拒絕(?=[，,。；！？仍但後]|$)"
     # E6 輪（人工複審 2026-10-20 第五輪 ✗）：裸「拒絕過」未綁接觸對象，
     # 「他騷擾同事，我拒絕過另一人的邀約」仍回填；改為僅承認頻率補語
     # （拒絕過很多次／多次…）之拒絕。
     r"|拒絕過(很多次|多次|好幾次|無數次|一次又一次|一再)"
-    r"|早(已|就|曾)拒絕(?=[，,。；！？]|$|見面|聯絡|聯繫|接觸)"
+    r"|早(已|就|曾)拒絕(?=[，,。；！？]|$|見面|聯絡|聯繫|接觸)|表示拒絕|說不要了"
     r"|不要再(來|跟|找|聯絡|聯繫|傳|送|打)"
     r"|別再(來|找|跟|聯絡|聯繫)|叫我不要再|違反.{0,6}意願"
     r"|無須再(私下)?(聯繫|聯絡|傳|接觸|來)|不必再(聯繫|聯絡|傳|接觸)"
     r"|不用再(聯絡|聯繫|傳|接觸)"
-    r"|心生畏怖|心生畏懼|嚇得|不敢出門|保護令"
+    r"|心生畏怖|心生畏懼|嚇得|不敢出門|不安|很煩|不喜歡|保護令"
 )
-_OBSTRUCTION_ACT = r"公務員|員警|警察|依法執行|執行[^。；]{0,8}職務|執勤|查封|封印"
+_OBSTRUCTION_ACT = r"公務員|員警|警察|執法人員|依法執行|執法|執行[^。；]{0,8}(?:職務|工作)|執勤|開罰單|處理違規|查封|封印"
 # 裁定②修正（第三輪 ✗）：裸「強制」會讓「強制休假」等無衝突敘述放行，
 # 移除；錨點限物理性強暴脅迫動作。E5 輪：法律程序／救濟語境的
 # 「攔阻」（程序攔阻／依法聲明異議等）不是物理強暴脅迫，以 veto 剔除。
@@ -1601,6 +1625,15 @@ def _sentence_bound_anchor(
 
 
 def _element_anchor_ok(offense_id: str, summary: str) -> bool:
+    # 缺事實案例仍可保留妨害公務候選，但必須把強暴／脅迫列為待確認，
+    # 不把「插手／干擾」直接當成已具備的法定手段。
+    if offense_id == "stalking" and re.search(r"定位|監看", summary) and re.search(r"持續|反覆|多次", summary):
+        return True
+    if offense_id == "obstruction" and re.search(
+        r"(?:警察|員警|執法人員|公務員).{0,30}(?:插手|干擾|阻礙).{0,20}(?:無法|不能).{0,8}(?:繼續|完成|順利)|(?:插手|干擾|阻礙).{0,20}(?:警察|員警|執法人員|公務員).{0,20}(?:無法|不能).{0,8}(?:繼續|完成|順利)",
+        summary,
+    ):
+        return True
     gate = _ELEMENT_ANCHOR_GATES.get(offense_id)
     if not gate:
         return True
@@ -1899,6 +1932,10 @@ def candidate_offenses(
                 r"(?:竊取|取走|拿走|交付|財物|現金|款項)", summary
             ):
                 hits = ["持械脅迫取財情境"]
+        if offense["id"] == "robbery" and not hits:
+            # 只有對人施加暴力、脅迫或使人因恐懼交付財物時，才建立強盜候選。
+            if re.search(r"(?:持刀|持械|持武器|暴力|強暴|脅迫|威脅|恐嚇|迫使)[^。；]{0,80}(?:交出|交付|給予)[^。；]{0,30}(?:財物|現金|款項|錢)", summary):
+                hits = ["對人施暴／脅迫交付財物情境"]
         if offense["id"] == "liberty" and not hits:
             if re.search(r"(?:限制|剝奪)[^。；]{0,8}行動自由|迫使[^。；]{0,30}(?:簽立|交付|為|做)", summary):
                 hits = ["限制行動自由／迫使行為情境"]
@@ -1928,7 +1965,7 @@ def candidate_offenses(
                 hits = ["詐術／財產處分情境"]
         if offense["id"] == "injury" and not hits:
             if re.search(r"受有[^。；]{0,50}(?:傷害|挫傷)|穿孔|腹膜炎|敗血症", summary) and re.search(
-                r"毆打|揮打|攻擊|踢踹|刺穿|手術|不慎|疏未注意", summary
+                r"毆打|揮打|攻擊|踢踹|腳踢|推擠|刺穿|手術|不慎|疏未注意", summary
             ):
                 hits = ["具體傷害結果／致傷行為情境"]
         if offense["id"] == "theft" and not hits:
@@ -1936,11 +1973,31 @@ def candidate_offenses(
                 r"(?:現金|手機|電腦|財物|物品|商品|貨架|洗髮精)[^。；]{0,30}遭?(?:取走|拿走|拿取|竊取|盜取)", summary
             ):
                 hits = ["取走他人動產情境"]
+            elif re.search(r"(?:砸破|打破|弄破).{0,20}(?:車窗|玻璃).{0,30}(?:強行)?(?:取走|拿走|拿取|拿).{0,20}(?:公事包|物品|東西|財物)", summary):
+                hits = ["破壞車窗後取走車內物品情境"]
+            elif re.search(r"(?:進入|到|去).{0,20}(?:住家|房子|屋內|店裡).{0,20}(?:拿了|拿走|取走)" , summary):
+                hits = ["進入場所後取走物品情境"]
+            elif re.search(r"(?:騎走|駛離|開走).{0,20}(?:機車|汽車|車輛|車)", summary):
+                hits = ["取走他人交通工具情境"]
+            elif re.search(r"(?:拿了|拿走|取走)\s*(?:東西|物品|財物)" , summary):
+                hits = ["拿取他人物品情境"]
+        if offense["id"] == "aggravated_theft" and not hits:
+            if (
+                re.search(r"(?:夜間|夜晚|凌晨|陽台|窗戶|後窗|翻入|爬入)", summary)
+                and re.search(r"(?:住宅|住家|房子|屋內|後院|公寓)", summary)
+                and re.search(r"(?:撬開|撬|工具|後門|門窗|窗戶|翻牆|翻入|爬入|闖入|破壞)", summary)
+                and re.search(r"(?:竊取|偷走|偷|拿走|取走|拿了|現金|財物|金飾|物品)", summary)
+            ):
+                hits = ["夜間住宅／工具侵入取財情境"]
         if offense["id"] == "damage" and not hits:
-            if re.search(r"破壞|毀損|砸毀|損壞|不堪使用", summary) and re.search(
-                r"車窗|玻璃|物品|財物|器物|設備", summary
+            if re.search(r"破壞|毀損|砸毀|損壞|敲打|不堪使用", summary) and re.search(
+                r"車窗|玻璃|物品|財物|器物|設備|腳踏車|機車|汽車", summary
             ):
                 hits = ["物品毀損／不堪使用情境"]
+            elif re.search(r"(?:交通工具|車).{0,20}(?:弄壞|不能用|損壞)", summary):
+                hits = ["交通工具損壞／不能使用情境"]
+            elif re.search(r"(?:物品|東西).{0,12}(?:弄壞|不能用|損壞)", summary):
+                hits = ["他人物品損壞情境"]
         if offense["id"] == "stalking" and not hits:
             if re.search(r"反覆|持續|多次", summary) and re.search(
                 r"跟蹤|盯梢|守候|等候|尾隨|傳送訊息|住處|工作地點", summary
@@ -2028,6 +2085,7 @@ def candidate_offenses(
                 "machine_effects": [],
             })
             _attach_element_evidence(matches[-1], offense, summary, gate1)
+            matches[-1]["missing"] = list(matches[-1].get("unknown_elements", []))
             matrix = matches[-1].get("route_element_matrix", [])
             matches[-1]["candidate_eligibility"] = "ELIGIBLE_CANDIDATE"
             route_states: dict[str, str] = {}
@@ -2112,6 +2170,7 @@ def candidate_offenses(
             "machine_effects": [],
         })
         _attach_element_evidence(matches[-1], offense, summary, gate1)
+        matches[-1]["missing"] = list(matches[-1].get("unknown_elements", []))
         matches[-1]["candidate_eligibility"] = "HINT_ONLY"
         matches[-1]["legal_route_states"] = {
             route.get("route_id", ""): "HINT_ONLY"
@@ -2135,6 +2194,96 @@ def candidate_offenses(
         ]
         item["status_reasons"] = []
     return sorted(matches, key=lambda item: (-len(item["matched_terms"]), item["name"]))
+
+
+def classify_candidates(
+    summary: str,
+    bank: dict[str, Any],
+    gate1: dict[str, Any] | None = None,
+    *,
+    max_candidates: int = 4,
+) -> dict[str, Any]:
+    """規則式 fallback 的 v3 外層結果。
+
+    候選本身仍由 ``candidate_offenses`` 產生，這層只補上狀態、缺口與
+    優先排序，避免代稱不明或缺事實摘要被錯誤降成空陣列。
+    """
+    text = summary.strip()
+    explicit_subject = bool(re.search(r"甲|乙|丙|丁|被告|嫌疑人|行為人|監視器.{0,12}(辨識|顯示)|鎖定", text))
+    ambiguous_subject = bool(re.search(r"他|她|對方|某人|一人|男子|女子|有人|不詳|另一個人", text))
+    status = {
+        "subject_identified": "true" if explicit_subject else ("false" if ambiguous_subject else "unknown"),
+        "has_victim": "true" if re.search(r"被害人|報案人|屋主|事主|店員|乙|對方|受有|遭", text) else "unknown",
+        "is_solved": "true" if re.search(r"已尋獲|已逮捕|已到案|監視器.{0,12}(辨識|顯示)|鎖定", text) else (
+            "false" if re.search(r"尚未|未尋獲|逃逸|失聯|不知是誰", text) else "unknown"
+        ),
+    }
+    global_missing: list[str] = []
+    if status["subject_identified"] == "false":
+        global_missing.append("主體不明")
+    if status["is_solved"] == "true" and re.search(r"未尋獲|尚未尋獲", text):
+        global_missing.append("贓物流向待查")
+    priority = {
+        "aggravated_theft": 100,
+        "robbery": 95,
+        "theft": 90,
+        "fraud": 85,
+        "intimidation": 80,
+        "obstruction": 78,
+        "residential_trespass": 77,
+        "liberty": 76,
+        "injury": 75,
+        "stalking": 74,
+        "defamation": 70,
+        "damage": 68,
+    }
+    candidates = candidate_offenses(text, bank, gate1)
+    # 題庫目前沒有第 306 條獨立罪名項目。僅在案情明確描述未經允許
+    # 進入住家時提供可審核的模型補充候選，法源狀態明確標為 NOT_FOUND，
+    # 不把既有「妨害自由」項目誤當作侵入住居。
+    has_residential_trespass = bool(re.search(
+        r"(?:未經.{0,12}(?:同意|允許)|沒有經過.{0,8}允許|無故|進了|進入).{0,18}(?:住宅|住家|家|房子|屋內)",
+        text,
+    ))
+    if has_residential_trespass and not any(item["id"] == "residential_trespass" for item in candidates):
+        candidates.append({
+            "id": "residential_trespass",
+            "candidate_id": "candidate:residential_trespass",
+            "name": "侵入住居（刑法第306條）（模型補充）",
+            "matched_terms": ["未經允許進入住家情境"],
+            "status": "NEED_REVIEW",
+            "notice": "模型補充候選，法源資料待補；不代表犯罪成立。",
+            "inclusion_reason": "案情描述未經允許進入住宅或住家，可能涉及侵入住居方向。",
+            "reservation_reason": "題庫缺少第306條獨立項目，需人工核對現行法源與構成要件。",
+            "supporting_fact_refs": ["intake.summary"],
+            "contradicting_fact_refs": [],
+            "unknown_elements": ["無故狀態", "住宅或建築物範圍", "是否有退去要求"],
+            "missing": ["無故狀態", "住宅或建築物範圍", "是否有退去要求"],
+            "element_model_status": "SOURCE_EVIDENCE_MATRIX",
+            "route_type": "substantive",
+            "crosswalk_status": "NOT_FOUND",
+            "legal_routes": [],
+            "excluded_legal_routes": [],
+            "legal_route_selection_status": "HUMAN_REVIEW_REQUIRED",
+            "source": {"status": "NOT_FOUND", "law_name": "中華民國刑法", "article_no": "第306條"},
+            "distinguishing_question_ids": ["HUMAN-DISTINGUISHING-QUESTION-REQUIRED"],
+            "required_evidence_question_ids": ["HUMAN-EVIDENCE-REVIEW-REQUIRED"],
+            "competition_analysis": "NOT_ASSESSED",
+            "prohibited_conclusions": ["犯罪成立", "故意成立", "因果關係成立", "競合成立"],
+            "version": "NOT_FOUND",
+            "selection_origin": "model_supplement",
+            "machine_effects": [],
+            "candidate_eligibility": "HINT_ONLY",
+            "legal_route_states": {},
+            "candidate_state": "NEED_REVIEW",
+            "unknown_fact_keys": [],
+            "status_reasons": [],
+        })
+    for candidate in candidates:
+        candidate["missing"] = list(dict.fromkeys(global_missing + list(candidate.get("missing", []))))
+        candidate["classification_missing"] = list(candidate["missing"])
+    candidates.sort(key=lambda item: (-priority.get(item["id"], 0), -len(item.get("matched_terms", [])), item["name"]))
+    return {"candidates": candidates[:max_candidates], "status": status, "source": "rules"}
 
 
 def alternative_legal_routes(gate1: dict[str, Any]) -> list[dict[str, Any]]:

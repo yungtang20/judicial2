@@ -189,11 +189,23 @@ def test_brief_dates_are_roc_era():
 
 
 def test_ai_analyze_updates_candidates_and_marks_source():
-    monkey_data = {"candidates": [{"id": "fraud", "reason": "以詐術使人交付"}], "model": "test-model"}
-    monkeypatch_ai = lambda summary, offenses, max_candidates=6, facts=None: monkey_data
+    monkey_data = {
+        "candidates": [{
+            "id": "fraud", "reason": "以詐術使人交付", "basis_quote": "以假客服名義要求匯款",
+            "basis_start": 0, "basis_end": 10, "missing": ["交付情形待確認"],
+        }],
+        "status": {"subject_identified": "unknown", "has_victim": "true", "is_solved": "unknown"},
+        "model": "test-model",
+        "contract": {
+            "schema_version": "case-analysis-v3-contract-v1", "request_id": "req-test",
+            "input_hash": "0" * 64, "source_snapshot_hashes": {"catalog": "1" * 64},
+            "attempt_count": 1,
+        },
+    }
+    monkeypatch_ai = lambda summary, offenses, **kwargs: monkey_data
     import app.workflow as wf
-    original = wf.analyze_candidates
-    wf.analyze_candidates = monkeypatch_ai
+    original = wf.analyze_candidates_v3
+    wf.analyze_candidates_v3 = monkeypatch_ai
     try:
         case = completed_case()
         case = apply_action(case, "start_interview", {"role": "victim"}, BANK)
@@ -204,8 +216,11 @@ def test_ai_analyze_updates_candidates_and_marks_source():
         assert "ai" in fraud_candidate["candidate_sources"]
         assert case["candidates"][0]["id"] == "fraud"
         assert "AI 候選" in case["candidates"][0]["notice"]
+        assert fraud_candidate["classification_missing"] == ["交付情形待確認"]
+        assert case["candidate_classification_status"]["has_victim"] == "true"
+        assert case["candidate_analysis_contract"]["schema_version"] == "case-analysis-v3-contract-v1"
     finally:
-        wf.analyze_candidates = original
+        wf.analyze_candidates_v3 = original
 
 
 def test_ai_analyze_requires_explicit_consent():
@@ -231,11 +246,23 @@ def test_initial_case_summary_is_preserved_while_statement_brief_is_capped():
 
 
 def test_ai_only_candidate_keeps_crosswalk_fail_closed_metadata():
-    monkey_data = {"candidates": [{"id": "opium", "reason": "AI 建議辨識鴉片章"}], "model": "test-model"}
-    monkeypatch_ai = lambda summary, offenses, max_candidates=6, facts=None: monkey_data
+    monkey_data = {
+        "candidates": [{
+            "id": "opium", "reason": "AI 建議辨識鴉片章", "basis_quote": "摘要沒有規則關鍵詞",
+            "basis_start": 0, "basis_end": 10, "missing": ["物品性質待確認"],
+        }],
+        "status": {"subject_identified": "unknown", "has_victim": "unknown", "is_solved": "unknown"},
+        "model": "test-model",
+        "contract": {
+            "schema_version": "case-analysis-v3-contract-v1", "request_id": "req-test",
+            "input_hash": "0" * 64, "source_snapshot_hashes": {"catalog": "1" * 64},
+            "attempt_count": 1,
+        },
+    }
+    monkeypatch_ai = lambda summary, offenses, **kwargs: monkey_data
     import app.workflow as wf
-    original = wf.analyze_candidates
-    wf.analyze_candidates = monkeypatch_ai
+    original = wf.analyze_candidates_v3
+    wf.analyze_candidates_v3 = monkeypatch_ai
     try:
         case = completed_case()
         case = apply_action(case, "start_interview", {"role": "victim"}, BANK)
@@ -249,7 +276,7 @@ def test_ai_only_candidate_keeps_crosswalk_fail_closed_metadata():
         assert len(candidate["legal_routes"]) == 10
         assert candidate["legal_route_selection_status"] == "OPTIONAL"
     finally:
-        wf.analyze_candidates = original
+        wf.analyze_candidates_v3 = original
 
 
 def test_company_questions_precede_common_questions():

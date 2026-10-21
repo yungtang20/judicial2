@@ -107,6 +107,32 @@
         <div class="warning"><strong>分析方向，不是法律結論</strong><span>候選罪章與問句由系統依摘要自動整理；未知事項會保留 UNKNOWN，最終由你一次檢視。</span></div>
         <div id="candidate-element-analysis" class="structured-facts" hidden></div>
 
+        <section id="evidence-report" class="evidence-report" aria-labelledby="evidence-report-title" hidden>
+          <div class="report-heading">
+            <div><p class="eyebrow">EVIDENCE FIRST</p><h4 id="evidence-report-title">案件分析與證據鏈</h4></div>
+            <span class="review-badge">待人工審核</span>
+          </div>
+          <div class="report-summary">
+            <strong>系統簡述</strong>
+            <p id="evidence-summary"></p>
+          </div>
+          <div class="source-tabs" role="tablist" aria-label="資料來源分類">
+            <button class="source-tab current" type="button" role="tab" aria-selected="true">法規 <span id="law-count">0</span></button>
+            <button class="source-tab" type="button" role="tab" aria-selected="false" disabled>裁判 <span>0</span></button>
+            <button class="source-tab" type="button" role="tab" aria-selected="false" disabled>函釋 <span>0</span></button>
+            <button class="source-tab" type="button" role="tab" aria-selected="false" disabled>論著 <span>0</span></button>
+          </div>
+          <div id="law-source-list" class="law-source-list"></div>
+          <details class="analysis-details" open>
+            <summary>詳細分析：如何證明這個候選方向</summary>
+            <div id="evidence-analysis"></div>
+          </details>
+          <div class="report-conclusion">
+            <strong>結論</strong>
+            <p id="evidence-conclusion"></p>
+          </div>
+        </section>
+
         <div id="gate2-steps" class="gate2-steps">
           <button id="step-tab-offense" class="step-tab current" type="button">① 選罪章</button>
           <button id="step-tab-profile" class="step-tab" type="button">② 年籍與時間</button>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>案情分析引擎 v3（法源風格）</title>
+  <style>
+    :root {
+      --primary: #1a56a0;
+      --primary-dark: #154785;
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    .header {
+      background: var(--primary);
+      color: white;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .header .badge {
+      background: rgba(255,255,255,0.2);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+    .container {
+      max-width: 920px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      padding: 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      resize: vertical;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(26,86,160,0.15);
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 11px 22px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: var(--primary-dark); }
+    .btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+    .btn-outline {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    .btn-outline:hover {
+      background: #f0f7ff;
+    }
+    .mode-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .mode-row select, .mode-row input {
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      padding: 7px 9px;
+      font: inherit;
+      color: var(--text);
+      background: white;
+    }
+    .api-status { margin-top: 8px; font-size: 12px; color: var(--muted); }
+    .result { display: none; }
+    .result.show { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .summary-box {
+      background: #f0f7ff;
+      border-left: 4px solid var(--primary);
+      padding: 16px 18px;
+      border-radius: 0 10px 10px 0;
+      font-size: 15px;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0 12px;
+      flex-wrap: wrap;
+    }
+    .tab {
+      background: #e8eef6;
+      color: var(--primary);
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .law-item {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .law-item h4 {
+      font-size: 15px;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .law-item ol {
+      padding-left: 22px;
+      font-size: 14px;
+    }
+    .law-item li { margin-bottom: 6px; }
+    .tags {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      background: #e8eef6;
+      color: var(--primary);
+      padding: 2px 9px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .detail-header {
+      background: var(--primary);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px 10px 0 0;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .detail-body {
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      padding: 0 18px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+    }
+    .detail-body.open {
+      max-height: 2000px;
+      padding: 16px 18px;
+    }
+    .detail-body h5 {
+      font-size: 14px;
+      color: var(--primary);
+      margin: 14px 0 6px;
+    }
+    .detail-body h5:first-child { margin-top: 0; }
+    .detail-body p { font-size: 14px; color: #374151; }
+    .conclusion-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .section-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .section-tab {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+    .section-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .section-content { display: none; }
+    .section-content.active { display: block; }
+    .q-list {
+      list-style: none;
+      counter-reset: q;
+    }
+    .q-list li {
+      counter-increment: q;
+      padding: 10px 0 10px 36px;
+      position: relative;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+    .q-list li::before {
+      content: counter(q);
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 24px;
+      height: 24px;
+      background: #e8eef6;
+      color: var(--primary);
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tiaocheng {
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 10px;
+      padding: 16px 18px;
+      font-size: 14px;
+    }
+    .tiaocheng .row {
+      display: flex;
+      margin-bottom: 8px;
+    }
+    .tiaocheng .label {
+      width: 100px;
+      font-weight: 600;
+      color: #92400e;
+      flex-shrink: 0;
+    }
+    .disclaimer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 24px;
+      padding: 12px;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #e5e7eb;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>案情分析引擎 v3</h1>
+    <span class="badge">法源風格示範 · 僅供參考</span>
+  </div>
+
+  <div class="container">
+    <!-- 輸入區 -->
+    <div class="card">
+      <div class="card-title">案情輸入</div>
+      <textarea id="caseInput" placeholder="請輸入已去識別化的案情，例如：&#10;甲於2026年10月3日晚上8時許，在臺北市某路邊停車格，見乙停放的機車未上鎖、鑰匙插在車上，甲趁乙不在場，將該機車騎走。乙於隔日上午發現機車不見，向派出所報案。警方調閱路口監視器，畫面顯示甲騎乘該機車離去，機車目前尚未尋獲。"></textarea>
+      <div class="btn-row">
+        <button class="btn" id="analyzeBtn" onclick="runAnalysis()">開始分析</button>
+        <button class="btn btn-outline" onclick="fillDemo()">填入示範案情</button>
+      </div>
+      <div class="mode-row">
+        <label for="analysisMode">分析模式</label>
+        <select id="analysisMode">
+          <option value="demo">示範模式（固定資料）</option>
+          <option value="api">真實 API（本機規則流程）</option>
+        </select>
+        <label for="apiEndpoint">API</label>
+        <input id="apiEndpoint" value="/api/analyze" aria-label="分析 API 位置">
+      </div>
+      <div class="api-status" id="apiStatus">預設使用示範資料。切換真實 API 後，案情會送至本機服務。</div>
+    </div>
+
+    <!-- 結果區 -->
+    <div class="result" id="resultArea">
+      <!-- AI 簡述 -->
+      <div class="card">
+        <div class="card-title">AI 簡述</div>
+        <div class="summary-box" id="summaryText"></div>
+      </div>
+
+      <!-- 法規標籤 -->
+      <div class="tabs" id="metaTabs"></div>
+
+      <!-- 法條 -->
+      <div class="card">
+        <div class="card-title">相關法條</div>
+        <div id="lawsArea"></div>
+      </div>
+
+      <!-- 詳細解析 -->
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div class="detail-header" onclick="toggleDetail()">
+          <span>詳細解析</span>
+          <span id="toggleIcon">▼</span>
+        </div>
+        <div class="detail-body" id="detailBody">
+          <div id="detailContent"></div>
+        </div>
+      </div>
+
+      <!-- 結論 -->
+      <div class="card">
+        <div class="card-title">結論</div>
+        <div class="conclusion-box" id="conclusionText"></div>
+      </div>
+
+      <!-- 筆錄問句 + 條陳 -->
+      <div class="card">
+        <div class="section-tabs">
+          <div class="section-tab active" onclick="switchSection(event, 'questions')">筆錄問句</div>
+          <div class="section-tab" onclick="switchSection(event, 'tiaocheng')">條陳草稿</div>
+        </div>
+
+        <div id="questions" class="section-content active">
+          <div class="card-title" style="margin-bottom:8px;">被害人筆錄建議問句</div>
+          <ol class="q-list" id="victimQuestions"></ol>
+          <div class="card-title" style="margin:20px 0 8px;">涉嫌人筆錄建議問句</div>
+          <ol class="q-list" id="suspectQuestions"></ol>
+        </div>
+
+        <div id="tiaocheng" class="section-content">
+          <div class="tiaocheng" id="tiaochengContent"></div>
+          <p style="font-size:12px; color:#92400e; margin-top:10px;">
+            ※ 本條陳為模擬填充，未敘明欄位均待補，不構成正式文書。
+          </p>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        由 AI 生成，僅供參考。正式文書與法律意見須經人工審核。<br>
+        候選罪章與要件判斷無法保證完全正確。
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========== 示範資料（之後改成真實本地模型回傳） ==========
+    const demoResult = {
+      summary: "甲趁乙不在場，將乙停放且鑰匙插在車上的機車騎走，客觀上已破壞乙對該機車的持有支配關係並建立新支配。其行為高度可能構成刑法第320條第1項普通竊盜罪。因機車至今未尋獲，實務上多認定具有不法所有意圖，使用竊盜之抗辯空間較小。",
+      meta: { 法規: 3, 裁判: 2, 論著: 5 },
+      laws: [
+        {
+          title: "中華民國刑法第320條",
+          content: [
+            "意圖為自己或第三人不法之所有，而竊取他人之動產者，為竊盜罪，處五年以下有期徒刑、拘役或五十萬元以下罰金。",
+            "意圖為自己或第三人不法之利益，而竊佔他人之不動產者，依前項之規定處斷。",
+            "前二項之未遂犯罰之。"
+          ],
+          tags: ["非告訴乃論", "縱經和解亦不得撤回告訴", "主管機關：法務部"]
+        },
+        {
+          title: "中華民國刑法第321條",
+          content: [
+            "犯前條第一項、第二項之罪而有下列情形之一者，處六月以上五年以下有期徒刑，得併科五十萬元以下罰金：",
+            "一、侵入住宅或有人居住之建築物、船艦或隱匿其內而犯之。",
+            "二、毀越門扇、牆垣或其他安全設備而犯之。",
+            "三、攜帶兇器而犯之。",
+            "四、結夥三人以上而犯之。"
+          ],
+          tags: ["非告訴乃論", "主管機關：法務部"]
+        },
+        {
+          title: "刑事訴訟法第232條",
+          content: ["犯罪之被害人，得為告訴。"],
+          tags: ["主管機關：司法院刑事廳"]
+        }
+      ],
+      detail: {
+        "1_行為定性": "甲於乙不在場之際，將乙停放且未上鎖、鑰匙插在車上的機車騎走，客觀上已完成「破壞原持有人支配關係並建立新支配關係」的竊取行為。",
+        "2_與類似罪名區別": "與使用竊盜的主要區別在於是否有歸還意圖與實際歸還行為。本案機車至今未尋獲，缺乏歸還跡象，故排除使用竊盜。亦非侵占遺失物，因機車停放位置明確。",
+        "3_程序要件與告訴乃論": "刑法第320條普通竊盜罪屬非告訴乃論（公訴罪）。被害人乙雖已報案，但檢察官仍得逕行起訴，不以被害人撤回告訴與否為限。",
+        "4_證據缺口與補證方向": "目前主要缺口為甲的主觀不法所有意圖，以及機車最終去向。建議持續追查機車流向，並確認甲是否有變賣、棄置或藏匿行為。",
+        "5_實務見解參考": "實務上對於鑰匙未拔的機車被騎走且長期未尋獲案件，多傾向認定行為人具有永久剝奪他人財產之意圖，而非單純使用。"
+      },
+      conclusion: "甲之行為高度符合刑法第320條第1項普通竊盜罪之構成要件。實務上對於此類「鑰匙未拔」機車竊取且未歸還案件，成立竊盜罪的機率較高。建議持續追查機車流向以釐清主觀犯意。僅供參考，須人工審核。",
+      victimQuestions: [
+        "請詳細說明發現機車不見的時間與地點。",
+        "機車停放時是否有上鎖？鑰匙是否插在車上？",
+        "您是否曾同意任何人使用或移動該機車？",
+        "機車的廠牌、顏色、車牌號碼與特徵為何？",
+        "您是否認識或懷疑特定人可能取走機車？",
+        "發現被竊後您是否有立即報案？過程為何？"
+      ],
+      suspectQuestions: [
+        "請說明當天您騎走該機車的時間、地點與經過。",
+        "您當時是否知道該機車是他人所有？",
+        "您騎走機車的目的為何？是否有打算歸還？",
+        "機車目前在何處？是否已變賣或棄置？",
+        "您與被害人乙是否認識？有無任何糾紛？",
+        "監視器畫面顯示您騎乘該車，您是否承認？"
+      ],
+      tiaocheng: {
+        "受理案由": "普通竊盜（候選）",
+        "發生時間": "2026年10月3日晚上8時許",
+        "發生地點": "臺北市某路邊停車格",
+        "報案時間": "2026年10月4日上午",
+        "案情摘要": "甲趁乙不在場，將乙停放且鑰匙插在車上的機車騎走，機車至今未尋獲。",
+        "後續處置": "由轄區派出所受理並製作筆錄，移送分局刑事組偵辦。",
+        "行為人": "甲（已由監視器鎖定）",
+        "被害人": "乙"
+      }
+    };
+
+    function fillDemo() {
+      document.getElementById('caseInput').value = 
+`甲於2026年10月3日晚上8時許，在臺北市某路邊停車格，見乙停放的機車未上鎖、鑰匙插在車上，甲趁乙不在場，將該機車騎走。乙於隔日上午發現機車不見，向派出所報案。警方調閱路口監視器，畫面顯示甲騎乘該機車離去，機車目前尚未尋獲。`;
+    }
+
+    function normalizeApiResult(payload) {
+      const analysis = payload.analysis || {};
+      const candidate = payload.candidate_result || {};
+      const names = (candidate.candidates || []).map(item => item.name || item.id).join('、');
+      const missing = (candidate.candidates || []).flatMap(item => item.missing || []);
+      return {
+        summary: analysis.summary || `本機規則式分析：${names || '未辨識到候選罪名'}。`,
+        meta: payload.meta || { '候選罪章': (candidate.candidates || []).length },
+        laws: payload.laws || [],
+        detail: analysis.detailed_analysis || {},
+        conclusion: analysis.conclusion || '僅供參考，須人工審核。',
+        victimQuestions: missing.length ? [`請補充或確認：${[...new Set(missing)].join('、')}`] : [],
+        suspectQuestions: ['請依案情原文確認行為人、時間、地點、手段及財物流向。'],
+        tiaocheng: {
+          '受理案由': `${names || '待確認'}（候選）`,
+          '發生時間': '（待補）',
+          '發生地點': '（待補）',
+          '報案時間': '（待補）',
+          '案情摘要': document.getElementById('caseInput').value.trim(),
+          '後續處置': '（待補）',
+          '行為人': candidate.status?.subject_identified === 'true' ? '已明示／待核對' : '（主體待確認）',
+          '被害人': candidate.status?.has_victim === 'true' ? '案情已提及／待核對' : '（待補）'
+        }
+      };
+    }
+
+    async function runAnalysis() {
+      const input = document.getElementById('caseInput').value.trim();
+      if (!input) {
+        alert('請先輸入案情');
+        return;
+      }
+
+      const btn = document.getElementById('analyzeBtn');
+      btn.disabled = true;
+      btn.textContent = '分析中…';
+
+      try {
+        const mode = document.getElementById('analysisMode').value;
+        if (mode === 'demo') {
+          await new Promise(r => setTimeout(r, 300));
+          renderResult(demoResult);
+          document.getElementById('apiStatus').textContent = '目前為示範模式，未送出案情。';
+        } else {
+          const endpoint = document.getElementById('apiEndpoint').value.trim() || '/api/analyze';
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ case_text: input })
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(payload?.error?.message || '本機 API 分析失敗');
+          renderResult(normalizeApiResult(payload));
+          document.getElementById('apiStatus').textContent = `已由本機 API 回傳 ${payload.mode || 'rules-fallback'} 結果。`;
+        }
+      } catch (error) {
+        document.getElementById('apiStatus').textContent = error.message || '分析失敗，請確認本機服務。';
+        alert(document.getElementById('apiStatus').textContent);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '開始分析';
+      }
+    }
+
+    function renderResult(data) {
+      // 簡述
+      document.getElementById('summaryText').textContent = data.summary;
+
+      // 標籤
+      const tabs = document.getElementById('metaTabs');
+      tabs.innerHTML = '';
+      Object.entries(data.meta).forEach(([k, v]) => {
+        tabs.innerHTML += `<span class="tab">${k} ${v}</span>`;
+      });
+
+      // 法條
+      const lawsArea = document.getElementById('lawsArea');
+      lawsArea.innerHTML = '';
+      data.laws.forEach(law => {
+        lawsArea.innerHTML += `
+          <div class="law-item">
+            <h4>${law.title}</h4>
+            <ol>${law.content.map(c => `<li>${c}</li>`).join('')}</ol>
+            <div class="tags">${law.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+          </div>`;
+      });
+
+      // 詳細解析
+      const detail = document.getElementById('detailContent');
+      detail.innerHTML = '';
+      Object.entries(data.detail).forEach(([key, val]) => {
+        const title = key.replace(/^\d+_/, '').replace(/_/g, ' ');
+        detail.innerHTML += `<h5>${title}</h5><p>${val}</p>`;
+      });
+
+      // 結論
+      document.getElementById('conclusionText').textContent = data.conclusion;
+
+      // 問句
+      document.getElementById('victimQuestions').innerHTML =
+        data.victimQuestions.map(q => `<li>${q}</li>`).join('');
+      document.getElementById('suspectQuestions').innerHTML =
+        data.suspectQuestions.map(q => `<li>${q}</li>`).join('');
+
+      // 條陳
+      const tc = document.getElementById('tiaochengContent');
+      tc.innerHTML = Object.entries(data.tiaocheng)
+        .map(([k, v]) => `<div class="row"><span class="label">${k}</span><span>${v}</span></div>`)
+        .join('');
+
+      document.getElementById('resultArea').classList.add('show');
+      document.getElementById('detailBody').classList.remove('open');
+      document.getElementById('toggleIcon').textContent = '▼';
+    }
+
+    function toggleDetail() {
+      const body = document.getElementById('detailBody');
+      const icon = document.getElementById('toggleIcon');
+      body.classList.toggle('open');
+      icon.textContent = body.classList.contains('open') ? '▲' : '▼';
+    }
+
+    function switchSection(e, id) {
+      document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.section-content').forEach(c => c.classList.remove('active'));
+      e.target.classList.add('active');
+      document.getElementById(id).classList.add('active');
+    }
+  </script>
+</body>
+</html>

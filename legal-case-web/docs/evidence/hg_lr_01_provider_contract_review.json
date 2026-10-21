@@ -6,7 +6,7 @@
   "human_gate_id": "HG-LR-01",
   "human_gate_status": "PENDING",
   "packet_id": "LR-HG-20261015-04",
-  "packet_sha256": "4db7a156ac0c6c9e91a51407daf7eb8ce028cee1c507265d7b5c224244e3f899",
+  "packet_sha256": "afc572bacfb4974ef23fef26124833aea5f74842835d1ca5eb2047c90f118c4d",
   "execution_mode": "SINGLE_EXECUTOR",
   "agent_mode": "SINGLE_AGENT_MODE",
   "question": "Which documented Taiwan legal retrieval providers have enough endpoint, response contract, authentication, terms, privacy and removal evidence to be considered for a later runtime design?",

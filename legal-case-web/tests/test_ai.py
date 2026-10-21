@@ -5,6 +5,7 @@ import json
 
 from app import ai as ai_module
 from app.ai import analyze_candidates
+from app.v3_contracts import canonical_sha256
 from tests.helpers import BANK
 
 
@@ -191,3 +192,100 @@ def test_analyze_prompt_includes_prohibited_conclusion_rule():
     messages = ai_module.build_analyze_prompt("摘要", [{"id": "theft", "name": "竊盜"}])
     user = messages[1]["content"]
     assert "不得輸出犯罪成立" in user
+
+
+def _v3_response_from_messages(messages, *, quote="拿走三千元", offense_id="robbery"):
+    user = messages[1]["content"]
+    request_text = user.split("【程式產生的 request】\n", 1)[1].split("\n\n【offense_catalog】", 1)[0]
+    request_envelope = json.loads(request_text)
+    case_text = request_envelope["input_payload"]["case_text"]
+    start = case_text.index(quote)
+    return {
+        key: request_envelope[key]
+        for key in (
+            "schema_version", "stage", "request_id", "case_revision", "attempt",
+            "input_hash", "source_snapshot_hashes",
+        )
+    } | {
+        "response_payload": {
+            "candidates": [{
+                "offense_id": offense_id,
+                "reason": f"案情記載「{quote}」，可能涉及本候選方向。",
+                "basis_quote": quote,
+                "basis_start": start,
+                "basis_end": start + len(quote),
+                "missing": ["行為時的具體壓制程度待確認"],
+            }],
+            "status": {
+                "subject_identified": "false",
+                "has_victim": "true",
+                "is_solved": "false",
+            },
+        }
+    }
+
+
+def test_v3_candidate_adapter_validates_envelope_and_uses_temperature_zero(monkeypatch):
+    _fake_settings(monkeypatch)
+    calls = []
+
+    def fake_chat(api_key, base_url, model, messages, max_tokens, *, temperature=0.2):
+        calls.append({"temperature": temperature, "messages": messages})
+        return json.dumps(_v3_response_from_messages(messages), ensure_ascii=False)
+
+    monkeypatch.setattr(ai_module, "_chat", fake_chat)
+    summary = "昨天在巷口被一個男的拿刀抵住脖子，拿走三千元。"
+    hashes = {"offense_catalog": canonical_sha256(OFFENSES)}
+    result = ai_module.analyze_candidates_v3(
+        summary,
+        OFFENSES,
+        case_revision=4,
+        source_snapshot_hashes=hashes,
+    )
+    assert result is not None
+    assert calls[0]["temperature"] == 0
+    assert result["candidates"][0]["basis_quote"] == "拿走三千元"
+    assert result["status"]["subject_identified"] == "false"
+    assert result["contract"]["case_revision"] == 4
+    assert result["contract"]["attempt_count"] == 1
+
+
+def test_v3_candidate_adapter_retries_contract_failure_at_most_twice(monkeypatch):
+    _fake_settings(monkeypatch)
+    attempts = []
+
+    def fake_chat(api_key, base_url, model, messages, max_tokens, *, temperature=0.2):
+        response = _v3_response_from_messages(messages)
+        attempts.append(response["attempt"])
+        response["response_payload"]["candidates"][0]["basis_start"] = 0
+        return json.dumps(response, ensure_ascii=False)
+
+    monkeypatch.setattr(ai_module, "_chat", fake_chat)
+    result = ai_module.analyze_candidates_v3(
+        "一個男的拿刀抵住脖子，拿走三千元。",
+        OFFENSES,
+        case_revision=1,
+        source_snapshot_hashes={"offense_catalog": canonical_sha256(OFFENSES)},
+    )
+    assert result is None
+    assert attempts == [1, 2, 3]
+
+
+def test_v3_candidate_adapter_rejects_markdown_wrapped_json_then_recovers(monkeypatch):
+    _fake_settings(monkeypatch)
+    calls = []
+
+    def fake_chat(api_key, base_url, model, messages, max_tokens, *, temperature=0.2):
+        response = json.dumps(_v3_response_from_messages(messages), ensure_ascii=False)
+        calls.append(response)
+        return f"```json\n{response}\n```" if len(calls) == 1 else response
+
+    monkeypatch.setattr(ai_module, "_chat", fake_chat)
+    result = ai_module.analyze_candidates_v3(
+        "一個男的拿刀抵住脖子，拿走三千元。",
+        OFFENSES,
+        case_revision=1,
+        source_snapshot_hashes={"offense_catalog": canonical_sha256(OFFENSES)},
+    )
+    assert result is not None
+    assert result["contract"]["attempt_count"] == 2

@@ -299,6 +299,82 @@ function legalRoutesForOffenses(bank, offenseIds) {
   });
 }
 
+function renderEvidenceReport(caseData) {
+  const report = $("#evidence-report");
+  if (!report) return;
+  const candidates = (caseData.candidates || []).filter((item) => item.selection_origin !== "related_hint");
+  report.hidden = candidates.length === 0;
+  if (!candidates.length) return;
+
+  $("#evidence-summary").textContent = caseData.brief_summary
+    ? `${caseData.brief_summary} 系統僅提出候選方向，未記載事項仍待確認。`
+    : "目前只有候選方向，案情簡述待補。";
+
+  const offenseById = new Map((state.bank?.offenses || []).map((item) => [item.id, item]));
+  const lawNodes = [];
+  for (const candidate of candidates) {
+    const source = offenseById.get(candidate.id)?.source || candidate.source || {};
+    const article = document.createElement("article");
+    article.className = "law-source-card";
+    const heading = document.createElement("h5");
+    if (source.law_url) {
+      const link = document.createElement("a");
+      link.href = source.law_url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = `${source.law_name || "法規"}${source.article_no || ""}`;
+      heading.appendChild(link);
+    } else {
+      heading.textContent = `${source.law_name || candidate.name}${source.article_no || ""}`;
+    }
+    const content = document.createElement("p");
+    content.className = "law-text";
+    content.textContent = source.article_content || "法規原文尚未出現在本機核實快照，待查證。";
+    const meta = document.createElement("p");
+    meta.className = "source-meta";
+    meta.textContent = source.article_content
+      ? `本機核實快照 · dataset ${source.dataset_version || "UNKNOWN"} · 修正日 ${source.law_modified_date || "UNKNOWN"}`
+      : "來源狀態：NOT FOUND；不得以模型記憶補入法條。";
+    article.append(heading, content, meta);
+    lawNodes.push(article);
+  }
+  $("#law-count").textContent = String(lawNodes.length);
+  $("#law-source-list").replaceChildren(...lawNodes);
+
+  const analysisNodes = [];
+  for (const candidate of candidates) {
+    const section = document.createElement("section");
+    section.className = "proof-card";
+    const heading = document.createElement("h5");
+    heading.textContent = candidate.name;
+    const basis = document.createElement("blockquote");
+    basis.textContent = candidate.classification_basis?.quote
+      || (candidate.supporting_fact_refs || []).join("、")
+      || "案情原文依據待人工標記";
+    const reason = document.createElement("p");
+    reason.textContent = `候選理由：${candidate.inclusion_reason || "待人工確認"}`;
+    const gaps = document.createElement("p");
+    const missing = candidate.classification_missing || candidate.unknown_elements || [];
+    gaps.textContent = `要件缺口：${missing.length ? missing.join("、") : "仍須逐項人工核對"}`;
+    const method = document.createElement("ol");
+    for (const text of [
+      "先檢查案情原句，不以 AI 自述作為依據。",
+      "再核對本機法條快照的名稱、條號、版本與原文。",
+      "以問句補足缺口，不把未知事實改寫成肯定事實。",
+      "最後由承辦人確認候選罪章與法律路由。",
+    ]) {
+      const item = document.createElement("li");
+      item.textContent = text;
+      method.appendChild(item);
+    }
+    section.append(heading, basis, reason, gaps, method);
+    analysisNodes.push(section);
+  }
+  $("#evidence-analysis").replaceChildren(...analysisNodes);
+  $("#evidence-conclusion").textContent =
+    `目前列出 ${candidates.length} 個候選方向。候選不代表犯罪成立；法條版本、要件缺口與案情引句均須人工審核。`;
+}
+
 function renderLegalRoutes() {
   const container = $("#legal-route-list");
   if (!container || !state.bank) return;
@@ -457,6 +533,7 @@ function renderOffenses(caseData) {
   $("#question-role").value = caseData.question_role;
   const sourceNote = caseData.candidates_source === "ai" ? "AI 分析" : "規則比對";
   $("#ai-analyze").textContent = `AI 分析候選罪章（目前：${sourceNote}）`;
+  renderEvidenceReport(caseData);
 }
 
 function fillProfileForm(caseData) {

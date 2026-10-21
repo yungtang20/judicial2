@@ -29,7 +29,8 @@ from .config import (
 from .accounts import AccountStore
 from .documents import DocumentError, brief_docx, brief_text, checked_interview_docx
 from .ai import ai_configured, external_ai_enabled
-from .rules import RuleError, load_bank
+from .law_reference import get_cached_law_article
+from .rules import RuleError, classify_candidates, load_bank
 from .storage import CaseNotFound, EphemeralCaseStore, RevisionConflict
 from .workflow import WorkflowError, apply_action, create_case, public_case, validate_case_id
 
@@ -62,6 +63,7 @@ CASE_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})$")
 ACTION_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})/actions$")
 DOC_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})/documents/(victim|suspect|transfer)/(interview|brief)$")
 BRIEF_ROUTE = re.compile(r"^/api/cases/([0-9a-f-]{36})/brief/(victim|suspect|transfer)$")
+ANALYZE_ROUTE = "/api/analyze"
 ALLOWED_HOSTS = {
     f"{HOST}:{PORT}", HOST, "localhost", f"localhost:{PORT}",
     "127.0.0.1", f"127.0.0.1:{PORT}",
@@ -104,6 +106,64 @@ def _safe_error_message(message: str) -> str:
     # 其餘以通用訊息取代，避免洩漏
     return "操作未完成，請確認輸入內容或稍後再試"
 
+
+def _local_analysis_payload(summary: str) -> dict[str, Any]:
+    """提供 standalone lawbank-engine.html 使用的本機規則分析結果。
+
+    這個端點不聲稱完成法律判斷。法條只有在本機快取有驗證內容時才展示，
+    否則明確回傳 NOT_FOUND，避免示範頁誤把固定文字當成現行法源。
+    """
+    classification = classify_candidates(summary, BANK)
+    candidates = classification["candidates"]
+    laws: list[dict[str, Any]] = []
+    per_offence: list[dict[str, Any]] = []
+    for candidate in candidates:
+        source = candidate.get("source") or {}
+        law_name = str(source.get("law_name", ""))
+        article_no = str(source.get("article_no", ""))
+        cached = get_cached_law_article(law_name, article_no) if law_name and article_no else None
+        content = str((cached or {}).get("article_content", ""))
+        if cached and content:
+            laws.append({
+                "title": source.get("label") or f"{law_name}{article_no}",
+                "content": [content],
+                "tags": ["VERIFIED_CACHE"],
+            })
+        elements = [
+            {
+                "element": item,
+                "status": "待確認",
+                "basis": "案情未述",
+            }
+            for item in candidate.get("missing", [])
+        ] or [{"element": "候選罪名之法定要件", "status": "待確認", "basis": "案情未述"}]
+        per_offence.append({
+            "name": candidate.get("name", ""),
+            "elements": elements,
+            "similar_crimes_excluded": [],
+            "prosecution": "待確認",
+            "evidence_hints": ["回查案情原文、監視器、對話紀錄及財物流向"],
+            "practical_risk": "規則式候選僅供人工審核，法源與要件仍須逐項核對。",
+        })
+    names = "、".join(item.get("name", "") for item in candidates) or "目前未辨識到候選罪名"
+    return {
+        "candidate_result": classification,
+        "meta": {"候選罪章": len(candidates), "法條快取": len(laws), "模式": "規則式"},
+        "laws": laws,
+        "analysis": {
+            "summary": f"本機規則式分析辨識到：{names}。候選方向不代表法律結論。",
+            "per_offence": per_offence,
+            "detailed_analysis": {
+                "1_行為定性": "僅依案情文字建立候選方向，未補充未記載事實。",
+                "2_與類似罪名區別": "目前未由本機端點替代人工完成相似罪名排除。",
+                "3_程序要件與告訴乃論": "法源資料未完整載入時標示待確認。",
+                "4_證據缺口與補證方向": "優先補查行為人辨識、被害人反應、原物及相關紀錄。",
+                "5_實務見解參考": "未提供可核對的判決字號時，不引用特定字號。",
+            },
+            "conclusion": "本結果為本機規則式候選與證據缺口提示，僅供參考，須人工審核。",
+        },
+        "mode": "rules-fallback",
+    }
 def _session_token(headers: Any) -> str:
     cookie = SimpleCookie()
     try:
@@ -161,6 +221,15 @@ def _account_store_ready() -> bool:
 
 
 def _serve_static(handler: BaseHTTPRequestHandler, path: str) -> bool:
+    if path == "/lawbank-engine.html":
+        source = Path(__file__).resolve().parents[2] / "lawbank-engine.html"
+        if not source.is_file():
+            handler._error(HTTPStatus.NOT_FOUND, "NOT_FOUND", "找不到檔案")
+            return True
+        raw = source.read_bytes()
+        handler._begin(HTTPStatus.OK, "text/html; charset=utf-8", len(raw))
+        handler.wfile.write(raw)
+        return True
     entry = STATIC_FILES.get(path)
     if not entry:
         return False
@@ -310,6 +379,15 @@ class Handler(BaseHTTPRequestHandler):
             self._json(HTTPStatus.OK, {"cases": [], "mode": "EPHEMERAL_SINGLE_CASE"})
             return
         if path == "/api/question-bank":
+            def public_source(item: dict[str, Any]) -> dict[str, Any]:
+                source = deepcopy(item["source"])
+                cached = get_cached_law_article(
+                    str(source.get("law_name", "")), str(source.get("article_no", ""))
+                )
+                source["article_content"] = cached.get("article_content", "") if cached else ""
+                source["article_content_status"] = "VERIFIED_CACHE" if cached else "NOT_FOUND"
+                return source
+
             self._json(HTTPStatus.OK, {
                 "library_version": BANK["library_version"],
                 "review_status": BANK["review_status"],
@@ -318,7 +396,7 @@ class Handler(BaseHTTPRequestHandler):
                 "offenses": [{
                     "id": item["id"],
                     "name": item["name"],
-                    "source": item["source"],
+                    "source": public_source(item),
                     "route_type": item["route_type"],
                     "selection_policy": item["selection_policy"],
                     "legal_routes": [{"id": route["id"], "name": route["name"]} for route in item["legal_routes"]],
@@ -415,6 +493,14 @@ class Handler(BaseHTTPRequestHandler):
                 )
                 return
             if not self._guard(token=not AUTH_REQUIRED, session=AUTH_REQUIRED):
+                return
+            if path == ANALYZE_ROUTE:
+                summary = payload.get("case_text", payload.get("summary", ""))
+                if not isinstance(summary, str) or not summary.strip():
+                    raise WorkflowError("案情摘要不得空白")
+                if len(summary) > 5000:
+                    raise WorkflowError("案情摘要不得超過 5000 字")
+                self._json(HTTPStatus.OK, _local_analysis_payload(summary.strip()))
                 return
             if path == "/api/cases":
                 case = STORE.create(create_case(payload, BANK))

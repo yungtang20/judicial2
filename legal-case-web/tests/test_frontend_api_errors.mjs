@@ -150,6 +150,38 @@ test("逐題流程只包含追加問句並另列摘要已知內容", () => {
   assert.match(summary.children[0].textContent, /1 題已自動帶入/);
 });
 
+test("證據報告顯示逐字依據、法條快照與人工審核聲明", () => {
+  const { context, elements } = createHarness({
+    fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({}), headers: new Headers() }),
+  });
+  vm.runInContext("state", context).bank = { offenses: [{
+    id: "theft",
+    name: "竊盜",
+    source: {
+      law_name: "中華民國刑法",
+      article_no: "第320條",
+      article_content: "意圖為自己或第三人不法之所有，而竊取他人之動產者。",
+      dataset_version: "2026-10-02",
+      law_modified_date: "2026-07-22",
+      law_url: "https://law.moj.gov.tw/",
+    },
+  }] };
+  context.renderEvidenceReport({
+    brief_summary: "甲將乙的機車騎走。",
+    candidates: [{
+      id: "theft", name: "竊盜", inclusion_reason: "案情記載機車遭騎走，可能涉及本候選方向。",
+      classification_basis: { quote: "將乙的機車騎走", start: 1, end: 9 },
+      classification_missing: ["不法所有意圖待確認"],
+    }],
+  });
+  assert.equal(elements.get("evidence-report").hidden, false);
+  assert.equal(elements.get("law-count").textContent, "1");
+  assert.match(elements.get("evidence-summary").textContent, /甲將乙的機車騎走/);
+  assert.equal(elements.get("law-source-list").children.length, 1);
+  assert.equal(elements.get("evidence-analysis").children[0].children[1].textContent, "將乙的機車騎走");
+  assert.match(elements.get("evidence-conclusion").textContent, /須人工審核/);
+});
+
 test("profile and answer saves describe the actual in-memory retention", async () => {
   const { context, elements } = createHarness({
     fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({}), headers: new Headers() }),
