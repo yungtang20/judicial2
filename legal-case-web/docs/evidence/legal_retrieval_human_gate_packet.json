@@ -80,7 +80,7 @@
     },
     {
       "path": "app/rules.py",
-      "sha256": "dc119f7a7c8159f9b424c0463a0817d69f027d7c681c0bb5c278c0bc91b83ffd",
+      "sha256": "19400ddc3eaec09e927128a93e8a0a26bd531c4bb48ea085363b528de2d1cafd",
       "expected_references": 0
     },
     {
@@ -102,10 +102,10 @@
       "id": "V01",
       "command": "py -3 -X utf8 -m pytest -q",
       "status": "PASS",
-      "result": "452 passed",
-      "passed": 452,
+      "result": "455 passed",
+      "passed": 455,
       "verified_on": "2026-10-22",
-      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15. Re-verified again the same day after the C091-C120 rule corrections (transcribed-allegation guard, weak keyword guards, negation window) and the fourth case batch: 444 -> 452."
+      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15. Re-verified again the same day after the C091-C120 rule corrections (transcribed-allegation guard, weak keyword guards, negation window) and the fourth case batch: 444 -> 452, then after the competition-hypothesis demotion and defamation recall corrections: 452 -> 455."
     },
     {
       "id": "V02",

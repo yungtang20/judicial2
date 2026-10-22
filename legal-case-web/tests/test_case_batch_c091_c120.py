@@ -161,3 +161,54 @@ def test_reverse_cases_do_not_create_forbidden_candidates():
         assert not (actual & forbidden), f"{case_id}: forbidden candidates {sorted(actual & forbidden)}"
         if expected is not None:
             assert expected in actual, f"{case_id}: expected {expected}, actual={sorted(actual)}"
+
+
+def test_robbery_keeps_adjacent_routes_as_competition_hypotheses_only():
+    """強盜方向成立時，竊盜與恐嚇只作相鄰競爭假設，不得與主方向並列。
+
+    同一事件的不同法律定性必須由人工區辨；工具的責任是把主方向與
+    競爭假設分開呈現，而不是把三者並列為同等候選。
+    """
+    for case_id, summary in (
+        ("C094", "甲持刀進入乙經營之便利商店，以言語及刀械威脅乙交出收銀機內現金，乙因恐懼交付後甲取走現金逃逸。"),
+        ("C096", "甲夥同他人持武器進入乙住家，以暴力及恐嚇方式迫使乙交出財物後離去。乙報案處理。"),
+    ):
+        candidates = {
+            item["id"]: item for item in classify_candidates(summary, BANK)["candidates"]
+        }
+        assert candidates["robbery"]["candidate_eligibility"] == "ELIGIBLE_CANDIDATE", case_id
+        for offense_id in ("theft", "intimidation"):
+            if offense_id in candidates:
+                assert candidates[offense_id]["candidate_eligibility"] == "HINT_ONLY", (
+                    f"{case_id}: {offense_id} 應為相鄰競爭假設"
+                )
+                assert "競爭假設" in candidates[offense_id]["reservation_reason"], case_id
+
+
+def test_non_robbery_cases_keep_their_own_direction_as_eligible():
+    """降級只適用於強盜方向成立時，不得連帶影響純竊盜或純恐嚇案件。"""
+    for summary, expected in (
+        ("甲於夜間持鐵棒至乙路邊停車處，砸破車窗後強行取走乙置於車內之公事包及現金後加速離去。", "theft"),
+        ("甲於乙工作地點附近守候並以言語威脅「小心點」，使乙感到生命身體安全受危害。", "intimidation"),
+    ):
+        candidate = next(
+            item for item in classify_candidates(summary, BANK)["candidates"]
+            if item["id"] == expected
+        )
+        assert candidate["candidate_eligibility"] == "ELIGIBLE_CANDIDATE", expected
+
+
+def test_broadcast_of_false_content_keeps_defamation_direction():
+    """散布不實內容即成立妨害名譽方向。
+
+    題庫對妨害名譽所追的要素為表達內容／接觸範圍／事實基礎，「名譽
+    受損」並非其中之一；不得因其未出現而否定整個方向。
+    """
+    candidate = next(
+        item for item in classify_candidates(
+            "甲在網路散佈不實內容稱乙偷竊公司財物。", BANK
+        )["candidates"]
+        if item["id"] == "defamation"
+    )
+    assert candidate["candidate_eligibility"] == "ELIGIBLE_CANDIDATE"
+    assert candidate["matched_terms"] == ["散布不實內容情境"]

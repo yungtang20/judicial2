@@ -438,6 +438,12 @@ _ROBBERY_TAKE_ANCHOR = (
     r"|把.{0,10}(現金|錢包|皮包|手機|錢|車).{0,10}(交|奪|搶)"
 )
 
+# 強盜方向成立時須降為「相鄰競爭假設」的罪章：同一事件的不同法律
+# 定性（財物罪章三路與恐嚇危害安全），不得與主方向並列為同等候選。
+_ROBBERY_COMPETITION_OFFENSES = frozenset(
+    {"theft", "aggravated_theft", "embezzlement", "intimidation"}
+)
+
 
 def _property_discriminators(summary: str) -> dict[str, bool]:
     """財物罪章三路區辨訊號（人工核定 D1「B 修正版」，2026-10-20）。
@@ -1973,10 +1979,19 @@ def candidate_offenses(
             ):
                 hits = ["揚言危害／心生畏懼情境"]
         if offense["id"] == "defamation" and not hits:
-            if re.search(r"(?:刊登|散布|傳播)[^。；]{0,40}(?:不實訊息|不實內容|不實言論)", summary) and re.search(
-                r"名譽受損|損害名譽|貶損名譽", summary
+            # 刑法第 304 條誹謗的核心事實是「散布謠言或傳播不實之事」。
+            # 題庫對妨害名譽所追的三項要素為表達內容／接觸範圍／事實基礎，
+            # 「名譽受損」並非其中之一；因此不得以「名譽受損」未出現為由
+            # 否定整個方向。2026-10-22 補上散佈／發布等異體與「謠言」。
+            if re.search(
+                r"(?:刊登|散布|散佈|發布|發佈|傳播|散播|貼上)[^。；]{0,40}"
+                r"(?:不實訊息|不實內容|不實言論|謠言|不實之事)",
+                summary,
             ):
-                hits = ["散布不實內容／名譽受損情境"]
+                if re.search(r"名譽受損|損害名譽|貶損名譽", summary):
+                    hits = ["散布不實內容／名譽受損情境"]
+                else:
+                    hits = ["散布不實內容情境"]
         if offense["id"] == "public_danger" and not hits:
             if re.search(r"(?:駕車|駕駛)[^。；]{0,50}(?:交通事故|碰撞|肇事)", summary) and re.search(
                 r"(?:未停留|未停車|未處理|逕行|立即).*?(?:離開|逃逸)|駕車離開現場", summary
@@ -2166,6 +2181,24 @@ def candidate_offenses(
                     route_states["sexual_227_age"] = "EXCLUDED"
             matches[-1]["legal_route_states"] = route_states
             matched_ids.add(offense["id"])
+    # 強盜方向成立時，財物罪章三路（竊盜／侵占）與恐嚇危害安全只是
+    # 相鄰競爭假設：它們描述的是同一事件的不同法律定性，不得與主方向
+    # 並列為同等候選（2026-10-22 複審 C094／C096）。以「強盜候選是否成立」
+    # 為準，不另立判準，避免與強盜情境規則使用不同的模式集。
+    if any(item["id"] == "robbery" for item in matches):
+        for item in matches:
+            if item["id"] not in _ROBBERY_COMPETITION_OFFENSES:
+                continue
+            item["candidate_eligibility"] = "HINT_ONLY"
+            item["notice"] = "相鄰競爭假設（僅供人工區辨），不代表犯罪成立。"
+            item["inclusion_reason"] = (
+                "強盜方向已由案情中的對人施暴／脅迫交付事實帶入；"
+                f"本方向為相鄰競爭假設，只供人工區辨：{', '.join(item.get('matched_terms', []))}"
+            )
+            item["reservation_reason"] = "競爭假設，非本方向獨立事實支持"
+            item["legal_route_states"] = {
+                route_id: "HINT_ONLY" for route_id in item.get("legal_route_states", {})
+            }
     # 關聯罪章只作人工區辨提示，不會因為出現在 candidates 就自動進入
     # question builder。正式問句仍須經 Gate 2 明確選取 parent + route。
     related_ids = {
