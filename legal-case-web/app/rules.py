@@ -1536,6 +1536,22 @@ def _phrase_hint_for(offense_id: str, summary: str) -> str | None:
     return None
 
 
+def _scene_hit(pattern: str, summary: str) -> bool:
+    """情境提示層的樣式判定：命中處未被否定語句包圍才算成立。
+
+    關鍵字層已套用否定窗口，情境提示層先前未套用，導致「甲未取走任何
+    財物」仍產生竊盜候選（2026-10-22 重測發現）。本函式讓兩層語意
+    一致：只要有一處未被否定的命中即成立。
+    """
+    for match in re.finditer(pattern, summary):
+        text = match.group(0)
+        if not text:
+            continue
+        if not _keyword_negated(text, summary):
+            return True
+    return False
+
+
 def _patterns_unnegated(patterns: list[str], summary: str) -> bool:
     for pattern in patterns:
         matches = list(re.finditer(pattern, summary))
@@ -1926,55 +1942,55 @@ def candidate_offenses(
                 hits = [item for item in hits if item != "偷"]
         # 性交且明示不同意、睡眠中或以影片威脅時，建立妨害性自主的分析方向。
         if offense["id"] == "sexual" and not hits and "性交" in summary:
-            if re.search(r"(不同意|違反.{0,3}意願|強暴|睡著|偷拍|威脅|脅迫|偷偷)", summary):
+            if _scene_hit(r"(不同意|違反.{0,3}意願|強暴|睡著|偷拍|威脅|脅迫|偷偷)", summary):
                 hits = ["非合意性交／性自主情境"]
         if offense["id"] == "sexual" and not hits:
-            if re.search(r"(乘機猥褻|猥褻|不能抗拒|胸部|內衣)", summary):
+            if _scene_hit(r"(乘機猥褻|猥褻|不能抗拒|胸部|內衣)", summary):
                 hits = ["乘機猥褻／不能抗拒情境"]
         # 失能／不能抗拒只是狀態，未與明確性行為同時出現時，
         # 不得單獨建立妨害性自主候選。純猥褻／強行親吻等明確行為仍保留。
-        if offense["id"] == "sexual" and hits and not re.search(
+        if offense["id"] == "sexual" and hits and not _scene_hit(
             r"性侵害|強制性交|強制猥褻|性交|猥褻|撫摸胸部|觸摸胸部|摸胸|伸入內衣|強行親吻|親吻性部位",
             summary,
         ):
             hits = []
         # 配偶、家庭成員間的未合意性行為或威脅，另列家庭暴力防治法檢視方向。
         if offense["id"] == "domestic_violence" and not hits:
-            if re.search(r"(老婆|妻子|丈夫|配偶|同居|家人)", summary) and re.search(
+            if _scene_hit(r"(老婆|妻子|丈夫|配偶|同居|家人)", summary) and _scene_hit(
                 r"(性交|不同意|威脅|脅迫|毆打|傷害|偷拍)", summary
             ):
                 hits = ["親密關係暴力／性暴力情境"]
         if offense["id"] == "child_protection" and not hits:
-            if re.search(r"未成年|未滿\s*18\s*歲|少年|兒童|A女|A男", summary) and re.search(
+            if _scene_hit(r"未成年|未滿\s*18\s*歲|少年|兒童|A女|A男", summary) and _scene_hit(
                 r"性影像|猥褻行為電子訊號|裸體|裸露|下體照片|性交易|性剝削", summary
             ):
                 hits = ["未成年人性影像／性剝削保護情境"]
-        if offense["id"] == "sexual_harassment" and hits and re.search(r"(乘機猥褻|猥褻|不能抗拒)", summary):
+        if offense["id"] == "sexual_harassment" and hits and _scene_hit(r"(乘機猥褻|猥褻|不能抗拒)", summary):
             hits = [item for item in hits if item not in {"親吻", "觸摸", "擁抱"}]
         if offense["id"] == "robbery" and hits == ["不能抗拒"]:
-            if not re.search(r"(搶|強盜|財物|現金|取走|拿走|竊取)", summary):
+            if not _scene_hit(r"(搶|強盜|財物|現金|取走|拿走|竊取)", summary):
                 hits = []
         # 裁判式敘事常以「持刀／持械進入店內取走現金」描述強盜，
         # 不一定直接使用「強盜」或「搶奪」字樣。這裡只建立候選方向，
         # 不把手段或主觀要件視為已證明。
         if offense["id"] == "robbery" and not hits:
-            if re.search(r"(?:持刀|持械|持預藏之[^，。；]{1,12})(?:[^。；]{0,80})(?:取走|拿取|搶取|現金)", summary):
+            if _scene_hit(r"(?:持刀|持械|持預藏之[^，。；]{1,12})(?:[^。；]{0,80})(?:取走|拿取|搶取|現金)", summary):
                 hits = ["持械取財情境"]
-            elif re.search(r"(?:持槍|持刀|持械|空氣槍|束帶)[^。；]{0,60}(?:脅迫|恫嚇|限制行動)", summary) and re.search(
+            elif _scene_hit(r"(?:持槍|持刀|持械|空氣槍|束帶)[^。；]{0,60}(?:脅迫|恫嚇|限制行動)", summary) and _scene_hit(
                 r"(?:竊取|取走|拿走|交付|財物|現金|款項)", summary
             ):
                 hits = ["持械脅迫取財情境"]
         if offense["id"] == "robbery" and not hits:
             # 只有對人施加暴力、脅迫或使人因恐懼交付財物時，才建立強盜候選。
-            if re.search(r"(?:持刀|持械|持武器|暴力|強暴|脅迫|威脅|恐嚇|迫使)[^。；]{0,80}(?:交出|交付|給予)[^。；]{0,30}(?:財物|現金|款項|錢)", summary):
+            if _scene_hit(r"(?:持刀|持械|持武器|暴力|強暴|脅迫|威脅|恐嚇|迫使)[^。；]{0,80}(?:交出|交付|給予)[^。；]{0,30}(?:財物|現金|款項|錢)", summary):
                 hits = ["對人施暴／脅迫交付財物情境"]
         if offense["id"] == "liberty" and not hits:
-            if re.search(r"(?:限制|剝奪)[^。；]{0,8}行動自由|迫使[^。；]{0,30}(?:簽立|交付|為|做)", summary):
+            if _scene_hit(r"(?:限制|剝奪)[^。；]{0,8}行動自由|迫使[^。；]{0,30}(?:簽立|交付|為|做)", summary):
                 hits = ["限制行動自由／迫使行為情境"]
         if offense["id"] == "intimidation" and not hits:
-            if re.search(r"恫稱|以此方式.*脅迫", summary):
+            if _scene_hit(r"恫稱|以此方式.*脅迫", summary):
                 hits = ["恫稱／脅迫情境"]
-            elif re.search(r"(?:揚言|聲稱|告以)[^。；]{0,40}(?:等語|要打|殺|死)", summary) and re.search(
+            elif _scene_hit(r"(?:揚言|聲稱|告以)[^。；]{0,40}(?:等語|要打|殺|死)", summary) and _scene_hit(
                 r"心生畏懼|害怕|恐懼|擔心遭受危害", summary
             ):
                 hits = ["揚言危害／心生畏懼情境"]
@@ -1983,81 +1999,81 @@ def candidate_offenses(
             # 題庫對妨害名譽所追的三項要素為表達內容／接觸範圍／事實基礎，
             # 「名譽受損」並非其中之一；因此不得以「名譽受損」未出現為由
             # 否定整個方向。2026-10-22 補上散佈／發布等異體與「謠言」。
-            if re.search(
+            if _scene_hit(
                 r"(?:刊登|散布|散佈|發布|發佈|傳播|散播|貼上)[^。；]{0,40}"
                 r"(?:不實訊息|不實內容|不實言論|謠言|不實之事)",
                 summary,
             ):
-                if re.search(r"名譽受損|損害名譽|貶損名譽", summary):
+                if _scene_hit(r"名譽受損|損害名譽|貶損名譽", summary):
                     hits = ["散布不實內容／名譽受損情境"]
                 else:
                     hits = ["散布不實內容情境"]
         if offense["id"] == "public_danger" and not hits:
-            if re.search(r"(?:駕車|駕駛)[^。；]{0,50}(?:交通事故|碰撞|肇事)", summary) and re.search(
+            if _scene_hit(r"(?:駕車|駕駛)[^。；]{0,50}(?:交通事故|碰撞|肇事)", summary) and _scene_hit(
                 r"(?:未停留|未停車|未處理|逕行|立即).*?(?:離開|逃逸)|駕車離開現場", summary
             ):
                 hits = ["駕車事故後未停留處理情境"]
         if offense["id"] == "public_danger" and hits:
-            driving_signal = re.search(r"駕車|駕駛|騎乘|行駛|上路|操控車輛|酒駕|肇事|交通事故", summary)
+            driving_signal = _scene_hit(r"駕車|駕駛|騎乘|行駛|上路|操控車輛|酒駕|肇事|交通事故", summary)
             if not driving_signal:
                 hits = []
         if offense["id"] == "fraud" and not hits:
-            if re.search(r"佯稱|冒充|詐術", summary) and re.search(r"匯款|轉帳|交付|付款", summary):
+            if _scene_hit(r"佯稱|冒充|詐術", summary) and _scene_hit(r"匯款|轉帳|交付|付款", summary):
                 hits = ["詐術／財產處分情境"]
         if offense["id"] == "injury" and not hits:
-            if re.search(r"受有[^。；]{0,50}(?:傷害|挫傷)|穿孔|腹膜炎|敗血症", summary) and re.search(
+            if _scene_hit(r"受有[^。；]{0,50}(?:傷害|挫傷)|穿孔|腹膜炎|敗血症", summary) and _scene_hit(
                 r"毆打|揮打|攻擊|踢踹|腳踢|推擠|刺穿|手術|不慎|疏未注意", summary
             ):
                 hits = ["具體傷害結果／致傷行為情境"]
         if offense["id"] == "theft" and not hits:
-            if re.search(r"(?:取走|拿走|拿取|竊取|盜取)[^。；]{0,60}(?:現金|手機|電腦|財物|物品|商品|貨架|洗髮精)", summary) or re.search(
+            if _scene_hit(r"(?:取走|拿走|拿取|竊取|盜取)[^。；]{0,60}(?:現金|手機|電腦|財物|物品|商品|貨架|洗髮精)", summary) or _scene_hit(
                 r"(?:現金|手機|電腦|財物|物品|商品|貨架|洗髮精)[^。；]{0,30}遭?(?:取走|拿走|拿取|竊取|盜取)", summary
             ):
                 hits = ["取走他人動產情境"]
-            elif re.search(r"(?:砸破|打破|弄破).{0,20}(?:車窗|玻璃).{0,30}(?:強行)?(?:取走|拿走|拿取|拿).{0,20}(?:公事包|物品|東西|財物)", summary):
+            elif _scene_hit(r"(?:砸破|打破|弄破).{0,20}(?:車窗|玻璃).{0,30}(?:強行)?(?:取走|拿走|拿取|拿).{0,20}(?:公事包|物品|東西|財物)", summary):
                 hits = ["破壞車窗後取走車內物品情境"]
-            elif re.search(r"(?:進入|到|去).{0,20}(?:住家|房子|屋內|店裡).{0,20}(?:拿了|拿走|取走)" , summary):
+            elif _scene_hit(r"(?:進入|到|去).{0,20}(?:住家|房子|屋內|店裡).{0,20}(?:拿了|拿走|取走)" , summary):
                 hits = ["進入場所後取走物品情境"]
-            elif re.search(r"(?:騎走|駛離|開走).{0,20}(?:機車|汽車|車輛|車)", summary):
+            elif _scene_hit(r"(?:騎走|駛離|開走).{0,20}(?:機車|汽車|車輛|車)", summary):
                 hits = ["取走他人交通工具情境"]
-            elif re.search(r"(?:拿了|拿走|取走)\s*(?:東西|物品|財物)" , summary):
+            elif _scene_hit(r"(?:拿了|拿走|取走)\s*(?:東西|物品|財物)" , summary):
                 hits = ["拿取他人物品情境"]
         if offense["id"] == "aggravated_theft" and not hits:
             if (
-                re.search(r"(?:夜間|夜晚|凌晨|陽台|窗戶|後窗|翻入|爬入)", summary)
-                and re.search(r"(?:住宅|住家|房子|屋內|後院|公寓)", summary)
-                and re.search(r"(?:撬開|撬|工具|後門|門窗|窗戶|翻牆|翻入|爬入|闖入|破壞)", summary)
-                and re.search(r"(?:竊取|偷走|偷|拿走|取走|拿了|現金|財物|金飾|物品)", summary)
+                _scene_hit(r"(?:夜間|夜晚|凌晨|陽台|窗戶|後窗|翻入|爬入)", summary)
+                and _scene_hit(r"(?:住宅|住家|房子|屋內|後院|公寓)", summary)
+                and _scene_hit(r"(?:撬開|撬|工具|後門|門窗|窗戶|翻牆|翻入|爬入|闖入|破壞)", summary)
+                and _scene_hit(r"(?:竊取|偷走|偷|拿走|取走|拿了|現金|財物|金飾|物品)", summary)
             ):
                 hits = ["夜間住宅／工具侵入取財情境"]
         if offense["id"] == "damage" and not hits:
-            if re.search(r"破壞|毀損|砸毀|損壞|敲打|不堪使用", summary) and re.search(
+            if _scene_hit(r"破壞|毀損|砸毀|損壞|敲打|不堪使用", summary) and _scene_hit(
                 r"車窗|玻璃|物品|財物|器物|設備|腳踏車|機車|汽車", summary
             ):
                 hits = ["物品毀損／不堪使用情境"]
-            elif re.search(r"(?:交通工具|車).{0,20}(?:弄壞|不能用|損壞)", summary):
+            elif _scene_hit(r"(?:交通工具|車).{0,20}(?:弄壞|不能用|損壞)", summary):
                 hits = ["交通工具損壞／不能使用情境"]
-            elif re.search(r"(?:物品|東西).{0,12}(?:弄壞|不能用|損壞)", summary):
+            elif _scene_hit(r"(?:物品|東西).{0,12}(?:弄壞|不能用|損壞)", summary):
                 hits = ["他人物品損壞情境"]
         if offense["id"] == "stalking" and not hits:
-            if re.search(r"反覆|持續|多次", summary) and re.search(
+            if _scene_hit(r"反覆|持續|多次", summary) and _scene_hit(
                 r"跟蹤|盯梢|守候|等候|尾隨|傳送訊息|住處|工作地點", summary
-            ) and re.search(r"心生畏怖|心生畏懼|害怕|恐懼", summary):
+            ) and _scene_hit(r"心生畏怖|心生畏懼|害怕|恐懼", summary):
                 hits = ["反覆跟蹤騷擾／心生畏怖情境"]
         if offense["id"] == "obstruction" and not hits:
-            if re.search(r"公務員|依法執行|執行[^。；]{0,12}職務", summary) and re.search(
+            if _scene_hit(r"公務員|依法執行|執行[^。；]{0,12}職務", summary) and _scene_hit(
                 r"攔阻|揮打|毆打|強暴|脅迫|妨害", summary
             ):
                 hits = ["執行職務公務員／強暴脅迫情境"]
         if offense["id"] == "obstruction" and not hits:
-            if re.search(_OBSTRUCTION_ACT, summary) and re.search(_OBSTRUCTION_FORCE, summary):
+            if _scene_hit(_OBSTRUCTION_ACT, summary) and _scene_hit(_OBSTRUCTION_FORCE, summary):
                 hits = ["執行職務公務員／強暴脅迫情境"]
         # 「電腦」可能只是地點或設備描述。單獨命中時不建立妨害電腦使用候選，
         # 仍保留「登入、刪除資料、駭客」等具體行為關鍵字供人工檢視。
         if offense["id"] == "computer" and hits == ["電腦"]:
             hits = []
         if offense["id"] == "defamation" and hits:
-            if not re.search(r"名譽|侮辱|誹謗|不實|貶損|公然|公開場合|辱罵|散布", summary):
+            if not _scene_hit(r"名譽|侮辱|誹謗|不實|貶損|公然|公開場合|辱罵|散布", summary):
                 hits = []
         # 公開貼文、散布謠傳或被指控語境中的「侵占」可能只是被指摘的
         # 內容，不等於摘要已描述行為人實際持有或處分他人財物。此時不得
@@ -2346,10 +2362,10 @@ def classify_candidates(
     # 題庫目前沒有第 306 條獨立罪名項目。僅在案情明確描述未經允許
     # 進入住家時提供可審核的模型補充候選，法源狀態明確標為 NOT_FOUND，
     # 不把既有「妨害自由」項目誤當作侵入住居。
-    has_residential_trespass = bool(re.search(
+    has_residential_trespass = _scene_hit(
         r"(?:未經.{0,12}(?:同意|允許)|沒有經過.{0,8}允許|無故|進了|進入).{0,18}(?:住宅|住家|家|房子|屋內)",
         text,
-    ))
+    )
     if has_residential_trespass and not any(item["id"] == "residential_trespass" for item in candidates):
         candidates.append({
             "id": "residential_trespass",

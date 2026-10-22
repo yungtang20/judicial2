@@ -80,6 +80,11 @@ REVERSE_CASES = [
     ("R05", "甲與乙爭執後離開，並未毆打乙。", None, {"injury"}),
     # 否定窗口不得誤傷未成年人條款：「未成年人遭乙毆打致受傷」仍須成立。
     ("R06", "未成年人遭乙毆打致受傷，乙已受調查。", "injury", set()),
+    # 情境提示層的否定：關鍵字層已套用否定窗口，提示層亦須一致。
+    # 「未取走任何財物」不得成立竊盜候選。
+    ("R07", "甲持刀在乙面前揮舞，乙因而害怕，甲未取走任何財物。", None, {"theft"}),
+    # 「並未進入住家」不得成立侵入住居方向。
+    ("R08", "甲並未進入乙住家，乙住家未遭侵入，屋內財物完好。", None, {"residential_trespass"}),
 ]
 
 # 完整事實案例的允許候選集合：預期方向之外的相鄰競爭假設，須經人工
@@ -212,3 +217,24 @@ def test_broadcast_of_false_content_keeps_defamation_direction():
     )
     assert candidate["candidate_eligibility"] == "ELIGIBLE_CANDIDATE"
     assert candidate["matched_terms"] == ["散布不實內容情境"]
+
+
+def test_negated_scene_facts_do_not_create_candidates():
+    """否定敘述在關鍵字層與情境提示層都不得成立候選。
+
+    關鍵字層的否定窗口先前已修正；情境提示層未套用，導致「甲未取走
+    任何財物」仍產生竊盜候選（2026-10-22 重測發現）。此處同時鎖定
+    兩層，並確認真實事實仍成立候選。
+    """
+    for summary, forbidden in (
+        ("甲持刀在乙面前揮舞，乙因而害怕，甲未取走任何財物。", "theft"),
+        ("甲並未進入乙住家，乙住家未遭侵入，屋內財物完好。", "residential_trespass"),
+        ("甲未砸破乙車窗，乙的車窗完好。", "damage"),
+    ):
+        assert forbidden not in _ids(summary), summary
+    for summary, expected in (
+        ("甲取走乙的現金後離開。", "theft"),
+        ("甲未經乙同意進入乙住家後離開，乙發現後報案。", "residential_trespass"),
+        ("甲持鐵棒砸毀乙機車後照鏡，造成損壞。", "damage"),
+    ):
+        assert expected in _ids(summary), summary
