@@ -37,11 +37,11 @@
 ## Packet integrity
 
 - Machine-readable packet：`docs/evidence/legal_retrieval_human_gate_packet.json`
-- Packet SHA-256：`1cf587b9dec2494e45438dc1077f0fd2f694870d9ae4f375411395db560c91da`
+- Packet SHA-256：`6d8a74c99c942bdcfb0c23b3be4a5e0c1bfb65da4781eb687e19fd7a014df553`
 - HG-LR-01 review：`docs/evidence/hg_lr_01_provider_contract_review.json`
-- HG-LR-01 review SHA-256：`f37795d3fd0d923c8a768dd5c31d74324497e6044e2d2e69f9fa192716ed60e2`
+- HG-LR-01 review SHA-256：`fa6941d1f7a45d508172cb78884a391cbf9479f2d6004b6da1ff8580bb4eb89f`
 - HG-LR-02 review：`docs/evidence/hg_lr_02_privacy_security_review.json`
-- HG-LR-02 review SHA-256：`c78fb1c049fa282b5cd3465e5a9cac9ccd0780915f1ceea7289486c2ceebde8f`
+- HG-LR-02 review SHA-256：`30573c1b1518b97fa3c7dbe106c08e33edb8a03c4940c2e3eb0624218c0f128c`
 - Corpus canonical SHA-256：`ad8e787338e35be3b72badf7588be437cb30a4636fabe8aee5f7e0e2ee6808ed`
 - Golden suite evidence SHA-256：`eb7638295f9b9265ade2c9a35791894d9aeafcd49d0a7f7cf02f5db996a50b9b`
 
@@ -66,3 +66,19 @@
 
 行為時法（`app/law_version.py`、`data/law_amendment_history.json`、`data/sources/`）
 不屬於本檢索包範圍，另見 `docs/HANDOFF_MANUAL.md` §9。
+
+## 2026-10-23 第二輪重新凍結（檢索結論未變）
+
+本輪把**行為時法**（非檢索功能）接入既有案件流程，因此動到兩個 runtime surface：
+
+| Surface | 變更 | 對檢索的影響 |
+| --- | --- | --- |
+| `app/workflow.py` | `set_offenses` 逐條寫入 `law_version_audits` / `law_version_summary`；`update_gate1` 清除舊判定 | 無；未引用任何檢索模組 |
+| `app/static/app.js` | 顯示逐條行為時法警示；`HINT_ONLY` 罪章標示「待區辨・非認定成立」 | 無；未引用任何檢索模組 |
+
+- 四個 runtime surface 的 `expected_references` 仍為 `0`，`runtime_enabled` 仍為 `false`，`gate2_connected` 仍為 `false`。
+- `HG-LR-01`、`HG-LR-02` 的 `decision_status` 與阻擋項均未改變，`approvals_required` 五項仍全為 `PENDING`。
+- `V01` 通過數 543 → 563（新增 20 個測試：行為時法接入流程 8 個、`law_version` 輔助函式 12 個）；`V04` 26 → 29（新增逐條警示、查對未完成、`HINT_ONLY` 標示各 1 個）。
+- 依序重新綁定：packet → `HG-LR-01`（`packet_sha256`）→ `HG-LR-02`（`packet_sha256`、`provider_review_sha256`）。
+
+此節只記錄雜湊同步，**不是核准紀錄**；`HG-LR-05`（產品負責人核准 runtime／UI／稽核／失敗回復）仍為 `PENDING`。

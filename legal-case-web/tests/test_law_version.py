@@ -310,3 +310,70 @@ def test_event_before_first_amendment_requires_original_text() -> None:
 def test_synthetic_snapshot_is_valid() -> None:
     snapshot = _synthetic_snapshot([_original()])
     assert law_version.validate_snapshot(snapshot) == []
+
+
+# ------------------------------------------------- 案件接入用的輔助函式
+
+
+@pytest.mark.parametrize(
+    ("law_name", "expected"),
+    [
+        ("中華民國刑法", True),
+        ("刑法", True),
+        (" 中華民國刑法 ", True),
+        ("貪污治罪條例", False),
+        ("中華民國刑法施行法", False),
+        ("", False),
+        (None, False),
+    ],
+)
+def test_matches_law_is_exact_alias_only(law_name, expected: bool) -> None:
+    assert law_version.matches_law(law_name) is expected
+
+
+def test_get_snapshot_is_cached_and_valid() -> None:
+    law_version.clear_snapshot_cache()
+    first = law_version.get_snapshot()
+    second = law_version.get_snapshot()
+    assert first is second, "快照應在行程內只讀一次"
+    assert law_version.validate_snapshot(first) == []
+    assert first["source"]["raw_html_sha256"]
+
+
+def test_summarize_counts_statuses_without_legal_conclusion() -> None:
+    snapshot = law_version.get_snapshot()
+    audits = law_version.audit_articles(snapshot, "2010-01-05", ["320", "9"])
+    summary = law_version.summarize(audits, "2010-01-05", snapshot)
+
+    assert summary["status"] == "AUDIT_COMPLETED"
+    assert summary["article_count"] == 2
+    assert sum(summary["by_status"].values()) == 2
+    assert summary["historical_text_required_count"] == sum(
+        1 for audit in audits if audit["historical_text_required"] is True
+    )
+    assert summary["legal_conclusion"] is False
+    assert summary["review_status"] == "HUMAN_REVIEW_REQUIRED"
+    assert summary["snapshot"]["amendment_count"] == snapshot["amendment_count"]
+
+
+def test_unavailable_summary_is_explicit() -> None:
+    summary = law_version.unavailable_summary("2010-01-05", "LawVersionError")
+    assert summary["status"] == "AUDIT_UNAVAILABLE"
+    assert summary["reason"] == "LawVersionError"
+    assert summary["article_count"] == 0
+    assert summary["legal_conclusion"] is False
+    assert "不得以現行法推定行為時法" in summary["note"]
+
+
+def test_audit_articles_validates_snapshot_once_and_fails_closed() -> None:
+    broken = {"schema_version": law_version.SNAPSHOT_SCHEMA, "amendments": []}
+    with pytest.raises(law_version.LawVersionError):
+        law_version.audit_articles(broken, "2010-01-05", ["320"])
+
+
+def test_audit_articles_isolates_unparseable_articles() -> None:
+    snapshot = law_version.get_snapshot()
+    audits = law_version.audit_articles(snapshot, "2010-01-05", ["無法解析", "320"])
+    assert audits[0]["status"] == "ARTICLE_UNPARSEABLE"
+    assert audits[1]["article"] == "320"
+    assert audits[1]["legal_conclusion"] is False

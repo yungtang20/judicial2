@@ -252,7 +252,7 @@ legal-case-web/
 | `app/document_validation.py` | 筆錄/條陳完整性驗證（fail closed） | 決定罪章成立 |
 | `app/law_reference.py` | 法源快照、多條號 spec 解析（`第100條至第119條`）、行為時法警示 | 取代人工法律核對 |
 | `app/moj_law_history.py` | 官方法規沿革頁解析與快照（中文數字、條號範圍、施行日） | 產生條文、判斷從舊從輕 |
-| `app/law_version.py` | 行為時法判定（讀沿革快照，指出應調閱哪一次修正） | 重建歷史條文、法律結論 |
+| `app/law_version.py` | 行為時法判定（讀沿革快照，指出應調閱哪一次修正）；已接入 `set_offenses` 與前端警示 | 重建歷史條文、法律結論 |
 | `app/legal_semantic_corpus.py` | 固定語意測試集（32+6 案例） | — |
 | `app/offense_linkage.py` | 離線罪章關聯 PoC（竊盜/侵占 3 罪） | 接入 Gate 2、機率/自動認定 |
 | `app/legal_retrieval.py` | 結構化去識別查詢、防竄改、離線 adapter | 接收全文、呼叫外部 MCP、改狀態 |

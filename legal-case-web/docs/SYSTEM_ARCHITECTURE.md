@@ -49,7 +49,7 @@ flowchart LR
 | `app/acts.py` | 行為層與競合待查提示 | 自動認定一行為／數行為或競合結論 |
 | `app/law_reference.py` | 法源快照、多條號 spec 解析與行為時法警示 | 取代人工法律核對 |
 | `app/moj_law_history.py` | 解析官方法規沿革頁並產生可重現快照（中文數字、條號範圍、施行日） | 產生條文、判斷從舊從輕 |
-| `app/law_version.py` | 以沿革快照判定事件日是否需調閱行為時版本 | 重建歷史條文或作成法律結論 |
+| `app/law_version.py` | 以沿革快照判定事件日是否需調閱行為時版本；`set_offenses` 逐條寫入判定並由前端警示顯示 | 重建歷史條文或作成法律結論 |
 | `app/offense_linkage.py` | 驗證離線來源、罪章關聯與逐要件覆蓋 PoC | 接入 Gate 2、計算有罪機率或自動認定罪章 |
 | `app/legal_retrieval.py` | 產生結構性去識別查詢、驗證防竄改內容、提供離線 adapter 契約 | 接收案件全文、呼叫外部 MCP／PSUE 或變更候選狀態 |
 | `app/legal_retrieval_cache.py` | 正規化來源 metadata、區分 hash scope、驗證兩層完整性並以明示路徑原子寫入 | 保存全文／節錄／案件個資，或建立預設正式快取 |

@@ -189,7 +189,7 @@ py -3 -X utf8 -m pytest -q
 前端與靜態檢查：
 
 ```powershell
-node tests/test_frontend_api_errors.mjs   # 26 passed
+node tests/test_frontend_api_errors.mjs   # 29 passed
 node --check app/static/app.js
 py -3 -X utf8 -m compileall -q app tests
 git diff --check
@@ -257,16 +257,18 @@ if ($bad -eq 0) { "EVIDENCE CHAIN OK ($($surfaces.Count) surfaces + 2 review lin
 - `docs/HG_LR_02_PRIVACY_SECURITY_REVIEW.md`
 - `docs/LEGAL_RETRIEVAL_HUMAN_GATE.md`
 
-## 7.1 2026-10-23 新增（全部未接線）
+## 7.1 2026-10-23 新增（行為時法已接入，其餘未接線）
 
-本輪補齊四項缺口。四個 runtime surface（`app/server.py`、`app/workflow.py`、`app/rules.py`、`app/static/app.js`）皆未引用下列模組，`tests/test_legal_retrieval_human_gate_packet.py` 會持續驗證這件事。
+本輪補齊四項缺口。三個檢索相關模組仍未接線：`app/server.py`、`app/workflow.py`、`app/rules.py`、`app/static/app.js` 皆未引用 `offense_linkage`、`legal_retrieval`、`legal_provider_fixtures`，`tests/test_legal_retrieval_human_gate_packet.py` 會持續驗證這件事（`expected_references: 0`）。
+
+**行為時法（`app/law_version.py`）不屬於檢索包，已於本輪接入 `set_offenses` 與前端警示區**；它只讀本機沿革快照，不連外、不含案件資料、不重建歷史條文。詳見下方「行為時法接入位置」。
 
 | 模組／資料 | 用途 | 邊界 |
 |---|---|---|
 | `app/law_reference.py`（多條號解析）＋ `data/law_reference_cache.json` | 題庫 `article_no` 為「第100條至第119條」「第2條、第25條」時可展開查詢；**全部**條號都在快取才算命中，缺一即 `NOT_FOUND` | 只回快取內容，不生成條文 |
 | `app/legal_provider_tlr_pack.py` ＋ `tests/fixtures/tlr_pack_bundle_v1.json` | `twlegalrag pack`（`twlegalrag.bundle/v1`）離線契約：bundle 必須綁定本次去識別查詢、全文未截斷、JID 已登錄，才會產生 hit | 只輸出 citation metadata 與摘錄 hash；判決文字不出模組 |
 | `app/provider_endpoint_policy.py` ＋ `deploy/providers/taiwan_law_mcp.json` | Taiwan Law MCP 只允許 loopback 自架端點；hosted 端點記錄為不可選（HG-LR-02 `P04`） | `runtime_ready()` 恆為 false（HG-LR-05 未核准） |
-| `app/law_version.py` ＋ `data/law_amendment_history.json` ＋ `data/sources/moj_law_history_C0000001.html` | 行為時法判定：事件日是否早於該條號的增訂／修正／刪除 | 不重建歷史條文；`historical_text_in_repo: false` |
+| `app/law_version.py` ＋ `data/law_amendment_history.json` ＋ `data/sources/moj_law_history_C0000001.html` | 行為時法判定：事件日是否早於該條號的增訂／修正／刪除 | 不重建歷史條文；`historical_text_in_repo: false`；已接入案件流程（見下） |
 
 指令：
 
@@ -297,6 +299,21 @@ py -3 -X utf8 scripts\capture_law_amendment_history.py
 
 全部結果均帶 `legal_conclusion: false`、`review_status: HUMAN_REVIEW_REQUIRED`。沿革頁只記載條號與日期，**不含**舊條文；`HISTORICAL_VERSION_REQUIRED` 只指出應調閱哪一筆，不提供條文文字。
 
+### 行為時法接入位置
+
+`set_offenses` 會對**已選罪章**的刑法條號（主條文＋`related_articles`，多條號先以 `parse_article_spec` 展開）逐條判定，寫入案件：
+
+| 欄位 | 內容 |
+|---|---|
+| `law_version_audits[]` | 每筆含 `offense_id`、`article`、`article_no`、`status`、`historical_text_required`、`legal_conclusion: false` |
+| `law_version_summary` | `status`（`AUDIT_COMPLETED`／`AUDIT_UNAVAILABLE`）、`by_status`、`historical_text_required_count`、沿革快照來源與 `raw_html_sha256` |
+
+- 只查 `中華民國刑法`／`刑法`（`matches_law`）；其他法規不套用刑法沿革，避免誤判。
+- 快照缺失或毀損時寫入 `AUDIT_UNAVAILABLE` 並記 `LAW_VERSION_AUDIT_UNAVAILABLE` 稽核事件，**不中斷** `set_offenses`，也不得解讀為「無須調閱」。
+- 單次最多判定 `MAX_VERSION_AUDIT_ARTICLES`（80）筆；超出部分列在 `summary.skipped` 並標 `truncated: true`。
+- `update_gate1` 會清空 `temporal_law_warnings`、`law_version_audits`、`law_version_summary`：行為日或罪章變動後不得沿用舊判定。
+- 前端 `renderWarnings` 逐條顯示「行為時法（第X條）：…請依官方沿革調閱…並人工覆核」，同一條號同一判定只提示一次；`AUDIT_UNAVAILABLE` 也會顯示，不靜默。
+
 `TlrPackCliClient` 在建構時讀取證據包 `decision_status`；目前為 `PENDING_HUMAN_APPROVAL`，因此 live 呼叫在正式環境一律建構失敗。`--check` 一律離線，重解析 `data/sources` 內的原始頁面並與快照逐欄位比對。
 
 ## 8. 已知限制
@@ -312,7 +329,7 @@ py -3 -X utf8 scripts\capture_law_amendment_history.py
 
 ## 9. 交接後建議順序
 
-1. 先執行完整 pytest，確認基準仍為 543 passed（單次 session）。
+1. 先執行完整 pytest，確認基準仍為 563 passed（單次 session）。
 2. 執行 §6.1 證據鏈重算，確認 17 個 surface（13 frozen + 4 runtime）與 2 條 review 連結皆一致。
 3. 以 `lawbank-engine.html` 測試 API 與前端顯示。
 4. 修改規則後先跑對應批次，再跑完整測試。
@@ -323,10 +340,10 @@ py -3 -X utf8 scripts\capture_law_amendment_history.py
 ## 10. 交接狀態
 
 - 功能測試：通過。
-- 完整測試：543 passed（2026-10-23 單次 session 實測）。
+- 完整測試：563 passed（2026-10-23 單次 session 實測）。
 - 案例批次 C001–C090：通過（已補允許集合反向檢查）。
 - 案例批次 C091–C125：通過（完整事實／缺事實／主體不明／反向安全四類齊備）。
-- 前端錯誤處理測試：26 passed。
+- 前端錯誤處理測試：29 passed。
 - Python 編譯檢查：通過。
 - 證據鏈重算：17 surfaces（13 frozen + 4 runtime）+ 2 條 review 連結全數一致。
 - 證據檔行尾：已正規化為 LF，與 `.gitattributes` 一致。
@@ -336,5 +353,6 @@ py -3 -X utf8 scripts\capture_law_amendment_history.py
 - 2026-10-22 規則修正（續二）：否定窗口補上**情境提示層**（關鍵字層先前已套用，提示層未套用，導致「甲未取走任何財物」仍產生竊盜候選）；情境提示層與模型補充項一律改以未被否定的命中為準。
 - 2026-10-22 規則修正（續）：強盜方向成立時，竊盜／侵占／恐嚇危害安全降為 `HINT_ONLY` 相鄰競爭假設（以「強盜候選是否成立」為準，避免另立判準）；妨害名譽的散布不實內容情境不再以「名譽受損」未出現為由否定整個方向（該項並非題庫對妨害名譽所追的要素），並補上散佈／發布等異體。
 - 2026-10-22 第四批案例標籤更正：C095 由「強盜」更正為「竊盜」（無對人施暴，與既有 C065 鎖定結論一致）、C096 由「加重強盜」更正為「強盜」（刑法無加重強盜此獨立罪名）、C106–C108 由「公然侮辱／誹謗」對應為題庫的妨害名譽。
-- 2026-10-23 缺口補齊（四項，皆未接線）：① 法源快取多條號解析（`第100條至第119條` 這類 spec 過去被當成單一條號，導致 14 個條目永遠 `NOT_FOUND`）＋ 88 筆回填，快取 105→193 筆；② `twlegalrag pack` 的 `twlegalrag.bundle/v1` 離線契約（綁定去識別查詢、只輸出 citation metadata 與摘錄 hash、截斷全文不得引用、live 客戶端受證據包 `decision_status` 約束）；③ Taiwan Law MCP 自架端點政策（僅 loopback 可選，hosted 端點記錄為不可選，`runtime_ready()` 恆 false）；④ 行為時法判定（官方沿革頁快照、中文數字與條號範圍解析、分段施行留 `null` 不以推測補值）。測試 456 → 469 → 487 → 501 → 543；證據鏈重新凍結（packet → HG-LR-01 → HG-LR-02），三個新檔案列入 `frozen_files`。
+- 2026-10-23 缺口補齊（四項；當時皆未接線）：① 法源快取多條號解析（`第100條至第119條` 這類 spec 過去被當成單一條號，導致 14 個條目永遠 `NOT_FOUND`）＋ 88 筆回填，快取 105→193 筆；② `twlegalrag pack` 的 `twlegalrag.bundle/v1` 離線契約（綁定去識別查詢、只輸出 citation metadata 與摘錄 hash、截斷全文不得引用、live 客戶端受證據包 `decision_status` 約束）；③ Taiwan Law MCP 自架端點政策（僅 loopback 可選，hosted 端點記錄為不可選，`runtime_ready()` 恆 false）；④ 行為時法判定（官方沿革頁快照、中文數字與條號範圍解析、分段施行留 `null` 不以推測補值）。測試 456 → 469 → 487 → 501 → 543；證據鏈重新凍結（packet → HG-LR-01 → HG-LR-02），三個新檔案列入 `frozen_files`。
 - 未追蹤且刻意不提交：`reasoning-flow/`（獨立專案）、`例子/`（個人截圖）。
+- 2026-10-23 行為時法接入（第二輪）：`set_offenses` 逐條寫入 `law_version_audits`／`law_version_summary`，前端警示區逐條顯示並提示人工調閱；沿革資料不可用時寫 `AUDIT_UNAVAILABLE`（不靜默、不中斷分析）；`update_gate1` 清除舊判定。`HINT_ONLY` 罪章在選單改標「待區辨・非認定成立」，候選區改用引擎提供的相鄰競爭假設說明。測試 543 → 563、前端 26 → 29；證據鏈再次重新綁定（packet → HG-LR-01 → HG-LR-02），檢索 runtime 仍不可達、五個 Gate 仍 `PENDING`。

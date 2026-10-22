@@ -26,6 +26,7 @@ from __future__ import annotations
 import json
 import re
 from datetime import date
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -145,6 +146,32 @@ def load_snapshot(path: Path | str | None = None) -> dict[str, Any]:
     return json.loads(Path(path or DEFAULT_SNAPSHOT_PATH).read_text(encoding="utf-8"))
 
 
+# 目前只有刑法有官方沿革快照。別名集中在此，避免用模糊比對把特別法誤接上
+# 刑法的修正紀錄（那會產生錯誤的行為時法判定）。
+SNAPSHOT_LAW_ALIASES = frozenset({"刑法", "中華民國刑法"})
+
+
+def matches_law(law_name: str) -> bool:
+    """此法定名稱是否由本快照涵蓋（僅刑法）。"""
+
+    return str(law_name or "").strip().replace(" ", "") in SNAPSHOT_LAW_ALIASES
+
+
+@lru_cache(maxsize=1)
+def get_snapshot() -> dict[str, Any]:
+    """唯讀快照（行程內快取）。呼叫端不得修改回傳物件。"""
+
+    snapshot = load_snapshot()
+    errors = validate_snapshot(snapshot)
+    if errors:
+        raise LawVersionError("沿革快照無效：" + "；".join(errors))
+    return snapshot
+
+
+def clear_snapshot_cache() -> None:
+    get_snapshot.cache_clear()
+
+
 def _effective_key(item: dict[str, Any]) -> tuple[str, int]:
     return (
         str(item.get("effective_on") or item.get("promulgated_on") or ""),
@@ -234,6 +261,12 @@ def resolve(
     errors = validate_snapshot(snapshot)
     if errors:
         raise LawVersionError("快照無效：" + "；".join(errors))
+    return _resolve_validated(snapshot, article, event_date)
+
+
+def _resolve_validated(
+    snapshot: dict[str, Any], article: str, event_date: str | None
+) -> dict[str, Any]:
     normalized = normalize_article(article)
     parsed_event = _parse_date(event_date)
     events = article_events(snapshot, normalized)
@@ -356,12 +389,19 @@ def resolve(
 def audit_articles(
     snapshot: dict[str, Any], event_date: str | None, articles: list[str]
 ) -> list[dict[str, Any]]:
-    """批次判定；單一條號格式錯誤不會中斷其他條號。"""
+    """批次判定；單一條號格式錯誤不會中斷其他條號。
 
+    快照只驗證一次：呼叫端可能一次帶入整個罪章的條號（例如 20 條），逐條重驗
+    會讓 58 筆沿革被反覆掃描。
+    """
+
+    errors = validate_snapshot(snapshot)
+    if errors:
+        raise LawVersionError("快照無效：" + "；".join(errors))
     results: list[dict[str, Any]] = []
     for article in articles:
         try:
-            results.append(resolve(snapshot, article, event_date))
+            results.append(_resolve_validated(snapshot, article, event_date))
         except LawVersionError as exc:
             results.append(
                 {
@@ -375,3 +415,62 @@ def audit_articles(
                 }
             )
     return results
+
+
+SUMMARY_SCHEMA = "law-version-summary-v1"
+
+
+def summarize(
+    audits: list[dict[str, Any]], event_date: str | None, snapshot: dict[str, Any]
+) -> dict[str, Any]:
+    """把逐條結果收斂成案件層摘要；不改變任何單條判定。"""
+
+    by_status: dict[str, int] = {}
+    for audit in audits:
+        status = str(audit.get("status") or "UNKNOWN")
+        by_status[status] = by_status.get(status, 0) + 1
+    source = snapshot.get("source") or {}
+    return {
+        "schema_version": SUMMARY_SCHEMA,
+        "status": "AUDIT_COMPLETED",
+        "event_date": event_date or None,
+        "article_count": len(audits),
+        "by_status": by_status,
+        "historical_text_required_count": sum(
+            1 for audit in audits if audit.get("historical_text_required") is True
+        ),
+        "snapshot": {
+            "law_name": snapshot.get("law_name"),
+            "pcode": snapshot.get("pcode"),
+            "amendment_count": snapshot.get("amendment_count"),
+            "last_amended_on": snapshot.get("last_amended_on"),
+            "official_history_url": source.get("url"),
+            "raw_html_sha256": source.get("raw_html_sha256"),
+        },
+        "note": (
+            "僅就官方沿革頁判斷事件日當時是否需要另調條文版本；"
+            "不含歷史條文文字，也不作從舊從輕判斷。"
+        ),
+        "legal_conclusion": False,
+        "review_status": "HUMAN_REVIEW_REQUIRED",
+    }
+
+
+def unavailable_summary(event_date: str | None, reason: str) -> dict[str, Any]:
+    """沿革資料不可用時的摘要：明示未完成，不得視為「無須調閱」。"""
+
+    return {
+        "schema_version": SUMMARY_SCHEMA,
+        "status": "AUDIT_UNAVAILABLE",
+        "event_date": event_date or None,
+        "article_count": 0,
+        "by_status": {},
+        "historical_text_required_count": 0,
+        "reason": reason,
+        "note": (
+            "行為時法查對未完成（沿革資料無法讀取或格式不符）；"
+            "不得以現行法推定行為時法，請人工確認。"
+        ),
+        "legal_conclusion": False,
+        "review_status": "HUMAN_REVIEW_REQUIRED",
+    }

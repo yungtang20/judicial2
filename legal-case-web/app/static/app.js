@@ -229,6 +229,28 @@ function renderWarnings(caseData) {
   for (const w of caseData.temporal_law_warnings || []) {
     items.push(`⚠ ${w.message}`);
   }
+  // 行為時法逐條判定：上面的警示只比「法條最後修正日」，這裡指出是哪一條、
+  // 哪一種情形。只提示應調閱，不提供歷史條文，也不作從舊從輕判斷。
+  const versionLabels = {
+    HISTORICAL_VERSION_REQUIRED: "行為時適用舊版條文",
+    ARTICLE_NOT_YET_IN_FORCE: "行為時尚無本條",
+    ARTICLE_NOT_IN_FORCE_AT_EVENT_TIME: "行為時本條已刪除",
+    VERSION_HISTORY_INCOMPLETE: "施行日不明，須人工查證",
+    EVENT_DATE_UNKNOWN: "行為日不明，須人工查證",
+    ARTICLE_UNPARSEABLE: "條號無法解析，須人工查證",
+  };
+  const seenVersion = new Set();
+  for (const audit of caseData.law_version_audits || []) {
+    const label = versionLabels[audit.status];
+    if (!label) continue;
+    const key = `${audit.article_no}|${audit.status}`;
+    if (seenVersion.has(key)) continue;
+    seenVersion.add(key);
+    items.push(`⚠ 行為時法（${audit.article_no}）：${label}。請依官方沿革調閱該次修正前後的條文，並人工覆核。`);
+  }
+  if (caseData.law_version_summary?.status === "AUDIT_UNAVAILABLE") {
+    items.push(`⚠ ${caseData.law_version_summary.note || "行為時法查對未完成，請人工確認。"}`);
+  }
   if (items.length === 0) {
     box.hidden = true;
     return;
@@ -273,7 +295,7 @@ function renderStructuredFacts(gate1) {
   }
 }
 
-function choice(id, name, suggested, selected, candidateState = "") {
+function choice(id, name, suggested, selected, candidateState = "", eligibility = "") {
   const label = document.createElement("label");
   label.className = "choice";
   const input = document.createElement("input");
@@ -282,7 +304,10 @@ function choice(id, name, suggested, selected, candidateState = "") {
   input.value = id;
   input.checked = selected;
   const span = document.createElement("span");
-  span.textContent = suggested ? `${name}（候選：${candidateState || "NEED_REVIEW"}）` : name;
+  // HINT_ONLY 是相鄰競爭假設，不是「建議成立」；若只寫「候選」，承辦人會把它
+  // 讀成與主要候選同級。標籤只描述引擎既有狀態，不新增法律評價。
+  const tier = eligibility === "HINT_ONLY" ? "待區辨・非認定成立" : "候選";
+  span.textContent = suggested ? `${name}（${tier}：${candidateState || "NEED_REVIEW"}）` : name;
   label.append(input, span);
   return label;
 }
@@ -407,13 +432,17 @@ function renderOffenses(caseData) {
   const suggested = new Map(caseData.candidates.map((item) => [item.id, item]));
   const selected = new Set(caseData.selected_offenses);
   const container = $("#offense-list");
-  const nodes = state.bank.offenses.map((item) => choice(
-    item.id,
-    item.name,
-    suggested.has(item.id),
-    selected.has(item.id),
-    suggested.get(item.id)?.candidate_state,
-  ));
+  const nodes = state.bank.offenses.map((item) => {
+    const candidate = suggested.get(item.id);
+    return choice(
+      item.id,
+      item.name,
+      suggested.has(item.id),
+      selected.has(item.id),
+      candidate?.candidate_state,
+      candidate?.candidate_eligibility || "",
+    );
+  });
   container.replaceChildren(...nodes);
   const analysisBox = $("#candidate-element-analysis");
   if (analysisBox) {
@@ -502,10 +531,12 @@ function renderOffenses(caseData) {
           section.appendChild(contraBox);
         }
 
-        // 保留聲明
+        // 保留聲明：HINT_ONLY 由引擎提供較精確的說明（相鄰競爭假設），其餘沿用通用句。
         const notice = document.createElement("p");
         notice.className = "candidate-notice";
-        notice.textContent = "候選不代表犯罪成立。";
+        notice.textContent = typeof candidate.notice === "string" && candidate.notice
+          ? candidate.notice
+          : "候選不代表犯罪成立。";
         section.appendChild(notice);
 
         return section;

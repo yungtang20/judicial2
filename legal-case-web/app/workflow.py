@@ -32,6 +32,9 @@ CURRENT_TEMPLATE_VERSION = "company-verbatim-2026-10-11"
 CURRENT_CANDIDATE_ENGINE = "rules-v3+ai-contract-v1"
 MAX_PROFILE_FIELD_LENGTH = 200
 MAX_FACTS = 50
+# 行為時法查對只針對已選罪章的法條；上限避免整個罪章範圍（例如 20 條）乘以
+# 多個罪章後把案件回應撐大。
+MAX_VERSION_AUDIT_ARTICLES = 80
 MACHINE_STATUSES = {"FACT", "INFERENCE", "UNKNOWN", "DISPUTED"}
 SUMMARY_CONTEXT_RE = re.compile(
     r"(?P<kind>發生|破獲|查獲)(?P<field>時間|地點)\s*[：:]\s*(?P<value>[^\r\n，,；;。]+)"
@@ -435,6 +438,11 @@ def apply_action(
             competition_relationships(case["candidates"])
         case["fact_updates"] = []
         case["fact_overlay"] = {}
+        # 行為日或罪章一旦變動，先前的行為時法判定即失效；罪章選擇已由
+        # _invalidate 清空，這裡必須一併清掉，避免舊判定跟著新案情顯示。
+        case["temporal_law_warnings"] = []
+        case["law_version_audits"] = []
+        case["law_version_summary"] = None
         case["state"] = "GATE1_REVIEW"
         _invalidate(case, "gate1")
 
@@ -576,9 +584,16 @@ def apply_action(
             quarantine_count=len(case["question_quarantine"]),
         )
 
-        from .law_reference import check_constitutional_validity, check_event_time_against_law
+        from .law_reference import (
+            check_constitutional_validity,
+            check_event_time_against_law,
+            parse_article_spec,
+        )
+        from . import law_version
+
         temporal_warnings: list[dict[str, Any]] = []
         constitutional_warnings: list[dict[str, Any]] = []
+        articles_by_offense: list[tuple[str, list[tuple[str, str]]]] = []
         event_time = case.get("intake", {}).get("event_time", "")
         offenses = {item["id"]: item for item in bank["offenses"]}
         for offense_id in selected:
@@ -591,6 +606,7 @@ def apply_action(
                 (item.get("law_name", ""), item.get("article_no", ""))
                 for item in source.get("related_articles", [])
             )
+            articles_by_offense.append((offense_id, articles))
             for law_name, article_no in articles:
                 invalidated = check_constitutional_validity(law_name, article_no)
                 if invalidated:
@@ -602,6 +618,83 @@ def apply_action(
                     })
         case["temporal_law_warnings"] = temporal_warnings
         case["constitutional_warnings"] = constitutional_warnings
+
+        # 行為時法：把「現行法核實」升級為「這條在行為日是哪一版」。只讀官方沿革
+        # 快照，不重建歷史條文；資料不可用時明示未完成，不得當成「無須調閱」。
+        law_version_audits: list[dict[str, Any]] = []
+        audit_skipped: list[str] = []
+        truncated = False
+        if event_time:
+            try:
+                audit_snapshot = law_version.get_snapshot()
+            except Exception as exc:  # 快照缺失、毀損或格式不符
+                audit_snapshot = None
+                audit_failure = type(exc).__name__
+            else:
+                audit_failure = ""
+            if audit_snapshot is None:
+                case["law_version_audits"] = []
+                case["law_version_summary"] = law_version.unavailable_summary(
+                    event_time, audit_failure
+                )
+                _audit(
+                    case,
+                    "LAW_VERSION_AUDIT_UNAVAILABLE",
+                    role=role,
+                    reason_code="LAW_VERSION_SNAPSHOT_UNAVAILABLE",
+                    schema_version=law_version.SUMMARY_SCHEMA,
+                )
+            else:
+                pending: list[tuple[str, str]] = []
+                seen_pairs: set[tuple[str, str]] = set()
+                for offense_id, articles in articles_by_offense:
+                    for law_name, article_no in articles:
+                        if not law_version.matches_law(law_name):
+                            continue
+                        expanded = parse_article_spec(article_no)
+                        if not expanded:
+                            audit_skipped.append(f"{law_name}{article_no}")
+                            continue
+                        for spec in expanded:
+                            pair = (offense_id, spec)
+                            if pair in seen_pairs:
+                                continue
+                            seen_pairs.add(pair)
+                            pending.append(pair)
+                if len(pending) > MAX_VERSION_AUDIT_ARTICLES:
+                    audit_skipped.extend(
+                        f"第{spec}條" for _, spec in pending[MAX_VERSION_AUDIT_ARTICLES:]
+                    )
+                    pending = pending[:MAX_VERSION_AUDIT_ARTICLES]
+                    truncated = True
+                if pending:
+                    results = law_version.audit_articles(
+                        audit_snapshot, event_time, [spec for _, spec in pending]
+                    )
+                    for (offense_id, _), audit in zip(pending, results):
+                        entry = dict(audit)
+                        entry["offense_id"] = offense_id
+                        entry["article_no"] = f"第{audit.get('article')}條"
+                        law_version_audits.append(entry)
+                case["law_version_audits"] = law_version_audits
+                case["law_version_summary"] = law_version.summarize(
+                    law_version_audits, event_time, audit_snapshot
+                )
+                if audit_skipped or truncated:
+                    case["law_version_summary"]["skipped"] = audit_skipped
+                    case["law_version_summary"]["truncated"] = truncated
+                _audit(
+                    case,
+                    "LAW_VERSION_AUDIT",
+                    role=role,
+                    reason_code="LAW_VERSION_SNAPSHOT_READ",
+                    schema_version=law_version.SUMMARY_SCHEMA,
+                )
+        else:
+            case["law_version_audits"] = []
+            case["law_version_summary"] = law_version.unavailable_summary(
+                "", "EVENT_TIME_MISSING"
+            )
         for item in case["questions"]:
             prior_item = prior.get(item["id"], {})
             item["answer"] = prior_item.get("answer", item.get("answer", ""))

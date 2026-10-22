@@ -90,7 +90,7 @@
     },
     {
       "path": "app/workflow.py",
-      "sha256": "496bd902ddad27ffb9d8bed75c08a10b585c74563ea87eb486c5f9b68f3707ea",
+      "sha256": "2ddfa5e2911ac8ffec6e34da7e86c32220d46a47b43c7b6324fb01a4d52c5874",
       "expected_references": 0
     },
     {
@@ -100,7 +100,7 @@
     },
     {
       "path": "app/static/app.js",
-      "sha256": "66d5e624f3a8b310c06926fcc88ba945a662f6c7dc7272f5e0e9fc7788fe677f",
+      "sha256": "b2b962a66ce3c11c7f2d9d373c7c83a67e7bdd6a71c940f8a13f538da62951b6",
       "expected_references": 0
     }
   ],
@@ -117,10 +117,10 @@
       "id": "V01",
       "command": "py -3 -X utf8 -m pytest -q",
       "status": "PASS",
-      "result": "543 passed",
-      "passed": 543,
+      "result": "563 passed",
+      "passed": 563,
       "verified_on": "2026-10-23",
-      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15. Re-verified again the same day after the C091-C120 rule corrections (transcribed-allegation guard, weak keyword guards, negation window) and the fourth case batch: 444 -> 452, after the competition-hypothesis demotion and defamation recall corrections: 452 -> 455, and after extending the negation window to the scenario-hint layer: 455 -> 456. Re-verified on 2026-10-23 after the multi-article law cache coverage fix and backfill: 456 -> 469; after the TLR pack bundle contract: 469 -> 487; after the self-host provider endpoint policy: 487 -> 501; after the behavior-time (amendment history) resolver: 501 -> 541; after two sub-numbered range parser cases: 541 -> 543."
+      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15. Re-verified again the same day after the C091-C120 rule corrections (transcribed-allegation guard, weak keyword guards, negation window) and the fourth case batch: 444 -> 452, after the competition-hypothesis demotion and defamation recall corrections: 452 -> 455, and after extending the negation window to the scenario-hint layer: 455 -> 456. Re-verified on 2026-10-23 after the multi-article law cache coverage fix and backfill: 456 -> 469; after the TLR pack bundle contract: 469 -> 487; after the self-host provider endpoint policy: 487 -> 501; after the behavior-time (amendment history) resolver: 501 -> 541; after two sub-numbered range parser cases: 541 -> 543.；行為時法接入 set_offenses 並於 UI 逐條顯示：543 -> 563。"
     },
     {
       "id": "V02",
@@ -128,7 +128,7 @@
       "status": "PASS",
       "result": "PASS",
       "passed": null,
-      "verified_on": "2026-10-22"
+      "verified_on": "2026-10-23"
     },
     {
       "id": "V03",
@@ -136,16 +136,16 @@
       "status": "PASS",
       "result": "PASS",
       "passed": null,
-      "verified_on": "2026-10-22"
+      "verified_on": "2026-10-23"
     },
     {
       "id": "V04",
       "command": "node tests/test_frontend_api_errors.mjs",
       "status": "PASS",
-      "result": "26 passed",
-      "passed": 26,
-      "verified_on": "2026-10-22",
-      "note": "Frontend error-handling suite re-verified 2026-10-22; supersedes the 20-passed baseline recorded on 2026-10-15."
+      "result": "29 passed",
+      "passed": 29,
+      "verified_on": "2026-10-23",
+      "note": "Frontend error-handling suite re-verified 2026-10-22; supersedes the 20-passed baseline recorded on 2026-10-15.；新增行為時法逐條警示與 HINT_ONLY 標示測試：26 -> 29。"
     },
     {
       "id": "V05",
@@ -153,7 +153,7 @@
       "status": "PASS",
       "result": "PASS",
       "passed": null,
-      "verified_on": "2026-10-22"
+      "verified_on": "2026-10-23"
     }
   ],
   "approvals_required": [

@@ -769,3 +769,87 @@ test("R: AI 分析成功：顯示請求 ID", async () => {
   assert.match(elements.get("status").textContent, /req-abc123/);
   assert.match(elements.get("status").textContent, /不代表犯罪成立/);
 });
+
+test("S: 行為時法逐條判定顯示條號並要求人工調閱", () => {
+  const { context, elements } = createHarness({
+    fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({}), headers: new Headers() }),
+  });
+  context.renderWarnings({
+    law_version_audits: [
+      { article_no: "第320條", status: "HISTORICAL_VERSION_REQUIRED", event_date: "2010-01-05" },
+      { article_no: "第320條", status: "HISTORICAL_VERSION_REQUIRED", event_date: "2010-01-05" },
+      { article_no: "第185條之3", status: "ARTICLE_NOT_YET_IN_FORCE", event_date: "1998-01-01" },
+      { article_no: "第9條", status: "NO_AMENDMENT_RECORDED", event_date: "2010-01-05" },
+    ],
+    law_version_summary: { status: "AUDIT_COMPLETED" },
+  });
+  const box = elements.get("case-warnings");
+  assert.equal(box.hidden, false, "行為時法警示應顯示");
+  const text = box.children.map((node) => node.textContent).join("\n");
+  assert.match(text, /行為時法（第320條）：行為時適用舊版條文/);
+  assert.match(text, /行為時法（第185條之3）：行為時尚無本條/);
+  assert.match(text, /人工覆核/);
+  assert.equal(text.match(/第320條/g).length, 1, "同一條號同一判定只提示一次");
+  assert.ok(!text.includes("第9條"), "沿革頁無異動紀錄者不應產生警示");
+});
+
+test("T: 行為時法查對未完成時必須明示", () => {
+  const { context, elements } = createHarness({
+    fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({}), headers: new Headers() }),
+  });
+  context.renderWarnings({
+    law_version_audits: [],
+    law_version_summary: { status: "AUDIT_UNAVAILABLE", note: "行為時法查對未完成，請人工確認。" },
+  });
+  const box = elements.get("case-warnings");
+  assert.equal(box.hidden, false, "查對未完成不得靜默");
+  const text = box.children.map((node) => node.textContent).join("\n");
+  assert.match(text, /行為時法查對未完成/);
+});
+
+test("U: HINT_ONLY 罪章標示待區辨，不與主要候選同級", () => {
+  const { context, elements } = createHarness({
+    fetchImpl: async () => ({ ok: true, status: 200, json: async () => ({}), headers: new Headers() }),
+  });
+  const stateRef = vm.runInContext("state", context);
+  stateRef.bank = {
+    offenses: [
+      { id: "robbery", name: "強盜" },
+      { id: "theft", name: "竊盜" },
+    ],
+  };
+  const base = {
+    selection_origin: "keyword_hint",
+    source: { status: "VERIFIED_CURRENT", law_name: "中華民國刑法", article_no: "第328條" },
+    route_element_matrix: [],
+    unknown_elements: [],
+    contradicting_fact_refs: [],
+  };
+  context.renderOffenses({
+    candidates: [
+      { ...base, id: "robbery", name: "強盜", candidate_eligibility: "ELIGIBLE_CANDIDATE", candidate_state: "NEED_REVIEW" },
+      {
+        ...base,
+        id: "theft",
+        name: "竊盜",
+        candidate_eligibility: "HINT_ONLY",
+        candidate_state: "NEED_REVIEW",
+        notice: "相鄰競爭假設（僅供人工區辨），不代表犯罪成立。",
+      },
+    ],
+    selected_offenses: [],
+  });
+  const list = elements.get("offense-list");
+  const labels = list.children.map((label) => label.children[1].textContent);
+  assert.match(labels[0], /強盜（候選：NEED_REVIEW）/, "主要候選維持原標示");
+  assert.match(labels[1], /竊盜（待區辨・非認定成立：NEED_REVIEW）/, "HINT_ONLY 須標示非認定成立");
+  const analysis = elements.get("candidate-element-analysis");
+  const getText = (node) => {
+    if (!node) return "";
+    let text = node.textContent || "";
+    for (const child of node.children || []) text += "\n" + getText(child);
+    return text;
+  };
+  const analysisText = analysis.children.map(getText).join("\n");
+  assert.match(analysisText, /相鄰競爭假設（僅供人工區辨），不代表犯罪成立/);
+});
