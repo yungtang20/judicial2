@@ -37,10 +37,32 @@
 ## Packet integrity
 
 - Machine-readable packet：`docs/evidence/legal_retrieval_human_gate_packet.json`
-- Packet SHA-256：`4f8987ddd2ad9c0fdeded492fed78080aa7a288a80178e8468522b98b612065c`
+- Packet SHA-256：`1cf587b9dec2494e45438dc1077f0fd2f694870d9ae4f375411395db560c91da`
 - HG-LR-01 review：`docs/evidence/hg_lr_01_provider_contract_review.json`
-- HG-LR-01 review SHA-256：`98c15cdcdaccb4915761ca06bec52412449aee4b1421bfcd22780a29507fe6b4`
+- HG-LR-01 review SHA-256：`f37795d3fd0d923c8a768dd5c31d74324497e6044e2d2e69f9fa192716ed60e2`
 - HG-LR-02 review：`docs/evidence/hg_lr_02_privacy_security_review.json`
-- HG-LR-02 review SHA-256：`45b3c39f87133078713ad34d53b74010f20931d0b1bed6043cdb270769eeb3af`
+- HG-LR-02 review SHA-256：`c78fb1c049fa282b5cd3465e5a9cac9ccd0780915f1ceea7289486c2ceebde8f`
 - Corpus canonical SHA-256：`ad8e787338e35be3b72badf7588be437cb30a4636fabe8aee5f7e0e2ee6808ed`
 - Golden suite evidence SHA-256：`eb7638295f9b9265ade2c9a35791894d9aeafcd49d0a7f7cf02f5db996a50b9b`
+
+上述三個 hash 由測試即時比對，文件若與檔案不一致即視為證據包失效：
+`tests/test_hg_lr_01_provider_review.py`、`tests/test_hg_lr_02_privacy_security_review.py`、
+`tests/test_legal_retrieval_human_gate_packet.py`。
+
+## 2026-10-23 重新凍結（結論未變）
+
+本輪新增三個**未接線**的候選契約，並已列入 `frozen_files`：
+
+| 檔案 | 角色 | 狀態 |
+| --- | --- | --- |
+| `app/legal_provider_tlr_pack.py` | `tlr_pack_bundle_contract` | 尚待 `HG-LR-01` 覆核 |
+| `app/provider_endpoint_policy.py` | `provider_endpoint_policy` | 尚待 `HG-LR-01`／`HG-LR-02` 覆核 |
+| `deploy/providers/taiwan_law_mcp.json` | `provider_endpoint_config` | 尚待 `HG-LR-01`／`HG-LR-02` 覆核 |
+
+- 三個檔案皆未被 `app/server.py`、`app/workflow.py`、`app/rules.py`、`app/static/app.js` 引用，runtime 仍不可達。
+- `HG-LR-01`、`HG-LR-02` 的審查結論與 `decision_status` 均未改變，門檻仍為 `PENDING`。
+- `V01` 通過數由 456 更新為 543（新增 87 個測試：法源多條號覆蓋、TLR pack 契約、自架端點政策、行為時法）。
+- 依序重新綁定：packet → `HG-LR-01`（`packet_sha256`）→ `HG-LR-02`（`packet_sha256`、`provider_review_sha256`）。
+
+行為時法（`app/law_version.py`、`data/law_amendment_history.json`、`data/sources/`）
+不屬於本檢索包範圍，另見 `docs/HANDOFF_MANUAL.md` §9。

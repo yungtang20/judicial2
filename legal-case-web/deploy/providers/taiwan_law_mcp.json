@@ -1,0 +1,56 @@
+{
+  "schema_version": "provider-endpoint-v1",
+  "provider_id": "taiwan-law-mcp",
+  "verified_on": "2026-10-22",
+  "upstream": {
+    "readme": "https://github.com/legaltechtw/taiwan-law-mcp",
+    "official_mcp_registry_id": "tw.org.legaltech/taiwan-law",
+    "tool_count": 14,
+    "licence_note": "該 repo 為發行說明；文件採 MIT，伺服器源代碼不在該 repo，自架映像屬外部供應鏈，須另行審查。",
+    "source_url_per_response": true
+  },
+  "hosted_endpoint": {
+    "url": "https://legaltech.org.tw/mcp",
+    "transport": "streamable-http",
+    "selectable": false,
+    "blocked_reason": "HG-LR-02 P04：業者隱私政策載明完整查詢參數保存 90 日；案件承辦環境不得送出查詢。"
+  },
+  "self_host": {
+    "url": "http://localhost:8787/mcp",
+    "transport": "streamable-http",
+    "launch": {
+      "npx": {
+        "command": ["npx", "taiwan-law-mcp"],
+        "requires": "Node 22+"
+      },
+      "docker": {
+        "command": [
+          "docker",
+          "run",
+          "-d",
+          "-p",
+          "8787:8787",
+          "-v",
+          "tlm-data:/data",
+          "legaltechtw/taiwan-law-mcp"
+        ],
+        "volume": "tlm-data"
+      }
+    },
+    "outbound_note": "案件內容留在本機；查詢仍直接送往全國法規資料庫與司法院官方網站，屬外部連線，須計入連線盤點。"
+  },
+  "policy": {
+    "mode": "SELF_HOST_ONLY",
+    "allowed_hosts": ["127.0.0.1", "localhost", "::1"],
+    "allow_hosted": false,
+    "allowed_schemes": ["http"],
+    "require_explicit_port": true
+  },
+  "human_gate": {
+    "HG-LR-01": "PENDING",
+    "HG-LR-02": "PENDING",
+    "HG-LR-05": "PENDING"
+  },
+  "runtime_enabled": false,
+  "review_status": "HUMAN_REVIEW_REQUIRED"
+}

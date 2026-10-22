@@ -8,3 +8,8 @@
 *.docx binary
 *.odt binary
 *.xlsm binary
+# Raw official page snapshots must stay byte-exact: their SHA-256 is recorded as
+# provenance and re-checked by scripts/capture_law_amendment_history.py --check.
+# `binary` = -text -diff, so CRLF bytes survive checkout and do not surface as
+# trailing-whitespace noise in `git diff --check`.
+legal-case-web/data/sources/* binary

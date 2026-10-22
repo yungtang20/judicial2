@@ -47,7 +47,9 @@ flowchart LR
 | `app/rules.py` | Gate 1 分析、規則候選、題目來源整合、題數限制 | 最終罪章認定 |
 | `app/questions.py` | 問句 metadata、預算、去重、答案 overlay、候選重評估 | 從自由文字直接定罪 |
 | `app/acts.py` | 行為層與競合待查提示 | 自動認定一行為／數行為或競合結論 |
-| `app/law_reference.py` | 法源快照與行為時法警示 | 取代人工法律核對 |
+| `app/law_reference.py` | 法源快照、多條號 spec 解析與行為時法警示 | 取代人工法律核對 |
+| `app/moj_law_history.py` | 解析官方法規沿革頁並產生可重現快照（中文數字、條號範圍、施行日） | 產生條文、判斷從舊從輕 |
+| `app/law_version.py` | 以沿革快照判定事件日是否需調閱行為時版本 | 重建歷史條文或作成法律結論 |
 | `app/offense_linkage.py` | 驗證離線來源、罪章關聯與逐要件覆蓋 PoC | 接入 Gate 2、計算有罪機率或自動認定罪章 |
 | `app/legal_retrieval.py` | 產生結構性去識別查詢、驗證防竄改內容、提供離線 adapter 契約 | 接收案件全文、呼叫外部 MCP／PSUE 或變更候選狀態 |
 | `app/legal_retrieval_cache.py` | 正規化來源 metadata、區分 hash scope、驗證兩層完整性並以明示路徑原子寫入 | 保存全文／節錄／案件個資，或建立預設正式快取 |
@@ -56,6 +58,8 @@ flowchart LR
 | `app/legal_retrieval_sync.py` | 離線協調 adapter、metadata 正規化、cache 寫入與移除流程；預設 dry-run | 使用外部網路 adapter、接受 provider 身分不一致、建立預設 cache 或接入 Gate 2 |
 | `app/legal_retrieval_batch.py` | 驗證 deterministic manifest，於記憶體依序套用多 provider 項目並一次提交 | 部分提交、忽略 cache 漂移、保存案件內容、排程執行或接入 runtime |
 | `app/legal_retrieval_replay.py` | 驗證合成 golden corpus、重播 allowlist provider 並產生固定結果投影與證據 hash | 接受案件資料、輸出 fixture／錯誤內文、覆寫既有 scratch cache 或宣稱法律驗收 |
+| `app/legal_provider_tlr_pack.py` | 驗證 `twlegalrag pack` bundle 契約並對應已登錄 JID，僅輸出 citation metadata 與摘錄 hash | 保存判決全文、未經核准發出 live 查詢 |
+| `app/provider_endpoint_policy.py` | 檢查 provider 端點僅為 loopback 自架、hosted 不可選，並回報 runtime 是否就緒 | 啟用 hosted 端點、代為核准 Human Gate |
 | `app/documents.py` | 筆錄、條陳與頁數驗證 | 決定罪章成立 |
 | `app/storage.py` | Runtime 使用程序記憶體的 `EphemeralCaseStore`；`CaseStore` 為未接線的持久化相容模組 | 案件歷史持久化或外部同步 |
 | `app/rcq_loader.py` | 解析 RCQ 審查稿、品質檢核、產生人工工作表 | 未核准前接入 runtime |

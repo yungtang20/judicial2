@@ -1,0 +1,75 @@
+{
+  "schema": "twlegalrag.bundle/v1",
+  "query": "刑法第320條 動產竊盜 取得前持有狀態",
+  "source": "Taiwan Legal RAG (TLR) retrieval endpoint",
+  "retrieval_only": true,
+  "allowed_citations": ["J1", "J2", "J3"],
+  "judgments": [
+    {
+      "citation_id": "J1",
+      "doc_id": "KSDM,100,簡,5635,20111130,1",
+      "citation_text": "臺灣高雄地方法院 100 年度簡字第 5635 號（刑事）",
+      "citation_url": "https://example.invalid/tlr/J1",
+      "court_name": "臺灣高雄地方法院",
+      "jdate": "2011-11-30",
+      "case_category": "刑事",
+      "cited_articles": ["刑法第320條第1項"],
+      "listing": "SYNTHETIC-FIXTURE-LISTING 不得作為判決內容",
+      "hit_excerpt": "SYNTHETIC-FIXTURE-HIT 合成摘錄，非真實判決文字",
+      "fulltext_excerpt": "SYNTHETIC-FIXTURE-FULLTEXT 合成摘錄，非真實判決文字；僅用於契約測試。",
+      "fulltext_truncated": false,
+      "fulltext_total_chars": 2282,
+      "case_history": null,
+      "warning": "SYNTHETIC-FIXTURE-WARNING"
+    },
+    {
+      "citation_id": "J2",
+      "doc_id": "TPSV,114,台上,9999,20250601,1",
+      "citation_text": "最高法院 114 年度台上字第 9999 號（刑事）",
+      "citation_url": "https://example.invalid/tlr/J2",
+      "court_name": "最高法院",
+      "jdate": "2025-06-01",
+      "case_category": "刑事",
+      "cited_articles": ["刑法第320條第1項"],
+      "listing": "SYNTHETIC-FIXTURE-LISTING 不得作為判決內容",
+      "hit_excerpt": "SYNTHETIC-FIXTURE-HIT 合成摘錄，非真實判決文字",
+      "fulltext_excerpt": "SYNTHETIC-FIXTURE-FULLTEXT 合成摘錄，非真實判決文字；僅用於契約測試。",
+      "fulltext_truncated": false,
+      "fulltext_total_chars": 1200,
+      "case_history": null,
+      "warning": "SYNTHETIC-FIXTURE-WARNING"
+    },
+    {
+      "citation_id": "J3",
+      "doc_id": "TPHV,113,上易,111,20250303,1",
+      "citation_text": "臺灣高等法院 113 年度上易字第 111 號（刑事）",
+      "citation_url": "https://example.invalid/tlr/J3",
+      "court_name": "臺灣高等法院",
+      "jdate": "2025-03-03",
+      "case_category": "刑事",
+      "cited_articles": ["刑法第320條第1項"],
+      "listing": "SYNTHETIC-FIXTURE-LISTING 不得作為判決內容",
+      "hit_excerpt": "SYNTHETIC-FIXTURE-HIT 合成摘錄，非真實判決文字",
+      "fulltext_excerpt": "SYNTHETIC-FIXTURE-FULLTEXT 合成摘錄（截斷）",
+      "fulltext_truncated": true,
+      "fulltext_total_chars": 50000,
+      "case_history": null,
+      "warning": "SYNTHETIC-FIXTURE-WARNING"
+    }
+  ],
+  "verification_instructions": {
+    "required": true,
+    "notice": "SYNTHETIC-FIXTURE-NOTICE 僅能引用本 bundle 的 citation_id，不得自行補充字號。",
+    "rules": [
+      "Only cite judgments whose citation_id appears in allowed_citations.",
+      "Every legal proposition must cite a citation_id from allowed_citations.",
+      "Do not treat party arguments as court holdings.",
+      "If the bundle is insufficient, say so instead of inventing authority.",
+      "SYNTHETIC-FIXTURE-RULE-5",
+      "SYNTHETIC-FIXTURE-RULE-6",
+      "SYNTHETIC-FIXTURE-RULE-7",
+      "SYNTHETIC-FIXTURE-RULE-8",
+      "SYNTHETIC-FIXTURE-RULE-9"
+    ]
+  }
+}

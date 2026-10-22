@@ -4,6 +4,8 @@
 - 僅查詢法規名稱與條號（不含案情、個資）——非敏感傳輸。
 - 每筆查詢記錄：法規名、條號、條文全文、官方 URL、最後修正日、dataset 版本、核對時間。
 - 離線快照（data/law_reference_cache.json）：測試與離線環境不依賴網路。
+- 題庫條號可能是單條或章節範圍（``第100條至第119條``）；範圍必須先解析成
+  個別條號再查快照，任一缺漏即 fail-closed，不得展示殘缺法源。
 - 未核實不得標示已確認法源（spec §1.2）。
 - 廢止條文禁止作為現行法源。
 """
@@ -11,6 +13,7 @@
 from __future__ import annotations
 
 import json
+import re
 import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
@@ -40,19 +43,110 @@ def load_cache() -> dict[str, Any]:
 
 
 def get_cached_law_article(law_name: str, article_no: str) -> dict[str, Any] | None:
-    """只讀取離線法條快照；查無資料時不得觸發網路或憑記憶補文。"""
+    """只讀取離線法條快照；查無資料時不得觸發網路或憑記憶補文。
 
+    題庫的 ``source.article_no`` 有兩種形態：單一條號與章節範圍（例如
+    ``第100條至第119條``、``第2條、第25條``）。範圍字串過去被當成單一
+    條號查詢，因此永遠查無資料，``/api/question-bank`` 會誤標 NOT_FOUND。
+    單一條號仍回傳單筆；多條／範圍只有在**全部**條文均在快照內時才回傳
+    合併結果，任一缺漏即回傳 ``None``（fail-closed，不展示殘缺法源）。
+    """
+
+    resolution = resolve_cached_articles(law_name, article_no)
+    if resolution["status"] != "VERIFIED_CACHE":
+        return None
+    entries = resolution["articles"]
+    if len(entries) == 1:
+        return dict(entries[0])
+    return _composite_entry(law_name, article_no, entries)
+
+
+def resolve_cached_articles(law_name: str, article_no: str) -> dict[str, Any]:
+    """解析條號字串為個別條文，並回報快照覆蓋狀態。
+
+    狀態值：``VERIFIED_CACHE``（全部命中）、``PARTIAL_CACHE``（部分命中）、
+    ``NOT_FOUND``（全部未命中）、``INVALID_SPEC``（無法解析條號）。
+    """
+
+    references = parse_article_spec(article_no)
+    if not references:
+        return {
+            "status": "INVALID_SPEC",
+            "law_name": law_name,
+            "article_spec": article_no,
+            "references": [],
+            "articles": [],
+            "missing": [],
+        }
     cache = load_cache()
-    for key in _candidate_keys(law_name, article_no):
-        entry = cache.get(key)
-        if isinstance(entry, dict) and not entry.get("abolished"):
-            return dict(entry)
-    return None
+    articles: list[dict[str, Any]] = []
+    missing: list[str] = []
+    for reference in references:
+        entry = None
+        for key in _candidate_keys(law_name, reference):
+            candidate = cache.get(key)
+            if isinstance(candidate, dict) and not candidate.get("abolished"):
+                entry = dict(candidate)
+                break
+        if entry is None:
+            missing.append(reference)
+        else:
+            articles.append(entry)
+    if not articles:
+        status = "NOT_FOUND"
+    elif missing:
+        status = "PARTIAL_CACHE"
+    else:
+        status = "VERIFIED_CACHE"
+    return {
+        "status": status,
+        "law_name": law_name,
+        "article_spec": article_no,
+        "references": references,
+        "articles": articles,
+        "missing": missing,
+    }
+
+
+def _composite_entry(
+    law_name: str, article_spec: str, entries: list[dict[str, Any]]
+) -> dict[str, Any]:
+    """把多條條文合併為單一顯示用條目；每段保留自己的條號標籤。"""
+
+    blocks = [
+        f"{entry['law_name']}{entry['article_no']}\n{entry['article_content']}"
+        for entry in entries
+    ]
+    first = entries[0]
+    return {
+        "law_name": first["law_name"],
+        "article_no": article_spec,
+        "article_content": "\n\n".join(blocks),
+        "articles": [
+            {
+                "article_no": entry["article_no"],
+                "article_content": entry["article_content"],
+            }
+            for entry in entries
+        ],
+        "article_count": len(entries),
+        "law_url": first.get("law_url", ""),
+        "law_modified_date": max(
+            (entry.get("law_modified_date", "") for entry in entries), default=""
+        ),
+        "dataset_version": max(
+            (entry.get("dataset_version", "") for entry in entries), default=""
+        ),
+        "abolished": False,
+        "verified_at": max((entry.get("verified_at", "") for entry in entries), default=""),
+    }
 
 
 def save_cache(cache: dict[str, Any]) -> None:
     CACHE_PATH.write_text(
-        json.dumps(cache, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8"
+        json.dumps(cache, ensure_ascii=False, indent=2, sort_keys=True),
+        encoding="utf-8",
+        newline="\n",
     )
 
 
@@ -104,6 +198,86 @@ def _candidate_keys(law_name: str, article_no: str) -> list[str]:
             if k not in keys:
                 keys.append(k)
     return keys
+
+
+_ARTICLE_REFERENCE = re.compile(
+    r"第\s*(\d+)\s*(?:[之\-]\s*(\d+))?\s*條(?:\s*之\s*(\d+))?"
+)
+_BARE_ARTICLE = re.compile(r"^(\d+)(?:[之\-](\d+))?$")
+_RANGE_MARKERS = ("至", "～", "~", "－", "—")
+_MAX_RANGE_EXPANSION = 100
+
+
+def parse_article_spec(article_no: str) -> list[str]:
+    """把條號字串解析為個別條號（``172-1`` 這種形式）。
+
+    題庫同時使用單一條號與章節範圍，例如 ``第320條``、``第172條之1``、
+    ``第2條、第25條``、``第100條至第119條``。範圍只在同編章連續條號時
+    展開；無法解析、或展開超過 ``_MAX_RANGE_EXPANSION`` 條時回傳空清單，
+    由呼叫端標記 ``INVALID_SPEC``，不得猜測條號。
+    """
+
+    text = str(article_no or "").replace("　", " ").strip()
+    if not text:
+        return []
+    pieces = re.split(r"[、,，;；]|及|與", text)
+    output: list[str] = []
+    for piece in pieces:
+        piece = piece.strip()
+        if not piece:
+            continue
+        refs = [
+            (int(match.group(1)), int(match.group(2) or match.group(3)))
+            if (match.group(2) or match.group(3))
+            else (int(match.group(1)), None)
+            for match in _ARTICLE_REFERENCE.finditer(piece)
+        ]
+        if not refs:
+            bare = _BARE_ARTICLE.match(piece.replace("第", "").replace("條", "").strip())
+            if not bare:
+                continue
+            refs = [(int(bare.group(1)), int(bare.group(2)) if bare.group(2) else None)]
+        expanded = (
+            _expand_article_range(refs[0], refs[1])
+            if len(refs) == 2 and any(marker in piece for marker in _RANGE_MARKERS)
+            else [_format_article_ref(main, sub) for main, sub in refs]
+        )
+        for reference in expanded:
+            if reference not in output:
+                output.append(reference)
+    return output
+
+
+def _format_article_ref(main: int, sub: int | None) -> str:
+    return f"{main}-{sub}" if sub is not None else str(main)
+
+
+def _expand_article_range(
+    start: tuple[int, int | None], end: tuple[int, int | None]
+) -> list[str]:
+    (start_main, start_sub), (end_main, end_sub) = start, end
+    if start_main == end_main and start_sub is not None and end_sub is not None:
+        return [
+            _format_article_ref(start_main, sub)
+            for sub in range(start_sub, end_sub + 1)
+        ]
+    if start_main == end_main and start_sub is None and end_sub is not None:
+        return [str(start_main)] + [
+            _format_article_ref(start_main, sub) for sub in range(1, end_sub + 1)
+        ]
+    if start_main > end_main or end_main - start_main > _MAX_RANGE_EXPANSION:
+        return []
+    references: list[str] = []
+    for main in range(start_main, end_main + 1):
+        if main == start_main and start_sub is not None:
+            references.append(_format_article_ref(main, start_sub))
+        elif main == end_main and end_sub is not None:
+            # 「第74條至第75條之1」涵蓋第75條本身，不可只留 75-1。
+            references.append(str(main))
+            references.append(_format_article_ref(main, end_sub))
+        else:
+            references.append(str(main))
+    return references
 
 
 def get_law_article(

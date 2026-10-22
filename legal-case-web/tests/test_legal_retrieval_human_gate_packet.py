@@ -74,6 +74,9 @@ def test_all_frozen_file_hashes_match_current_checkout():
         "app/legal_retrieval_batch.py",
         "app/legal_retrieval_replay.py",
         "tests/fixtures/legal_retrieval_replay.json",
+        "app/legal_provider_tlr_pack.py",
+        "app/provider_endpoint_policy.py",
+        "deploy/providers/taiwan_law_mcp.json",
     }
     assert {item["path"] for item in packet["frozen_files"]} == expected_paths
     for item in packet["frozen_files"]:
@@ -117,6 +120,6 @@ def test_packet_records_current_bounded_verification_without_approving_gate():
     verification = {item["id"]: item for item in packet["verification"]}
     assert set(verification) == {"V01", "V02", "V03", "V04", "V05"}
     assert all(item["status"] == "PASS" for item in verification.values())
-    assert verification["V01"]["passed"] == 456
+    assert verification["V01"]["passed"] == 543
     assert verification["V04"]["passed"] == 26
     assert packet["decision_status"] == "PENDING_HUMAN_APPROVAL"

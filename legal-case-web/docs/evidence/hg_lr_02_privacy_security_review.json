@@ -6,9 +6,11 @@
   "human_gate_id": "HG-LR-02",
   "human_gate_status": "PENDING",
   "packet_id": "LR-HG-20261015-04",
-  "packet_sha256": "0dd346bd7b180fdd7a44ecd25617f683539afdf53a42cc0b444a8c9c2febb690",
+  "packet_sha256": "1cf587b9dec2494e45438dc1077f0fd2f694870d9ae4f375411395db560c91da",
   "provider_review_id": "HG-LR-01-REVIEW-20261015-03",
-  "provider_review_sha256": "85e7d229ea132aa3b93e2ab7e6713934b3c1e3d2698048f264c5b9b7c0d34741",
+  "provider_review_sha256": "f37795d3fd0d923c8a768dd5c31d74324497e6044e2d2e69f9fa192716ed60e2",
+  "repinned_on": "2026-10-23",
+  "repin_note": "本 review 的結論未變（仍為 CHANGES_REQUIRED_HUMAN_APPROVAL_PENDING）；僅因證據包重新凍結而更新 packet_sha256，並連帶更新 provider_review_sha256。P04（hosted 端點保存完整查詢參數）已由 app/provider_endpoint_policy.py 以「僅允許 loopback 自架端點」的可測試政策落實，但這不是核准紀錄。",
   "execution_mode": "SINGLE_EXECUTOR",
   "agent_mode": "SINGLE_AGENT_MODE",
   "scope": {

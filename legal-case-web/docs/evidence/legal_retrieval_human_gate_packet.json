@@ -65,6 +65,21 @@
       "path": "tests/fixtures/legal_retrieval_replay.json",
       "sha256": "bd5a02f6251dd1afece388f4a49f3ea41f60e006e162f827e25088f1067987dd",
       "role": "synthetic_golden_corpus"
+    },
+    {
+      "path": "app/legal_provider_tlr_pack.py",
+      "sha256": "1683419f76aac1dcdb30d482b2bd92f02178fb380b532d4b499ecb6eb3a4b0ae",
+      "role": "tlr_pack_bundle_contract"
+    },
+    {
+      "path": "app/provider_endpoint_policy.py",
+      "sha256": "a2496a643f060a7ada30deceffac621ce783dacb6591391ece6204e6817d0aab",
+      "role": "provider_endpoint_policy"
+    },
+    {
+      "path": "deploy/providers/taiwan_law_mcp.json",
+      "sha256": "0687beacc7a8d8eff23c060c97a5b8e2493b93240574bd416fb402b29dbd6a1f",
+      "role": "provider_endpoint_config"
     }
   ],
   "runtime_surfaces": [
@@ -102,10 +117,10 @@
       "id": "V01",
       "command": "py -3 -X utf8 -m pytest -q",
       "status": "PASS",
-      "result": "456 passed",
-      "passed": 456,
-      "verified_on": "2026-10-22",
-      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15. Re-verified again the same day after the C091-C120 rule corrections (transcribed-allegation guard, weak keyword guards, negation window) and the fourth case batch: 444 -> 452, after the competition-hypothesis demotion and defamation recall corrections: 452 -> 455, and after extending the negation window to the scenario-hint layer: 455 -> 456."
+      "result": "543 passed",
+      "passed": 543,
+      "verified_on": "2026-10-23",
+      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15. Re-verified again the same day after the C091-C120 rule corrections (transcribed-allegation guard, weak keyword guards, negation window) and the fourth case batch: 444 -> 452, after the competition-hypothesis demotion and defamation recall corrections: 452 -> 455, and after extending the negation window to the scenario-hint layer: 455 -> 456. Re-verified on 2026-10-23 after the multi-article law cache coverage fix and backfill: 456 -> 469; after the TLR pack bundle contract: 469 -> 487; after the self-host provider endpoint policy: 487 -> 501; after the behavior-time (amendment history) resolver: 501 -> 541; after two sub-numbered range parser cases: 541 -> 543."
     },
     {
       "id": "V02",

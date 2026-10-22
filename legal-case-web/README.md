@@ -250,7 +250,9 @@ legal-case-web/
 | `app/acts.py` | 行為模型、競合分析（不自動定性；竊盜/侵占含裁判錨點） | 自動認定行為數/競合結論 |
 | `app/questions.py` | 問句 metadata、動態預算、條件觸發、重評估、品質檢核 | 從自由文字直接定罪 |
 | `app/document_validation.py` | 筆錄/條陳完整性驗證（fail closed） | 決定罪章成立 |
-| `app/law_reference.py` | 法源快照、行為時法警示 | 取代人工法律核對 |
+| `app/law_reference.py` | 法源快照、多條號 spec 解析（`第100條至第119條`）、行為時法警示 | 取代人工法律核對 |
+| `app/moj_law_history.py` | 官方法規沿革頁解析與快照（中文數字、條號範圍、施行日） | 產生條文、判斷從舊從輕 |
+| `app/law_version.py` | 行為時法判定（讀沿革快照，指出應調閱哪一次修正） | 重建歷史條文、法律結論 |
 | `app/legal_semantic_corpus.py` | 固定語意測試集（32+6 案例） | — |
 | `app/offense_linkage.py` | 離線罪章關聯 PoC（竊盜/侵占 3 罪） | 接入 Gate 2、機率/自動認定 |
 | `app/legal_retrieval.py` | 結構化去識別查詢、防竄改、離線 adapter | 接收全文、呼叫外部 MCP、改狀態 |
@@ -260,10 +262,13 @@ legal-case-web/
 | `app/legal_retrieval_sync.py` | 協調器（dry-run）、adapter/正規化/cache/移除 | 外部網路、身分不一致、預設 cache、接入 |
 | `app/legal_retrieval_batch.py` | Manifest 驗證、記憶體 transaction、單次原子提交 | 部分提交、忽略漂移、存案件、排程、接入 |
 | `app/legal_retrieval_replay.py` | Golden corpus 重播、allowlist、固定投影與 hash | 收案件資料、輸出 fixture/錯誤文、覆寫、宣稱驗收 |
+| `app/legal_provider_tlr_pack.py` | `twlegalrag pack`（`twlegalrag.bundle/v1`）契約、registry 對應、摘要 hash | 保存判決全文、繞過 Human Gate 發 live 查詢 |
+| `app/provider_endpoint_policy.py` | 自架端點政策（僅 loopback）與 runtime 就緒檢查 | 啟用 hosted 端點、代為核准 Gate |
 
 **關鍵資料**：
 - `data/offense_linkage_poc.json`：法條/裁判錨點/child route/區分軸/中性問句關聯；`runtime_enabled: false / HUMAN_REVIEW_REQUIRED`；起訴書 `NOT_INGESTED`
-- `docs/evidence/legal_retrieval_human_gate_packet.json`：10 核心檔案 + 4 runtime hash 凍結；`PENDING_HUMAN_APPROVAL`，**hash 漂移即失效**
+- `data/law_amendment_history.json` ＋ `data/sources/moj_law_history_C0000001.html`：刑法官方沿革快照（58 筆修正、原始頁面 hash）；**不含舊條文**，`--check` 離線比對防漂移
+- `docs/evidence/legal_retrieval_human_gate_packet.json`：13 核心檔案 + 4 runtime hash 凍結；`PENDING_HUMAN_APPROVAL`，**hash 漂移即失效**
 - `docs/evidence/hg_lr_01_provider_contract_review.json`：5 provider 盤點；`PARTIAL_REVIEW_HUMAN_APPROVAL_REQUIRED`，**不選定/不授權 live**
 - `docs/evidence/hg_lr_02_privacy_security_review.json`：query/boundary/cache/audit/報告流；`CHANGES_REQUIRED_HUMAN_APPROVAL_PENDING`，**不得啟用外部/正式 cache**
 
