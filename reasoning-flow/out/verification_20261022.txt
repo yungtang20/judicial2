@@ -1,0 +1,15 @@
+驗收重跑摘要（2026-10-22 交接前重跑，非原始產生時間）
+validate_templates.py            exit=0  OK=262 FAIL=0
+validate_reasoning_flow.py       exit=0  OK=640 FAIL=0
+validate_questions_rules.py      exit=0  OK=446 FAIL=0
+validate_analyzer.py             exit=0  OK=388 FAIL=0
+validate_generator.py            exit=0  OK=1023 FAIL=0
+prototype_smoke.js               NOT_RUN  需要 PW_PATH 與 CHROME_PATH
+web_e2e.js                       NOT_RUN  需要 PW_PATH 與 CHROME_PATH
+llm_e2e.js                       NOT_RUN  需要 opencode CLI 與網路
+web_llm_e2e.js                   NOT_RUN  需要 PW_PATH、CHROME_PATH、opencode CLI 與網路
+
+說明：
+- 五份 Python 驗收腳本於 2026-10-22 於本機重跑，exit 皆為 0，項數與 out/regression_summary.txt（2026-10-21 16:09）完全一致，資料未劣化。
+- 四支瀏覽器／LLM 端到端腳本於 2026-10-22 未重跑：本機無 playwright-core（PW_PATH）與 Chrome headless shell（CHROME_PATH），LLM 腳本另需 opencode CLI 與網路。上次全數通過紀錄見 out/regression_summary.txt（2026-10-21 16:09），未於本次覆寫。
+- 執行環境需求與指令見 README.md 第九節「驗收與回歸」。

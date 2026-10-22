@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>條陳動態表單原型（M1）</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --panel:#fff; --line:#dfe3e8; --text:#1c2430; --muted:#6b7684;
+    --accent:#2f5d8c; --warn-bg:#fff8e1; --warn-line:#e0b95c; --warn-text:#8a5a00;
+    --todo:#b23b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;
+    font-size:15px;line-height:1.7}
+  header{background:var(--accent);color:#fff;padding:18px 24px}
+  header h1{margin:0;font-size:20px;font-weight:700}
+  header p{margin:4px 0 0;font-size:13px;opacity:.9}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px}
+  .grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin-bottom:18px}
+  .panel h2{margin:0 0 12px;font-size:16px;border-left:4px solid var(--accent);padding-left:8px}
+  .panel h3{margin:18px 0 8px;font-size:14px;color:var(--muted);font-weight:600}
+  label.q{display:block;margin:0 0 12px}
+  label.q .qt{font-size:13px;color:var(--muted);display:block;margin-bottom:4px}
+  select,input[type=text],textarea{width:100%;padding:7px 9px;border:1px solid var(--line);
+    border-radius:5px;font:inherit;font-size:14px;background:#fff;color:var(--text)}
+  textarea{min-height:84px;resize:vertical;line-height:1.7}
+  select:focus,input:focus,textarea:focus{outline:2px solid #bcd3e8;border-color:var(--accent)}
+  .field{margin-bottom:14px}
+  .field .fl{font-size:13px;font-weight:600;margin-bottom:4px;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap}
+  .field .fx{font-family:Consolas,"Courier New",monospace;font-size:12px;color:var(--muted)}
+  .field .fn{font-size:12px;color:var(--muted);margin-top:4px}
+  .field .fn.warn{color:var(--warn-text);background:var(--warn-bg);border:1px solid var(--warn-line);
+    border-radius:4px;padding:4px 6px;display:inline-block}
+  .fixed{font-family:Consolas,"Courier New",monospace;font-size:13px;background:#f2f4f7;
+    border:1px dashed var(--line);border-radius:5px;padding:8px 10px;white-space:pre-wrap}
+  .slotrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .slotrow>div{flex:1 1 150px}
+  .slotrow span{font-size:12px;color:var(--muted)}
+  .tag{display:inline-block;font-size:11px;border-radius:3px;padding:1px 6px;border:1px solid var(--line);
+    color:var(--muted);background:#f7f8fa;font-weight:400}
+  .tag.req{border-color:#c8a2a2;color:#8c4a4a;background:#fdf2f2}
+  .tag.todo{border-color:var(--todo);color:var(--todo);background:#fdf2f2}
+  .tag.ok{border-color:#5f9c6f;color:#3d7449;background:#f1f8f2}
+  pre.preview{background:#fbfbfc;border:1px solid var(--line);border-radius:6px;padding:14px;
+    white-space:pre-wrap;word-break:break-word;font-family:"Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+    font-size:14.5px;line-height:1.9;margin:0;max-height:620px;overflow:auto}
+  .hit{font-size:13px;border-radius:5px;padding:9px 11px;margin-bottom:12px;border:1px solid}
+  .hit.ok{background:#f1f8f2;border-color:#b6d6bd;color:#2f5f3a}
+  .hit.no{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-text)}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  button{font:inherit;font-size:14px;padding:8px 14px;border-radius:5px;border:1px solid var(--accent);
+    background:var(--accent);color:#fff;cursor:pointer}
+  button.ghost{background:#fff;color:var(--accent)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+  th{background:#f2f4f7;font-weight:600}
+  .muted{color:var(--muted);font-size:13px}
+  .err{color:var(--todo);font-size:14px}
+  .sticky{position:sticky;top:16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>條陳動態表單原型（M1）</h1>
+  <p>資料來源：<code>data/templates.json</code>｜模板選擇、欄位、輸出全部由 JSON 驅動，改模板不改程式碼。</p>
+</header>
+
+<div class="wrap">
+  <div id="boot" class="panel"><p class="err" id="bootMsg">載入 templates.json 中…</p></div>
+
+  <div class="grid" id="app" hidden>
+    <div>
+      <section class="panel">
+        <h2>① 模板選擇</h2>
+        <div id="picker"></div>
+        <div id="hit" class="hit"></div>
+      </section>
+
+      <section class="panel">
+        <h2>② 表單（依 JSON 欄位動態產生）</h2>
+        <div id="form"></div>
+      </section>
+    </div>
+
+    <div class="sticky">
+      <section class="panel">
+        <h2>③ 條陳預覽</h2>
+        <div class="btnrow">
+          <button id="btnCopy">複製文字</button>
+          <button id="btnDl">下載 .txt</button>
+          <button id="btnReset" class="ghost">清除填寫</button>
+        </div>
+        <pre class="preview" id="preview"></pre>
+      </section>
+
+      <section class="panel">
+        <h2>④ 三種模板差異對照</h2>
+        <div id="compare"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const DATA_URL = "../data/templates.json";
+let DATA = null;
+let current = null;          // 目前選用的 template
+let answers = {};            // {has_victim, is_solved, subject_identified}
+let values  = {};            // {field_id: 字串}
+let slotValues = {};         // {slot_id: 字串}
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? "" : s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* ---------- 資料載入 ---------- */
+async function boot(){
+  try{
+    const res = await fetch(DATA_URL, {cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    DATA = await res.json();
+  }catch(err){
+    $("#bootMsg").innerHTML =
+      "無法載入 <code>" + DATA_URL + "</code>：" + esc(err.message) +
+      "<br><span class='muted'>請以本機 HTTP 伺服器開啟（執行 <code>reasoning-flow/start.ps1</code>），"
+      + "直接雙擊本檔會因瀏覽器同源限制而讀不到 JSON。</span>";
+    return;
+  }
+  $("#boot").hidden = true;
+  $("#app").hidden = false;
+  initAnswers();
+  renderPicker();
+  renderForm();
+  renderCompare();
+  update();
+}
+
+/* ---------- ① 模板選擇 ---------- */
+function initAnswers(){
+  const first = DATA.templates[0].applies_when;
+  answers = {
+    has_victim: first.has_victim,
+    is_solved: first.is_solved,
+    subject_identified: first.subject_identified
+  };
+}
+function renderPicker(){
+  const box = $("#picker");
+  box.innerHTML = DATA.selection_logic.questions.map(q => {
+    const opts = q.options.map(o =>
+      `<option value="${o.value === null ? "null" : o.value}"${String(answers[q.maps_to]) === String(o.value) ? " selected" : ""}>${esc(o.label)}</option>`
+    ).join("");
+    return `<label class="q"><span class="qt">${esc(q.question)}</span>
+      <select data-key="${q.maps_to}">${opts}</select></label>`;
+  }).join("");
+  box.querySelectorAll("select").forEach(sel => {
+    sel.addEventListener("change", () => {
+      const v = sel.value;
+      answers[sel.dataset.key] = (v === "true") ? true : (v === "false") ? false : null;
+      update();
+    });
+  });
+}
+function matchTemplate(){
+  for(const row of DATA.selection_logic.decision_table){
+    let ok = true;
+    for(const key of ["has_victim","is_solved","subject_identified"]){
+      const cond = row[key];
+      if(cond === null || cond === undefined) continue;   // wildcard
+      const ans = answers[key];
+      if(ans === null || ans === undefined) { ok = false; break; }
+      if(cond !== ans){ ok = false; break; }
+    }
+    if(ok) return row;
+  }
+  return null;
+}
+
+/* ---------- ② 表單 ---------- */
+function renderForm(){
+  const tpl = current;
+  if(!tpl){ $("#form").innerHTML = '<p class="muted">目前條件無對應模板。</p>'; return; }
+  const html = tpl.sections.map(sec => {
+    const fields = sec.fields.map(f => {
+      if(f.type === "static"){
+        return `<div class="field">
+          <div class="fl">${esc(f.label)} <span class="tag">固定文字</span></div>
+          <div class="fixed">${esc(f.fixed_text)}</div>
+          ${f.note ? `<div class="fn">${esc(f.note)}</div>` : ""}
+        </div>`;
+      }
+      if(f.type === "composite"){
+        const slots = (f.slots||[]).map(s => `
+          <div><span>${esc(s.label)}</span>
+          <input type="text" data-slot="${esc(s.slot_id)}" value="${esc(slotValues[s.slot_id]||"")}" placeholder="（可留空）"></div>`).join("");
+        return `<div class="field">
+          <div class="fl">${esc(f.label)} <span class="tag">固定文字＋可填空位</span></div>
+          <div class="fixed">${esc(f.fixed_text)}</div>
+          <div class="slotrow">${slots}</div>
+          ${f.note ? `<div class="fn">${esc(f.note)}</div>` : ""}
+        </div>`;
+      }
+      const isArea = f.type === "multiline";
+      const val = values[f.field_id] || "";
+      const ctrl = isArea
+        ? `<textarea data-field="${esc(f.field_id)}" placeholder="${esc(f.variable_placeholder||f.example||"")}">${esc(val)}</textarea>`
+        : `<input type="text" data-field="${esc(f.field_id)}" value="${esc(val)}"
+             placeholder="${esc(f.variable_placeholder||f.example||"")}">`;
+      const req = f.required ? '<span class="tag req">必填</span>' : "";
+      const fx = f.fixed_text ? `<span class="fx">${esc(f.fixed_text)}</span>` : "";
+      const note = f.note ? `<div class="fn">${esc(f.note)}</div>` : "";
+      return `<div class="field">
+        <div class="fl">${esc(f.label)} ${req} ${fx}</div>
+        ${ctrl}
+        ${note}
+        <div class="fn" data-status="${esc(f.field_id)}"></div>
+      </div>`;
+    }).join("");
+    return `<h3>${esc(sec.section_title)}</h3>${fields}`;
+  }).join("");
+  $("#form").innerHTML = html;
+
+  $("#form").querySelectorAll("[data-field]").forEach(el => {
+    el.addEventListener("input", () => { values[el.dataset.field] = el.value; update(); });
+  });
+  $("#form").querySelectorAll("[data-slot]").forEach(el => {
+    el.addEventListener("input", () => { slotValues[el.dataset.slot] = el.value; update(); });
+  });
+}
+
+/* ---------- ③ 輸出組裝（完全依 JSON 的 fixed_text 規則） ---------- */
+function markerFor(f){
+  if(f.empty_policy === "keep_placeholder") return f.variable_placeholder || "";
+  if(f.empty_policy === "keep_blank") return "";
+  return DATA.export_rules.unfilled_marker;
+}
+function buildText(tpl){
+  const out = [];
+  if(tpl.title_text) out.push(tpl.title_text);
+  for(const sec of tpl.sections){
+    for(const f of sec.fields){
+      if(f.type === "static"){ out.push(f.fixed_text); continue; }
+      if(f.type === "composite"){
+        let text = f.fixed_text;
+        for(const s of (f.slots||[])){
+          const v = (slotValues[s.slot_id]||"").trim();
+          if(v) text = text.split(s.anchor).join(s.anchor + v);
+        }
+        out.push(text);
+        continue;
+      }
+      const raw = (values[f.field_id]||"").trim();
+      const v = raw || markerFor(f);
+      const suffix = f.fixed_suffix || "";
+      if(f.render === "below"){
+        out.push(f.fixed_text + "\n" + v + suffix);
+      }else if(f.variable_position === "before"){
+        out.push(v + f.fixed_text + suffix);
+      }else{
+        out.push(f.fixed_text + v + suffix);
+      }
+    }
+  }
+  return out.join("\n");
+}
+function buildExport(tpl){
+  const body = buildText(tpl);
+  const footer = DATA.export_rules.footer.map(f => f).join("\n");
+  return body + "\n\n" + footer;
+}
+function update(){
+  const row = matchTemplate();
+  const hit = $("#hit");
+  if(!row){
+    hit.className = "hit no";
+    hit.textContent = "目前組合無對應模板。";
+    current = null;
+  }else if(row.template_id){
+    hit.className = "hit ok";
+    hit.textContent = "符合：" + row.result_note;
+    const tpl = DATA.templates.find(t => t.template_id === row.template_id);
+    if(!current || current.template_id !== tpl.template_id){
+      current = tpl;
+      renderForm();
+    }
+  }else{
+    hit.className = "hit no";
+    hit.textContent = row.result_note;
+    current = null;
+    renderForm();
+  }
+  renderPreview();
+  renderStatus();
+}
+function renderPreview(){
+  const pre = $("#preview");
+  if(!current){ pre.textContent = "（無對應模板，無輸出）"; return; }
+  pre.textContent = buildExport(current);
+}
+function renderStatus(){
+  if(!current) return;
+  for(const sec of current.sections){
+    for(const f of sec.fields){
+      const el = document.querySelector(`[data-status="${f.field_id}"]`);
+      if(!el) continue;
+      if(f.editable === false){ el.innerHTML = ""; continue; }
+      const filled = (values[f.field_id]||"").trim();
+      el.innerHTML = filled
+        ? '<span class="tag ok">已填</span>'
+        : '<span class="tag todo">未敘明 → ' + esc(markerFor(f)) + '</span>';
+    }
+  }
+}
+
+/* ---------- ④ 模板差異對照 ---------- */
+function renderCompare(){
+  const c = DATA.template_comparison;
+  const names = DATA.templates.map(t => t.template_name);
+  const allFields = [];
+  for(const t of DATA.templates){
+    for(const sec of t.sections) for(const f of sec.fields) if(!allFields.includes(f.field_id)) allFields.push(f.field_id);
+  }
+  const rows = allFields.map(fid => {
+    const cells = DATA.templates.map(t => {
+      let found = null;
+      for(const sec of t.sections) for(const f of sec.fields) if(f.field_id === fid) found = f;
+      if(!found) return "<td class='muted'>—</td>";
+      const label = found.label;
+      const ph = found.variable_placeholder ? `<div class='muted'>佔位：${esc(found.variable_placeholder)}</div>` : "";
+      return `<td>${esc(label)}${ph}</td>`;
+    }).join("");
+    return `<tr><td><code>${esc(fid)}</code></td>${cells}</tr>`;
+  }).join("");
+  $("#compare").innerHTML =
+    `<table><thead><tr><th>field_id</th>${names.map(n => `<th>${esc(n)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>
+     <div class="muted" style="margin-top:8px">共用欄位：${c.common_fields.map(esc).join("、")}</div>`;
+}
+
+/* ---------- 匯出 ---------- */
+$("#btnCopy").addEventListener("click", async () => {
+  if(!current) return;
+  const text = buildExport(current);
+  try{
+    await navigator.clipboard.writeText(text);
+    $("#btnCopy").textContent = "已複製 ✓";
+    setTimeout(() => $("#btnCopy").textContent = "複製文字", 1600);
+  }catch(err){
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+    $("#btnCopy").textContent = "已複製 ✓";
+    setTimeout(() => $("#btnCopy").textContent = "複製文字", 1600);
+  }
+});
+$("#btnDl").addEventListener("click", () => {
+  if(!current) return;
+  const blob = new Blob(["\ufeff" + buildExport(current)], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = current.template_name + ".txt";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+$("#btnReset").addEventListener("click", () => {
+  values = {}; slotValues = {};
+  renderForm(); update();
+});
+
+boot();
+</script>
+</body>
+</html>

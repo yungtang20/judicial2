@@ -1,0 +1,95 @@
+[
+  {
+    "id": "GEN-C-01",
+    "target": "relative",
+    "question": "當時對方以何種方式、施加於何處？你的身體或心理感受到什麼樣的狀態？",
+    "maps_to": [
+      "e_irresistible",
+      "e_coercion",
+      "gap_category:行為",
+      "e_taking_or_delivery",
+      "e_delivery_by_fear"
+    ],
+    "gap_id": "g1",
+    "note": "對應缺口 g1；範本 q_relative_coercion_degree",
+    "source_template_id": "q_relative_coercion_degree",
+    "covers_gaps": [
+      "g1"
+    ]
+  },
+  {
+    "id": "GEN-C-02",
+    "target": "relative",
+    "question": "遭取走或被要求交付的財物有哪些？請逐項說明名稱、數量、特徵與價值認定依據。",
+    "maps_to": [
+      "e_taking_or_delivery",
+      "e_robbery_intent",
+      "gap_category:物"
+    ],
+    "gap_id": "g2",
+    "note": "對應缺口 g2；範本 q_relative_property；並對應缺口 g3；並對應缺口 g5；並對應缺口 g6",
+    "source_template_id": "q_relative_property",
+    "covers_gaps": [
+      "g2",
+      "g3",
+      "g5",
+      "g6"
+    ]
+  },
+  {
+    "id": "GEN-C-03",
+    "target": "relative",
+    "question": "對方當時說了什麼或做了什麼？請逐項說明其內容、表達方式與發生順序。",
+    "maps_to": [
+      "e_threat",
+      "e_coercion",
+      "gap_category:行為"
+    ],
+    "gap_id": "g4",
+    "note": "對應缺口 g4；範本 q_relative_threat_content",
+    "source_template_id": "q_relative_threat_content",
+    "covers_gaps": [
+      "g4"
+    ]
+  },
+  {
+    "id": "GEN-C-04",
+    "target": "relative",
+    "question": "請說明各項財物的價值及其認定依據。",
+    "maps_to": [
+      "gap:g7"
+    ],
+    "gap_id": "g7",
+    "note": "對應缺口 g7；依缺口建議問法",
+    "source_template_id": null,
+    "covers_gaps": [
+      "g7"
+    ]
+  },
+  {
+    "id": "GEN-C-05",
+    "target": "relative",
+    "question": "請用自己的話說明事情從開始到結束的經過。",
+    "maps_to": [
+      "gap_category:事"
+    ],
+    "gap_id": null,
+    "covers_gaps": [],
+    "note": "角色基礎問句（每次詢問必問）",
+    "source_template_id": "q_relative_free_account",
+    "is_baseline": true
+  },
+  {
+    "id": "GEN-N-01",
+    "target": "suspect",
+    "question": "請依時間順序說明整個過程。",
+    "maps_to": [
+      "gap_category:事"
+    ],
+    "gap_id": null,
+    "covers_gaps": [],
+    "note": "角色基礎問句（每次詢問必問）",
+    "source_template_id": "q_suspect_sequence",
+    "is_baseline": true
+  }
+]

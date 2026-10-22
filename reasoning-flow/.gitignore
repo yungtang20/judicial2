@@ -1,0 +1,7 @@
+# 法源擷取原始資料（含登入 session）—— 不進版控
+raw/
+*.json.gz
+
+# 本機環境
+.env
+.env.local

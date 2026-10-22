@@ -1,0 +1,23 @@
+{
+  "case_id": "case_ambiguous",
+  "subject_identified": false,
+  "delivery_status": "未敘明",
+  "ambiguous_referentials": [
+    "他",
+    "對方",
+    "對方"
+  ],
+  "candidate_statutes": [
+    "§328_I",
+    "§346_I"
+  ],
+  "has_victim": null,
+  "has_victim_evidence": [],
+  "is_solved": false,
+  "is_solved_evidence": [],
+  "element_count": 7,
+  "gap_count": 15,
+  "triggered_paths": [],
+  "candidate_fallback_used": false,
+  "partial_path_matches": []
+}

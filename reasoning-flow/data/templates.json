@@ -1,0 +1,958 @@
+{
+  "schema": "statement_templates_v1",
+  "source_file": "條陳.txt",
+  "source_encoding": "utf-8",
+  "extracted_at": "2026-10-21",
+  "status": "extracted",
+  "schema_notes": {
+    "note": "本檔為階段一 4.2（條陳模板提取）產出。所有固定文字、佔位文字、括號與標點均照抄 條陳.txt，未自行更正任何字元（含原文誤植）。",
+    "added_field_keys": [
+      "variable_position：變動文字相對於 fixed_text 的位置，after（預設）或 before",
+      "fixed_suffix：變動文字之後的固定結尾（例如「。」）",
+      "render：inline（與 fixed_text 同行）或 below（填在下一行）",
+      "empty_policy：todo（未填標「（待補）」）、keep_placeholder（保留原文佔位）、keep_blank（保留原樣留白）",
+      "editable：該欄位是否可由使用者填寫",
+      "slots：固定文字中的可填空位，以 anchor 標示插入點",
+      "title_text：原文第一行標題"
+    ],
+    "field_key_reference": {
+      "field_id": "欄位識別碼（同語意欄位於三種模板共用同 id）",
+      "label": "中文字段名",
+      "type": "header | string | datetime | multiline | static | composite",
+      "required": "是否為該模板必要欄位",
+      "conditional": "模板內欄位皆為 false；跨模板的條件性由 selection_logic 與 applies_when 表達",
+      "fixed_text": "固定不變文字（照抄原文，含全形冒號、頓號、括號）",
+      "variable_placeholder": "原文樣板上的變動佔位文字；空字串代表原文該處留白無佔位",
+      "example": "填寫示例",
+      "note": "註記（含原文疑義，不得自行更正）"
+    }
+  },
+  "export_rules": {
+    "join": "依 sections 順序以換行串接欄位；title_text 置於最上。",
+    "unfilled_marker": "（待補）",
+    "subject_unknown_marker": "（主體待確認）",
+    "footer": [
+      "模擬填充，不構成正式文書。",
+      "所有罪名均為候選，不認定犯罪成立。"
+    ],
+    "preserve_original": "固定文字一律照抄，不得改寫、補字或換標點。"
+  },
+  "templates": [
+    {
+      "template_id": "victim_report",
+      "template_name": "被害人條陳",
+      "title_text": "被害人條陳",
+      "status": "extracted",
+      "applies_when": {
+        "has_victim": true,
+        "is_solved": false,
+        "subject_identified": true
+      },
+      "applies_note": "原文此模板以「受理案由：○○○(受理)」表示案件已受理、尚未破獲；後續處置含「本案管轄」欄位。",
+      "sections": [
+        {
+          "section_id": "header",
+          "section_title": "抬頭",
+          "fields": [
+            {
+              "field_id": "header_office",
+              "label": "報告單位抬頭",
+              "type": "header",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "報告",
+              "variable_placeholder": "○○所",
+              "variable_position": "before",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "keep_placeholder",
+              "example": "○○派出所",
+              "note": "原文為「○○所報告」；本欄位填單位名稱，「報告」為固定文字。",
+              "value_hints": {
+                "type": "manual",
+                "note": "報告單位名稱不由事實描述抽取，須由承辦人填寫；未填時保留原文佔位。"
+              }
+            }
+          ]
+        },
+        {
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "fields": [
+            {
+              "field_id": "case_reason",
+              "label": "受理案由",
+              "type": "string",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "一、受理案由：",
+              "variable_placeholder": "○○○(受理)",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "被害人於超商遭人持刀威脅並取走財物（候選）",
+              "note": "受理案由僅填「事實描述＋（候選）」，不得填具體法條罪名；括號為原文半形括號。",
+              "value_hints": {
+                "type": "summary",
+                "role": "事實描述摘要",
+                "max_length": 120,
+                "suffix": "（候選）",
+                "note": "僅填事實描述，不得填具體法條罪名；末尾以（候選）標示本欄位內容尚待釐清。"
+              }
+            },
+            {
+              "field_id": "occurred_time",
+              "label": "發生時間",
+              "type": "datetime",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "二、發生時間：",
+              "variable_placeholder": "年月日時分",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "114年5月1日21時30分",
+              "note": "原文佔位為時間格式「年月日時分」，填寫時須含年、月、日、時、分。",
+              "value_hints": {
+                "type": "datetime",
+                "patterns": [
+                  "\\d{2,3}年\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "(?:早上|中午|下午|晚上|凌晨|傍晚)\\d{1,2}時(?:\\d{1,2}分)?",
+                  "\\d{1,2}時\\d{1,2}分"
+                ]
+              }
+            },
+            {
+              "field_id": "occurred_location",
+              "label": "發生地點",
+              "type": "string",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "三、發生地點：",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "○○市○○區○○路○○號超商門口",
+              "note": "原文此欄位冒號後留白，無佔位文字。",
+              "value_hints": {
+                "type": "location",
+                "patterns": [
+                  "(?![我在于到去來從對他她它])[^，。；\\s]{0,12}?(?:市|縣)[^，。；\\s]{0,10}?(?:區|鄉|鎮)[^，。；\\s]{0,20}?(?:號|路|街|巷)",
+                  "(?![我在于到去來從對他她它])[^，。；\\s]{0,20}?(?:超商|公園|市場|車站|停車場|騎樓|住處|店面前|旁)"
+                ]
+              }
+            },
+            {
+              "field_id": "report_time",
+              "label": "報案時間",
+              "type": "datetime",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "四、報案時間：",
+              "variable_placeholder": "年月日時分",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "114年5月1日22時10分",
+              "note": "原文佔位為時間格式「年月日時分」。",
+              "value_hints": {
+                "type": "datetime",
+                "context_before": [
+                  "報案",
+                  "報警",
+                  "通報",
+                  "向警察"
+                ],
+                "context_window": 30,
+                "patterns": [
+                  "\\d{2,3}年\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "(?:早上|中午|下午|晚上|凌晨)\\d{1,2}時(?:\\d{1,2}分)?"
+                ]
+              }
+            },
+            {
+              "field_id": "case_summary",
+              "label": "案情摘要",
+              "type": "multiline",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "五、案情摘要：",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "below",
+              "empty_policy": "todo",
+              "example": "114年5月1日21時30分，○○市○○區○○路○○號超商前，遭一名男子持刀威脅，被害人交付現金新臺幣○○元後該男子離去。",
+              "note": "摘要內容填於本行下方，可分多行；原文此處為空白待填。",
+              "value_hints": {
+                "type": "summary",
+                "role": "案情摘要",
+                "max_length": 400,
+                "suffix": ""
+              }
+            }
+          ]
+        },
+        {
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "fields": [
+            {
+              "field_id": "follow_up_header",
+              "label": "後續處置標題",
+              "type": "static",
+              "editable": false,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "六、後續處置：",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "keep_blank",
+              "example": "六、後續處置：",
+              "note": "段落標題，固定文字不可填寫。"
+            },
+            {
+              "field_id": "filing_report",
+              "label": "依規定陳報",
+              "type": "composite",
+              "editable": false,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "keep_blank",
+              "example": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+              "note": "原文含三個案號空位且預設留白；本行開頭為全形「（一）」，結尾為半形「)」。如已有案號可填入對應空位，未填則保留原樣。",
+              "slots": [
+                {
+                  "slot_id": "filing_report_no",
+                  "label": "證明單案號",
+                  "anchor": "證明單案號："
+                },
+                {
+                  "slot_id": "child_welfare_no",
+                  "label": "婦幼案號",
+                  "anchor": "婦幼案號："
+                },
+                {
+                  "slot_id": "case165_no",
+                  "label": "165案號",
+                  "anchor": "165案號："
+                }
+              ]
+            },
+            {
+              "field_id": "jurisdiction",
+              "label": "本案管轄",
+              "type": "string",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "（二）本案管轄：",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "本所轄區",
+              "note": "原文冒號後留白。",
+              "value_hints": {
+                "type": "constant",
+                "value": "本所轄區"
+              }
+            },
+            {
+              "field_id": "handling_officer",
+              "label": "處理員警",
+              "type": "string",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "（三）處理員警：警員 ",
+              "variable_placeholder": "○○○",
+              "variable_position": "after",
+              "fixed_suffix": "。",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "王小明",
+              "note": "固定文字含「警員 」與句尾「。」，中間姓名為變動欄位。",
+              "value_hints": {
+                "type": "person",
+                "patterns": [
+                  "警員\\s*([\\u4e00-\\u9fff]{2,4})",
+                  "處理員警[:：]\\s*([\\u4e00-\\u9fff]{2,4})"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "template_id": "suspect_with_victim",
+      "template_name": "涉嫌人條陳，有被害人版",
+      "title_text": "涉嫌人條陳，有被害人版",
+      "status": "extracted",
+      "applies_when": {
+        "has_victim": true,
+        "is_solved": true,
+        "subject_identified": true
+      },
+      "applies_note": "原文此模板以「受理案由：○○○(破獲)」表示已破獲，且後續處置載明調閱監視器尋線通知嫌疑人到所說明之流程。",
+      "sections": [
+        {
+          "section_id": "header",
+          "section_title": "抬頭",
+          "fields": [
+            {
+              "field_id": "header_office",
+              "label": "報告單位抬頭",
+              "type": "header",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "報告",
+              "variable_placeholder": "○○所",
+              "variable_position": "before",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "keep_placeholder",
+              "example": "○○派出所",
+              "note": "原文為「○○所報告」；本欄位填單位名稱，「報告」為固定文字。",
+              "value_hints": {
+                "type": "manual",
+                "note": "報告單位名稱不由事實描述抽取，須由承辦人填寫；未填時保留原文佔位。"
+              }
+            }
+          ]
+        },
+        {
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "fields": [
+            {
+              "field_id": "case_reason",
+              "label": "受理案由",
+              "type": "string",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "一、受理案由：",
+              "variable_placeholder": "○○○(破獲)",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "被害人於超商遭人持刀威脅並取走財物（候選）",
+              "note": "受理案由僅填「事實描述＋（候選）」，不得填具體法條罪名；括號為原文半形括號。",
+              "value_hints": {
+                "type": "summary",
+                "role": "事實描述摘要",
+                "max_length": 120,
+                "suffix": "（候選）",
+                "note": "僅填事實描述，不得填具體法條罪名；末尾以（候選）標示本欄位內容尚待釐清。"
+              }
+            },
+            {
+              "field_id": "occurred_time",
+              "label": "發生時間",
+              "type": "datetime",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "二、發生時間：",
+              "variable_placeholder": "年月日時分",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "114年5月1日21時30分",
+              "note": "原文佔位為時間格式「年月日時分」，填寫時須含年、月、日、時、分。",
+              "value_hints": {
+                "type": "datetime",
+                "patterns": [
+                  "\\d{2,3}年\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "(?:早上|中午|下午|晚上|凌晨|傍晚)\\d{1,2}時(?:\\d{1,2}分)?",
+                  "\\d{1,2}時\\d{1,2}分"
+                ]
+              }
+            },
+            {
+              "field_id": "occurred_location",
+              "label": "發生地點",
+              "type": "string",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "三、發生地點：",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "○○市○○區○○路○○號超商門口",
+              "note": "原文此欄位冒號後留白，無佔位文字。",
+              "value_hints": {
+                "type": "location",
+                "patterns": [
+                  "(?![我在于到去來從對他她它])[^，。；\\s]{0,12}?(?:市|縣)[^，。；\\s]{0,10}?(?:區|鄉|鎮)[^，。；\\s]{0,20}?(?:號|路|街|巷)",
+                  "(?![我在于到去來從對他她它])[^，。；\\s]{0,20}?(?:超商|公園|市場|車站|停車場|騎樓|住處|店面前|旁)"
+                ]
+              }
+            },
+            {
+              "field_id": "report_time",
+              "label": "報案時間",
+              "type": "datetime",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "四、報案時間：",
+              "variable_placeholder": "年月日時分",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "114年5月1日22時10分",
+              "note": "原文佔位為時間格式「年月日時分」。",
+              "value_hints": {
+                "type": "datetime",
+                "context_before": [
+                  "報案",
+                  "報警",
+                  "通報",
+                  "向警察"
+                ],
+                "context_window": 30,
+                "patterns": [
+                  "\\d{2,3}年\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "(?:早上|中午|下午|晚上|凌晨)\\d{1,2}時(?:\\d{1,2}分)?"
+                ]
+              }
+            },
+            {
+              "field_id": "solved_time",
+              "label": "破獲時間",
+              "type": "datetime",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "五、破獲時間：",
+              "variable_placeholder": "年月日時分",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "114年5月3日14時0分",
+              "note": "本欄位僅見於本模板；原文佔位為時間格式「年月日時分」。",
+              "value_hints": {
+                "type": "datetime",
+                "context_before": [
+                  "到案",
+                  "破獲",
+                  "查獲",
+                  "移送",
+                  "帶回"
+                ],
+                "context_window": 30,
+                "patterns": [
+                  "\\d{2,3}年\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "(?:早上|中午|下午|晚上|凌晨)\\d{1,2}時(?:\\d{1,2}分)?"
+                ]
+              }
+            },
+            {
+              "field_id": "case_summary",
+              "label": "案情摘要",
+              "type": "multiline",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "六、案情摘要：",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "below",
+              "empty_policy": "todo",
+              "example": "114年5月1日21時30分，○○市○○區○○路○○號超商前，遭一名男子持刀威脅，被害人交付現金新臺幣○○元後該男子離去；本案於114年5月3日通知嫌疑人到所說明。",
+              "note": "摘要內容填於本行下方，可分多行；原文此處為空白待填。",
+              "value_hints": {
+                "type": "summary",
+                "role": "案情摘要",
+                "max_length": 400,
+                "suffix": ""
+              }
+            }
+          ]
+        },
+        {
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "fields": [
+            {
+              "field_id": "follow_up_header",
+              "label": "後續處置標題",
+              "type": "static",
+              "editable": false,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "七、後續處置：",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "keep_blank",
+              "example": "七、後續處置：",
+              "note": "段落標題，固定文字不可填寫。"
+            },
+            {
+              "field_id": "filing_report",
+              "label": "依規定陳報",
+              "type": "composite",
+              "editable": false,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "keep_blank",
+              "example": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+              "note": "原文含三個案號空位且預設留白；本行開頭為全形「（一）」，結尾為半形「)」。如已有案號可填入對應空位，未填則保留原樣。",
+              "slots": [
+                {
+                  "slot_id": "filing_report_no",
+                  "label": "證明單案號",
+                  "anchor": "證明單案號："
+                },
+                {
+                  "slot_id": "child_welfare_no",
+                  "label": "婦幼案號",
+                  "anchor": "婦幼案號："
+                },
+                {
+                  "slot_id": "case165_no",
+                  "label": "165案號",
+                  "anchor": "165案號："
+                }
+              ]
+            },
+            {
+              "field_id": "investigation_summary",
+              "label": "偵查經過說明",
+              "type": "static",
+              "editable": false,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "（二）警方依規定受理後，調閱店家及公家道路監視器影像，尋線找到嫌疑人並聯繫嫌疑人至所說明，嫌於警詢筆錄中表示，其他內容詳如筆錄，函送偵查隊續辦。",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "keep_blank",
+              "example": "（二）警方依規定受理後，調閱店家及公家道路監視器影像，尋線找到嫌疑人並聯繫嫌疑人至所說明，嫌於警詢筆錄中表示，其他內容詳如筆錄，函送偵查隊續辦。",
+              "note": "原文此行為固定敘述，未預留明顯空位；其中「表示，」之後隱含嫌疑人陳述承接點，實務如何填補待確認，提取階段不做變更。"
+            },
+            {
+              "field_id": "handling_officer",
+              "label": "處理員警",
+              "type": "string",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "（三）處理員警：警員 ",
+              "variable_placeholder": "○○○",
+              "variable_position": "after",
+              "fixed_suffix": "。",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "王小明",
+              "note": "固定文字含「警員 」與句尾「。」，中間姓名為變動欄位。",
+              "value_hints": {
+                "type": "person",
+                "patterns": [
+                  "警員\\s*([\\u4e00-\\u9fff]{2,4})",
+                  "處理員警[:：]\\s*([\\u4e00-\\u9fff]{2,4})"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "template_id": "suspect_no_victim",
+      "template_name": "涉嫌人條陳，無被害人版",
+      "title_text": "涉嫌人條陳，無被害人版",
+      "status": "extracted",
+      "applies_when": {
+        "has_victim": false,
+        "is_solved": true,
+        "subject_identified": true
+      },
+      "applies_note": "原文此模板以「查獲案由：○○○(破獲)」表示查獲且無被害人，全篇無報案時間與後續處置區塊。",
+      "sections": [
+        {
+          "section_id": "header",
+          "section_title": "抬頭",
+          "fields": [
+            {
+              "field_id": "header_office",
+              "label": "報告單位抬頭",
+              "type": "header",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "報告",
+              "variable_placeholder": "○○○所",
+              "variable_position": "before",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "keep_placeholder",
+              "example": "○○○派出所",
+              "note": "原文為「○○○所報告」，佔位圈數為三個，與前兩種模板的「○○所」不同，照原文保留。",
+              "value_hints": {
+                "type": "manual",
+                "note": "報告單位名稱不由事實描述抽取，須由承辦人填寫；未填時保留原文佔位。"
+              }
+            }
+          ]
+        },
+        {
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "fields": [
+            {
+              "field_id": "case_reason",
+              "label": "查獲案由",
+              "type": "string",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "一、查獲案由：",
+              "variable_placeholder": "○○○(破獲)",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "現場查獲持有管制毒品並遭查扣（候選）",
+              "note": "查獲案由僅填「事實描述＋（候選）」，不得填具體法條罪名；括號為原文半形括號。",
+              "value_hints": {
+                "type": "summary",
+                "role": "事實描述摘要",
+                "max_length": 120,
+                "suffix": "（候選）",
+                "note": "僅填事實描述，不得填具體法條罪名；末尾以（候選）標示本欄位內容尚待釐清。"
+              }
+            },
+            {
+              "field_id": "occurred_time",
+              "label": "查獲時間",
+              "type": "datetime",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "二、查獲時間：",
+              "variable_placeholder": "年月日時分",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "114年5月3日14時0分",
+              "note": "本模板無「發生時間」欄位，改以「查獲時間」記載。",
+              "value_hints": {
+                "type": "datetime",
+                "patterns": [
+                  "\\d{2,3}年\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "\\d{1,2}月\\d{1,2}日(?:\\d{1,2}時\\d{1,2}分)?",
+                  "(?:早上|中午|下午|晚上|凌晨|傍晚)\\d{1,2}時(?:\\d{1,2}分)?",
+                  "\\d{1,2}時\\d{1,2}分"
+                ]
+              }
+            },
+            {
+              "field_id": "occurred_location",
+              "label": "查獲地點",
+              "type": "string",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "三、查獲地點：",
+              "variable_placeholder": "年月日時分",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "○○市○○區○○路○○號",
+              "note": "原文疑為誤植：查獲地點欄位的佔位文字為時間格式「年月日時分」。依提取規範保留原樣、未自行更正，實際填寫應為地點。",
+              "value_hints": {
+                "type": "location",
+                "patterns": [
+                  "(?![我在于到去來從對他她它])[^，。；\\s]{0,12}?(?:市|縣)[^，。；\\s]{0,10}?(?:區|鄉|鎮)[^，。；\\s]{0,20}?(?:號|路|街|巷)",
+                  "(?![我在于到去來從對他她它])[^，。；\\s]{0,20}?(?:超商|公園|市場|車站|停車場|騎樓|住處|店面前|旁)"
+                ]
+              }
+            },
+            {
+              "field_id": "case_summary",
+              "label": "案情摘要",
+              "type": "multiline",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "四、案情摘要：",
+              "variable_placeholder": "",
+              "variable_position": "after",
+              "fixed_suffix": "",
+              "render": "below",
+              "empty_policy": "todo",
+              "example": "114年5月3日14時0分，於○○市○○區○○路○○號查獲涉案人，現場查扣物件詳如扣押清單。",
+              "note": "摘要內容填於本行下方，可分多行；原文此處為空白待填。",
+              "value_hints": {
+                "type": "summary",
+                "role": "案情摘要",
+                "max_length": 400,
+                "suffix": ""
+              }
+            }
+          ]
+        },
+        {
+          "section_id": "follow_up",
+          "section_title": "承辦人",
+          "fields": [
+            {
+              "field_id": "handling_officer",
+              "label": "處理員警",
+              "type": "string",
+              "editable": true,
+              "required": true,
+              "conditional": false,
+              "fixed_text": "五、處理員警：警員 ",
+              "variable_placeholder": "○○○",
+              "variable_position": "after",
+              "fixed_suffix": "。",
+              "render": "inline",
+              "empty_policy": "todo",
+              "example": "王小明",
+              "note": "本模板無後續處置區塊，處理員警直接編為第五項；固定文字含「警員 」與句尾「。」。",
+              "value_hints": {
+                "type": "person",
+                "patterns": [
+                  "警員\\s*([\\u4e00-\\u9fff]{2,4})",
+                  "處理員警[:：]\\s*([\\u4e00-\\u9fff]{2,4})"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "template_comparison": {
+    "common_fields": [
+      "header_office",
+      "case_reason",
+      "occurred_time",
+      "occurred_location",
+      "case_summary",
+      "handling_officer"
+    ],
+    "unique_fields": {
+      "victim_report": [
+        "report_time",
+        "follow_up_header",
+        "filing_report",
+        "jurisdiction"
+      ],
+      "suspect_with_victim": [
+        "report_time",
+        "solved_time",
+        "follow_up_header",
+        "filing_report",
+        "investigation_summary"
+      ],
+      "suspect_no_victim": []
+    },
+    "label_variants": {
+      "case_reason": {
+        "victim_report": "受理案由",
+        "suspect_with_victim": "受理案由",
+        "suspect_no_victim": "查獲案由"
+      },
+      "occurred_time": {
+        "victim_report": "發生時間",
+        "suspect_with_victim": "發生時間",
+        "suspect_no_victim": "查獲時間"
+      },
+      "occurred_location": {
+        "victim_report": "發生地點",
+        "suspect_with_victim": "發生地點",
+        "suspect_no_victim": "查獲地點"
+      }
+    },
+    "placeholder_variants": {
+      "case_reason": {
+        "victim_report": "○○○(受理)",
+        "suspect_with_victim": "○○○(破獲)",
+        "suspect_no_victim": "○○○(破獲)"
+      },
+      "header_office": {
+        "victim_report": "○○所",
+        "suspect_with_victim": "○○所",
+        "suspect_no_victim": "○○○所"
+      }
+    },
+    "notes": [
+      "三種模板皆含抬頭、案由、時間、地點、案情摘要與處理員警六個語意欄位。",
+      "報案時間與後續處置區塊僅見於前兩種模板；破獲時間僅見於涉嫌人有被害人版。",
+      "涉嫌人無被害人版無後續處置區塊，處理員警直接編為第五項，編號不跳號。",
+      "同一語意欄位在三種模板的標籤、佔位文字與編號皆不同，填寫與輸出時以各模板原文字面為準。",
+      "跨模板的條件性（某欄位是否出現）由 selection_logic 與 applies_when 表達，模板內欄位本身無 conditional=true。",
+      "原文標題行（被害人條陳／涉嫌人條陳，有被害人版／涉嫌人條陳，無被害人版）含版本說明文字，疑為樣本檔分段標記，一律照原文保留。"
+    ]
+  },
+  "selection_logic": {
+    "questions": [
+      {
+        "question_id": "q_has_victim",
+        "question": "本案是否有被害人？",
+        "maps_to": "has_victim",
+        "options": [
+          {
+            "value": true,
+            "label": "有被害人"
+          },
+          {
+            "value": false,
+            "label": "無被害人"
+          }
+        ]
+      },
+      {
+        "question_id": "q_is_solved",
+        "question": "本案是否已破獲（查獲或嫌疑人到案說明）？",
+        "maps_to": "is_solved",
+        "options": [
+          {
+            "value": true,
+            "label": "已破獲"
+          },
+          {
+            "value": false,
+            "label": "未破獲"
+          }
+        ]
+      },
+      {
+        "question_id": "q_subject_identified",
+        "question": "涉案主體（嫌疑人）是否已特定？",
+        "maps_to": "subject_identified",
+        "options": [
+          {
+            "value": true,
+            "label": "已特定"
+          },
+          {
+            "value": false,
+            "label": "未特定"
+          },
+          {
+            "value": null,
+            "label": "不確定"
+          }
+        ]
+      }
+    ],
+    "decision_table": [
+      {
+        "row_id": "r1",
+        "has_victim": true,
+        "is_solved": false,
+        "subject_identified": null,
+        "template_id": "victim_report",
+        "result_note": "有被害人且未破獲 → 被害人條陳（受理案由）"
+      },
+      {
+        "row_id": "r2",
+        "has_victim": true,
+        "is_solved": true,
+        "subject_identified": true,
+        "template_id": "suspect_with_victim",
+        "result_note": "有被害人、已破獲且主體已特定 → 涉嫌人條陳，有被害人版"
+      },
+      {
+        "row_id": "r3",
+        "has_victim": true,
+        "is_solved": true,
+        "subject_identified": false,
+        "template_id": null,
+        "result_note": "無對應模板：已破獲但主體尚未特定，應先補齊主體身分資料"
+      },
+      {
+        "row_id": "r4",
+        "has_victim": false,
+        "is_solved": true,
+        "subject_identified": true,
+        "template_id": "suspect_no_victim",
+        "result_note": "無被害人、已破獲且主體已特定 → 涉嫌人條陳，無被害人版"
+      },
+      {
+        "row_id": "r5",
+        "has_victim": false,
+        "is_solved": true,
+        "subject_identified": false,
+        "template_id": null,
+        "result_note": "無對應模板：主體尚未特定"
+      },
+      {
+        "row_id": "r6",
+        "has_victim": false,
+        "is_solved": false,
+        "subject_identified": null,
+        "template_id": null,
+        "result_note": "無對應模板：無被害人且未破獲之情形不在 條陳.txt 三種模板範圍內"
+      },
+      {
+        "row_id": "r7",
+        "has_victim": true,
+        "is_solved": true,
+        "subject_identified": null,
+        "template_id": null,
+        "result_note": "無對應模板：已破獲但主體是否特定尚不確定，應先確認主體身分"
+      },
+      {
+        "row_id": "r8",
+        "has_victim": false,
+        "is_solved": true,
+        "subject_identified": null,
+        "template_id": null,
+        "result_note": "無對應模板：已破獲但主體是否特定尚不確定，應先確認主體身分"
+      }
+    ],
+    "matching_rule": "row 值為 null 代表該列不限制此條件（wildcard）；question 值為 null 代表「不確定」，不滿足任何具體條件。取第一列完全符合者。"
+  },
+  "extraction_gaps": []
+}

@@ -1,0 +1,2069 @@
+{
+  "case_ambiguous": {
+    "llm": {
+      "subject": {
+        "identified": false,
+        "detail": "敘事中行為人僅以「他」代稱、被害人僅以「對方」代稱，姓名與身分均未確定；另載「現場好像有人看見，但不清楚是誰」，存在未解析之指代，致行為人身分須另行釐明。"
+      },
+      "delivery_status": "僅有要求或脅迫，交付與否未敘明",
+      "elements": [
+        {
+          "element_id": "e_coercion",
+          "status": "待確認",
+          "reason": "敘事僅載「跟對方說了一些話」且內容不明，未見持械、施暴、喝令交付等施壓方式之對應事實，故是否以脅迫或其他不法方法施壓尚待確認。"
+        },
+        {
+          "element_id": "e_irresistible",
+          "status": "已具備",
+          "reason": "「對方嚇得不敢動」「兩個人就這樣僵住了」已呈現被害人當時身心上顯難抗拒之狀態。"
+        },
+        {
+          "element_id": "e_taking_or_delivery",
+          "status": "因指代不明無法判斷",
+          "reason": "敘事已載「後來好像就走了，東西也不曉得去哪裡」，惟離開者為行為人或被害人一事未明，是否有人取走物品或雙方就交付事項未經指明，致取走或交付之事實無從確認。"
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "status": "已具備",
+          "reason": "敘事已載「好像是要搶東西的事」，其中「要搶」與圖取他人之物之意圖相應。"
+        },
+        {
+          "element_id": "e_threat",
+          "status": "待確認",
+          "reason": "雖有「跟對方說了一些話」及「嚇得不敢動」之反應，但話語內容與告知方式均未敘明，是否以加害生命、身體、自由、名譽或財產之事通知他人並致生畏怖心理尚待確認。"
+        },
+        {
+          "element_id": "e_delivery_by_fear",
+          "status": "明顯欠缺",
+          "reason": "被害人基於畏懼而交付物品之對應事實完全未出現，敘事僅有致其畏懼而不敢動之情狀，至於有無交付之動作及其內容均未敘及。"
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "status": "已具備",
+          "reason": "就§346而言，敘事已載「好像是要搶東西的事」，其中「要搶」與圖取他人之物之意圖相應。"
+        }
+      ],
+      "gaps": [
+        {
+          "gap_id": "g1",
+          "type": "fact",
+          "description": "缺少「他跟對方說的那些話」的具體內容與說話方式之對應事實（含有無表明要取走何物、有無以加害之事恐嚇或喝令交付、有無同時手持工具或做出動作），致 e_coercion（是否以脅迫或其他不法方法施壓）與 e_threat（是否以加害之事通知他人致生畏怖心理）無從判斷。",
+          "affects_elements": [
+            "e_coercion",
+            "e_threat"
+          ],
+          "question_hint": "請盡可能逐字或逐段描述「他跟對方說的那些話」的內容、語氣與同時的動作，以及說話當下有無手持工具、逼近或其他身體動作。"
+        },
+        {
+          "gap_id": "g2",
+          "type": "fact",
+          "description": "缺少被害人是否有交付物品、行為人是否有取走物品之對應事實，現有敘述僅稱「東西也不曉得去哪裡」，未指明物品如何離開現場、係由何人取走或由何人交付，致 e_taking_or_delivery 與 e_delivery_by_fear 之核心事實無從確認。",
+          "affects_elements": [
+            "e_taking_or_delivery",
+            "e_delivery_by_fear"
+          ],
+          "question_hint": "請說明案發當時物品的下落與流向，包含物品最後出現在何處、由誰帶走或交與何人，以及被害人是否曾將物品交予他人。"
+        },
+        {
+          "gap_id": "g3",
+          "type": "fact",
+          "description": "缺少「後來好像就走了」之主體所指為行為人或被害人之對應事實，致 e_taking_or_delivery 無法確認取走或交付之作為人及相關動靜之先後關係。",
+          "affects_elements": [
+            "e_taking_or_delivery"
+          ],
+          "question_hint": "請描述事發後離開現場的是哪一方，以及離開的先後順序與當時攜帶或持有的物品情形。"
+        },
+        {
+          "gap_id": "g4",
+          "type": "fact",
+          "description": "缺少在場目擊者之身分及其見聞範圍之對應事實（敘事稱「現場好像有人看見，但不清楚是誰」），致 e_coercion、e_irresistible 與 e_taking_or_delivery 無從獲得他人證述之佐證。",
+          "affects_elements": [
+            "e_coercion",
+            "e_irresistible",
+            "e_taking_or_delivery"
+          ],
+          "question_hint": "請說明當時在場目擊者的身分、與當事人之關係，以及其實際目擊之互動過程與物品移動情形。"
+        },
+        {
+          "gap_id": "g5",
+          "type": "element",
+          "description": "e_delivery_by_fear 目前無任何交付事實可供涵攝（仅有致其畏懼而不敢動之情狀），需補充被害人是否因畏懼而將物交付之具體事實後，該要件始有判斷基礎。",
+          "affects_elements": [
+            "e_delivery_by_fear"
+          ],
+          "question_hint": "請補充被害人於畏懼狀態下是否曾將任何物品交給對方，或雙方間是否曾有交付、允許取用或處置物品的互動。"
+        }
+      ]
+    },
+    "gen": {
+      "template_id": "victim_report",
+      "template_name": "被害人條陳",
+      "template_selection": {
+        "answers": {
+          "has_victim": true,
+          "is_solved": false,
+          "subject_identified": false
+        },
+        "note": "有被害人且未破獲 → 被害人條陳（受理案由）",
+        "no_exact_match": false
+      },
+      "questions": [
+        {
+          "id": "GEN-C-01",
+          "target": "relative",
+          "question": "當時（具體情境），你看到／聽到什麼？請依順序說明。",
+          "maps_to": [
+            "e_coercion",
+            "gap_category:事",
+            "e_threat"
+          ],
+          "gap_id": "g1",
+          "note": "對應缺口 g1；範本 q_relative_perception；並對應缺口 g4",
+          "source_template_id": "q_relative_perception",
+          "covers_gaps": [
+            "g1",
+            "g4"
+          ]
+        },
+        {
+          "id": "GEN-C-02",
+          "target": "relative",
+          "question": "當時你的處境為何？有哪些選項是你當下仍能選擇的？",
+          "maps_to": [
+            "e_delivery_by_fear",
+            "e_irresistible",
+            "gap_category:因果",
+            "e_taking_or_delivery"
+          ],
+          "gap_id": "g2",
+          "note": "對應缺口 g2；範本 q_relative_freedom_of_choice；並對應缺口 g5",
+          "source_template_id": "q_relative_freedom_of_choice",
+          "covers_gaps": [
+            "g2",
+            "g5"
+          ]
+        },
+        {
+          "id": "GEN-C-03",
+          "target": "relative",
+          "question": "遭取走或被要求交付的財物有哪些？請逐項說明名稱、數量、特徵與價值認定依據。",
+          "maps_to": [
+            "e_taking_or_delivery",
+            "e_robbery_intent",
+            "gap_category:物"
+          ],
+          "gap_id": "g3",
+          "note": "對應缺口 g3；範本 q_relative_property",
+          "source_template_id": "q_relative_property",
+          "covers_gaps": [
+            "g3"
+          ]
+        },
+        {
+          "id": "GEN-C-04",
+          "target": "relative",
+          "question": "請用自己的話說明事情從開始到結束的經過。",
+          "maps_to": [
+            "gap_category:事"
+          ],
+          "gap_id": null,
+          "covers_gaps": [],
+          "note": "角色基礎問句（每次詢問必問）",
+          "source_template_id": "q_relative_free_account",
+          "is_baseline": true
+        }
+      ],
+      "questions_by_target": {
+        "relative": [
+          {
+            "id": "GEN-C-01",
+            "target": "relative",
+            "question": "當時（具體情境），你看到／聽到什麼？請依順序說明。",
+            "maps_to": [
+              "e_coercion",
+              "gap_category:事",
+              "e_threat"
+            ],
+            "gap_id": "g1",
+            "note": "對應缺口 g1；範本 q_relative_perception；並對應缺口 g4",
+            "source_template_id": "q_relative_perception",
+            "covers_gaps": [
+              "g1",
+              "g4"
+            ]
+          },
+          {
+            "id": "GEN-C-02",
+            "target": "relative",
+            "question": "當時你的處境為何？有哪些選項是你當下仍能選擇的？",
+            "maps_to": [
+              "e_delivery_by_fear",
+              "e_irresistible",
+              "gap_category:因果",
+              "e_taking_or_delivery"
+            ],
+            "gap_id": "g2",
+            "note": "對應缺口 g2；範本 q_relative_freedom_of_choice；並對應缺口 g5",
+            "source_template_id": "q_relative_freedom_of_choice",
+            "covers_gaps": [
+              "g2",
+              "g5"
+            ]
+          },
+          {
+            "id": "GEN-C-03",
+            "target": "relative",
+            "question": "遭取走或被要求交付的財物有哪些？請逐項說明名稱、數量、特徵與價值認定依據。",
+            "maps_to": [
+              "e_taking_or_delivery",
+              "e_robbery_intent",
+              "gap_category:物"
+            ],
+            "gap_id": "g3",
+            "note": "對應缺口 g3；範本 q_relative_property",
+            "source_template_id": "q_relative_property",
+            "covers_gaps": [
+              "g3"
+            ]
+          },
+          {
+            "id": "GEN-C-04",
+            "target": "relative",
+            "question": "請用自己的話說明事情從開始到結束的經過。",
+            "maps_to": [
+              "gap_category:事"
+            ],
+            "gap_id": null,
+            "covers_gaps": [],
+            "note": "角色基礎問句（每次詢問必問）",
+            "source_template_id": "q_relative_free_account",
+            "is_baseline": true
+          }
+        ]
+      },
+      "rejected_questions": [],
+      "statement_fill": [
+        {
+          "template_id": "victim_report",
+          "section_id": "header",
+          "section_title": "抬頭",
+          "field_id": "header_office",
+          "label": "報告單位抬頭",
+          "fixed_text": "報告",
+          "type": "header",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "before",
+          "fixed_suffix": "",
+          "value": "○○所",
+          "status": "保留原文佔位"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "case_reason",
+          "label": "受理案由",
+          "fixed_text": "一、受理案由：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（主體待確認）",
+          "status": "主體待確認"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "occurred_time",
+          "label": "發生時間",
+          "fixed_text": "二、發生時間：",
+          "type": "datetime",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "occurred_location",
+          "label": "發生地點",
+          "fixed_text": "三、發生地點：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "report_time",
+          "label": "報案時間",
+          "fixed_text": "四、報案時間：",
+          "type": "datetime",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "case_summary",
+          "label": "案情摘要",
+          "fixed_text": "五、案情摘要：",
+          "type": "multiline",
+          "editable": true,
+          "render": "below",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（主體待確認）",
+          "status": "主體待確認"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "follow_up_header",
+          "label": "後續處置標題",
+          "fixed_text": "六、後續處置：",
+          "type": "static",
+          "editable": false,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "六、後續處置：",
+          "status": "固定文字"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "filing_report",
+          "label": "依規定陳報",
+          "fixed_text": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+          "type": "composite",
+          "editable": false,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+          "status": "固定文字（案號空位保留原樣）",
+          "slots": [
+            {
+              "slot_id": "filing_report_no",
+              "label": "證明單案號",
+              "value": ""
+            },
+            {
+              "slot_id": "child_welfare_no",
+              "label": "婦幼案號",
+              "value": ""
+            },
+            {
+              "slot_id": "case165_no",
+              "label": "165案號",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "jurisdiction",
+          "label": "本案管轄",
+          "fixed_text": "（二）本案管轄：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（主體待確認）",
+          "status": "主體待確認"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "handling_officer",
+          "label": "處理員警",
+          "fixed_text": "（三）處理員警：警員 ",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "。",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        }
+      ],
+      "export_text": "被害人條陳\n○○所報告\n一、受理案由：（主體待確認）\n二、發生時間：（待補）\n三、發生地點：（待補）\n四、報案時間：（待補）\n五、案情摘要：\n（主體待確認）\n六、後續處置：\n（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)\n（二）本案管轄：（主體待確認）\n（三）處理員警：警員 （待補）。\n\n模擬填充，不構成正式文書。\n所有罪名均為候選，不認定犯罪成立。",
+      "meta": {
+        "question_count": 4,
+        "rejected_count": 0,
+        "gap_count": 5,
+        "covered_gaps": [
+          "g1",
+          "g2",
+          "g3",
+          "g4",
+          "g5"
+        ],
+        "fill_status": {
+          "保留原文佔位": 1,
+          "主體待確認": 3,
+          "未敘明，待補": 4,
+          "固定文字": 1,
+          "固定文字（案號空位保留原樣）": 1
+        }
+      }
+    },
+    "rule_meta": {
+      "case_id": "case_ambiguous",
+      "subject_identified": false,
+      "delivery_status": "未敘明",
+      "ambiguous_referentials": [
+        "他",
+        "對方",
+        "對方"
+      ],
+      "candidate_statutes": [
+        "§328_I",
+        "§346_I"
+      ],
+      "has_victim": null,
+      "has_victim_evidence": [],
+      "is_solved": false,
+      "is_solved_evidence": [],
+      "element_count": 7,
+      "gap_count": 15,
+      "triggered_paths": [],
+      "candidate_fallback_used": false,
+      "partial_path_matches": []
+    }
+  },
+  "case_explicit": {
+    "llm": {
+      "subject": {
+        "identified": true,
+        "detail": "被害人陳○○（事發時下班後欲步行回家之女性，行經○○市○○區○○路○○號超商前）與行為人王○○（自背後持刀接近、揚言搶錢並取走現金者）均以姓名代碼指稱，角色與相互關係明確，未出現未解析之指代。"
+      },
+      "delivery_status": "已取走",
+      "elements": [
+        {
+          "element_id": "e_coercion",
+          "status": "已具備",
+          "reason": "敘述已載「持刀從背後接近並以刀指向被害人」，對應持刀、刀指之不法施壓方法。"
+        },
+        {
+          "element_id": "e_irresistible",
+          "status": "已具備",
+          "reason": "敘述已載「被害人因害怕而不敢抗拒」，對應害怕、不敢抗拒之心理狀態事實。"
+        },
+        {
+          "element_id": "e_taking_or_delivery",
+          "status": "已具備",
+          "reason": "敘述已載「王○○隨即取走被害人包內現金新臺幣3千元」，對應取走他人之物（取財方式為自行取走而非被害人交付）。"
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "status": "已具備",
+          "reason": "敘述已載「揚言要搶錢」，對應搶奪之不法所有意圖（§328_I 項下同一 element_id 之對應事實）。"
+        },
+        {
+          "element_id": "e_illegal_benefit",
+          "status": "已具備",
+          "reason": "敘述已載行為人取走被害人所有之現金新臺幣3,000元，客觀上已得他人之財產上利益。"
+        },
+        {
+          "element_id": "e_threat",
+          "status": "已具備",
+          "reason": "敘述已載「持刀……以刀指向被害人，揚言要搶錢」，對應揚言並亮刀之恐嚇告知方式。"
+        },
+        {
+          "element_id": "e_delivery_by_fear",
+          "status": "明顯欠缺",
+          "reason": "敘述僅載行為人自行取走包內現金，全文未出現被害人因畏懼而將財物交付予行為人之事實（§346_I 項下同一 element_id 之對應事實）。"
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "status": "已具備",
+          "reason": "敘述已載「揚言要搶錢」，對應搶奪之不法所有意圖（§346_I 項下同一 element_id 之對應事實）。"
+        }
+      ],
+      "gaps": [
+        {
+          "gap_id": "g1",
+          "type": "fact",
+          "description": "欠缺「被害人如何處置該筆現金」之具體事實：敘述僅載「取走被害人包內現金新臺幣3千元」，未載被害人是否自包中取出、遞交或以其他方式交予行為人。致 §346_I「以恐嚇使人交付」之要件無對應事實可資判斷（e_delivery_by_fear）。",
+          "affects_elements": [
+            "e_delivery_by_fear",
+            "e_taking_or_delivery"
+          ],
+          "question_hint": "被害人當時是親手將該3,000元取出交予行為人，還是任憑行為人自行自包內取走？交予或交付過程中有無任何語言或肢體互動？"
+        },
+        {
+          "gap_id": "g2",
+          "type": "fact",
+          "description": "欠缺「案發時段超商監視器影像內容」之事實（敘述載明現場附近有超商監視器但尚未調閱）。致 e_coercion、e_threat、e_irresistible 之客觀事實（持刀指向之方式與距離、揚言之具體內容、被害人當場之反應與抗拒程度）目前僅有被害人單方陳述，判斷基礎尚未取得影像佐證。",
+          "affects_elements": [
+            "e_coercion",
+            "e_threat",
+            "e_irresistible"
+          ],
+          "question_hint": "該超商監視器可調閱之時間區間與涵蓋範圍為何？影像中可辨識出哪些當事人之位置、動作、所持物品與言詞內容？"
+        },
+        {
+          "gap_id": "g3",
+          "type": "element",
+          "description": "欠缺「§346_I 恐嚇取財各要件與本件敘述事實之對應關係」之釐清：現有敘述之取財手法為持刀脅迫後由行為人自行取走，未敘明因恐嚇而生交付。致 e_delivery_by_fear 之判斷基礎不足，並使 §346_I 與 §328_I 兩組要件（e_threat、e_robbery_intent）究應如何涵攝同一事實，尚待承辦人確認。",
+          "affects_elements": [
+            "e_delivery_by_fear",
+            "e_threat",
+            "e_robbery_intent",
+            "e_taking_or_delivery"
+          ],
+          "question_hint": "本件取財行為在事實上究屬被害人交付抑或行為人自行取走，與以恐嚇使人交付之結構是否相容，請承辦人裁示認定方向。"
+        },
+        {
+          "gap_id": "g4",
+          "type": "fact",
+          "description": "欠缺「被害人與行為人是否熟識、被害人報案之時點及是否為第一時間報案」之事實。致 e_robbery_intent（§328_I 與 §346_I 兩處）之知悉情形與 e_irresistible 之客觀情境判斷，目前僅有事後報警之單一記述可資對照。",
+          "affects_elements": [
+            "e_robbery_intent",
+            "e_irresistible"
+          ],
+          "question_hint": "被害人與行為人彼此認識嗎？被害人是在何時、於何處報警，報警內容與本次敘述是否一致？"
+        }
+      ]
+    },
+    "gen": {
+      "template_id": "victim_report",
+      "template_name": "被害人條陳",
+      "template_selection": {
+        "answers": {
+          "has_victim": true,
+          "is_solved": false,
+          "subject_identified": true
+        },
+        "note": "有被害人且未破獲 → 被害人條陳（受理案由）",
+        "no_exact_match": false
+      },
+      "questions": [
+        {
+          "id": "GEN-C-05",
+          "target": "relative",
+          "question": "當時你的處境為何？有哪些選項是你當下仍能選擇的？",
+          "maps_to": [
+            "e_delivery_by_fear",
+            "e_irresistible",
+            "gap_category:因果",
+            "e_taking_or_delivery"
+          ],
+          "gap_id": "g1",
+          "note": "對應缺口 g1；範本 q_relative_freedom_of_choice；並對應缺口 g3",
+          "source_template_id": "q_relative_freedom_of_choice",
+          "covers_gaps": [
+            "g1",
+            "g3"
+          ]
+        },
+        {
+          "id": "GEN-C-06",
+          "target": "relative",
+          "question": "當時（具體情境），你看到／聽到什麼？請依順序說明。",
+          "maps_to": [
+            "e_coercion",
+            "gap_category:事",
+            "e_threat",
+            "e_irresistible"
+          ],
+          "gap_id": "g2",
+          "note": "對應缺口 g2；範本 q_relative_perception",
+          "source_template_id": "q_relative_perception",
+          "covers_gaps": [
+            "g2"
+          ]
+        },
+        {
+          "id": "GEN-C-07",
+          "target": "relative",
+          "question": "當時對方以何種方式、施加於何處？你的身體或心理感受到什麼樣的狀態？",
+          "maps_to": [
+            "e_irresistible",
+            "e_coercion",
+            "gap_category:行為",
+            "e_robbery_intent"
+          ],
+          "gap_id": "g4",
+          "note": "對應缺口 g4；範本 q_relative_coercion_degree",
+          "source_template_id": "q_relative_coercion_degree",
+          "covers_gaps": [
+            "g4"
+          ]
+        },
+        {
+          "id": "GEN-C-08",
+          "target": "relative",
+          "question": "請用自己的話說明事情從開始到結束的經過。",
+          "maps_to": [
+            "gap_category:事"
+          ],
+          "gap_id": null,
+          "covers_gaps": [],
+          "note": "角色基礎問句（每次詢問必問）",
+          "source_template_id": "q_relative_free_account",
+          "is_baseline": true
+        },
+        {
+          "id": "GEN-N-01",
+          "target": "suspect",
+          "question": "請依時間順序說明整個過程。",
+          "maps_to": [
+            "gap_category:事"
+          ],
+          "gap_id": null,
+          "covers_gaps": [],
+          "note": "角色基礎問句（每次詢問必問）",
+          "source_template_id": "q_suspect_sequence",
+          "is_baseline": true
+        }
+      ],
+      "questions_by_target": {
+        "relative": [
+          {
+            "id": "GEN-C-05",
+            "target": "relative",
+            "question": "當時你的處境為何？有哪些選項是你當下仍能選擇的？",
+            "maps_to": [
+              "e_delivery_by_fear",
+              "e_irresistible",
+              "gap_category:因果",
+              "e_taking_or_delivery"
+            ],
+            "gap_id": "g1",
+            "note": "對應缺口 g1；範本 q_relative_freedom_of_choice；並對應缺口 g3",
+            "source_template_id": "q_relative_freedom_of_choice",
+            "covers_gaps": [
+              "g1",
+              "g3"
+            ]
+          },
+          {
+            "id": "GEN-C-06",
+            "target": "relative",
+            "question": "當時（具體情境），你看到／聽到什麼？請依順序說明。",
+            "maps_to": [
+              "e_coercion",
+              "gap_category:事",
+              "e_threat",
+              "e_irresistible"
+            ],
+            "gap_id": "g2",
+            "note": "對應缺口 g2；範本 q_relative_perception",
+            "source_template_id": "q_relative_perception",
+            "covers_gaps": [
+              "g2"
+            ]
+          },
+          {
+            "id": "GEN-C-07",
+            "target": "relative",
+            "question": "當時對方以何種方式、施加於何處？你的身體或心理感受到什麼樣的狀態？",
+            "maps_to": [
+              "e_irresistible",
+              "e_coercion",
+              "gap_category:行為",
+              "e_robbery_intent"
+            ],
+            "gap_id": "g4",
+            "note": "對應缺口 g4；範本 q_relative_coercion_degree",
+            "source_template_id": "q_relative_coercion_degree",
+            "covers_gaps": [
+              "g4"
+            ]
+          },
+          {
+            "id": "GEN-C-08",
+            "target": "relative",
+            "question": "請用自己的話說明事情從開始到結束的經過。",
+            "maps_to": [
+              "gap_category:事"
+            ],
+            "gap_id": null,
+            "covers_gaps": [],
+            "note": "角色基礎問句（每次詢問必問）",
+            "source_template_id": "q_relative_free_account",
+            "is_baseline": true
+          }
+        ],
+        "suspect": [
+          {
+            "id": "GEN-N-01",
+            "target": "suspect",
+            "question": "請依時間順序說明整個過程。",
+            "maps_to": [
+              "gap_category:事"
+            ],
+            "gap_id": null,
+            "covers_gaps": [],
+            "note": "角色基礎問句（每次詢問必問）",
+            "source_template_id": "q_suspect_sequence",
+            "is_baseline": true
+          }
+        ]
+      },
+      "rejected_questions": [],
+      "statement_fill": [
+        {
+          "template_id": "victim_report",
+          "section_id": "header",
+          "section_title": "抬頭",
+          "field_id": "header_office",
+          "label": "報告單位抬頭",
+          "fixed_text": "報告",
+          "type": "header",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "before",
+          "fixed_suffix": "",
+          "value": "○○所",
+          "status": "保留原文佔位"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "case_reason",
+          "label": "受理案由",
+          "fixed_text": "一、受理案由：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "114年5月1日晚上21時30分，○○市○○區○○路○○號超商前，被害人陳○○下班後正要走回家，行為人王○○持刀從背後靠近並以刀指向被害人，揚言要搶錢，被害人因害怕而不敢抗拒，王○○隨即取走被害人包內現金新臺幣3千元後離去。被害人事後報警，…（候選）",
+          "status": "已填"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "occurred_time",
+          "label": "發生時間",
+          "fixed_text": "二、發生時間：",
+          "type": "datetime",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "114年5月1日",
+          "status": "已填"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "occurred_location",
+          "label": "發生地點",
+          "fixed_text": "三、發生地點：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "○○市○○區○○路",
+          "status": "已填"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "report_time",
+          "label": "報案時間",
+          "fixed_text": "四、報案時間：",
+          "type": "datetime",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "case_summary",
+          "label": "案情摘要",
+          "fixed_text": "五、案情摘要：",
+          "type": "multiline",
+          "editable": true,
+          "render": "below",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "114年5月1日晚上21時30分，○○市○○區○○路○○號超商前，被害人陳○○下班後正要走回家，行為人王○○持刀從背後靠近並以刀指向被害人，揚言要搶錢，被害人因害怕而不敢抗拒，王○○隨即取走被害人包內現金新臺幣3千元後離去。被害人事後報警，現場附近有超商監視器但尚未調閱。",
+          "status": "已填"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "follow_up_header",
+          "label": "後續處置標題",
+          "fixed_text": "六、後續處置：",
+          "type": "static",
+          "editable": false,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "六、後續處置：",
+          "status": "固定文字"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "filing_report",
+          "label": "依規定陳報",
+          "fixed_text": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+          "type": "composite",
+          "editable": false,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+          "status": "固定文字（案號空位保留原樣）",
+          "slots": [
+            {
+              "slot_id": "filing_report_no",
+              "label": "證明單案號",
+              "value": ""
+            },
+            {
+              "slot_id": "child_welfare_no",
+              "label": "婦幼案號",
+              "value": ""
+            },
+            {
+              "slot_id": "case165_no",
+              "label": "165案號",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "jurisdiction",
+          "label": "本案管轄",
+          "fixed_text": "（二）本案管轄：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "本所轄區",
+          "status": "已填"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "handling_officer",
+          "label": "處理員警",
+          "fixed_text": "（三）處理員警：警員 ",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "。",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        }
+      ],
+      "export_text": "被害人條陳\n○○所報告\n一、受理案由：114年5月1日晚上21時30分，○○市○○區○○路○○號超商前，被害人陳○○下班後正要走回家，行為人王○○持刀從背後靠近並以刀指向被害人，揚言要搶錢，被害人因害怕而不敢抗拒，王○○隨即取走被害人包內現金新臺幣3千元後離去。被害人事後報警，…（候選）\n二、發生時間：114年5月1日\n三、發生地點：○○市○○區○○路\n四、報案時間：（待補）\n五、案情摘要：\n114年5月1日晚上21時30分，○○市○○區○○路○○號超商前，被害人陳○○下班後正要走回家，行為人王○○持刀從背後靠近並以刀指向被害人，揚言要搶錢，被害人因害怕而不敢抗拒，王○○隨即取走被害人包內現金新臺幣3千元後離去。被害人事後報警，現場附近有超商監視器但尚未調閱。\n六、後續處置：\n（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)\n（二）本案管轄：本所轄區\n（三）處理員警：警員 （待補）。\n\n模擬填充，不構成正式文書。\n所有罪名均為候選，不認定犯罪成立。",
+      "meta": {
+        "question_count": 5,
+        "rejected_count": 0,
+        "gap_count": 4,
+        "covered_gaps": [
+          "g1",
+          "g2",
+          "g3",
+          "g4"
+        ],
+        "fill_status": {
+          "保留原文佔位": 1,
+          "已填": 5,
+          "未敘明，待補": 2,
+          "固定文字": 1,
+          "固定文字（案號空位保留原樣）": 1
+        }
+      }
+    },
+    "rule_meta": {
+      "case_id": "case_explicit",
+      "subject_identified": true,
+      "delivery_status": "已取走",
+      "ambiguous_referentials": [],
+      "candidate_statutes": [
+        "§328_I",
+        "§328_II",
+        "§346_I"
+      ],
+      "has_victim": true,
+      "has_victim_evidence": [
+        "被害人",
+        "被害",
+        "報警"
+      ],
+      "is_solved": false,
+      "is_solved_evidence": [],
+      "element_count": 8,
+      "gap_count": 1,
+      "triggered_paths": [
+        "p_robbery_vs_threat"
+      ],
+      "candidate_fallback_used": false,
+      "partial_path_matches": []
+    }
+  },
+  "case_partial": {
+    "llm": {
+      "subject": {
+        "identified": true,
+        "detail": "行為人於敘事中以「一名男子」指稱，係單一且可辨識之同一人（攔住、推擾、作勢要打後離開者）；被害人為林○○。惟該男子之姓名、身分、與被害人關係及報案時之指認情形均未敘明，發生地點以○○市○○區表示。"
+      },
+      "delivery_status": "未敘明",
+      "elements": [
+        {
+          "element_id": "e_coercion",
+          "status": "已具備",
+          "reason": "敘事已載明男子攔住被害人並出手推她、作勢要打，係以肢體強制方式對被害人施壓。"
+        },
+        {
+          "element_id": "e_irresistible",
+          "status": "已具備",
+          "reason": "被害人於遭推擾並被作勢要打後明確表示害怕，已出現心生畏懼之情緒事實。"
+        },
+        {
+          "element_id": "e_taking_or_delivery",
+          "status": "明顯欠缺",
+          "reason": "敘事完全未出現男子取走被害人財物或使被害人交付物品之事實，且載明男子隨即離開。"
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "status": "明顯欠缺",
+          "reason": "敘事未提及男子有任何取財、想拿、貪圖或求取財物之動機，該要件對應事實完全未出現。"
+        },
+        {
+          "element_id": "e_threat",
+          "status": "已具備",
+          "reason": "男子以作勢要打之肢體動作為加害身體之通知，被害人因而害怕，符合恐嚇得為肢體動作之告知方式。"
+        },
+        {
+          "element_id": "e_delivery_by_fear",
+          "status": "明顯欠缺",
+          "reason": "雖有害怕之情緒事實，但敘事完全未出現被害人受恐嚇而交付本人或第三人之物之事實。"
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "status": "明顯欠缺",
+          "reason": "敘事未提及男子有任何取財、想拿、貪圖或求取財物之動機，該要件對應事實完全未出現。"
+        }
+      ],
+      "gaps": [
+        {
+          "gap_id": "g1",
+          "type": "fact",
+          "description": "缺少「男子於當時是否取走被害人財物、或以何種要求使被害人交付」之事實；敘事僅載明推擾、作勢要打後男子即離開，既無取走記載亦無交付記載，致 e_taking_or_delivery、e_delivery_by_fear 無從判斷，且現有載述亦不足以判斷交付與否。",
+          "affects_elements": [
+            "e_taking_or_delivery",
+            "e_delivery_by_fear"
+          ],
+          "question_hint": "請說明男子當場是否取走或開口要求被害人的財物（含品項、數量、去向），以及被害人當下是否交付或交出任何物品。"
+        },
+        {
+          "gap_id": "g2",
+          "type": "fact",
+          "description": "缺少「男子主觀上是否具有為自己或第三人不法所有之意圖」之事實；敘事無任何提及金錢、財物、求取或牟利動機之內容，致 §328_I 與 §346_I 兩項 e_robbery_intent 皆因對應事實完全未出現而無法判斷。",
+          "affects_elements": [
+            "e_robbery_intent"
+          ],
+          "question_hint": "請補充男子當時是否提及或以言語、肢體動作表示欲索求金錢、財物或其他利益，其實際所求為何。"
+        },
+        {
+          "gap_id": "g3",
+          "type": "fact",
+          "description": "缺少「行為人之同一性與身分」之事實；僅以「一名男子」稱之，未載姓名、與被害人關係、是否另有第三人在場、報案筆錄及指認情形，致各要件所涵攝之人是否即本案應考驗之對象尚待確認。",
+          "affects_elements": [
+            "e_coercion",
+            "e_irresistible",
+            "e_threat"
+          ],
+          "question_hint": "請說明該男子之姓名或可辨識特徵、與被害人是否熟識、事發當時在場第三人及報案時如何指認其人。"
+        },
+        {
+          "gap_id": "g4",
+          "type": "fact",
+          "description": "缺少「作勢要打之具體內容與當時客觀情境」之事實（有無持械、雙方距離、是否獨處、有無旁人或可離開路徑、被害人當場除害怕外之反應）；致 e_irresistible 雖已有畏懼事實，其是否達於客觀上不能或顯難抗拒之程度，仍須以當時具體事實補充判斷。",
+          "affects_elements": [
+            "e_irresistible"
+          ],
+          "question_hint": "請描述當時雙方距離、男子動作之具體樣態（有無持械、逼近或出手程度）、周遭有無他人或可離開之路，以及被害人除害怕外當場尚有何肢體反應。"
+        }
+      ]
+    },
+    "gen": {
+      "template_id": "victim_report",
+      "template_name": "被害人條陳",
+      "template_selection": {
+        "answers": {
+          "has_victim": true,
+          "is_solved": false,
+          "subject_identified": true
+        },
+        "note": "有被害人且未破獲 → 被害人條陳（受理案由）",
+        "no_exact_match": false
+      },
+      "questions": [
+        {
+          "id": "GEN-C-09",
+          "target": "relative",
+          "question": "當時你的處境為何？有哪些選項是你當下仍能選擇的？",
+          "maps_to": [
+            "e_delivery_by_fear",
+            "e_irresistible",
+            "gap_category:因果",
+            "e_taking_or_delivery"
+          ],
+          "gap_id": "g1",
+          "note": "對應缺口 g1；範本 q_relative_freedom_of_choice",
+          "source_template_id": "q_relative_freedom_of_choice",
+          "covers_gaps": [
+            "g1"
+          ]
+        },
+        {
+          "id": "GEN-C-10",
+          "target": "relative",
+          "question": "遭取走或被要求交付的財物有哪些？請逐項說明名稱、數量、特徵與價值認定依據。",
+          "maps_to": [
+            "e_taking_or_delivery",
+            "e_robbery_intent",
+            "gap_category:物"
+          ],
+          "gap_id": "g2",
+          "note": "對應缺口 g2；範本 q_relative_property",
+          "source_template_id": "q_relative_property",
+          "covers_gaps": [
+            "g2"
+          ]
+        },
+        {
+          "id": "GEN-C-11",
+          "target": "relative",
+          "question": "當時（具體情境），你看到／聽到什麼？請依順序說明。",
+          "maps_to": [
+            "e_coercion",
+            "gap_category:事",
+            "e_irresistible",
+            "e_threat"
+          ],
+          "gap_id": "g3",
+          "note": "對應缺口 g3；範本 q_relative_perception",
+          "source_template_id": "q_relative_perception",
+          "covers_gaps": [
+            "g3"
+          ]
+        },
+        {
+          "id": "GEN-C-12",
+          "target": "relative",
+          "question": "當時對方以何種方式、施加於何處？你的身體或心理感受到什麼樣的狀態？",
+          "maps_to": [
+            "e_irresistible",
+            "e_coercion",
+            "gap_category:行為"
+          ],
+          "gap_id": "g4",
+          "note": "對應缺口 g4；範本 q_relative_coercion_degree",
+          "source_template_id": "q_relative_coercion_degree",
+          "covers_gaps": [
+            "g4"
+          ]
+        },
+        {
+          "id": "GEN-C-13",
+          "target": "relative",
+          "question": "請用自己的話說明事情從開始到結束的經過。",
+          "maps_to": [
+            "gap_category:事"
+          ],
+          "gap_id": null,
+          "covers_gaps": [],
+          "note": "角色基礎問句（每次詢問必問）",
+          "source_template_id": "q_relative_free_account",
+          "is_baseline": true
+        },
+        {
+          "id": "GEN-N-02",
+          "target": "suspect",
+          "question": "請依時間順序說明整個過程。",
+          "maps_to": [
+            "gap_category:事"
+          ],
+          "gap_id": null,
+          "covers_gaps": [],
+          "note": "角色基礎問句（每次詢問必問）",
+          "source_template_id": "q_suspect_sequence",
+          "is_baseline": true
+        }
+      ],
+      "questions_by_target": {
+        "relative": [
+          {
+            "id": "GEN-C-09",
+            "target": "relative",
+            "question": "當時你的處境為何？有哪些選項是你當下仍能選擇的？",
+            "maps_to": [
+              "e_delivery_by_fear",
+              "e_irresistible",
+              "gap_category:因果",
+              "e_taking_or_delivery"
+            ],
+            "gap_id": "g1",
+            "note": "對應缺口 g1；範本 q_relative_freedom_of_choice",
+            "source_template_id": "q_relative_freedom_of_choice",
+            "covers_gaps": [
+              "g1"
+            ]
+          },
+          {
+            "id": "GEN-C-10",
+            "target": "relative",
+            "question": "遭取走或被要求交付的財物有哪些？請逐項說明名稱、數量、特徵與價值認定依據。",
+            "maps_to": [
+              "e_taking_or_delivery",
+              "e_robbery_intent",
+              "gap_category:物"
+            ],
+            "gap_id": "g2",
+            "note": "對應缺口 g2；範本 q_relative_property",
+            "source_template_id": "q_relative_property",
+            "covers_gaps": [
+              "g2"
+            ]
+          },
+          {
+            "id": "GEN-C-11",
+            "target": "relative",
+            "question": "當時（具體情境），你看到／聽到什麼？請依順序說明。",
+            "maps_to": [
+              "e_coercion",
+              "gap_category:事",
+              "e_irresistible",
+              "e_threat"
+            ],
+            "gap_id": "g3",
+            "note": "對應缺口 g3；範本 q_relative_perception",
+            "source_template_id": "q_relative_perception",
+            "covers_gaps": [
+              "g3"
+            ]
+          },
+          {
+            "id": "GEN-C-12",
+            "target": "relative",
+            "question": "當時對方以何種方式、施加於何處？你的身體或心理感受到什麼樣的狀態？",
+            "maps_to": [
+              "e_irresistible",
+              "e_coercion",
+              "gap_category:行為"
+            ],
+            "gap_id": "g4",
+            "note": "對應缺口 g4；範本 q_relative_coercion_degree",
+            "source_template_id": "q_relative_coercion_degree",
+            "covers_gaps": [
+              "g4"
+            ]
+          },
+          {
+            "id": "GEN-C-13",
+            "target": "relative",
+            "question": "請用自己的話說明事情從開始到結束的經過。",
+            "maps_to": [
+              "gap_category:事"
+            ],
+            "gap_id": null,
+            "covers_gaps": [],
+            "note": "角色基礎問句（每次詢問必問）",
+            "source_template_id": "q_relative_free_account",
+            "is_baseline": true
+          }
+        ],
+        "suspect": [
+          {
+            "id": "GEN-N-02",
+            "target": "suspect",
+            "question": "請依時間順序說明整個過程。",
+            "maps_to": [
+              "gap_category:事"
+            ],
+            "gap_id": null,
+            "covers_gaps": [],
+            "note": "角色基礎問句（每次詢問必問）",
+            "source_template_id": "q_suspect_sequence",
+            "is_baseline": true
+          }
+        ]
+      },
+      "rejected_questions": [],
+      "statement_fill": [
+        {
+          "template_id": "victim_report",
+          "section_id": "header",
+          "section_title": "抬頭",
+          "field_id": "header_office",
+          "label": "報告單位抬頭",
+          "fixed_text": "報告",
+          "type": "header",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "before",
+          "fixed_suffix": "",
+          "value": "○○所",
+          "status": "保留原文佔位"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "case_reason",
+          "label": "受理案由",
+          "fixed_text": "一、受理案由：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "114年3月8日晚上，於○○市○○區某市場旁，被害人林○○遭到一名男子攔住，男子出手推她並作勢要打，林○○表示害怕，隨後男子就離開了。被害人事後有報警。（候選）",
+          "status": "已填"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "occurred_time",
+          "label": "發生時間",
+          "fixed_text": "二、發生時間：",
+          "type": "datetime",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "114年3月8日",
+          "status": "已填"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "occurred_location",
+          "label": "發生地點",
+          "fixed_text": "三、發生地點：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "於○○市○○區某市場",
+          "status": "已填"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "report_time",
+          "label": "報案時間",
+          "fixed_text": "四、報案時間：",
+          "type": "datetime",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "case_summary",
+          "label": "案情摘要",
+          "fixed_text": "五、案情摘要：",
+          "type": "multiline",
+          "editable": true,
+          "render": "below",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "114年3月8日晚上，於○○市○○區某市場旁，被害人林○○遭到一名男子攔住，男子出手推她並作勢要打，林○○表示害怕，隨後男子就離開了。被害人事後有報警。",
+          "status": "已填"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "follow_up_header",
+          "label": "後續處置標題",
+          "fixed_text": "六、後續處置：",
+          "type": "static",
+          "editable": false,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "六、後續處置：",
+          "status": "固定文字"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "filing_report",
+          "label": "依規定陳報",
+          "fixed_text": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+          "type": "composite",
+          "editable": false,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+          "status": "固定文字（案號空位保留原樣）",
+          "slots": [
+            {
+              "slot_id": "filing_report_no",
+              "label": "證明單案號",
+              "value": ""
+            },
+            {
+              "slot_id": "child_welfare_no",
+              "label": "婦幼案號",
+              "value": ""
+            },
+            {
+              "slot_id": "case165_no",
+              "label": "165案號",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "jurisdiction",
+          "label": "本案管轄",
+          "fixed_text": "（二）本案管轄：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "本所轄區",
+          "status": "已填"
+        },
+        {
+          "template_id": "victim_report",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "handling_officer",
+          "label": "處理員警",
+          "fixed_text": "（三）處理員警：警員 ",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "。",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        }
+      ],
+      "export_text": "被害人條陳\n○○所報告\n一、受理案由：114年3月8日晚上，於○○市○○區某市場旁，被害人林○○遭到一名男子攔住，男子出手推她並作勢要打，林○○表示害怕，隨後男子就離開了。被害人事後有報警。（候選）\n二、發生時間：114年3月8日\n三、發生地點：於○○市○○區某市場\n四、報案時間：（待補）\n五、案情摘要：\n114年3月8日晚上，於○○市○○區某市場旁，被害人林○○遭到一名男子攔住，男子出手推她並作勢要打，林○○表示害怕，隨後男子就離開了。被害人事後有報警。\n六、後續處置：\n（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)\n（二）本案管轄：本所轄區\n（三）處理員警：警員 （待補）。\n\n模擬填充，不構成正式文書。\n所有罪名均為候選，不認定犯罪成立。",
+      "meta": {
+        "question_count": 6,
+        "rejected_count": 0,
+        "gap_count": 4,
+        "covered_gaps": [
+          "g1",
+          "g2",
+          "g3",
+          "g4"
+        ],
+        "fill_status": {
+          "保留原文佔位": 1,
+          "已填": 5,
+          "未敘明，待補": 2,
+          "固定文字": 1,
+          "固定文字（案號空位保留原樣）": 1
+        }
+      }
+    },
+    "rule_meta": {
+      "case_id": "case_partial",
+      "subject_identified": true,
+      "delivery_status": "未敘明",
+      "ambiguous_referentials": [],
+      "candidate_statutes": [
+        "§328_I",
+        "§346_I"
+      ],
+      "has_victim": true,
+      "has_victim_evidence": [
+        "被害人",
+        "被害",
+        "遭",
+        "報警"
+      ],
+      "is_solved": false,
+      "is_solved_evidence": [],
+      "element_count": 7,
+      "gap_count": 7,
+      "triggered_paths": [],
+      "candidate_fallback_used": false,
+      "partial_path_matches": [
+        {
+          "path_id": "p_robbery_vs_threat",
+          "matched": 1,
+          "required": 2
+        }
+      ]
+    }
+  },
+  "case_suspect": {
+    "llm": {
+      "subject": {
+        "identified": true,
+        "detail": "敘事以「我」自述為行為人，被害人明載為陳○○，雙方身分及相互關係明確；文中○○市○○區○○路應屬地名遮蔽，並非未解析之指代。"
+      },
+      "delivery_status": "已取走",
+      "elements": [
+        {
+          "element_id": "e_theft_intent",
+          "status": "已具備",
+          "reason": "敘事載「原本要搶被害人陳○○的現金」，已顯示取走他人現金之企圖。"
+        },
+        {
+          "element_id": "e_theft_taking",
+          "status": "明顯欠缺",
+          "reason": "取財當下敘及推擋被害人並持刀嚇唬，未見未施強暴、脅迫且被害人不知情下取走之對應事實。"
+        },
+        {
+          "element_id": "e_theft_object",
+          "status": "已具備",
+          "reason": "標的明載為被害人包內之現金，屬他人之動產。"
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "status": "已具備",
+          "reason": "就§325_I觀之，「原本要搶被害人陳○○的現金」已顯示搶奪他人現金之企圖。"
+        },
+        {
+          "element_id": "e_robbery_snatch",
+          "status": "明顯欠缺",
+          "reason": "取財係在被害人已遭推擋並持刀嚇唬之後為之，未出現乘人不備、於被害人不知情下公然掠取之對應事實。"
+        },
+        {
+          "element_id": "e_coercion",
+          "status": "已具備",
+          "reason": "敘事載「推了被害人一把並持刀嚇她」，對應以推擋與持刀嚇唬方式施壓之事實。"
+        },
+        {
+          "element_id": "e_irresistible",
+          "status": "已具備",
+          "reason": "以持刀嚇唬方式當面施壓之事實已出現；被害人當時之具體反應未敘明，程度細節參見 g5。"
+        },
+        {
+          "element_id": "e_taking_or_delivery",
+          "status": "已具備",
+          "reason": "敘事載「隨即取走她包內現金」，對應以強制方法取走他人之物之事實。"
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "status": "已具備",
+          "reason": "就§328_I觀之，搶奪他人現金之企圖已於「原本要搶……現金」之敘述中顯現。"
+        },
+        {
+          "element_id": "e_illegal_benefit",
+          "status": "已具備",
+          "reason": "行為人取走被害人現金，已對應取得財產上利益之事實；是否使第三人得之則未敘明。"
+        },
+        {
+          "element_id": "e_preceding_offense",
+          "status": "已具備",
+          "reason": "「原本要搶被害人陳○○的現金」對應前段竊盜、搶奪之指向；其與施強暴脅迫之先後完成時點未敘明，參見 g4。"
+        },
+        {
+          "element_id": "e_motive",
+          "status": "已具備",
+          "reason": "敘事載「我怕被抓到」，對應脫免逮捕之動機事實。"
+        },
+        {
+          "element_id": "e_ond_the_spot",
+          "status": "已具備",
+          "reason": "敘事載「當下推了被害人一把並持刀嚇她」，對應當場施以強暴脅迫之事實。"
+        },
+        {
+          "element_id": "e_threat",
+          "status": "已具備",
+          "reason": "「持刀嚇她」屬以持有凶器及肢體動作方式將加害可能通知他人，已現恐嚇之事實。"
+        },
+        {
+          "element_id": "e_delivery_by_fear",
+          "status": "明顯欠缺",
+          "reason": "敘述為行為人自行取走被害人包內現金，未載被害人基於畏懼而交付之事實。"
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "status": "已具備",
+          "reason": "就§346_I觀之，搶奪他人現金之企圖已於「原本要搶……現金」之敘述中顯現。"
+        }
+      ],
+      "gaps": [
+        {
+          "gap_id": "g1",
+          "type": "fact",
+          "description": "事實缺口：取走現金當下除推擋與持刀嚇唬外，未有被害人不知情或未受任何強制之取財經過之陳述，故「未使用強暴、脅迫等方法而於被害人不知情下取走」之事實無從認定。",
+          "affects_elements": [
+            "e_theft_taking"
+          ],
+          "question_hint": "請說明取走現金當下，除了推擋與持刀嚇唬外，是否另有被害人未察覺或未受任何強制而遭取走財物的情形？"
+        },
+        {
+          "gap_id": "g2",
+          "type": "fact",
+          "description": "事實缺口：未載被害人何時察覺遭取財，亦未載其當時是否處於未加防備或無從防備之狀態，故「乘人不備而公然掠取」之事實無從認定。",
+          "affects_elements": [
+            "e_robbery_snatch"
+          ],
+          "question_hint": "請說明被害人是在何時、於何種情境下發現金遭取走，其當時是否已察覺並有所防備或抵抗？"
+        },
+        {
+          "gap_id": "g3",
+          "type": "fact",
+          "description": "事實缺口：僅載行為人自行取走被害人包內現金，未載被害人是否因畏懼而親手交出或交付該筆現金，故「以恐嚇使人交付」之事實無從認定。",
+          "affects_elements": [
+            "e_delivery_by_fear"
+          ],
+          "question_hint": "請說明被害人包內現金是如何被取走的（是否親手交出、因畏懼而交付，或任由行為人取走）？"
+        },
+        {
+          "gap_id": "g4",
+          "type": "fact",
+          "description": "事實缺口：敘事順序為「原本要搶→被現場民眾發現→推擋並持刀嚇→取走現金」，未載明施以強暴脅迫之當下是否已著手或完成竊盜、搶奪，故前段取財行為與後段施強暴脅迫之先後完成時點仍待釐清。",
+          "affects_elements": [
+            "e_preceding_offense",
+            "e_ond_the_spot"
+          ],
+          "question_hint": "請補充說明在推擋並持刀嚇被害人之前，您是否已著手或已完成取走被害人財物的行為，以及各該動作發生的先後順序？"
+        },
+        {
+          "gap_id": "g5",
+          "type": "fact",
+          "description": "事實缺口：未載被害人受推擋與持刀嚇唬當下之具體反應（是否畏縮退讓、不敢出聲、仍曾抵抗或呼救），致施壓程度是否達到「至使不能抗拒」之程度無從具體評估。",
+          "affects_elements": [
+            "e_irresistible"
+          ],
+          "question_hint": "請說明被害人當時面對推擋與持刀嚇唬的反應為何（例如是否畏縮退讓、不敢出聲、跌坐或仍曾抵抗）？"
+        }
+      ]
+    },
+    "gen": {
+      "template_id": "suspect_with_victim",
+      "template_name": "涉嫌人條陳，有被害人版",
+      "template_selection": {
+        "answers": {
+          "has_victim": true,
+          "is_solved": true,
+          "subject_identified": true
+        },
+        "note": "有被害人、已破獲且主體已特定 → 涉嫌人條陳，有被害人版",
+        "no_exact_match": false
+      },
+      "questions": [
+        {
+          "id": "GEN-C-14",
+          "target": "relative",
+          "question": "遭取走或被要求交付的財物有哪些？請逐項說明名稱、數量、特徵與價值認定依據。",
+          "maps_to": [
+            "e_taking_or_delivery",
+            "e_robbery_intent",
+            "gap_category:物",
+            "e_theft_taking"
+          ],
+          "gap_id": "g1",
+          "note": "對應缺口 g1；範本 q_relative_property",
+          "source_template_id": "q_relative_property",
+          "covers_gaps": [
+            "g1"
+          ]
+        },
+        {
+          "id": "GEN-C-15",
+          "target": "relative",
+          "question": "請說明被害人是在何時、於何種情境下發現金遭取走，其當時是否已察覺並有所防備或抵抗？",
+          "maps_to": [
+            "e_robbery_snatch"
+          ],
+          "gap_id": "g2",
+          "note": "對應缺口 g2；依缺口建議問法",
+          "source_template_id": null,
+          "covers_gaps": [
+            "g2"
+          ]
+        },
+        {
+          "id": "GEN-C-16",
+          "target": "relative",
+          "question": "當時你的處境為何？有哪些選項是你當下仍能選擇的？",
+          "maps_to": [
+            "e_delivery_by_fear",
+            "e_irresistible",
+            "gap_category:因果"
+          ],
+          "gap_id": "g3",
+          "note": "對應缺口 g3；範本 q_relative_freedom_of_choice",
+          "source_template_id": "q_relative_freedom_of_choice",
+          "covers_gaps": [
+            "g3"
+          ]
+        },
+        {
+          "id": "GEN-N-03",
+          "target": "suspect",
+          "question": "你當時的目的為何？請說明你原本打算如何處置該財物。",
+          "maps_to": [
+            "e_robbery_intent",
+            "gap_category:物",
+            "e_preceding_offense",
+            "e_ond_the_spot"
+          ],
+          "gap_id": "g4",
+          "note": "對應缺口 g4；範本 q_suspect_intent",
+          "source_template_id": "q_suspect_intent",
+          "covers_gaps": [
+            "g4"
+          ]
+        },
+        {
+          "id": "GEN-C-17",
+          "target": "relative",
+          "question": "當時對方以何種方式、施加於何處？你的身體或心理感受到什麼樣的狀態？",
+          "maps_to": [
+            "e_irresistible",
+            "e_coercion",
+            "gap_category:行為"
+          ],
+          "gap_id": "g5",
+          "note": "對應缺口 g5；範本 q_relative_coercion_degree",
+          "source_template_id": "q_relative_coercion_degree",
+          "covers_gaps": [
+            "g5"
+          ]
+        },
+        {
+          "id": "GEN-C-18",
+          "target": "relative",
+          "question": "請用自己的話說明事情從開始到結束的經過。",
+          "maps_to": [
+            "gap_category:事"
+          ],
+          "gap_id": null,
+          "covers_gaps": [],
+          "note": "角色基礎問句（每次詢問必問）",
+          "source_template_id": "q_relative_free_account",
+          "is_baseline": true
+        },
+        {
+          "id": "GEN-N-04",
+          "target": "suspect",
+          "question": "請依時間順序說明整個過程。",
+          "maps_to": [
+            "gap_category:事"
+          ],
+          "gap_id": null,
+          "covers_gaps": [],
+          "note": "角色基礎問句（每次詢問必問）",
+          "source_template_id": "q_suspect_sequence",
+          "is_baseline": true
+        }
+      ],
+      "questions_by_target": {
+        "relative": [
+          {
+            "id": "GEN-C-14",
+            "target": "relative",
+            "question": "遭取走或被要求交付的財物有哪些？請逐項說明名稱、數量、特徵與價值認定依據。",
+            "maps_to": [
+              "e_taking_or_delivery",
+              "e_robbery_intent",
+              "gap_category:物",
+              "e_theft_taking"
+            ],
+            "gap_id": "g1",
+            "note": "對應缺口 g1；範本 q_relative_property",
+            "source_template_id": "q_relative_property",
+            "covers_gaps": [
+              "g1"
+            ]
+          },
+          {
+            "id": "GEN-C-15",
+            "target": "relative",
+            "question": "請說明被害人是在何時、於何種情境下發現金遭取走，其當時是否已察覺並有所防備或抵抗？",
+            "maps_to": [
+              "e_robbery_snatch"
+            ],
+            "gap_id": "g2",
+            "note": "對應缺口 g2；依缺口建議問法",
+            "source_template_id": null,
+            "covers_gaps": [
+              "g2"
+            ]
+          },
+          {
+            "id": "GEN-C-16",
+            "target": "relative",
+            "question": "當時你的處境為何？有哪些選項是你當下仍能選擇的？",
+            "maps_to": [
+              "e_delivery_by_fear",
+              "e_irresistible",
+              "gap_category:因果"
+            ],
+            "gap_id": "g3",
+            "note": "對應缺口 g3；範本 q_relative_freedom_of_choice",
+            "source_template_id": "q_relative_freedom_of_choice",
+            "covers_gaps": [
+              "g3"
+            ]
+          },
+          {
+            "id": "GEN-C-17",
+            "target": "relative",
+            "question": "當時對方以何種方式、施加於何處？你的身體或心理感受到什麼樣的狀態？",
+            "maps_to": [
+              "e_irresistible",
+              "e_coercion",
+              "gap_category:行為"
+            ],
+            "gap_id": "g5",
+            "note": "對應缺口 g5；範本 q_relative_coercion_degree",
+            "source_template_id": "q_relative_coercion_degree",
+            "covers_gaps": [
+              "g5"
+            ]
+          },
+          {
+            "id": "GEN-C-18",
+            "target": "relative",
+            "question": "請用自己的話說明事情從開始到結束的經過。",
+            "maps_to": [
+              "gap_category:事"
+            ],
+            "gap_id": null,
+            "covers_gaps": [],
+            "note": "角色基礎問句（每次詢問必問）",
+            "source_template_id": "q_relative_free_account",
+            "is_baseline": true
+          }
+        ],
+        "suspect": [
+          {
+            "id": "GEN-N-03",
+            "target": "suspect",
+            "question": "你當時的目的為何？請說明你原本打算如何處置該財物。",
+            "maps_to": [
+              "e_robbery_intent",
+              "gap_category:物",
+              "e_preceding_offense",
+              "e_ond_the_spot"
+            ],
+            "gap_id": "g4",
+            "note": "對應缺口 g4；範本 q_suspect_intent",
+            "source_template_id": "q_suspect_intent",
+            "covers_gaps": [
+              "g4"
+            ]
+          },
+          {
+            "id": "GEN-N-04",
+            "target": "suspect",
+            "question": "請依時間順序說明整個過程。",
+            "maps_to": [
+              "gap_category:事"
+            ],
+            "gap_id": null,
+            "covers_gaps": [],
+            "note": "角色基礎問句（每次詢問必問）",
+            "source_template_id": "q_suspect_sequence",
+            "is_baseline": true
+          }
+        ]
+      },
+      "rejected_questions": [],
+      "statement_fill": [
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "header",
+          "section_title": "抬頭",
+          "field_id": "header_office",
+          "label": "報告單位抬頭",
+          "fixed_text": "報告",
+          "type": "header",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "before",
+          "fixed_suffix": "",
+          "value": "○○所",
+          "status": "保留原文佔位"
+        },
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "case_reason",
+          "label": "受理案由",
+          "fixed_text": "一、受理案由：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "114年4月20日晚上21時，我在○○市○○區○○路超商附近，原本要搶被害人陳○○的現金，被現場民眾發現，我怕被抓到，當下推了被害人一把並持刀嚇她，隨即取走她包內現金後離開。我是在被害人報警後到案說明的。（候選）",
+          "status": "已填"
+        },
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "occurred_time",
+          "label": "發生時間",
+          "fixed_text": "二、發生時間：",
+          "type": "datetime",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "114年4月20日",
+          "status": "已填"
+        },
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "occurred_location",
+          "label": "發生地點",
+          "fixed_text": "三、發生地點：",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "○○市○○區○○路",
+          "status": "已填"
+        },
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "report_time",
+          "label": "報案時間",
+          "fixed_text": "四、報案時間：",
+          "type": "datetime",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        },
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "solved_time",
+          "label": "破獲時間",
+          "fixed_text": "五、破獲時間：",
+          "type": "datetime",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        },
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "basic",
+          "section_title": "基本資料",
+          "field_id": "case_summary",
+          "label": "案情摘要",
+          "fixed_text": "六、案情摘要：",
+          "type": "multiline",
+          "editable": true,
+          "render": "below",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "114年4月20日晚上21時，我在○○市○○區○○路超商附近，原本要搶被害人陳○○的現金，被現場民眾發現，我怕被抓到，當下推了被害人一把並持刀嚇她，隨即取走她包內現金後離開。我是在被害人報警後到案說明的。",
+          "status": "已填"
+        },
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "follow_up_header",
+          "label": "後續處置標題",
+          "fixed_text": "七、後續處置：",
+          "type": "static",
+          "editable": false,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "七、後續處置：",
+          "status": "固定文字"
+        },
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "filing_report",
+          "label": "依規定陳報",
+          "fixed_text": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+          "type": "composite",
+          "editable": false,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)",
+          "status": "固定文字（案號空位保留原樣）",
+          "slots": [
+            {
+              "slot_id": "filing_report_no",
+              "label": "證明單案號",
+              "value": ""
+            },
+            {
+              "slot_id": "child_welfare_no",
+              "label": "婦幼案號",
+              "value": ""
+            },
+            {
+              "slot_id": "case165_no",
+              "label": "165案號",
+              "value": ""
+            }
+          ]
+        },
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "investigation_summary",
+          "label": "偵查經過說明",
+          "fixed_text": "（二）警方依規定受理後，調閱店家及公家道路監視器影像，尋線找到嫌疑人並聯繫嫌疑人至所說明，嫌於警詢筆錄中表示，其他內容詳如筆錄，函送偵查隊續辦。",
+          "type": "static",
+          "editable": false,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "",
+          "value": "（二）警方依規定受理後，調閱店家及公家道路監視器影像，尋線找到嫌疑人並聯繫嫌疑人至所說明，嫌於警詢筆錄中表示，其他內容詳如筆錄，函送偵查隊續辦。",
+          "status": "固定文字"
+        },
+        {
+          "template_id": "suspect_with_victim",
+          "section_id": "follow_up",
+          "section_title": "後續處置",
+          "field_id": "handling_officer",
+          "label": "處理員警",
+          "fixed_text": "（三）處理員警：警員 ",
+          "type": "string",
+          "editable": true,
+          "render": "inline",
+          "variable_position": "after",
+          "fixed_suffix": "。",
+          "value": "（待補）",
+          "status": "未敘明，待補"
+        }
+      ],
+      "export_text": "涉嫌人條陳，有被害人版\n○○所報告\n一、受理案由：114年4月20日晚上21時，我在○○市○○區○○路超商附近，原本要搶被害人陳○○的現金，被現場民眾發現，我怕被抓到，當下推了被害人一把並持刀嚇她，隨即取走她包內現金後離開。我是在被害人報警後到案說明的。（候選）\n二、發生時間：114年4月20日\n三、發生地點：○○市○○區○○路\n四、報案時間：（待補）\n五、破獲時間：（待補）\n六、案情摘要：\n114年4月20日晚上21時，我在○○市○○區○○路超商附近，原本要搶被害人陳○○的現金，被現場民眾發現，我怕被抓到，當下推了被害人一把並持刀嚇她，隨即取走她包內現金後離開。我是在被害人報警後到案說明的。\n七、後續處置：\n（一）依規定陳報（證明單案號：、婦幼案號：、165案號：)\n（二）警方依規定受理後，調閱店家及公家道路監視器影像，尋線找到嫌疑人並聯繫嫌疑人至所說明，嫌於警詢筆錄中表示，其他內容詳如筆錄，函送偵查隊續辦。\n（三）處理員警：警員 （待補）。\n\n模擬填充，不構成正式文書。\n所有罪名均為候選，不認定犯罪成立。",
+      "meta": {
+        "question_count": 7,
+        "rejected_count": 0,
+        "gap_count": 5,
+        "covered_gaps": [
+          "g1",
+          "g2",
+          "g3",
+          "g4",
+          "g5"
+        ],
+        "fill_status": {
+          "保留原文佔位": 1,
+          "已填": 4,
+          "未敘明，待補": 3,
+          "固定文字": 2,
+          "固定文字（案號空位保留原樣）": 1
+        }
+      }
+    },
+    "rule_meta": {
+      "case_id": "case_suspect",
+      "subject_identified": true,
+      "delivery_status": "已取走",
+      "ambiguous_referentials": [],
+      "candidate_statutes": [
+        "§320_I",
+        "§325_I",
+        "§328_I",
+        "§328_II",
+        "§329",
+        "§346_I"
+      ],
+      "has_victim": true,
+      "has_victim_evidence": [
+        "被害人",
+        "被害",
+        "報警"
+      ],
+      "is_solved": true,
+      "is_solved_evidence": [
+        "到案",
+        "說明"
+      ],
+      "element_count": 16,
+      "gap_count": 5,
+      "triggered_paths": [
+        "p_robbery_vs_threat",
+        "p_snatch_vs_robbery",
+        "p_qualified_robbery"
+      ],
+      "candidate_fallback_used": false,
+      "partial_path_matches": []
+    }
+  }
+}

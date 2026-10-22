@@ -1,0 +1,30 @@
+{
+  "case_id": "case_partial",
+  "subject_identified": true,
+  "delivery_status": "未敘明",
+  "ambiguous_referentials": [],
+  "candidate_statutes": [
+    "§328_I",
+    "§346_I"
+  ],
+  "has_victim": true,
+  "has_victim_evidence": [
+    "被害人",
+    "被害",
+    "遭",
+    "報警"
+  ],
+  "is_solved": false,
+  "is_solved_evidence": [],
+  "element_count": 7,
+  "gap_count": 7,
+  "triggered_paths": [],
+  "candidate_fallback_used": false,
+  "partial_path_matches": [
+    {
+      "path_id": "p_robbery_vs_threat",
+      "matched": 1,
+      "required": 2
+    }
+  ]
+}

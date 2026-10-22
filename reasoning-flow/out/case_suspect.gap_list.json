@@ -1,0 +1,45 @@
+[
+  {
+    "gap_id": "g1",
+    "type": "element",
+    "description": "缺少「不法所有之意圖」之具體事實（e_theft_intent），致 §320_I 之該要件無法判斷。",
+    "affects_elements": [
+      "e_theft_intent"
+    ],
+    "question_hint": "請就「不法所有之意圖」補充說明具體經過。"
+  },
+  {
+    "gap_id": "g2",
+    "type": "element",
+    "description": "缺少「竊取他人動產」之具體事實（e_theft_taking），致 §320_I 之該要件無法判斷。",
+    "affects_elements": [
+      "e_theft_taking"
+    ],
+    "question_hint": "請就「竊取他人動產」補充說明具體經過。"
+  },
+  {
+    "gap_id": "g3",
+    "type": "element",
+    "description": "「得財產上不法之利益或使第三人得之」（e_illegal_benefit）之情形未敘明，致 §328_II 該要件尚待確認。",
+    "affects_elements": [
+      "e_illegal_benefit"
+    ],
+    "question_hint": "請確認「得財產上不法之利益或使第三人得之」之情形為何。"
+  },
+  {
+    "gap_id": "g4",
+    "type": "element",
+    "description": "缺少「恐嚇」之具體事實（e_threat），致 §346_I 之該要件無法判斷。",
+    "affects_elements": [
+      "e_threat"
+    ],
+    "question_hint": "請就「恐嚇」補充說明具體經過。"
+  },
+  {
+    "gap_id": "g5",
+    "type": "fact",
+    "description": "事實面向「價值」於敘事中未見記載。",
+    "affects_elements": [],
+    "question_hint": "請說明各項財物的價值及其認定依據。"
+  }
+]

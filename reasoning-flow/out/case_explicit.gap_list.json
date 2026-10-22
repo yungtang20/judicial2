@@ -1,0 +1,11 @@
+[
+  {
+    "gap_id": "g1",
+    "type": "element",
+    "description": "「得財產上不法之利益或使第三人得之」（e_illegal_benefit）之情形未敘明，致 §328_II 該要件尚待確認。",
+    "affects_elements": [
+      "e_illegal_benefit"
+    ],
+    "question_hint": "請確認「得財產上不法之利益或使第三人得之」之情形為何。"
+  }
+]

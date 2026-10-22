@@ -1,0 +1,42 @@
+[
+  {
+    "id": "GEN-C-01",
+    "target": "relative",
+    "question": "請確認「得財產上不法之利益或使第三人得之」之情形為何。",
+    "maps_to": [
+      "e_illegal_benefit"
+    ],
+    "gap_id": "g1",
+    "note": "對應缺口 g1；依缺口建議問法",
+    "source_template_id": null,
+    "covers_gaps": [
+      "g1"
+    ]
+  },
+  {
+    "id": "GEN-C-02",
+    "target": "relative",
+    "question": "請用自己的話說明事情從開始到結束的經過。",
+    "maps_to": [
+      "gap_category:事"
+    ],
+    "gap_id": null,
+    "covers_gaps": [],
+    "note": "角色基礎問句（每次詢問必問）",
+    "source_template_id": "q_relative_free_account",
+    "is_baseline": true
+  },
+  {
+    "id": "GEN-N-01",
+    "target": "suspect",
+    "question": "請依時間順序說明整個過程。",
+    "maps_to": [
+      "gap_category:事"
+    ],
+    "gap_id": null,
+    "covers_gaps": [],
+    "note": "角色基礎問句（每次詢問必問）",
+    "source_template_id": "q_suspect_sequence",
+    "is_baseline": true
+  }
+]

@@ -1,0 +1,129 @@
+[
+  {
+    "gap_id": "g1",
+    "type": "fact",
+    "description": "敘事中出現未解析之指代（他、對方、對方），須確認各指代所指之人及其角色。",
+    "affects_elements": [
+      "e_irresistible",
+      "e_robbery_intent",
+      "e_delivery_by_fear"
+    ],
+    "question_hint": "請說明本案當事人為何人（姓名或可辨識之特徵），以及其與本事件之關係。"
+  },
+  {
+    "gap_id": "g2",
+    "type": "fact",
+    "description": "財物交付或取走之狀態未敘明（未敘明），須確認是否已交付、取走或未交付。",
+    "affects_elements": [
+      "e_irresistible",
+      "e_taking_or_delivery",
+      "e_delivery_by_fear"
+    ],
+    "question_hint": "當時財物實際上是由你交付、由對方取走，還是尚未交付？請說明。"
+  },
+  {
+    "gap_id": "g3",
+    "type": "element",
+    "description": "缺少「強暴、脅迫、藥劑、催眠術或他法」之具體事實（e_coercion），致 §328_I 之該要件無法判斷。",
+    "affects_elements": [
+      "e_coercion"
+    ],
+    "question_hint": "請就「強暴、脅迫、藥劑、催眠術或他法」補充說明具體經過。"
+  },
+  {
+    "gap_id": "g4",
+    "type": "element",
+    "description": "「至使不能抗拒」（e_irresistible）因敘事中指代不明而無法判斷，致 §328_I 該要件之認定前提不足。",
+    "affects_elements": [
+      "e_irresistible"
+    ],
+    "question_hint": "請說明前述各指代所指之人及其角色。"
+  },
+  {
+    "gap_id": "g5",
+    "type": "element",
+    "description": "缺少「取他人之物或使其交付」之具體事實（e_taking_or_delivery），致 §328_I 之該要件無法判斷。",
+    "affects_elements": [
+      "e_taking_or_delivery"
+    ],
+    "question_hint": "請就「取他人之物或使其交付」補充說明具體經過。"
+  },
+  {
+    "gap_id": "g6",
+    "type": "element",
+    "description": "「不法所有之意圖」（e_robbery_intent）因敘事中指代不明而無法判斷，致 §328_I 該要件之認定前提不足。",
+    "affects_elements": [
+      "e_robbery_intent"
+    ],
+    "question_hint": "請說明前述各指代所指之人及其角色。"
+  },
+  {
+    "gap_id": "g7",
+    "type": "element",
+    "description": "缺少「恐嚇」之具體事實（e_threat），致 §346_I 之該要件無法判斷。",
+    "affects_elements": [
+      "e_threat"
+    ],
+    "question_hint": "請就「恐嚇」補充說明具體經過。"
+  },
+  {
+    "gap_id": "g8",
+    "type": "element",
+    "description": "「使人交付（基於畏懼）」（e_delivery_by_fear）因敘事中指代不明而無法判斷，致 §346_I 該要件之認定前提不足。",
+    "affects_elements": [
+      "e_delivery_by_fear"
+    ],
+    "question_hint": "請說明前述各指代所指之人及其角色。"
+  },
+  {
+    "gap_id": "g9",
+    "type": "element",
+    "description": "「不法所有之意圖」（e_robbery_intent）因敘事中指代不明而無法判斷，致 §346_I 該要件之認定前提不足。",
+    "affects_elements": [
+      "e_robbery_intent"
+    ],
+    "question_hint": "請說明前述各指代所指之人及其角色。"
+  },
+  {
+    "gap_id": "g10",
+    "type": "fact",
+    "description": "事實面向「人」於敘事中未見記載。",
+    "affects_elements": [],
+    "question_hint": "請說明本案當事人之身分、關係與可辨識之特徵。"
+  },
+  {
+    "gap_id": "g11",
+    "type": "fact",
+    "description": "事實面向「時」於敘事中未見記載。",
+    "affects_elements": [],
+    "question_hint": "請說明事件發生的日期與時點。"
+  },
+  {
+    "gap_id": "g12",
+    "type": "fact",
+    "description": "事實面向「地」於敘事中未見記載。",
+    "affects_elements": [],
+    "question_hint": "請說明事件發生的地點。"
+  },
+  {
+    "gap_id": "g13",
+    "type": "fact",
+    "description": "事實面向「物」於敘事中未見記載。",
+    "affects_elements": [],
+    "question_hint": "請逐項說明涉及之財物名稱、數量與特徵。"
+  },
+  {
+    "gap_id": "g14",
+    "type": "fact",
+    "description": "事實面向「價值」於敘事中未見記載。",
+    "affects_elements": [],
+    "question_hint": "請說明各項財物的價值及其認定依據。"
+  },
+  {
+    "gap_id": "g15",
+    "type": "fact",
+    "description": "事實面向「補強」於敘事中未見記載。",
+    "affects_elements": [],
+    "question_hint": "請說明可佐證本事件之情形（監視器、影像、目擊者、報案紀錄等）及其保存狀況。"
+  }
+]

@@ -1,0 +1,1619 @@
+{
+  "flow_id": "lawbank_reasoning_flow_v1",
+  "source_note": "mixed",
+  "generated_at": "2026-10-21T06:28:14.726Z",
+  "extraction_summary": {
+    "source_site": "法源法律網 lawbank.com.tw（會員登入擷取）",
+    "statutes_extracted": 8,
+    "judgments_scanned": 264,
+    "judgments_matched": 51,
+    "treatises_scanned": 23,
+    "interpretations_extracted": 2,
+    "coverage_note": "判解要旨取自法源司法判解（FJ）查詢結果列表之要旨欄位（<em> 標示之要旨核心），未進入 fyjud 裁判書全文（該單元需另行授權，帳號無閱覽權限）。"
+  },
+  "statute_decomposition": [
+    {
+      "statute_id": "§320_I",
+      "statute_name": "竊盜罪",
+      "source_url": "https://db.lawbank.com.tw/FLAW/FLAWDOC01.aspx?lsid=FL001424&lno=320",
+      "article_text": "意圖為自己或第三人不法之所有，而竊取他人之動產者，為竊盜罪，處五年以下有期徒刑、拘役或五十萬元以下罰金。意圖為自己或第三人不法之利益，而竊佔他人之不動產者，依前項之規定處斷。前二項之未遂犯罰之。",
+      "elements": [
+        {
+          "element_id": "e_theft_intent",
+          "discriminating": false,
+          "fact_patterns": [
+            "想要",
+            "要拿",
+            "想拿",
+            "打算",
+            "企圖",
+            "想據為己有",
+            "想佔有",
+            "想取得",
+            "意圖"
+          ],
+          "critical": true,
+          "element_name": "不法所有之意圖",
+          "definition": "意圖為自己或第三人不法之所有。",
+          "search_tags": [
+            "不法所有",
+            "意圖",
+            "竊取"
+          ]
+        },
+        {
+          "element_id": "e_theft_taking",
+          "discriminating": true,
+          "fact_patterns": [
+            "偷",
+            "竊",
+            "摸走",
+            "未經同意",
+            "未經被害人同意",
+            "趁被害人不在",
+            "趁沒人注意",
+            "順手拿",
+            "摸走後"
+          ],
+          "critical": true,
+          "element_name": "竊取他人動產",
+          "definition": "未使用強暴、脅迫等方法，於被害人不知情下取走其動產。",
+          "search_tags": [
+            "竊取",
+            "動產",
+            "秘密",
+            "不被察覺"
+          ]
+        },
+        {
+          "element_id": "e_theft_object",
+          "discriminating": false,
+          "fact_patterns": [
+            "現金",
+            "手機",
+            "財物卡",
+            "皮夾",
+            "包",
+            "珠寶",
+            "金錶",
+            "物品",
+            "財物",
+            "手提包"
+          ],
+          "critical": true,
+          "element_name": "客體為他人動產",
+          "definition": "標的須為他人之動產。",
+          "search_tags": [
+            "動產",
+            "他人",
+            "財物"
+          ]
+        }
+      ]
+    },
+    {
+      "statute_id": "§321_I",
+      "statute_name": "竊盜罪之加重事由",
+      "source_url": "https://db.lawbank.com.tw/FLAW/FLAWDOC01.aspx?lsid=FL001424&lno=321",
+      "article_text": "犯前條第一項、第二項之罪而有下列情形之一者，處六月以上五年以下有期徒刑，得併科五十萬元以下罰金：前項之未遂犯罰之。",
+      "elements": [
+        {
+          "element_id": "e_agg_circumstance",
+          "discriminating": false,
+          "fact_patterns": [
+            "攜帶凶器",
+            "攜帶兇器",
+            "隨身帶著刀",
+            "口袋有刀",
+            "背包有刀",
+            "腰間",
+            "藏刀",
+            "凶器",
+            "三人以上",
+            "三人",
+            "三人共同",
+            "住宅內",
+            "住家內",
+            "房子裡",
+            "毀越",
+            "門窗",
+            "鐵窗",
+            "災害之際",
+            "颱風",
+            "火車上",
+            "捷運上",
+            "公車上",
+            "車站"
+          ],
+          "critical": false,
+          "element_name": "加重情狀（§321 I 各款）",
+          "definition": "犯竊盜罪而有 §321 I 所列情形之一（住宅或建築物內、攜帶兇器、三人以上共同、毀越門窗或安全設備、災害之際或公共運輸工具內等）。",
+          "search_tags": [
+            "攜帶兇器",
+            "住宅",
+            "三人以上",
+            "毀越",
+            "災害之際",
+            "公共運輸工具"
+          ]
+        }
+      ]
+    },
+    {
+      "statute_id": "§325_I",
+      "statute_name": "搶奪罪",
+      "source_url": "https://db.lawbank.com.tw/FLAW/FLAWDOC01.aspx?lsid=FL001424&lno=325",
+      "article_text": "意圖為自己或第三人不法之所有，而搶奪他人之動產者，處六月以上五年以下有期徒刑。因而致人於死者，處無期徒刑或七年以上有期徒刑，致重傷者，處三年以上十年以下有期徒刑。第一項之未遂犯罰之。",
+      "elements": [
+        {
+          "element_id": "e_robbery_intent",
+          "discriminating": false,
+          "fact_patterns": [
+            "搶",
+            "要搶",
+            "想搶",
+            "打算搶",
+            "圖謀",
+            "想拿",
+            "想取",
+            "貪",
+            "想賺",
+            "打算拿"
+          ],
+          "critical": true,
+          "element_name": "不法所有之意圖",
+          "definition": "意圖為自己或第三人不法之所有。",
+          "search_tags": [
+            "不法所有",
+            "意圖"
+          ]
+        },
+        {
+          "element_id": "e_robbery_snatch",
+          "discriminating": true,
+          "fact_patterns": [
+            "突然",
+            "趁",
+            "順手",
+            "拔走",
+            "扯下",
+            "抓了就跑",
+            "不知不覺",
+            "一把",
+            "猛然",
+            "隨手"
+          ],
+          "critical": true,
+          "element_name": "乘人不備公然掠取",
+          "definition": "以突然之手段乘人不備公然掠取他人動產，未對人施以強暴、脅迫致不能抗拒。",
+          "search_tags": [
+            "乘人不備",
+            "公然",
+            "掠取",
+            "搶奪"
+          ]
+        }
+      ]
+    },
+    {
+      "statute_id": "§326_I",
+      "statute_name": "搶奪罪之加重事由",
+      "source_url": "https://db.lawbank.com.tw/FLAW/FLAWDOC01.aspx?lsid=FL001424&lno=326",
+      "article_text": "犯前條第一項之罪，而有第三百二十一條第一項各款情形之一者，處一年以上七年以下有期徒刑。前項之未遂犯罰之。",
+      "elements": [
+        {
+          "element_id": "e_agg_circumstance",
+          "discriminating": false,
+          "fact_patterns": [
+            "攜帶凶器",
+            "攜帶兇器",
+            "隨身帶著刀",
+            "口袋有刀",
+            "背包有刀",
+            "腰間",
+            "藏刀",
+            "凶器",
+            "三人以上",
+            "三人",
+            "三人共同",
+            "住宅內",
+            "住家內",
+            "房子裡",
+            "毀越",
+            "門窗",
+            "鐵窗",
+            "災害之際",
+            "颱風",
+            "火車上",
+            "捷運上",
+            "公車上",
+            "車站"
+          ],
+          "critical": false,
+          "element_name": "加重情狀（§321 I 各款）",
+          "definition": "犯搶奪罪而有 §321 I 各款情形之一。",
+          "search_tags": [
+            "攜帶兇器",
+            "住宅",
+            "三人以上"
+          ]
+        }
+      ]
+    },
+    {
+      "statute_id": "§328_I",
+      "statute_name": "強盜罪",
+      "source_url": "https://db.lawbank.com.tw/FLAW/FLAWDOC01.aspx?lsid=FL001424&lno=328",
+      "article_text": "意圖為自己或第三人不法之所有，以強暴、脅迫、藥劑、催眠術或他法，至使不能抗拒，而取他人之物或使其交付者，為強盜罪，處五年以上有期徒刑。以前項方法得財產上不法之利益或使第三人得之者，亦同。犯強盜罪因而致人於死者，處死刑、無期徒刑或十年以上有期徒刑；致重傷者，處無期徒刑或七年以上有期徒刑。第一項及第二項之未遂犯罰之。預備犯強盜罪者，處一年以下有期徒刑、拘役或九千元以下罰金。",
+      "elements": [
+        {
+          "element_id": "e_coercion",
+          "discriminating": true,
+          "fact_patterns": [
+            "持刀",
+            "拿刀",
+            "揮刀",
+            "刀指",
+            "棍",
+            "鐵棍",
+            "打",
+            "拳",
+            "踢",
+            "推",
+            "拉住",
+            "掐",
+            "抱住",
+            "堵住",
+            "攔住",
+            "威脅",
+            "恐嚇",
+            "吼",
+            "兇器",
+            "拿出刀",
+            "亮刀"
+          ],
+          "critical": true,
+          "element_name": "強暴、脅迫、藥劑、催眠術或他法",
+          "definition": "以強暴、脅迫、藥劑、催眠術或他法等不法方法對被害人施壓。",
+          "search_tags": [
+            "強暴",
+            "脅迫",
+            "藥劑",
+            "催眠術",
+            "他法",
+            "手持",
+            "持刀"
+          ]
+        },
+        {
+          "element_id": "e_irresistible",
+          "discriminating": true,
+          "fact_patterns": [
+            "害怕",
+            "恐懼",
+            "嚇",
+            "不敢",
+            "不敢動",
+            "不敢反抗",
+            "不敢抗拒",
+            "不能動",
+            "動不了",
+            "跑不了",
+            "求助",
+            "喊叫",
+            "畏縮",
+            "發抖",
+            "僵住",
+            "無法抗拒",
+            "心生畏懼",
+            "嚇到",
+            "腿軟",
+            "不敢出聲"
+          ],
+          "critical": true,
+          "element_name": "至使不能抗拒",
+          "definition": "所謂「至使不能抗拒」，係指行為人所施用之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言；不以被害人之主觀意思為準，亦不以被害人完全喪失抗拒能力為要件。",
+          "search_tags": [
+            "不能抗拒",
+            "顯難抗拒",
+            "意思自由",
+            "具體事實",
+            "客觀判斷"
+          ]
+        },
+        {
+          "element_id": "e_taking_or_delivery",
+          "discriminating": true,
+          "fact_patterns": [
+            "拿走",
+            "取走",
+            "搶走",
+            "交出",
+            "交付",
+            "遞給",
+            "遞上",
+            "塞給",
+            "交給",
+            "搶去",
+            "交予",
+            "放到他手上",
+            "放到桌上",
+            "遞過去"
+          ],
+          "critical": true,
+          "element_name": "取他人之物或使其交付",
+          "definition": "以強制方法取走他人之物，或使被害人交付他人之物。",
+          "search_tags": [
+            "取他人之物",
+            "使其交付",
+            "交付",
+            "取走",
+            "強取"
+          ]
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "discriminating": false,
+          "fact_patterns": [
+            "搶",
+            "要搶",
+            "想搶",
+            "打算搶",
+            "圖謀",
+            "想拿",
+            "想取",
+            "貪",
+            "想賺",
+            "打算拿"
+          ],
+          "critical": true,
+          "element_name": "不法所有之意圖",
+          "definition": "意圖為自己或第三人不法之所有。",
+          "search_tags": [
+            "不法所有",
+            "意圖"
+          ]
+        }
+      ]
+    },
+    {
+      "statute_id": "§328_II",
+      "statute_name": "強盜罪（取得財產上不法利益）",
+      "source_url": "https://db.lawbank.com.tw/FLAW/FLAWDOC01.aspx?lsid=FL001424&lno=328",
+      "elements": [
+        {
+          "element_id": "e_illegal_benefit",
+          "discriminating": true,
+          "fact_patterns": [
+            "利益",
+            "得利",
+            "讓第三人",
+            "脫離",
+            "好處",
+            "便宜"
+          ],
+          "critical": false,
+          "element_name": "得財產上不法之利益或使第三人得之",
+          "definition": "以前項方法得財產上不法之利益或使第三人得之者，亦同。",
+          "search_tags": [
+            "財產上不法利益",
+            "第三人得之"
+          ]
+        }
+      ]
+    },
+    {
+      "statute_id": "§329",
+      "statute_name": "準強盜罪",
+      "source_url": "https://db.lawbank.com.tw/FLAW/FLAWDOC01.aspx?lsid=FL001424&lno=329",
+      "article_text": "竊盜或搶奪，因防護贓物、脫免逮捕或湮滅罪證，而當場施以強暴脅迫者，以強盜論。",
+      "elements": [
+        {
+          "element_id": "e_preceding_offense",
+          "discriminating": true,
+          "fact_patterns": [
+            "先前偷",
+            "之前偷",
+            "剛才偷",
+            "原本要偷",
+            "先前搶",
+            "之前搶",
+            "剛才搶",
+            "原本要搶",
+            "為防止",
+            "怕被抓",
+            "為掩護",
+            "為躲藏",
+            "不想被發現"
+          ],
+          "critical": true,
+          "element_name": "前行為須為竊盜或搶奪",
+          "definition": "竊盜或搶奪。",
+          "search_tags": [
+            "竊盜",
+            "搶奪",
+            "前行為"
+          ]
+        },
+        {
+          "element_id": "e_motive",
+          "discriminating": true,
+          "fact_patterns": [
+            "贓物",
+            "怕被追",
+            "怕被抓",
+            "怕警察",
+            "要逃",
+            "逃跑",
+            "躲起來",
+            "藏起來",
+            "湮滅",
+            "銷毀",
+            "掩護",
+            "脫免",
+            "怕被抓到"
+          ],
+          "critical": true,
+          "element_name": "動機為防護贓物、脫免逮捕或湮滅罪證",
+          "definition": "因防護贓物、脫免逮捕或湮滅罪證。",
+          "search_tags": [
+            "防護贓物",
+            "脫免逮捕",
+            "湮滅罪證"
+          ]
+        },
+        {
+          "element_id": "e_ond_the_spot",
+          "discriminating": true,
+          "fact_patterns": [
+            "當場對",
+            "現場對",
+            "立刻對",
+            "隨即對",
+            "馬上對",
+            "轉身對",
+            "回頭對",
+            "搶回",
+            "爭奪",
+            "追上去",
+            "當下推",
+            "隨即打",
+            "立刻打",
+            "轉身打"
+          ],
+          "critical": true,
+          "element_name": "當場施以強暴脅迫",
+          "definition": "而當場施以強暴脅迫者。",
+          "search_tags": [
+            "當場",
+            "強暴脅迫",
+            "追捕"
+          ]
+        }
+      ]
+    },
+    {
+      "statute_id": "§330_I",
+      "statute_name": "強盜罪之加重事由",
+      "source_url": "https://db.lawbank.com.tw/FLAW/FLAWDOC01.aspx?lsid=FL001424&lno=330",
+      "article_text": "犯強盜罪而有第三百二十一條第一項各款情形之一者，處七年以上有期徒刑。前項之未遂犯罰之。",
+      "elements": [
+        {
+          "element_id": "e_agg_circumstance",
+          "discriminating": false,
+          "fact_patterns": [
+            "攜帶凶器",
+            "攜帶兇器",
+            "隨身帶著刀",
+            "口袋有刀",
+            "背包有刀",
+            "腰間",
+            "藏刀",
+            "凶器",
+            "三人以上",
+            "三人",
+            "三人共同",
+            "住宅內",
+            "住家內",
+            "房子裡",
+            "毀越",
+            "門窗",
+            "鐵窗",
+            "災害之際",
+            "颱風",
+            "火車上",
+            "捷運上",
+            "公車上",
+            "車站"
+          ],
+          "critical": false,
+          "element_name": "加重情狀（§321 I 各款）",
+          "definition": "犯強盜罪而有 §321 I 各款情形之一。",
+          "search_tags": [
+            "攜帶兇器",
+            "住宅",
+            "三人以上",
+            "毀越"
+          ]
+        }
+      ]
+    },
+    {
+      "statute_id": "§346_I",
+      "statute_name": "恐嚇取財罪",
+      "source_url": "https://db.lawbank.com.tw/FLAW/FLAWDOC01.aspx?lsid=FL001424&lno=346",
+      "article_text": "意圖為自己或第三人不法之所有，以恐嚇使人將本人或第三人之物交付者，處六月以上五年以下有期徒刑，得併科三萬元以下罰金。以前項方法得財產上不法之利益或使第三人得之者，亦同。前二項之未遂犯罰之。",
+      "elements": [
+        {
+          "element_id": "e_threat",
+          "discriminating": true,
+          "fact_patterns": [
+            "揚言",
+            "威脅",
+            "恐嚇",
+            "說要",
+            "喊你",
+            "罵",
+            "亮刀",
+            "亮出刀",
+            "拿著刀說",
+            "叫嚣",
+            "叫囂",
+            "說要報復",
+            "說要弄死"
+          ],
+          "critical": true,
+          "element_name": "恐嚇",
+          "definition": "所謂之「恐嚇」，係指以加害生命、身體、自由、名譽、財產之事通知他人，使其發生畏怖心理；其告知方式並無限制，無論口頭、書面、言語或肢體動作均屬之；且須在客觀上足以一般人產生畏怖心理。",
+          "search_tags": [
+            "恐嚇",
+            "畏怖",
+            "惡害告知",
+            "將來惡害",
+            "威脅"
+          ]
+        },
+        {
+          "element_id": "e_delivery_by_fear",
+          "discriminating": true,
+          "fact_patterns": [
+            "害怕",
+            "恐懼",
+            "嚇",
+            "畏懼",
+            "不敢",
+            "擔心",
+            "怕",
+            "驚恐",
+            "恐慌"
+          ],
+          "critical": true,
+          "element_name": "使人交付（基於畏懼）",
+          "definition": "以恐嚇使人將本人或第三人之物交付。",
+          "search_tags": [
+            "使人交付",
+            "交付",
+            "心生畏懼",
+            "恐懼"
+          ]
+        },
+        {
+          "element_id": "e_robbery_intent",
+          "discriminating": false,
+          "fact_patterns": [
+            "搶",
+            "要搶",
+            "想搶",
+            "打算搶",
+            "圖謀",
+            "想拿",
+            "想取",
+            "貪",
+            "想賺",
+            "打算拿"
+          ],
+          "critical": true,
+          "element_name": "不法所有之意圖",
+          "definition": "意圖為自己或第三人不法之所有。",
+          "search_tags": [
+            "不法所有",
+            "意圖"
+          ]
+        }
+      ]
+    }
+  ],
+  "element_to_judgment": [
+    {
+      "element_id": "e_irresistible",
+      "judgment_refs": [
+        {
+          "case_ref": "最高法院101年度台上字3376號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 101,台上,3376 (101.06.28)",
+          "holding_summary": "所謂「至使不能抗拒」，係指行為人所施用之強暴、脅迫等非法方法，在「客觀上」足使被害人喪失意思自由，並達於不能抗拒之程度者而言",
+          "court_level": "最高法院",
+          "year": 2012,
+          "year_roc": "101",
+          "status": null,
+          "cited_count": 3,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrAVU50GCTmyjIsT4Vf1AH%2bYhXMSF1jEuBxKY0qkwRx368n0jydokdB7DIX5XcQnY4FM5uHIuDnk6xYbyv4h%2bwbScjNdYNKciDAG3yJjjDr6cFBvOMNpm4Eg1PIqnNJVqGR1VLM0rdYJdIevEhqlx0IZsRP%2fGWRg%2f3aiHknRHPbag",
+          "status_flag": "extracted",
+          "is_key_judgment": true
+        },
+        {
+          "case_ref": "最高法院99年度台上字7594號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 99,台上,7594 (99.12.09)",
+          "holding_summary": "所稱至使不能抗拒，係指行為人所施之強暴、脅迫等不法行為，在事實上已達於使被害人無法抗拒或不能抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2010,
+          "year_roc": "99",
+          "status": "本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrA0qyPIMSmbwtkMYtyFNWIV8sIDMUKhUr2TyUOCZ9xm4mO0Y27mzJlWl30%2f%2f1iLqKIVEuSEH4WDNg3HTSANcIQPcPjBU0pSTWktLPv3ALImaxH5yZN9rOs%2fmVKP6V1Nxai1WSbhQBEv8Ms8jLxvAP74r3QPvCzmtB3o7p8QdpeRh",
+          "status_flag": "extracted",
+          "is_key_judgment": true
+        },
+        {
+          "case_ref": "最高法院111年度台上字2060號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 111,台上,2060 (111.04.28)",
+          "holding_summary": "所謂「至使不能抗拒」，係指行為人所施用之強暴、脅迫等手段，就當時之具體事實，予以客觀之判斷，足使一般人身體上或精神上達於不能或顯難抗拒之程度而言，不以被害人之主觀意思為準，亦不以被害人完全喪失抗拒能力為要件",
+          "court_level": "最高法院",
+          "year": 2022,
+          "year_roc": "111",
+          "status": "本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrBtE57887nVxh%2fPMkvuUPxemLjVzvMWkgUaR8Idju18t%2bNi7JC8ar1LdH4abCY5sfIzb4ZeY6haY87A00zUnP5jI%2bSokdjbYasaX%2bOEKfnk9CluBNrcL8l%2buHm3nF%2b7Qw0vrMlF88mk4B5fOom6wnAeynqioh2L2NZ09K2DRcTLV",
+          "status_flag": "extracted",
+          "is_key_judgment": true
+        },
+        {
+          "case_ref": "最高法院104年度台上字290號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 104,台上,290 (104.01.29)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言，再按搶奪與強盜，雖同具不法得財之意思，然搶奪係乘人不備，公然掠取人之財物，如係施用強暴脅迫，至使人不能抗拒，而取被害人財物或令其交付者，則為強盜罪",
+          "court_level": "最高法院",
+          "year": 2015,
+          "year_roc": "104",
+          "status": "精選裁判本案已確定",
+          "cited_count": 23,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrGp81N%2f4Jy%2bKpK%2b3Af3EE%2bfWNPqAZshg85EIXMAsbeAltgMii%2fsbyTsjWr5k82abtlWf9Poo4nES8vuTgtSywbFP0eIjpU5yb2XnT9hBS7vOKjq9uj5Ldi7svtMCPYSYSMRl84IZK6vHy8lSoXPVnyU%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院107年度台上字586號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 107,台上,586 (107.02.08)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言，亦即應依一般人在同一情況下，其意思自由是否因此受壓制為斷，不以被害人之主觀意思為準",
+          "court_level": "最高法院",
+          "year": 2018,
+          "year_roc": "107",
+          "status": "精選裁判本案已確定",
+          "cited_count": 62,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrLjkIXrgwedWNf8iHLk7IyQzTaiV7%2fA5HO92VMrp9IhWhqvgmf%2b1GB2xHHEdwbiWthTq%2f2uSiDlF2404yzyIke1beM9%2fzXyCZhArxaegh3Ev1E%2b9A%2fetmbP5FBo89zhqCQB9lK4H%2fZrCADXnL91uXow%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院100年度台上字6876號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 100,台上,6876 (100.12.08)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言，係依一般人在同一情況下，其意思自由是否因此受壓制為斷，並不以被害人之主觀意思為準",
+          "court_level": "最高法院",
+          "year": 2011,
+          "year_roc": "100",
+          "status": "精選裁判本案已確定",
+          "cited_count": 51,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrDlas%2b%2fWvZJw09eyEK7AhhZwkdHu6cz5BCQ1BJWwQj65UuuIH%2fOBaKBjXKljd%2fVvdk6Tr%2btbKn7iFJx0QUB6eyvNo2L9Ck8EMu5WaBqfB1NVBUn7EcxPu4dvRWhkWy7pkvakSiPKoiImW5kdxf1mFhc%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院107年度台上字4742號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 107,台上,4742 (107.12.12)",
+          "holding_summary": "所謂「至使不能抗拒」，係指行為人所施用之強暴、脅迫等手段，就當時之具體事實，予以客觀之判斷，足使一般人身體上或精神上達於不能或顯難抗拒之程度而言，不以被害人之主觀意思為準，亦不以被害人完全喪失抗拒能力為要件",
+          "court_level": "最高法院",
+          "year": 2018,
+          "year_roc": "107",
+          "status": "精選裁判本案已確定",
+          "cited_count": 3,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrC0bY59zta3DSnYD3fBin3DaoBqoGRFVRaHYFieGOql9d8JPcL43FprF5X0CQ1YVzO0Q6qNl7wz8vRkD0%2bhwfe8KgA%2fCY3lA3Pbw2OCjompRMWw7qRK8MK3aTF2RaK7%2bMEv43IKmSfyvkO0ikmPcNA6oJZ4ICl7lE4DLgntWvfF2",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院106年度台上字3158號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 106,台上,3158 (106.10.18)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫、藥劑、催眠術或他法等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2017,
+          "year_roc": "106",
+          "status": "精選裁判本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrCa57ABje%2bYRPgFTdOLTjgEAFHyFCV1gpODp%2fO4KTxhb7sQJVq3K585oPXlDefm7ItM82IrjXxDKStEO1Qwui0gtF9d2cFOjocA9HEmpQ6ZM%2fMjNjYlECkBNFKR%2bvn3shpbK0IFV5nZ4y4RtoU15ruk%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院100年度台上字5508號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 100,台上,5508 (100.10.06)",
+          "holding_summary": "所謂之「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2011,
+          "year_roc": "100",
+          "status": "精選裁判本案已確定",
+          "cited_count": 2,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrFPXSNK1FreOqgS%2ftYT3Hfzza5cOuqGhbUIWnr221lx%2bTWoTo6%2f4lQGLu%2bCmCukINrwAr0zazGgQw4mxPIBWY1erobPWofK0v5q%2f5jkMCeZSOoAOkjhrMtttULpgOV6D4oBvEj0k0aJC8%2fXzx3wXUqU%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院110年度台上字3056號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 110,台上,3056 (110.05.13)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2021,
+          "year_roc": "110",
+          "status": "精選裁判本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrGgH5Gg%2fYc1Tm2gQcR2Azi6luYrFyFM3rsuD6HdSvlet6x5eHpdWWZsEtDrzBTvBzzi3Ov1%2b6rFex1ceNPk6bdqvR9E5tcWVkpBrA9Y5DeDOUm4D0uSuRY%2fPca%2fHRwV1BNQCtFU0oelo09yJjsUaAxo%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院106年度台上字3541號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 106,台上,3541 (106.11.16)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2017,
+          "year_roc": "106",
+          "status": "精選裁判本案已確定",
+          "cited_count": 24,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrLFVVPJu5G2T1C4xWgDhinRw%2fyKMm7b4gp3P3SZLHa9pHFFzM18PfPH%2b9323dXmCoeHo81Kp4kV2o3mw6dAe5YI4xxCw8z6Afyn0lmwGo1XXB0YosslxMde8fDlA5Vfyu3ua2psuION9LxPjfk7iIM8%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院104年度台上字1568號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 104,台上,1568 (104.05.28)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2015,
+          "year_roc": "104",
+          "status": "精選裁判本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrFxx4P%2fQDjuWQJddYal8IVuNWILRfpeUcKE9c4XEDGD3j3ayPnWByDRVfHQjsge3tVdIU9n9K2REJMnWQNiA1j5zztx%2bKRRIQYZj1rHvIH3r98JMYwEvXHBQcqhMFlEy3K0wck2Auax8dvlWlX3kHDA%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院98年度台上字4380號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 98,台上,4380 (98.08.06)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2009,
+          "year_roc": "98",
+          "status": "精選裁判本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrOj9FDR0wBzRhUYOjNG2g%2biK3HsrLOnb3HQlP0yFaB6OAaL0v6t51Q6Fb82N1OaP%2bVElLTcxp1dX0j4biuqnbf%2bDjEtfnuAvWJfRgOV1%2fL1%2fia0htbrvSqWeofmGS%2fnL3JSzCDu%2b6k%2blx%2fXAImsuNg8%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院110年度台上字2678號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 110,台上,2678 (110.05.13)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2021,
+          "year_roc": "110",
+          "status": "精選裁判本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrOFTodmv%2fiXb79YfK8J%2bBSZ0YhMqPqIQZWAjDMcWq7G8IOYD2KlyOxsjRpehzKXQXOiURK2mhSJGlxM7uwzcVeN4xBpEsTo013TAJZKz5Mn51Yc8LoT04WBTftr6Lt2bKkZdcY%2bCVjF0ToE4auiCNrU%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院109年度台上字5535號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 109,台上,5535 (109.12.10)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀觀察，足使被害人身體或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2020,
+          "year_roc": "109",
+          "status": "精選裁判本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrHEGN0F3Q3l3OC%2b89ktdL0dnfvml9p4%2bcISUNexe88%2b7qlktSkY9lOFnXoMoAa5NqoVplkYzUQlaKyyZSyoMSdqCZ3I7svMjhqA84dVjhjtJ57zTJPFuAmWqB34ebQcqSH5gQJdjLIYlRMrpAhGRIFc%3d",
+          "status_flag": "extracted"
+        }
+      ]
+    },
+    {
+      "element_id": "e_coercion",
+      "judgment_refs": [
+        {
+          "case_ref": "最高法院104年度台上字290號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 104,台上,290 (104.01.29)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言，再按搶奪與強盜，雖同具不法得財之意思，然搶奪係乘人不備，公然掠取人之財物，如係施用強暴脅迫，至使人不能抗拒，而取被害人財物或令其交付者，則為強盜罪",
+          "court_level": "最高法院",
+          "year": 2015,
+          "year_roc": "104",
+          "status": "精選裁判本案已確定",
+          "cited_count": 23,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrGp81N%2f4Jy%2bKpK%2b3Af3EE%2bfWNPqAZshg85EIXMAsbeAltgMii%2fsbyTsjWr5k82abtlWf9Poo4nES8vuTgtSywbFP0eIjpU5yb2XnT9hBS7vOKjq9uj5Ldi7svtMCPYSYSMRl84IZK6vHy8lSoXPVnyU%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院107年度台上字586號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 107,台上,586 (107.02.08)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言，亦即應依一般人在同一情況下，其意思自由是否因此受壓制為斷，不以被害人之主觀意思為準",
+          "court_level": "最高法院",
+          "year": 2018,
+          "year_roc": "107",
+          "status": "精選裁判本案已確定",
+          "cited_count": 62,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrLjkIXrgwedWNf8iHLk7IyQzTaiV7%2fA5HO92VMrp9IhWhqvgmf%2b1GB2xHHEdwbiWthTq%2f2uSiDlF2404yzyIke1beM9%2fzXyCZhArxaegh3Ev1E%2b9A%2fetmbP5FBo89zhqCQB9lK4H%2fZrCADXnL91uXow%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院100年度台上字6876號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 100,台上,6876 (100.12.08)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言，係依一般人在同一情況下，其意思自由是否因此受壓制為斷，並不以被害人之主觀意思為準",
+          "court_level": "最高法院",
+          "year": 2011,
+          "year_roc": "100",
+          "status": "精選裁判本案已確定",
+          "cited_count": 51,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrDlas%2b%2fWvZJw09eyEK7AhhZwkdHu6cz5BCQ1BJWwQj65UuuIH%2fOBaKBjXKljd%2fVvdk6Tr%2btbKn7iFJx0QUB6eyvNo2L9Ck8EMu5WaBqfB1NVBUn7EcxPu4dvRWhkWy7pkvakSiPKoiImW5kdxf1mFhc%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院107年度台上字4742號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 107,台上,4742 (107.12.12)",
+          "holding_summary": "所謂「至使不能抗拒」，係指行為人所施用之強暴、脅迫等手段，就當時之具體事實，予以客觀之判斷，足使一般人身體上或精神上達於不能或顯難抗拒之程度而言，不以被害人之主觀意思為準，亦不以被害人完全喪失抗拒能力為要件",
+          "court_level": "最高法院",
+          "year": 2018,
+          "year_roc": "107",
+          "status": "精選裁判本案已確定",
+          "cited_count": 3,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrC0bY59zta3DSnYD3fBin3DaoBqoGRFVRaHYFieGOql9d8JPcL43FprF5X0CQ1YVzO0Q6qNl7wz8vRkD0%2bhwfe8KgA%2fCY3lA3Pbw2OCjompRMWw7qRK8MK3aTF2RaK7%2bMEv43IKmSfyvkO0ikmPcNA6oJZ4ICl7lE4DLgntWvfF2",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院106年度台上字3158號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 106,台上,3158 (106.10.18)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫、藥劑、催眠術或他法等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2017,
+          "year_roc": "106",
+          "status": "精選裁判本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrCa57ABje%2bYRPgFTdOLTjgEAFHyFCV1gpODp%2fO4KTxhb7sQJVq3K585oPXlDefm7ItM82IrjXxDKStEO1Qwui0gtF9d2cFOjocA9HEmpQ6ZM%2fMjNjYlECkBNFKR%2bvn3shpbK0IFV5nZ4y4RtoU15ruk%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院100年度台上字5508號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 100,台上,5508 (100.10.06)",
+          "holding_summary": "所謂之「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2011,
+          "year_roc": "100",
+          "status": "精選裁判本案已確定",
+          "cited_count": 2,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrFPXSNK1FreOqgS%2ftYT3Hfzza5cOuqGhbUIWnr221lx%2bTWoTo6%2f4lQGLu%2bCmCukINrwAr0zazGgQw4mxPIBWY1erobPWofK0v5q%2f5jkMCeZSOoAOkjhrMtttULpgOV6D4oBvEj0k0aJC8%2fXzx3wXUqU%3d",
+          "status_flag": "extracted"
+        }
+      ]
+    },
+    {
+      "element_id": "e_taking_or_delivery",
+      "judgment_refs": [
+        {
+          "case_ref": "最高法院110年度台上字3056號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 110,台上,3056 (110.05.13)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2021,
+          "year_roc": "110",
+          "status": "精選裁判本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrGgH5Gg%2fYc1Tm2gQcR2Azi6luYrFyFM3rsuD6HdSvlet6x5eHpdWWZsEtDrzBTvBzzi3Ov1%2b6rFex1ceNPk6bdqvR9E5tcWVkpBrA9Y5DeDOUm4D0uSuRY%2fPca%2fHRwV1BNQCtFU0oelo09yJjsUaAxo%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院106年度台上字3541號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 106,台上,3541 (106.11.16)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2017,
+          "year_roc": "106",
+          "status": "精選裁判本案已確定",
+          "cited_count": 24,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrLFVVPJu5G2T1C4xWgDhinRw%2fyKMm7b4gp3P3SZLHa9pHFFzM18PfPH%2b9323dXmCoeHo81Kp4kV2o3mw6dAe5YI4xxCw8z6Afyn0lmwGo1XXB0YosslxMde8fDlA5Vfyu3ua2psuION9LxPjfk7iIM8%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院104年度台上字1568號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 104,台上,1568 (104.05.28)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2015,
+          "year_roc": "104",
+          "status": "精選裁判本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrFxx4P%2fQDjuWQJddYal8IVuNWILRfpeUcKE9c4XEDGD3j3ayPnWByDRVfHQjsge3tVdIU9n9K2REJMnWQNiA1j5zztx%2bKRRIQYZj1rHvIH3r98JMYwEvXHBQcqhMFlEy3K0wck2Auax8dvlWlX3kHDA%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院110年度台上字2678號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 110,台上,2678 (110.05.13)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言",
+          "court_level": "最高法院",
+          "year": 2021,
+          "year_roc": "110",
+          "status": "精選裁判本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrOFTodmv%2fiXb79YfK8J%2bBSZ0YhMqPqIQZWAjDMcWq7G8IOYD2KlyOxsjRpehzKXQXOiURK2mhSJGlxM7uwzcVeN4xBpEsTo013TAJZKz5Mn51Yc8LoT04WBTftr6Lt2bKkZdcY%2bCVjF0ToE4auiCNrU%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院95年度台上字5006號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 95,台上,5006 (95.09.14)",
+          "holding_summary": "所謂至使不能抗拒，係指行為人所施用之強暴、脅迫等非法方法，在「客觀上」足使被害人喪失意思自由，並達於不能抗拒之程度者而言",
+          "court_level": "最高法院",
+          "year": 2006,
+          "year_roc": "95",
+          "status": "精選裁判本案已確定",
+          "cited_count": 38,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrO8dQD63PqsWE7M5ChOjSH%2bnFLPibPLJALrfGXjdbVufyAIyGNDcTy7eBPKXPsMIzt2YTWow8GQMB0LvZZhytQnsll7JfG1K4bVwSaapW107PjiE5AA3NGEX%2bLhKB%2f%2fvNH46EnAWwGtoPfAwXVhOm%2bKhR95ms5l%2fYsEwo%2fn4uzWj",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院110年度台上字4960號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 110,台上,4960 (110.10.07)",
+          "holding_summary": "所謂至使不能抗拒，係指行為人所施用之強暴、脅迫等非法方法，在客觀上足使被害人喪失意思自由，並達於不能抗拒之程度者而言",
+          "court_level": "最高法院",
+          "year": 2021,
+          "year_roc": "110",
+          "status": "精選裁判",
+          "cited_count": 8,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrM8Zw7DGtM5ON7hKrGe1tbPvbwfXudz8k2orWNZRaKvFkXTCKCVL0PaFxbZyPnA74yoymNtMYlihDmykZk4m4W7GJHpsA%2b%2bWjcE0tglgSsdR8FCQjDK3SfvZUzVM1us2oh%2f0HBrNvjTM0QVFdM5L1h61UZjuca8HrtFlHP963nYJ",
+          "status_flag": "extracted"
+        }
+      ]
+    },
+    {
+      "element_id": "e_threat",
+      "judgment_refs": [
+        {
+          "case_ref": "最高法院86年度台上字5174號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 86,台上,5174 (86.08.28)",
+          "holding_summary": "所稱之恐嚇，係指以危害通知他人，使該他人主觀上生畏怖之行為，此項危害之通知，非僅限於將來之危害，其於現時以危害相加者，亦應包括在內，故對被害人施以強暴、脅迫，倘被害人尚有幾分自由意思，在社會一般通念上，僅心生畏怖而未達不能抗拒之程度者，仍屬本罪所稱恐嚇之範疇",
+          "court_level": "最高法院",
+          "year": 1997,
+          "year_roc": "86",
+          "status": "本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrJCmFm0tSnh8FHj%2fQBwteDDdsR25odegTOekiQAQ%2bBmdBdhwNPI8LRvlS9jomnadSbWy1RMxsbIFHMFCTc5so3ZAQKC2S5uHfhwBfl%2bjZDVsjzGlcFvCdx1WkoSgrh9nLA%3d%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院 高雄分院107年度上易字74號刑事判決",
+          "case_ref_text": "臺灣高等法院 高雄分院刑事 (判決) 107,上易,74 (107.03.15)",
+          "holding_summary": "所謂「恐嚇」，係以加害生命、身體、自由、名譽等事通知他人，使其發生畏怖心理，所表示者須在客觀上一般人認為足以構成威脅，以致被恐嚇者之生活狀態陷於危險不安之境方屬相當，而被害人是否心生畏懼，亦應本於社會客觀經驗法則以為判斷基準。是以行為人之言語是否屬於惡害通知，須審酌其前後之全文、斯時所受之刺激等主客觀全盤情形為斷。㈠針對「那妳就叫他等著看喔，我就跟妳講真的嘛，妳要弄成這樣也沒關係啦，陳沛蓁，妳跟我講我就知道哪一個」語句部分，依一般正常對話習慣當提及對話當事人以外之第三人且未特別強調其姓名、身分而僅用「他」字代稱時，應係雙方對於該第三人為何人均有認知，然參諸附表所示被告口出此段話語前與告訴人間之對話全文可知，雖被告一再以「男朋友」、「打電話約阿華處理」之關鍵字欲特定談話對象，惟告訴人似全未理解被告所指為何人，渠更於偵、審應訊時均稱：伊不知道被告所稱「他」是指誰等語明確（偵卷第32頁",
+          "court_level": "臺灣高等法院 高雄分院",
+          "year": 2018,
+          "year_roc": "107",
+          "status": "本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrIP%2feMk%2fmz%2fXZh5OY2uhW7nQVx9K1zkflAxoDFRPc3naPdLskY18PA3HSwAiz7EENoIeEBalgmax3qkB8owq1sG8DWjlZlYsYgnc9C%2btEoRkV3Z9Bc89%2fskzm5n0FK3Qfn1bHClL5PBbu3IVfmBqFWk%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院106年度上易字1663號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 106,上易,1663 (107.01.17)",
+          "holding_summary": "所謂恐嚇，乃以將惡害之事實，通知被害人，使其生畏怖之心。惡害內容所加害之客體，不限於人之生命、身體、自由、名譽或財產，凡其足使人生畏怖之心理者，均屬之。恐嚇取財大抵以揭發他人隱私或檢舉他人犯罪，恐嚇他人使其交付財物，作為不予揭發或不予檢舉之交換條件居多，其性質不以違法行為為限，亦不以虛構之事實為限，即屬合法之行為、實在之事實，而用為恐嚇他人者，亦然。又刑法上關於財產上犯罪，所定意圖為自己或第三人不法之所有之意思條件，即所稱之「不法所有之意圖」，乃指行為人對所求要之利益並不具備已屆期且無抗辯存在之請求權",
+          "court_level": "臺灣高等法院",
+          "year": 2017,
+          "year_roc": "106",
+          "status": "本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrKr7yeX0sTYVHyffYk65Qs1iLNIfht1d2YBdhzrM9YP2mNpkrD2Ueov4BnMSU%2beUG9MxlVJvFvg%2frNFijiu4sD%2fHzPgF2vQBn5oDsS7982i6ZpsMZG6LUricjSYb4y%2fmvQmavQJWEidR%2fWtIbfsP8ps%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院109年度上易字327號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 109,上易,327 (109.04.15)",
+          "holding_summary": "所謂「恐嚇」，係指以足使人心生畏怖之惡害告知他人之行為，惡害告知方式，並無限制，無論係口頭、書面、言語或態度，其為明示或暗示，均非所問，行為人倘以加害生命、身體、自由、名譽、財產之事，作為惡害告知之內容，並於客觀上達於「致生危害於安全」之程度，即被害人受惡害之通知而有不安全之感覺，即足當之，並應以一般社會標準考量其言語、文字或舉動是否足致他人生畏怖之心，並審酌當時環境、互動經過等，為客觀判斷",
+          "court_level": "臺灣高等法院",
+          "year": 2020,
+          "year_roc": "109",
+          "status": "本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrI%2fNK5pq7IrMR9FUopT05uSRWycl42DvCLfZ%2fCz8z3vBwv%2bTosuBjCpb9jBYUY%2fSjFYR%2faBnahdEkEB33Cke%2bMiZ7RPBac8YVqU4miDAVlRgRTHcgLsTjOdCXWY28fnxZyJ8UFd6b3BtE41jnmxu3L0%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院111年度上易字698號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 111,上易,698 (111.07.13)",
+          "holding_summary": "所謂恐嚇，係指以足使人心生畏怖之惡害告知他人之行為，惡害告知方式，並無限制，無論係口頭、書面、言語或態度，其為明示或暗示，均非所問，行為人倘以加害生命、身體、自由、名譽、財產之事，作為惡害告知之內容，並於客觀上達於致生危害於安全之程度，即被害人受惡害之通知而有不安全之感覺，即足當之，並應以一般社會標準考量其言語、文字或舉動是否足致他人生畏怖之心，審酌當時環境、互動經過等，為客觀判斷",
+          "court_level": "臺灣高等法院",
+          "year": 2022,
+          "year_roc": "111",
+          "status": "本案已確定",
+          "cited_count": 3,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrLPxTmxVK8pzXMWXqVJL62TVA8c%2f92PYNAD8Zw6HquDOW59Y3Z01cUsXN%2fvQJ%2fgJSYqg1iom%2fiTdV%2b1mbR44lQNsX%2bYuozkKysM04%2bBpET3kuOQjVR1oM794bsGbSQHK1AnnsZlIBjCU8h973MPxBLk%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院110年度上易字885號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 110,上易,885 (110.08.18)",
+          "holding_summary": "所謂恐嚇，係指以足使人心生畏怖之惡害告知他人之行為，惡害告知方式，並無限制，無論係口頭、書面、言語或態度，其為明示或暗示，均非所問，行為人倘以加害生命、身體、自由、名譽、財產之事，作為惡害告知之內容，並於客觀上達於致生危害於安全之程度，即被害人受惡害之通知而有不安全之感覺，即足當之，並應以一般社會標準考量其言語、文字或舉動是否足致他人生畏怖之心，審酌當時環境、互動經過等，為客觀判斷",
+          "court_level": "臺灣高等法院",
+          "year": 2021,
+          "year_roc": "110",
+          "status": "本案已確定",
+          "cited_count": 2,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrIT80UMJNoyIe4Xjon%2fq0mXviTIY%2bewI5KdXWl1zoMu65mI45hF%2bnS0%2bfWMT%2bxRjt2jUdLCACgoN1%2bBBKnnKcc%2fXR%2foTG1lYhkBI%2fj3YC0yPy%2f3EOUlD5ax6JYaHzPPtNUgLJSa%2bT%2bLSgpHawU10%2fng%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院110年度上易字410號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 110,上易,410 (110.05.27)",
+          "holding_summary": "所謂「恐嚇」，係指以足使人心生畏怖的惡害告知他人之行為，惡害告知方式，固無限制，無論其為口頭、書面、言語或態度，其為明示或暗示，均非所問，惟不論告知方式為何，均須行為人以加害生命、身體、自由、名譽、財產之事，作為惡害告知之內容，始足當之，並應於客觀上達於「致生危害於安全」之程度，即被害人受惡害之通知而有不安全之感覺，如僅使他人產生困惑、嫌惡、不快或稍許不安者，尚不足認係恐嚇",
+          "court_level": "臺灣高等法院",
+          "year": 2021,
+          "year_roc": "110",
+          "status": "本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrIdpjtedKqVGCj9TpA5Qx6jgiM%2f8ZuiPZtW5yQUPBWCUVWy5U7FGJCluHg1WWSJYvFsmBpTemd9YAnBA6Wsk3M%2feu0%2bDAfTy19xb5geu6qd1ZLGe4nEiIRo6lLfk7dyKtMxny3%2fTn%2bwIl1wBinaXfPE%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院108年度上易字2333號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 108,上易,2333 (109.01.22)",
+          "holding_summary": "所謂「恐嚇」，係指以足使人心生畏怖的惡害告知他人之行為，惡害告知方式，固無限制，無論其為口頭、書面、言語或態度，其為明示或暗示，均非所問，惟不論告知方式為何，均須行為人以加害生命、身體、自由、名譽、財產之事，作為惡害告知之內容，始足當之，並應於客觀上達於「致生危害於安全」之程度，即被害人受惡害之通知而有不安全之感覺，如僅使他人產生困惑、嫌惡、不快或稍許不安者，尚不足認係恐嚇",
+          "court_level": "臺灣高等法院",
+          "year": 2019,
+          "year_roc": "108",
+          "status": "本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrGFR%2bS8KfPeo68ljUqWmoZ1yEbyVEucrs0QHcksM5vk950CSQ5TJsyFK0iv%2bS2WQWGpCCH8utdZseSguy9qDyaE02oY%2fH0a2IawwJEEdP15%2fDHRPNNhW%2fBituPPzL%2fwiVpRP302CFUdjyKu3%2fNfaJRA%3d",
+          "status_flag": "extracted"
+        }
+      ]
+    },
+    {
+      "element_id": "e_delivery_by_fear",
+      "judgment_refs": [
+        {
+          "case_ref": "最高法院86年度台上字5174號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 86,台上,5174 (86.08.28)",
+          "holding_summary": "所稱之恐嚇，係指以危害通知他人，使該他人主觀上生畏怖之行為，此項危害之通知，非僅限於將來之危害，其於現時以危害相加者，亦應包括在內，故對被害人施以強暴、脅迫，倘被害人尚有幾分自由意思，在社會一般通念上，僅心生畏怖而未達不能抗拒之程度者，仍屬本罪所稱恐嚇之範疇",
+          "court_level": "最高法院",
+          "year": 1997,
+          "year_roc": "86",
+          "status": "本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrJCmFm0tSnh8FHj%2fQBwteDDdsR25odegTOekiQAQ%2bBmdBdhwNPI8LRvlS9jomnadSbWy1RMxsbIFHMFCTc5so3ZAQKC2S5uHfhwBfl%2bjZDVsjzGlcFvCdx1WkoSgrh9nLA%3d%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院 高雄分院107年度上易字74號刑事判決",
+          "case_ref_text": "臺灣高等法院 高雄分院刑事 (判決) 107,上易,74 (107.03.15)",
+          "holding_summary": "所謂「恐嚇」，係以加害生命、身體、自由、名譽等事通知他人，使其發生畏怖心理，所表示者須在客觀上一般人認為足以構成威脅，以致被恐嚇者之生活狀態陷於危險不安之境方屬相當，而被害人是否心生畏懼，亦應本於社會客觀經驗法則以為判斷基準。是以行為人之言語是否屬於惡害通知，須審酌其前後之全文、斯時所受之刺激等主客觀全盤情形為斷。㈠針對「那妳就叫他等著看喔，我就跟妳講真的嘛，妳要弄成這樣也沒關係啦，陳沛蓁，妳跟我講我就知道哪一個」語句部分，依一般正常對話習慣當提及對話當事人以外之第三人且未特別強調其姓名、身分而僅用「他」字代稱時，應係雙方對於該第三人為何人均有認知，然參諸附表所示被告口出此段話語前與告訴人間之對話全文可知，雖被告一再以「男朋友」、「打電話約阿華處理」之關鍵字欲特定談話對象，惟告訴人似全未理解被告所指為何人，渠更於偵、審應訊時均稱：伊不知道被告所稱「他」是指誰等語明確（偵卷第32頁",
+          "court_level": "臺灣高等法院 高雄分院",
+          "year": 2018,
+          "year_roc": "107",
+          "status": "本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrIP%2feMk%2fmz%2fXZh5OY2uhW7nQVx9K1zkflAxoDFRPc3naPdLskY18PA3HSwAiz7EENoIeEBalgmax3qkB8owq1sG8DWjlZlYsYgnc9C%2btEoRkV3Z9Bc89%2fskzm5n0FK3Qfn1bHClL5PBbu3IVfmBqFWk%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院109年度上易字327號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 109,上易,327 (109.04.15)",
+          "holding_summary": "所謂「恐嚇」，係指以足使人心生畏怖之惡害告知他人之行為，惡害告知方式，並無限制，無論係口頭、書面、言語或態度，其為明示或暗示，均非所問，行為人倘以加害生命、身體、自由、名譽、財產之事，作為惡害告知之內容，並於客觀上達於「致生危害於安全」之程度，即被害人受惡害之通知而有不安全之感覺，即足當之，並應以一般社會標準考量其言語、文字或舉動是否足致他人生畏怖之心，並審酌當時環境、互動經過等，為客觀判斷",
+          "court_level": "臺灣高等法院",
+          "year": 2020,
+          "year_roc": "109",
+          "status": "本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrI%2fNK5pq7IrMR9FUopT05uSRWycl42DvCLfZ%2fCz8z3vBwv%2bTosuBjCpb9jBYUY%2fSjFYR%2faBnahdEkEB33Cke%2bMiZ7RPBac8YVqU4miDAVlRgRTHcgLsTjOdCXWY28fnxZyJ8UFd6b3BtE41jnmxu3L0%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院111年度上易字698號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 111,上易,698 (111.07.13)",
+          "holding_summary": "所謂恐嚇，係指以足使人心生畏怖之惡害告知他人之行為，惡害告知方式，並無限制，無論係口頭、書面、言語或態度，其為明示或暗示，均非所問，行為人倘以加害生命、身體、自由、名譽、財產之事，作為惡害告知之內容，並於客觀上達於致生危害於安全之程度，即被害人受惡害之通知而有不安全之感覺，即足當之，並應以一般社會標準考量其言語、文字或舉動是否足致他人生畏怖之心，審酌當時環境、互動經過等，為客觀判斷",
+          "court_level": "臺灣高等法院",
+          "year": 2022,
+          "year_roc": "111",
+          "status": "本案已確定",
+          "cited_count": 3,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrLPxTmxVK8pzXMWXqVJL62TVA8c%2f92PYNAD8Zw6HquDOW59Y3Z01cUsXN%2fvQJ%2fgJSYqg1iom%2fiTdV%2b1mbR44lQNsX%2bYuozkKysM04%2bBpET3kuOQjVR1oM794bsGbSQHK1AnnsZlIBjCU8h973MPxBLk%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院110年度上易字885號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 110,上易,885 (110.08.18)",
+          "holding_summary": "所謂恐嚇，係指以足使人心生畏怖之惡害告知他人之行為，惡害告知方式，並無限制，無論係口頭、書面、言語或態度，其為明示或暗示，均非所問，行為人倘以加害生命、身體、自由、名譽、財產之事，作為惡害告知之內容，並於客觀上達於致生危害於安全之程度，即被害人受惡害之通知而有不安全之感覺，即足當之，並應以一般社會標準考量其言語、文字或舉動是否足致他人生畏怖之心，審酌當時環境、互動經過等，為客觀判斷",
+          "court_level": "臺灣高等法院",
+          "year": 2021,
+          "year_roc": "110",
+          "status": "本案已確定",
+          "cited_count": 2,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrIT80UMJNoyIe4Xjon%2fq0mXviTIY%2bewI5KdXWl1zoMu65mI45hF%2bnS0%2bfWMT%2bxRjt2jUdLCACgoN1%2bBBKnnKcc%2fXR%2foTG1lYhkBI%2fj3YC0yPy%2f3EOUlD5ax6JYaHzPPtNUgLJSa%2bT%2bLSgpHawU10%2fng%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院110年度上易字410號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 110,上易,410 (110.05.27)",
+          "holding_summary": "所謂「恐嚇」，係指以足使人心生畏怖的惡害告知他人之行為，惡害告知方式，固無限制，無論其為口頭、書面、言語或態度，其為明示或暗示，均非所問，惟不論告知方式為何，均須行為人以加害生命、身體、自由、名譽、財產之事，作為惡害告知之內容，始足當之，並應於客觀上達於「致生危害於安全」之程度，即被害人受惡害之通知而有不安全之感覺，如僅使他人產生困惑、嫌惡、不快或稍許不安者，尚不足認係恐嚇",
+          "court_level": "臺灣高等法院",
+          "year": 2021,
+          "year_roc": "110",
+          "status": "本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrIdpjtedKqVGCj9TpA5Qx6jgiM%2f8ZuiPZtW5yQUPBWCUVWy5U7FGJCluHg1WWSJYvFsmBpTemd9YAnBA6Wsk3M%2feu0%2bDAfTy19xb5geu6qd1ZLGe4nEiIRo6lLfk7dyKtMxny3%2fTn%2bwIl1wBinaXfPE%3d",
+          "status_flag": "extracted"
+        }
+      ]
+    },
+    {
+      "element_id": "e_robbery_intent",
+      "judgment_refs": [
+        {
+          "case_ref": "臺灣高等法院 臺南分院109年度上訴字967號刑事判決",
+          "case_ref_text": "臺灣高等法院 臺南分院刑事 (判決) 109,上訴,967 (109.10.29)",
+          "holding_summary": "所稱之「搶奪」，係指乘人不備或不及抗拒而公然攫取他人支配範圍以內之物，移轉於自己實力支配下之行為而言",
+          "court_level": "臺灣高等法院 臺南分院",
+          "year": 2020,
+          "year_roc": "109",
+          "status": null,
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrP%2bz4EI7hgQEWVHPzylODZMk%2bq%2f0oGufFLZ3D5%2btOiAYnZ45Bq4qtpU%2bN2aBcig%2fHGBvZyjSMu0fJuZEDNEwTZ87DIztFCJOnptnWMBxdba1OhkcoqU5GLza2fO5CgGfdOXyJy%2fAJjGmqHVz2WUxV5M%3d",
+          "status_flag": "extracted"
+        }
+      ]
+    },
+    {
+      "element_id": "e_theft_taking",
+      "judgment_refs": [
+        {
+          "case_ref": "最高法院93年度台上字1776號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 93,台上,1776 (93.04.08)",
+          "holding_summary": "所稱之「搶奪」，係指乘人不備或不及抗拒而公然攫取他人支配範圍以內之物，移轉於自己實力支配下之行為而言",
+          "court_level": "最高法院",
+          "year": 2004,
+          "year_roc": "93",
+          "status": "本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrHEN5Vwtp9Ln7vNMSE1KU8J4AMmyQOXDuICaboRv8c1bCka9GAy2T1dlYn2GmENQbn5XB9%2fFEG9lown3o%2f1heoT%2f%2bAlzZ64kK%2bgtqB%2b%2fonLK6FmJbbJY3xzMSt8gb5%2f%2f1w%3d%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院108年度上易字724號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 108,上易,724 (108.07.02)",
+          "holding_summary": "所稱之使用竊盜，係指供己一時使用，於使用完畢後，即將之返還之行為（最高法院83年度台上字第826號、86年度台上字第4976號判決意旨參照）",
+          "court_level": "臺灣高等法院",
+          "year": 2019,
+          "year_roc": "108",
+          "status": "本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrIvfm%2b01pOf3XWrpepnHAWZLezOLtdRoczJe%2fxonRo0sxGcdItiiVBfHcsAwAFt4z8TubJDSSdBQ4x8UMOaOhr%2bRMzjbIOZbzXyfGMRAXaxQ7GVsr3xRkZOyyAcLzvmHndiJFU0b21UZmrVknoLYRwQ%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院108年度上易字550號刑事判決",
+          "case_ref_text": "臺灣高等法院刑事 (判決) 108,上易,550 (108.04.30)",
+          "holding_summary": "所稱之使用竊盜，係指供己一時使用，於使用完畢後，即將之返還之行為（最高法院83年度台上字第826號、86年度台上字第4976號判決意旨參照）",
+          "court_level": "臺灣高等法院",
+          "year": 2019,
+          "year_roc": "108",
+          "status": "本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrJFw7QdNUvrqcJVbVMo4E69F8MP2OQDSWQqwlZnhGFCxUV2504oriGWieZAJdCd92qxtPmH4fXgigzvaKNSB6ErEOfxSv8QnI2tPSFGiWwAzbmW7buBNasxyb7vsOmR0jDbavBkWScZrQGW4JNQJGg8%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "臺灣高等法院 臺南分院104年度上易字300號刑事判決",
+          "case_ref_text": "臺灣高等法院 臺南分院刑事 (判決) 104,上易,300 (104.06.25)",
+          "holding_summary": "所謂「使用竊盜」，係指行為人為供己一時之用，因而暫時使用他人管領支配之物，並於使用完畢後予以返還，而無將該物據為己有之不法所有犯意而言",
+          "court_level": "臺灣高等法院 臺南分院",
+          "year": 2015,
+          "year_roc": "104",
+          "status": "本案已確定",
+          "cited_count": 0,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrOKMI0jsBod2yhYpG%2bMFtQWrmix%2b3Hxjfhm3lsZxZGHUgLKxnWTQOal83uEsZMQE7TkkfCbHWydBOesEuQ1NA%2b9eoJgP3tDHBcpyrLbI2yrWfy65%2f%2bPudkr0SocIOQ%2f5nvS9nYf2j0eM4jA9GW3rg8o%3d",
+          "status_flag": "extracted"
+        }
+      ]
+    },
+    {
+      "element_id": "e_robbery_snatch",
+      "judgment_refs": [
+        {
+          "case_ref": "最高法院103年度台上字1995號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 103,台上,1995 (103.06.12)",
+          "holding_summary": "所稱之「搶奪」，係指乘人不備或不及抗拒而公然攫取他人支配範圍以內之物，移轉於自己實力支配下之行為，饒烜宗於扯斷張阿招頸部項鍊落入手中之際，並未與張阿招發生肢體或財物拉扯，該項鍊已在饒烜宗實力支配下，所為之搶奪行為業已因得手而既遂，被告驟見饒烜宗之搶奪行為，始起意將饒烜宗載離現場，及搭載饒烜宗前往變賣贓物並平分款項，均屬饒烜宗搶奪犯行完成後之事後行為，不能據此即認被告於事前或事中與饒烜宗間有犯意之聯絡或行為之分擔，因認檢察官所舉之證據，均不足為被告有罪之積極證明，基於無罪推定之原則，自應就此部分為被告無罪之諭知，因而撤銷第一審該部分之科刑判決，改判諭知被告無罪，已就卷內訴訟資料，逐一剖析，參互審酌，詳敘其如何綜合證據調查之結果，仍無從為被告有罪確信之心證理由，所為論斷，無檢察官所指認定事實悖於經驗法則與論理法則之違法。㈡、刑事訴訟法第三百條所謂得就起訴之犯罪事實，變更檢察官所引應起訴之法條，係指法院於不妨害事實同一之範圍內，得自由認定事實，適用法律而言",
+          "court_level": "最高法院",
+          "year": 2014,
+          "year_roc": "103",
+          "status": "精選裁判本案已確定",
+          "cited_count": 15,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrEkghgS7%2bOCLOVzwy5oS6mspktKZ7XWcPzkrLY7NK0D8ogmaer733X%2bCCal4abmKN04eyDHxDKgjoCXoZi7bLq2r0vWaQ3oKTrHbAqDGW6BNaTB9iftzELNhVSlP777KtA%3d%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院104年度台上字290號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 104,台上,290 (104.01.29)",
+          "holding_summary": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言，再按搶奪與強盜，雖同具不法得財之意思，然搶奪係乘人不備，公然掠取人之財物，如係施用強暴脅迫，至使人不能抗拒，而取被害人財物或令其交付者，則為強盜罪",
+          "court_level": "最高法院",
+          "year": 2015,
+          "year_roc": "104",
+          "status": "精選裁判本案已確定",
+          "cited_count": 23,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrGp81N%2f4Jy%2bKpK%2b3Af3EE%2bfWNPqAZshg85EIXMAsbeAltgMii%2fsbyTsjWr5k82abtlWf9Poo4nES8vuTgtSywbFP0eIjpU5yb2XnT9hBS7vOKjq9uj5Ldi7svtMCPYSYSMRl84IZK6vHy8lSoXPVnyU%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院92年度台上字5514號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 92,台上,5514 (92.10.02)",
+          "holding_summary": "所稱之「搶奪」，係指乘人不備或不及抗拒而公然攫取他人支配範圍以內之物，移轉於自己實力支配下之行為而言",
+          "court_level": "最高法院",
+          "year": 2003,
+          "year_roc": "92",
+          "status": "精選裁判本案已確定",
+          "cited_count": 19,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrKC6fNDlW7FWXR7dESRcLm6fg8deFeBMOE751pN5YwtjDkFdznTXfWjkdTGfhJ%2fXvlh7eYFgudTVNSYXksGWNolq4ptXPMQm4m5J3CGB0JT9fEfB2Zhx1bUiFYoPz%2fg%2bww%3d%3d",
+          "status_flag": "extracted"
+        },
+        {
+          "case_ref": "最高法院93年度台上字1776號刑事判決",
+          "case_ref_text": "最高法院刑事 (判決) 93,台上,1776 (93.04.08)",
+          "holding_summary": "所稱之「搶奪」，係指乘人不備或不及抗拒而公然攫取他人支配範圍以內之物，移轉於自己實力支配下之行為而言",
+          "court_level": "最高法院",
+          "year": 2004,
+          "year_roc": "93",
+          "status": "本案已確定",
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrHEN5Vwtp9Ln7vNMSE1KU8J4AMmyQOXDuICaboRv8c1bCka9GAy2T1dlYn2GmENQbn5XB9%2fFEG9lown3o%2f1heoT%2f%2bAlzZ64kK%2bgtqB%2b%2fonLK6FmJbbJY3xzMSt8gb5%2f%2f1w%3d%3d",
+          "status_flag": "extracted"
+        }
+      ]
+    },
+    {
+      "element_id": "e_ond_the_spot",
+      "judgment_refs": [
+        {
+          "case_ref": "臺灣高等法院 臺南分院104年度上訴字933號刑事判決",
+          "case_ref_text": "臺灣高等法院 臺南分院刑事 (判決) 104,上訴,933 (105.03.10)",
+          "holding_summary": "所稱「至使不能抗拒」係指行為人所施之強暴、脅迫等不法行為，在事實上，已達於使被害人無法抗拒或不能抗拒之程度而言。故行為人所施用之強暴、脅迫等方法，在客觀上須足使被害人喪失意思自由，並達於不能抗拒之程度者，始足當之。被告王輝順持上開可供兇器使用之水果刀，先指向坐在椅子上之林梅雀喝令交出錢財，繼又以持水果刀之右手環繞林梅雀頸部，並將其身體下壓等強暴手段，出言威脅稱林梅雀交出財物，使林梅雀無法抗拒，而指出金錢擺放之位置，顯已使被害人達於喪失意思自由而不能抗拒之程度。是核被告二人所為，均係犯刑法第330條第1項之攜帶兇器強盜罪。㈤按教唆犯係指僅有教唆行為者而言，如於實施犯罪行為之際，當場有所指揮，且就其犯罪實施之方法，以及實施之順序，有所計劃，以促成犯罪之實現者，則其擔任計劃行為之人，與加工於犯罪之實施初無異致，即應認為共同正犯，而不能以教唆犯論（最高法院45年台上字第473號判例）",
+          "court_level": "臺灣高等法院 臺南分院",
+          "year": 2015,
+          "year_roc": "104",
+          "status": null,
+          "cited_count": 1,
+          "source_url": "https://fyjud.lawbank.com.tw/judcontent02.aspx?p=jP0RfcduyRxh8UxPGXjMrL%2fegf0dT7guyeKC8NpOtLyk1Jj%2fYS6zSPZW9fVc1NPX2z5C99wxRb4htuHsC5dr3zBdOnVA2yge%2b%2fIcBunIwxQQe%2fVOnG19imD9zas8J%2blVbMAwYSLWEBNnKnm4tEmRqJBDfy7Fdq9nEHPKpnJUsJiacN7dO9fZ4RWNvIaHQadE",
+          "status_flag": "extracted"
+        }
+      ]
+    },
+    {
+      "element_id": "e_motive",
+      "judgment_refs": [],
+      "extraction_status": "needs_external",
+      "note": "本次以要件關鍵字擷取，未涵蓋準強盜（§329）之判解；此要件與判解之對應待另行擷取。"
+    }
+  ],
+  "judgment_to_issue": [
+    {
+      "case_ref": "最高法院111年度台上字2060號刑事判決",
+      "issue": "「至使不能抗拒」之判斷基準：應依當時具體事實為客觀判斷，以一般人處於同一情境時其意思自由是否受壓制為準，非以被害人主觀上是否覺得害怕為準。",
+      "court_reasoning": "所謂「至使不能抗拒」，係指行為人所施用之強暴、脅迫等手段，就當時之具體事實，予以客觀之判斷，足使一般人身體上或精神上達於不能或顯難抗拒之程度而言，不以被害人之主觀意思為準，亦不以被害人完全喪失抗拒能力為要件。",
+      "factors": [
+        "當時之具體事實（武器種類、距離、場合、被害人身心狀況）",
+        "一般人置於同一情境時意思自由是否受壓制",
+        "不以被害人主觀感受為準",
+        "不要求被害人完全喪失抗拒能力，達顯難抗拒即足"
+      ],
+      "case_ref_verified": true
+    },
+    {
+      "case_ref": "最高法院86年度台上字5174號刑事判決",
+      "issue": "強盜罪「不能抗拒」與恐嚇取財罪「心生畏懼」之區分：被害人尚有幾分自由意思、社會一般通念上僅心生畏怖而未達不能抗拒程度者，屬恐嚇取財而非強盜。",
+      "court_reasoning": "所稱之恐嚇，係指以危害通知他人，使該他人主觀上生畏怖之行為，此項危害之通知，非僅限於將來之危害，其於現時以危害相加者，亦應包括在內，故對被害人施以強暴、脅迫，倘被害人尚有幾分自由意思，在社會一般通念上，僅心生畏怖而未達不能抗拒之程度者，仍屬恐嚇取財而非強盜。",
+      "factors": [
+        "被害人是否尚存自由意思（是否仍能抗拒、是否仍有選擇餘地）",
+        "社會一般通念之判斷",
+        "危害係將來發生或現時相加",
+        "被害人主觀心生畏怖不等於客觀不能抗拒"
+      ],
+      "case_ref_verified": true
+    },
+    {
+      "case_ref": "最高法院104年度台上字290號刑事判決",
+      "issue": "搶奪與強盜之區分：乘人不備公然掠取為搶奪；施用強暴脅迫至使不能抗拒而取財者為強盜。",
+      "court_reasoning": "再按搶奪與強盜，雖同具不法得財之意思，然搶奪係乘人不備，公然掠取人之財物，如係施用強暴脅迫，至使不能抗拒而取財物者，即為強盜罪。",
+      "factors": [
+        "是否乘人不備、公然掠取（搶奪）",
+        "是否施用強暴脅迫致不能抗拒（強盜）",
+        "取財之同時性"
+      ],
+      "case_ref_verified": true
+    },
+    {
+      "case_ref": "最高法院107年度台上字586號刑事判決",
+      "issue": "判斷不能抗拒之基準：應依一般人在同一情況下其意思自由是否因此受壓制為斷，不以被害人之主觀意思為準。",
+      "court_reasoning": "所謂「不能抗拒」，係指行為人所為之強暴、脅迫等不法行為，就當時之具體事實，予以客觀之判斷，足使被害人身體上或精神上達於不能或顯難抗拒之程度而言，亦即應依一般人在同一情況下，其意思自由是否因此受壓制為斷，不以被害人之主觀意思為準。",
+      "factors": [
+        "一般人在同一情況下之意思自由是否受壓制",
+        "具體事實之綜合判斷",
+        "被害人主觀意思非判斷基準"
+      ],
+      "case_ref_verified": true
+    },
+    {
+      "case_ref": "最高法院99年度台上字7594號刑事判決",
+      "issue": "「不能抗拒」之程度要求：在事實上已達於使被害人無法抗拒或不能抗拒之程度。",
+      "court_reasoning": "所稱至使不能抗拒，係指行為人所施之強暴、脅迫等不法行為，在事實上已達於使被害人無法抗拒或不能抗拒之程度而言。",
+      "factors": [
+        "事實上已達無法抗拒或不能抗拒之程度",
+        "強暴脅迫之具體實施情形"
+      ],
+      "case_ref_verified": true
+    },
+    {
+      "case_ref": "最高法院101年度台上字3376號刑事判決",
+      "issue": "「客觀上」判斷之要求：在客觀上足使被害人喪失意思自由並達於不能抗拒之程度。",
+      "court_reasoning": "所謂至使不能抗拒，係指行為人所施用之強暴、脅迫等非法方法，在「客觀上」足使被害人喪失意思自由，並達於不能抗拒之程度者而言。",
+      "factors": [
+        "客觀上足使喪失意思自由",
+        "須達不能抗拒之程度"
+      ],
+      "case_ref_verified": true
+    }
+  ],
+  "issue_to_scholarship": [
+    {
+      "issue": "「至使不能抗拒」之判斷基準：應依當時具體事實為客觀判斷，以一般人處於同一情境時其意思自由是否受壓制為準，非以被害人主觀上是否覺得害怕為準。",
+      "scholarship_views": [
+        {
+          "view": "客觀判斷說（本系統主要依據）：不能抗拒之判斷以一般人置於同一情境時之感受為基準，須被害人於當時具體事實下已達身體上或精神上不能或顯難抗拒之程度。",
+          "orientation": "通說",
+          "source_hint": "最高法院111年度台上字2060號、107年度台上字586號、110年度台上字2679號等裁判一致採此判準",
+          "status": "extracted"
+        },
+        {
+          "view": "被害人主觀說（被否定之立場）：以被害人主觀上是否感到恐懼或放棄抵抗為判斷依據。此說於最高法院裁判中明確被排除。",
+          "orientation": "少數／否定",
+          "source_hint": "最高法院111年度台上字2060號（明載「不以被害人之主觀意思為準」）、107年度台上字586號",
+          "status": "extracted"
+        }
+      ]
+    },
+    {
+      "issue": "強盜罪「不能抗拒」與恐嚇取財罪「心生畏懼」之區分：被害人尚有幾分自由意思、社會一般通念上僅心生畏怖而未達不能抗拒程度者，屬恐嚇取財而非強盜。",
+      "scholarship_views": [
+        {
+          "view": "自由意思餘地說：以被害人是否尚存自由意思（仍能抗拒或仍有選擇餘地）為強盜與恐嚇取財之分水嶺，僅達心生畏怖而未至不能抗拒者，構成恐嚇取財。",
+          "orientation": "通說",
+          "source_hint": "最高法院86年度台上字5174號刑事判決",
+          "status": "extracted"
+        },
+        {
+          "view": "客觀判斷說（相對說）：兩罪之區別仍應回歸「不能抗拒」之客觀判準，以一般人於同一情境下之意思自由是否受壓制為斷，被害人是否自承恐懼不具決定性。",
+          "orientation": "學說／實務補充",
+          "source_hint": "最高法院107年度台上字586號（一般人同一情況下之意思自由是否受壓制）",
+          "status": "extracted"
+        }
+      ]
+    },
+    {
+      "issue": "搶奪與強盜之區分：乘人不備公然掠取為搶奪；施用強暴脅迫至使不能抗拒而取財者為強盜。",
+      "scholarship_views": [
+        {
+          "view": "手段區分說：兩罪之別在於取財之手段與被害人能否抗拒；搶奪不對人施壓，強盜以強暴脅迫致不能抗拒。",
+          "orientation": "通說",
+          "source_hint": "最高法院104年度台上字290號刑事判決",
+          "status": "extracted"
+        }
+      ]
+    }
+  ],
+  "reasoning_paths": [
+    {
+      "path_id": "p_robbery_vs_threat",
+      "required_triggers": [
+        "e_coercion",
+        "e_taking_or_delivery"
+      ],
+      "required_triggers_note": "本路徑被視為適用之事實型態，須下列要件於敘事中同時受陳述；其餘 trigger_elements 為細分參考。",
+      "fact_pattern": "行為人持刀（或以其他手段）向被害人威脅並要求交付財物，被害人因恐懼而交付。",
+      "trigger_elements": [
+        "e_coercion",
+        "e_irresistible",
+        "e_taking_or_delivery",
+        "e_threat",
+        "e_illegal_benefit"
+      ],
+      "candidate_statutes": [
+        "§328_I",
+        "§328_II",
+        "§346_I"
+      ],
+      "distinguishing_elements": [
+        "e_irresistible",
+        "e_delivery_by_fear"
+      ],
+      "key_judgments": [
+        "最高法院111年度台上字2060號刑事判決",
+        "最高法院86年度台上字5174號刑事判決",
+        "最高法院107年度台上字586號刑事判決"
+      ],
+      "key_issues": [
+        "「至使不能抗拒」之判斷基準：應依當時具體事實為客觀判斷，以一般人處於同一情境時其意思自由是否受壓制為準，非以被害人主觀上是否覺得害怕為準。",
+        "強盜罪「不能抗拒」與恐嚇取財罪「心生畏懼」之區分：被害人尚有幾分自由意思、社會一般通念上僅心生畏怖而未達不能抗拒程度者，屬恐嚇取財而非強盜。"
+      ],
+      "note": "本路徑僅為候選法條之推理對照，不作任何成立與否之認定。"
+    },
+    {
+      "path_id": "p_snatch_vs_robbery",
+      "required_triggers": [
+        "e_robbery_snatch"
+      ],
+      "required_triggers_note": "本路徑被視為適用之事實型態，須下列要件於敘事中同時受陳述；其餘 trigger_elements 為細分參考。",
+      "fact_pattern": "行為人趁被害人未注意時突然取走其隨身財物，被害人當場才發覺。",
+      "trigger_elements": [
+        "e_robbery_snatch",
+        "e_theft_taking",
+        "e_robbery_intent"
+      ],
+      "candidate_statutes": [
+        "§325_I",
+        "§320_I",
+        "§328_I"
+      ],
+      "distinguishing_elements": [
+        "e_robbery_snatch",
+        "e_coercion",
+        "e_irresistible"
+      ],
+      "key_judgments": [
+        "最高法院104年度台上字290號刑事判決"
+      ],
+      "key_issues": [
+        "搶奪與強盜之區分：乘人不備公然掠取為搶奪；施用強暴脅迫至使不能抗拒而取財者為強盜。"
+      ],
+      "note": "本路徑僅為候選法條之推理對照，不作任何成立與否之認定。"
+    },
+    {
+      "path_id": "p_qualified_robbery",
+      "required_triggers": [
+        "e_preceding_offense",
+        "e_ond_the_spot"
+      ],
+      "required_triggers_note": "本路徑被視為適用之事實型態，須下列要件於敘事中同時受陳述；其餘 trigger_elements 為細分參考。",
+      "fact_pattern": "行為人先竊取或搶奪財物，嗣後為防止追捕、湮滅贓物或脫免逮捕而當場施以強暴脅迫。",
+      "trigger_elements": [
+        "e_preceding_offense",
+        "e_motive",
+        "e_ond_the_spot",
+        "e_coercion"
+      ],
+      "candidate_statutes": [
+        "§329",
+        "§328_I"
+      ],
+      "distinguishing_elements": [
+        "e_preceding_offense",
+        "e_motive",
+        "e_ond_the_spot"
+      ],
+      "key_judgments": [],
+      "key_issues": [],
+      "note": "本路徑僅為候選法條之推理對照，不作任何成立與否之認定。"
+    }
+  ],
+  "search_word_recommendations": [
+    {
+      "input_term": "持刀威脅",
+      "recommended_terms": [
+        "強暴",
+        "脅迫",
+        "不能抗拒",
+        "強盜",
+        "恐嚇",
+        "顯難抗拒"
+      ],
+      "maps_to_elements": [
+        "e_coercion",
+        "e_irresistible",
+        "e_threat"
+      ]
+    },
+    {
+      "input_term": "被害人害怕所以交付",
+      "recommended_terms": [
+        "不能抗拒",
+        "心生畏懼",
+        "畏怖心理",
+        "恐嚇",
+        "意思自由",
+        "客觀判斷"
+      ],
+      "maps_to_elements": [
+        "e_irresistible",
+        "e_delivery_by_fear",
+        "e_threat"
+      ]
+    },
+    {
+      "input_term": "搶了就跑",
+      "recommended_terms": [
+        "乘人不備",
+        "公然",
+        "搶奪",
+        "竊盜",
+        "竊取"
+      ],
+      "maps_to_elements": [
+        "e_robbery_snatch",
+        "e_theft_taking"
+      ]
+    },
+    {
+      "input_term": "被搶後追上去",
+      "recommended_terms": [
+        "當場",
+        "防護贓物",
+        "脫免逮捕",
+        "湮滅罪證",
+        "準強盜"
+      ],
+      "maps_to_elements": [
+        "e_ond_the_spot",
+        "e_motive",
+        "e_preceding_offense"
+      ]
+    },
+    {
+      "input_term": "攜帶武器",
+      "recommended_terms": [
+        "攜帶兇器",
+        "凶器",
+        "凶器種類",
+        "加重事由",
+        "三人以上"
+      ],
+      "maps_to_elements": [
+        "e_agg_circumstance"
+      ]
+    }
+  ],
+  "quotation_policy": {
+    "note": "本檔中 holding_summary、court_reasoning、definition 等欄位為法源原文（法院要旨或條文）或依原文改寫之引述，可能含法院原話之斷定性語詞（此為引述，非本系統之斷定）。本系統自身之判斷一律不得出現斷定性語詞；免責語與候選性說明亦一併排除於禁語檢查之外。禁語清單見 tools/validate_reasoning_flow.py 之 FORBIDDEN_WORDS。",
+    "quotation_fields": [
+      "statute_decomposition[].elements[].definition",
+      "statute_decomposition[].article_text",
+      "element_to_judgment[].judgment_refs[].holding_summary",
+      "judgment_to_issue[].court_reasoning",
+      "issue_to_scholarship[].scholarship_views[].view"
+    ],
+    "system_authored_fields": [
+      "reasoning_paths[].note",
+      "extraction_gaps[].description",
+      "extraction_gaps[].impact"
+    ]
+  },
+  "extraction_gaps": [
+    {
+      "gap_id": "g_fyjud",
+      "description": "裁判書全文（七段式裁判摘要）未能擷取：fyjud.lawbank.com.tw 需獨立授權，此帳號登入後該單元顯示「閱讀權限已滿額／僅供付費會員閱讀」。目前判解層僅有要旨欄位文字。",
+      "impact": "judgment_to_issue 的法院心證係由要旨推得，未經全文核對。",
+      "status": "needs_external"
+    },
+    {
+      "gap_id": "g_fint",
+      "description": "行政函釋未能取得與本罪群相關者：FINT 以關鍵字檢索，命中結果多為不相干機關之公告，與刑法§328/§329/§346 相關之函釋要旨尚待以條文關聯路徑擷取。",
+      "impact": "issue_to_scholarship 之學說層目前僅有判解與法學論著條目，缺行政函釋觀點。",
+      "status": "needs_external"
+    },
+    {
+      "gap_id": "g_article_full",
+      "description": "各要件所對應之全部判解（§328 關聯原判例 46 件、精選裁判 355 件）僅擷取其中符合要件關鍵者，非法源頁面所列全量。",
+      "impact": "要件與判解之對應為代表性取樣，非窮盡。",
+      "status": "inferred"
+    }
+  ],
+  "output_flags": {
+    "extracted": "原文有",
+    "needs_external": "需外部檢索驗證",
+    "inferred": "由關聯結構推得"
+  }
+}

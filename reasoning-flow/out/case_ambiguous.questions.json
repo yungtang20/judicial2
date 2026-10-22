@@ -1,0 +1,159 @@
+[
+  {
+    "id": "GEN-C-01",
+    "target": "relative",
+    "question": "當時對方以何種方式、施加於何處？你的身體或心理感受到什麼樣的狀態？",
+    "maps_to": [
+      "e_irresistible",
+      "e_coercion",
+      "gap_category:行為",
+      "e_robbery_intent",
+      "e_delivery_by_fear"
+    ],
+    "gap_id": "g1",
+    "note": "對應缺口 g1；範本 q_relative_coercion_degree；並對應缺口 g2；並對應缺口 g4",
+    "source_template_id": "q_relative_coercion_degree",
+    "covers_gaps": [
+      "g1",
+      "g2",
+      "g4"
+    ]
+  },
+  {
+    "id": "GEN-C-02",
+    "target": "relative",
+    "question": "當時（具體情境），你看到／聽到什麼？請依順序說明。",
+    "maps_to": [
+      "e_coercion",
+      "gap_category:事"
+    ],
+    "gap_id": "g3",
+    "note": "對應缺口 g3；範本 q_relative_perception",
+    "source_template_id": "q_relative_perception",
+    "covers_gaps": [
+      "g3"
+    ]
+  },
+  {
+    "id": "GEN-C-03",
+    "target": "relative",
+    "question": "遭取走或被要求交付的財物有哪些？請逐項說明名稱、數量、特徵與價值認定依據。",
+    "maps_to": [
+      "e_taking_or_delivery",
+      "e_robbery_intent",
+      "gap_category:物"
+    ],
+    "gap_id": "g5",
+    "note": "對應缺口 g5；範本 q_relative_property；並對應缺口 g6；並對應缺口 g9；並對應缺口 g13",
+    "source_template_id": "q_relative_property",
+    "covers_gaps": [
+      "g5",
+      "g6",
+      "g9",
+      "g13"
+    ]
+  },
+  {
+    "id": "GEN-C-04",
+    "target": "relative",
+    "question": "對方當時說了什麼或做了什麼？請逐項說明其內容、表達方式與發生順序。",
+    "maps_to": [
+      "e_threat",
+      "e_coercion",
+      "gap_category:行為"
+    ],
+    "gap_id": "g7",
+    "note": "對應缺口 g7；範本 q_relative_threat_content",
+    "source_template_id": "q_relative_threat_content",
+    "covers_gaps": [
+      "g7"
+    ]
+  },
+  {
+    "id": "GEN-C-05",
+    "target": "relative",
+    "question": "當時你的處境為何？有哪些選項是你當下仍能選擇的？",
+    "maps_to": [
+      "e_delivery_by_fear",
+      "e_irresistible",
+      "gap_category:因果"
+    ],
+    "gap_id": "g8",
+    "note": "對應缺口 g8；範本 q_relative_freedom_of_choice",
+    "source_template_id": "q_relative_freedom_of_choice",
+    "covers_gaps": [
+      "g8"
+    ]
+  },
+  {
+    "id": "GEN-C-06",
+    "target": "relative",
+    "question": "你對行為人的身分或可供辨識的特徵掌握哪些資料？請說明。",
+    "maps_to": [
+      "gap_category:人"
+    ],
+    "gap_id": "g10",
+    "note": "對應缺口 g10；範本 q_relative_suspect_id",
+    "source_template_id": "q_relative_suspect_id",
+    "covers_gaps": [
+      "g10"
+    ]
+  },
+  {
+    "id": "GEN-C-07",
+    "target": "relative",
+    "question": "事件的時間與地點為何？請說明最初、最後及各重要節點。",
+    "maps_to": [
+      "gap_category:時",
+      "gap_category:地"
+    ],
+    "gap_id": "g11",
+    "note": "對應缺口 g11；範本 q_relative_timeline；並對應缺口 g12",
+    "source_template_id": "q_relative_timeline",
+    "covers_gaps": [
+      "g11",
+      "g12"
+    ]
+  },
+  {
+    "id": "GEN-C-08",
+    "target": "relative",
+    "question": "請說明各項財物的價值及其認定依據。",
+    "maps_to": [
+      "gap:g14"
+    ],
+    "gap_id": "g14",
+    "note": "對應缺口 g14；依缺口建議問法",
+    "source_template_id": null,
+    "covers_gaps": [
+      "g14"
+    ]
+  },
+  {
+    "id": "GEN-C-09",
+    "target": "relative",
+    "question": "現場或附近有哪些可佐證之處（如監視器、影像等）？請說明其位置與保存情形。",
+    "maps_to": [
+      "gap_category:補強"
+    ],
+    "gap_id": "g15",
+    "note": "對應缺口 g15；範本 q_relative_evidence",
+    "source_template_id": "q_relative_evidence",
+    "covers_gaps": [
+      "g15"
+    ]
+  },
+  {
+    "id": "GEN-C-10",
+    "target": "relative",
+    "question": "請用自己的話說明事情從開始到結束的經過。",
+    "maps_to": [
+      "gap_category:事"
+    ],
+    "gap_id": null,
+    "covers_gaps": [],
+    "note": "角色基礎問句（每次詢問必問）",
+    "source_template_id": "q_relative_free_account",
+    "is_baseline": true
+  }
+]

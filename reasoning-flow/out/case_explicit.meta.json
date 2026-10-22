@@ -1,0 +1,26 @@
+{
+  "case_id": "case_explicit",
+  "subject_identified": true,
+  "delivery_status": "已取走",
+  "ambiguous_referentials": [],
+  "candidate_statutes": [
+    "§328_I",
+    "§328_II",
+    "§346_I"
+  ],
+  "has_victim": true,
+  "has_victim_evidence": [
+    "被害人",
+    "被害",
+    "報警"
+  ],
+  "is_solved": false,
+  "is_solved_evidence": [],
+  "element_count": 8,
+  "gap_count": 1,
+  "triggered_paths": [
+    "p_robbery_vs_threat"
+  ],
+  "candidate_fallback_used": false,
+  "partial_path_matches": []
+}

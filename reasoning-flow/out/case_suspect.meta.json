@@ -1,0 +1,34 @@
+{
+  "case_id": "case_suspect",
+  "subject_identified": true,
+  "delivery_status": "已取走",
+  "ambiguous_referentials": [],
+  "candidate_statutes": [
+    "§320_I",
+    "§325_I",
+    "§328_I",
+    "§328_II",
+    "§329",
+    "§346_I"
+  ],
+  "has_victim": true,
+  "has_victim_evidence": [
+    "被害人",
+    "被害",
+    "報警"
+  ],
+  "is_solved": true,
+  "is_solved_evidence": [
+    "到案",
+    "說明"
+  ],
+  "element_count": 16,
+  "gap_count": 5,
+  "triggered_paths": [
+    "p_robbery_vs_threat",
+    "p_snatch_vs_robbery",
+    "p_qualified_robbery"
+  ],
+  "candidate_fallback_used": false,
+  "partial_path_matches": []
+}

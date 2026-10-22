@@ -1,0 +1,100 @@
+[
+  {
+    "id": "GEN-C-01",
+    "target": "relative",
+    "question": "請就「不法所有之意圖」補充說明具體經過。",
+    "maps_to": [
+      "e_theft_intent"
+    ],
+    "gap_id": "g1",
+    "note": "對應缺口 g1；依缺口建議問法",
+    "source_template_id": null,
+    "covers_gaps": [
+      "g1"
+    ]
+  },
+  {
+    "id": "GEN-C-02",
+    "target": "relative",
+    "question": "請就「竊取他人動產」補充說明具體經過。",
+    "maps_to": [
+      "e_theft_taking"
+    ],
+    "gap_id": "g2",
+    "note": "對應缺口 g2；依缺口建議問法",
+    "source_template_id": null,
+    "covers_gaps": [
+      "g2"
+    ]
+  },
+  {
+    "id": "GEN-C-03",
+    "target": "relative",
+    "question": "請確認「得財產上不法之利益或使第三人得之」之情形為何。",
+    "maps_to": [
+      "e_illegal_benefit"
+    ],
+    "gap_id": "g3",
+    "note": "對應缺口 g3；依缺口建議問法",
+    "source_template_id": null,
+    "covers_gaps": [
+      "g3"
+    ]
+  },
+  {
+    "id": "GEN-C-04",
+    "target": "relative",
+    "question": "對方當時說了什麼或做了什麼？請逐項說明其內容、表達方式與發生順序。",
+    "maps_to": [
+      "e_threat",
+      "e_coercion",
+      "gap_category:行為"
+    ],
+    "gap_id": "g4",
+    "note": "對應缺口 g4；範本 q_relative_threat_content",
+    "source_template_id": "q_relative_threat_content",
+    "covers_gaps": [
+      "g4"
+    ]
+  },
+  {
+    "id": "GEN-C-05",
+    "target": "relative",
+    "question": "請說明各項財物的價值及其認定依據。",
+    "maps_to": [
+      "gap:g5"
+    ],
+    "gap_id": "g5",
+    "note": "對應缺口 g5；依缺口建議問法",
+    "source_template_id": null,
+    "covers_gaps": [
+      "g5"
+    ]
+  },
+  {
+    "id": "GEN-C-06",
+    "target": "relative",
+    "question": "請用自己的話說明事情從開始到結束的經過。",
+    "maps_to": [
+      "gap_category:事"
+    ],
+    "gap_id": null,
+    "covers_gaps": [],
+    "note": "角色基礎問句（每次詢問必問）",
+    "source_template_id": "q_relative_free_account",
+    "is_baseline": true
+  },
+  {
+    "id": "GEN-N-01",
+    "target": "suspect",
+    "question": "請依時間順序說明整個過程。",
+    "maps_to": [
+      "gap_category:事"
+    ],
+    "gap_id": null,
+    "covers_gaps": [],
+    "note": "角色基礎問句（每次詢問必問）",
+    "source_template_id": "q_suspect_sequence",
+    "is_baseline": true
+  }
+]

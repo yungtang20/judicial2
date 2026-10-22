@@ -1,0 +1,63 @@
+[
+  {
+    "gap_id": "g1",
+    "type": "fact",
+    "description": "財物交付或取走之狀態未敘明（未敘明），須確認是否已交付、取走或未交付。",
+    "affects_elements": [
+      "e_irresistible",
+      "e_taking_or_delivery",
+      "e_delivery_by_fear"
+    ],
+    "question_hint": "當時財物實際上是由你交付、由對方取走，還是尚未交付？請說明。"
+  },
+  {
+    "gap_id": "g2",
+    "type": "element",
+    "description": "缺少「取他人之物或使其交付」之具體事實（e_taking_or_delivery），致 §328_I 之該要件無法判斷。",
+    "affects_elements": [
+      "e_taking_or_delivery"
+    ],
+    "question_hint": "請就「取他人之物或使其交付」補充說明具體經過。"
+  },
+  {
+    "gap_id": "g3",
+    "type": "element",
+    "description": "缺少「不法所有之意圖」之具體事實（e_robbery_intent），致 §328_I 之該要件無法判斷。",
+    "affects_elements": [
+      "e_robbery_intent"
+    ],
+    "question_hint": "請就「不法所有之意圖」補充說明具體經過。"
+  },
+  {
+    "gap_id": "g4",
+    "type": "element",
+    "description": "缺少「恐嚇」之具體事實（e_threat），致 §346_I 之該要件無法判斷。",
+    "affects_elements": [
+      "e_threat"
+    ],
+    "question_hint": "請就「恐嚇」補充說明具體經過。"
+  },
+  {
+    "gap_id": "g5",
+    "type": "element",
+    "description": "缺少「不法所有之意圖」之具體事實（e_robbery_intent），致 §346_I 之該要件無法判斷。",
+    "affects_elements": [
+      "e_robbery_intent"
+    ],
+    "question_hint": "請就「不法所有之意圖」補充說明具體經過。"
+  },
+  {
+    "gap_id": "g6",
+    "type": "fact",
+    "description": "事實面向「物」於敘事中未見記載。",
+    "affects_elements": [],
+    "question_hint": "請逐項說明涉及之財物名稱、數量與特徵。"
+  },
+  {
+    "gap_id": "g7",
+    "type": "fact",
+    "description": "事實面向「價值」於敘事中未見記載。",
+    "affects_elements": [],
+    "question_hint": "請說明各項財物的價值及其認定依據。"
+  }
+]

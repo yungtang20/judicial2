@@ -1,0 +1,5 @@
+驗收腳本摘要（產生時間 2026-10-21 14:33）
+validate_templates.py            exit=0  OK=205 FAIL=0
+validate_reasoning_flow.py       exit=0  OK=640 FAIL=0
+validate_questions_rules.py      exit=0  OK=446 FAIL=0
+validate_analyzer.py             exit=0  OK=290 FAIL=0

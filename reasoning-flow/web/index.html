@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>法律案件工作台（法源推理流程）</title>
+<style>
+  :root{
+    --bg:#f4f6f8; --panel:#fff; --line:#dde2e8; --text:#1b2430; --muted:#67727f;
+    --accent:#2f5d8c; --accent2:#4a7fb5;
+    --warn-bg:#fff8e1; --warn-line:#e0b95c; --warn-text:#8a5a00;
+    --todo:#b23b3b; --ok:#3d7449; --okbg:#f1f8f2; --okline:#b6d6bd;
+    --mono:Consolas,"Courier New",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Microsoft JhengHei","PingFang TC","Noto Sans TC",system-ui,sans-serif;
+    font-size:15px;line-height:1.7}
+  header{background:var(--accent);color:#fff;padding:14px 22px}
+  header h1{margin:0;font-size:19px;font-weight:700}
+  header p{margin:3px 0 0;font-size:12.5px;opacity:.92}
+  .tabs{display:flex;gap:2px;background:var(--accent);padding:0 22px}
+  .tab{background:rgba(255,255,255,.12);color:#fff;border:0;padding:9px 16px;font:inherit;font-size:14px;
+    cursor:pointer;border-radius:6px 6px 0 0}
+  .tab.active{background:var(--bg);color:var(--text);font-weight:700}
+  .wrap{max-width:1500px;margin:0 auto;padding:16px}
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+  @media (max-width:1050px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+  .panel h2{margin:0 0 10px;font-size:15.5px;border-left:4px solid var(--accent);padding-left:8px}
+  .panel h3{margin:14px 0 6px;font-size:13.5px;color:var(--muted);font-weight:600}
+  label.q{display:block;margin:0 0 10px}
+  label.q .qt{font-size:12.5px;color:var(--muted);display:block;margin-bottom:3px}
+  select,input[type=text],textarea{width:100%;padding:6px 8px;border:1px solid var(--line);
+    border-radius:5px;font:inherit;font-size:14px;background:#fff;color:var(--text)}
+  textarea{min-height:110px;resize:vertical;line-height:1.7}
+  select:focus,input:focus,textarea:focus{outline:2px solid #bcd3e8;border-color:var(--accent)}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  button{font:inherit;font-size:14px;padding:7px 13px;border-radius:5px;border:1px solid var(--accent);
+    background:var(--accent);color:#fff;cursor:pointer}
+  button.ghost{background:#fff;color:var(--accent)}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .hint{font-size:12.5px;color:var(--muted)}
+  .hit{border-radius:5px;padding:8px 10px;margin-bottom:10px;border:1px solid;font-size:13.5px}
+  .hit.ok{background:var(--okbg);border-color:var(--okline);color:#2f5f3a}
+  .hit.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-text)}
+  .hit.err{background:#fdf2f2;border-color:#c8a2a2;color:#8c4a4a}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top}
+  th{background:#f2f4f7;font-weight:600;position:sticky;top:0}
+  .scroll{max-height:520px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+  .tag{display:inline-block;font-size:11px;border-radius:3px;padding:1px 6px;border:1px solid var(--line);
+    color:var(--muted);background:#f7f8fa;white-space:nowrap}
+  .tag.req{border-color:#c8a2a2;color:#8c4a4a;background:#fdf2f2}
+  .tag.todo{border-color:var(--todo);color:var(--todo);background:#fdf2f2}
+  .tag.ok{border-color:var(--okline);color:var(--ok);background:var(--okbg)}
+  .tag.ext{border-color:var(--warn-line);color:var(--warn-text);background:var(--warn-bg)}
+  pre.preview{background:#fbfbfc;border:1px solid var(--line);border-radius:6px;padding:12px;
+    white-space:pre-wrap;word-break:break-word;font-family:"Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+    font-size:14px;line-height:1.9;margin:0;max-height:640px;overflow:auto}
+  .qitem{border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-bottom:7px;background:#fcfdfe}
+  .qitem .qh{font-size:12px;color:var(--muted);margin-bottom:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .qitem .qt2{font-size:14.5px}
+  .fixed{font-family:var(--mono);font-size:12.5px;background:#f2f4f7;border:1px dashed var(--line);
+    border-radius:5px;padding:6px 8px;white-space:pre-wrap}
+  .muted{color:var(--muted);font-size:12.5px}
+  .err{color:var(--todo);font-size:13.5px}
+  .sticky{position:sticky;top:12px}
+  .foot{font-size:12px;color:var(--muted);text-align:center;padding:10px}
+</style>
+</head>
+<body>
+<header>
+  <h1>法律案件工作台｜法源推理流程</h1>
+  <p>事實輸入 → 候選路徑分析 → 缺口 → 問句清單 → 條陳填充 → 匯出。所有罪名均為候選，不認定犯罪成立。</p>
+</header>
+<div class="tabs">
+  <button class="tab active" data-tab="work">工作台</button>
+  <button class="tab" data-tab="data">資料與規則</button>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ 工作台 ============ -->
+  <div id="tab-work">
+    <div class="grid">
+      <div>
+        <section class="panel">
+          <h2>① 事實輸入</h2>
+          <label class="q">
+            <span class="qt">事實描述（自由敘述，請勿先做法律定性）</span>
+            <textarea id="facts" placeholder="例：114年5月1日晚上21時30分，○○市○○區○○路○○號超商前，被害人陳○○下班後正要走回家，行為人王○○持刀從背後靠近並以刀指向被害人，揚言要搶錢，被害人因害怕而不敢抗拒，王○○隨即取走被害人包內現金新臺幣3千元後離去。"></textarea>
+          </label>
+          <div class="btnrow">
+            <button id="btnAnalyze">分析事實（規則版）</button>
+            <button id="btnLlm" class="ghost">LLM 分析</button>
+            <button id="btnExample" class="ghost">載入範例</button>
+            <button id="btnReset" class="ghost">清除</button>
+            <span class="hint" id="analyzeStatus"></span>
+          </div>
+          <div class="muted" style="margin-top:6px">
+            分析方式：
+            <select id="modeSel" style="width:auto;display:inline-block;padding:3px 6px">
+              <option value="rule">規則版（本機，離線可用）</option>
+              <option value="llm">LLM 版（需本機 opencode CLI 與網路）</option>
+            </select>
+            <span id="modeNote" class="hint"></span>
+          </div>
+          <div id="warnBox"></div>
+        </section>
+
+        <section class="panel">
+          <h2>② 候選路徑與要件檢核</h2>
+          <div id="candBox" class="muted">尚未分析。</div>
+        </section>
+
+        <section class="panel">
+          <h2>③ 缺口清單</h2>
+          <div id="gapBox" class="muted">尚未分析。</div>
+        </section>
+      </div>
+
+      <div class="sticky">
+        <section class="panel">
+          <h2>④ 問句清單</h2>
+          <div id="qBox" class="muted">尚未分析。</div>
+        </section>
+
+        <section class="panel">
+          <h2>⑤ 條陳（可手動覆寫）</h2>
+          <div class="btnrow" style="margin-bottom:8px">
+            <label class="q" style="flex:1;margin:0">
+              <span class="qt">模板</span>
+              <select id="tplSel"></select>
+            </label>
+          </div>
+          <div id="fillBox" class="muted">尚未分析。</div>
+          <h3>預覽</h3>
+          <pre class="preview" id="preview"></pre>
+          <div class="btnrow" style="margin-top:10px">
+            <button id="btnCopy">複製</button>
+            <button id="btnDl">下載 .txt</button>
+            <span class="hint" id="copyStatus"></span>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 資料與規則 ============ -->
+  <div id="tab-data" hidden>
+    <div class="grid">
+      <div>
+        <section class="panel">
+          <h2>法源推理流程（lawbank_reasoning_flow.json）</h2>
+          <div id="flowBox" class="muted">載入中…</div>
+        </section>
+        <section class="panel">
+          <h2>問句規則（questions_rules.json）</h2>
+          <div id="rulesBox" class="muted">載入中…</div>
+        </section>
+      </div>
+      <div>
+        <section class="panel">
+          <h2>條陳模板（templates.json）</h2>
+          <div id="tplBox" class="muted">載入中…</div>
+        </section>
+        <section class="panel">
+          <h2>使用說明與限制</h2>
+          <div class="muted" style="line-height:1.9">
+            <p>本工作台產出為<b>模擬</b>結果，所有罪名均為候選，不認定犯罪成立；問句須由承辦人核實後使用。</p>
+            <p>條陳之<b>順序</b>固定取自 <code>條陳.txt</code> 原文，僅填入值，不得重排或增刪項次。</p>
+            <p>要件事實以關鍵詞比對偵測，敘事用同義詞而未收錄者可能被誤判為欠缺，請承辦人覆寫。</p>
+            <p>本機優先：不對外傳送任何資料。所有 JSON 均由本機 HTTP 伺服器供應。</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">法源法律網內容之智慧財產權屬法源資訊股份有限公司；本工具僅供內部办案參考，請遵守其使用規範。</div>
+</div>
+
+<script src="../tools/analyzer.js"></script>
+<script src="../tools/generator.js"></script>
+<script src="llm_client.js"></script>
+<script>
+"use strict";
+const D = { flow:null, rules:null, templates:null };
+const S = { analysis:null, gen:null, overrides:{}, tplId:null };
+
+const $ = (s)=>document.querySelector(s);
+const esc = (s)=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const A = window.RF.analyzer, G = window.RF.generator;
+
+/* ---------- 分頁 ---------- */
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");
+  $("#tab-work").hidden = t.dataset.tab!=="work";
+  $("#tab-data").hidden = t.dataset.tab!=="data";
+}));
+
+/* ---------- 載入資料 ---------- */
+async function loadAll(){
+  const [flow,rules,templates] = await Promise.all([
+    fetch("../data/lawbank_reasoning_flow.json",{cache:"no-store"}).then(r=>r.json()),
+    fetch("../data/questions_rules.json",{cache:"no-store"}).then(r=>r.json()),
+    fetch("../data/templates.json",{cache:"no-store"}).then(r=>r.json()),
+  ]);
+  D.flow=flow; D.rules=rules; D.templates=templates;
+  renderDataTab();
+  $("#tplSel").innerHTML = templates.templates.map(t=>`<option value="${t.template_id}">${esc(t.template_name)}</option>`).join("");
+  $("#tplSel").addEventListener("change",()=>{ S.tplId=$("#tplSel").value; regenerate(); });
+}
+
+function renderDataTab(){
+  const f=D.flow, r=D.rules, t=D.templates;
+  const elCount=f.statute_decomposition.reduce((a,s)=>a+s.elements.length,0);
+  const jCount=f.element_to_judgment.reduce((a,g)=>a+g.judgment_refs.length,0);
+  $("#flowBox").innerHTML =
+    `<div class="muted" style="margin-bottom:6px">法源：${esc(f.extraction_summary.source_site)}</div>`+
+    `<table><tr><th>法條</th><td>${f.statute_decomposition.length} 條 / ${elCount} 個要件</td></tr>`+
+    `<tr><th>要件→判解</th><td>${jCount} 筆判解</td></tr>`+
+    `<tr><th>判解→爭點</th><td>${f.judgment_to_issue.length} 組</td></tr>`+
+    `<tr><th>爭點→學說</th><td>${f.issue_to_scholarship.length} 組</td></tr>`+
+    `<tr><th>推理路徑</th><td>${f.reasoning_paths.length} 條</td></tr>`+
+    `<tr><th>已知缺口</th><td>${f.extraction_gaps.length} 項（標示 needs_external 者為待外部檢索）</td></tr></table>`+
+    `<h3>推理路徑</h3>`+
+    f.reasoning_paths.map(p=>`<div style="margin-bottom:6px"><b>${esc(p.path_id)}</b>：${esc(p.fact_pattern)}`+
+      `<div class="muted">候選：${esc((p.candidate_statutes||[]).join("、"))}　關鍵判解：${esc((p.key_judgments||[]).join("、")||"—")}</div></div>`).join("");
+  $("#rulesBox").innerHTML =
+    `<div class="muted" style="margin-bottom:6px">共 ${r.rules.length} 條規則、${r.question_templates.length} 個問句範本</div>`+
+    `<table><tr><th>rule_id</th><th>check_type</th><th>內容</th></tr>`+
+    r.rules.map(x=>`<tr><td>${esc(x.rule_id)}</td><td>${esc(x.check_type)}</td><td class="muted">${esc(x.description)}</td></tr>`).join("")+
+    `</table>`+
+    `<h3>已知缺口</h3>`+
+    r.extraction_gaps.map(g=>`<div style="margin-bottom:5px"><span class="tag ${g.status==="needs_external"?"ext":""}">${esc(g.status)}</span> ${esc(g.description.slice(0,120))}</div>`).join("");
+  $("#tplBox").innerHTML =
+    t.templates.map(x=>`<div style="margin-bottom:8px"><b>${esc(x.template_name)}</b> <span class="muted">${esc(x.template_id)}</span>`+
+      `<div class="muted">${esc((x.applies_note||""))}</div>`+
+      `<div class="muted">欄位：${x.sections.reduce((a,s)=>a+s.fields.length,0)} 項（順序固定，不得重排）</div></div>`).join("")+
+    `<h3>模板選擇邏輯</h3>`+
+    `<table><tr><th>有被害人</th><th>已破獲</th><th>主體特定</th><th>結果</th></tr>`+
+    t.selection_logic.decision_table.map(d=>`<tr><td>${d.has_victim===null?"—":(d.has_victim?"是":"否")}</td>`+
+      `<td>${d.is_solved===null?"—":(d.is_solved?"是":"否")}</td>`+
+      `<td>${d.subject_identified===null?"—":(d.subject_identified?"是":"否")}</td>`+
+      `<td class="muted">${esc(d.result_note)}</td></tr>`).join("")+`</table>`;
+}
+
+/* ---------- 分析 ---------- */
+function analyze(){
+  const facts_text = $("#facts").value.trim();
+  if(!facts_text){ $("#warnBox").innerHTML='<div class="hit warn">請先輸入事實描述。</div>'; return; }
+  S.overrides={};
+  S.analysis = A.analyze({case_id:"web", facts_text}, D.flow);
+  S.gapList = S.analysis.gap_list;
+  S.meta = S.analysis.meta;
+  S.source = "rule";
+  $("#analyzeStatus").textContent = "分析完成（規則版）";
+  renderAnalysis();
+  regenerate();
+}
+
+/* ---------- LLM 分析（失敗自動退回規則版） ---------- */
+async function analyzeLLM(){
+  const facts_text = $("#facts").value.trim();
+  if(!facts_text){ $("#warnBox").innerHTML='<div class="hit warn">請先輸入事實描述。</div>'; return; }
+  const st = $("#analyzeStatus");
+  st.textContent = "LLM 分析中…";
+  $("#btnLlm").disabled = true;
+  const rule = A.analyze({case_id:"web", facts_text}, D.flow);
+  try{
+    const r = await RF.llm.analyzeWithLLM(facts_text, D.flow, rule.meta.candidate_statutes, "/api/llm");
+    if(!r.ok) throw new Error(r.error + (r.violations? "（"+r.violations.slice(0,3).join("；")+"）":""));
+    S.gapList = (r.obj.gaps||[]).map(g=>({
+      gap_id:g.gap_id, type:g.type, description:g.description,
+      affects_elements:g.affects_elements||[],
+      question_hint:g.question_hint||"請補充說明本項事實之具體內容。"
+    }));
+    S.meta = Object.assign({}, rule.meta, {subject_identified: r.obj.subject.identified});
+    S.analysis = rule;
+    S.source = "llm";
+    st.textContent = "LLM 分析完成（"+(r.model||"")+"）";
+    renderAnalysis();
+    regenerate();
+    $("#warnBox").innerHTML = '<div class="hit ok">本輪分析採 LLM 語意判讀；輸出已通過要件識別、狀態值與禁語校驗。</div>' + warnBoxHTML();
+  }catch(e){
+    S.analysis = rule; S.gapList = rule.gap_list; S.meta = rule.meta; S.source = "fallback";
+    st.textContent = "已退回規則版";
+    renderAnalysis();
+    regenerate();
+    $("#warnBox").innerHTML = '<div class="hit warn">LLM 不可用或未通過校驗，已退回規則版：'+esc(e.message)+'</div>' + warnBoxHTML();
+  }finally{
+    $("#btnLlm").disabled = false;
+  }
+}
+
+function warnBoxHTML(){
+  const meta = S.meta || {};
+  const warns = [];
+  if(meta.subject_identified === false) warns.push("【主體不明警示】敘事中之當事人未明確或存在未解析之指代，須先確認所指何人。");
+  if(meta.delivery_status === "未敘明" || /未敘明/.test(meta.delivery_status||"")) warns.push("【階段不明警示】財物交付或取走之狀態未敘明，須先確認事件進行至何階段。");
+  return warns.map(w=>`<div class="hit warn">${esc(w)}</div>`).join("");
+}
+
+function renderAnalysis(){
+  const an=S.analysis, meta=S.meta||an.meta;
+  const warns=[];
+  if(meta.subject_identified===false) warns.push("【主體不明警示】敘事中之當事人未明確或存在未解析之指代，須先確認所指何人。");
+  if(meta.delivery_status==="未敘明"||/未敘明/.test(meta.delivery_status||"")) warns.push("【階段不明警示】財物交付或取走之狀態未敘明，須先確認事件進行至何階段。");
+  $("#warnBox").innerHTML = (S.source==="llm"?'<div class="hit ok">本輪分析採 LLM 語意判讀；輸出已通過要件識別、狀態值與禁語校驗。</div>':"")
+    + (warns.length ? warns.map(w=>`<div class="hit warn">${esc(w)}</div>`).join("")
+                    : '<div class="hit ok">未偵得主體不明或階段不明之情形。</div>');
+
+  // 候選與要件檢核
+  const rows = [];
+  const md = an.markdown;
+  md.split("\n").forEach(l=>{
+    const m = l.match(/^\| (\S+) \| (.+?)（(e_[a-z_]+)） \| (基本要件|非基本要件) \| ([^|]+?) \| ([^|]*) \| (.*?) \|$/);
+    if(m) rows.push({sid:m[1],name:m[2],eid:m[3],crit:m[4],status:m[5].trim(),reason:m[6].trim(),tags:m[7].trim()});
+  });
+  const stTag = s => s==="已具備"?"ok":(s==="明顯欠缺"?"todo":(s==="待確認"?"ext":"ext"));
+  $("#candBox").innerHTML =
+    `<div class="hit ok">候選路徑（未排序）：${meta.candidate_statutes.map(esc).join("、")}`+
+    (meta.triggered_paths.length?`<br>已符合之事實型態：${meta.triggered_paths.map(esc).join("、")}`:"")+
+    `</div>`+
+    `<div class="scroll"><table><tr><th>條號</th><th>要件</th><th>性質</th><th>狀態</th><th>理由</th><th>命中詞彙</th></tr>`+
+    rows.map(r=>`<tr><td>${esc(r.sid)}</td><td>${esc(r.name)}<div class="muted">${esc(r.eid)}</div></td>`+
+      `<td>${r.crit==="基本要件"?'<span class="tag req">基本</span>':'<span class="tag">非基本</span>'}</td>`+
+      `<td><span class="tag ${stTag(r.status)}">${esc(r.status)}</span></td>`+
+      `<td class="muted">${esc(r.reason)}</td><td class="muted">${esc(r.tags)}</td></tr>`).join("")+
+    `</table></div>`;
+
+  // 缺口
+  const gapList = S.gapList || an.gap_list;
+  $("#gapBox").innerHTML = gapList.length
+    ? `<div class="scroll"><table><tr><th>gap_id</th><th>類型</th><th>缺口描述</th><th>影響要件</th></tr>`+
+      gapList.map(g=>`<tr><td>${esc(g.gap_id)}</td>`+
+        `<td>${g.type==="fact"?'<span class="tag">事實</span>':'<span class="tag ext">要件</span>'}</td>`+
+        `<td>${esc(g.description)}</td><td class="muted">${esc((g.affects_elements||[]).join("、")||"—")}</td></tr>`).join("")+
+      `</table></div>`
+    : '<div class="hit ok">本次分析未偵得缺口。</div>';
+}
+
+/* ---------- 生成（條陳 + 問句） ---------- */
+function regenerate(){
+  if(!S.analysis) return;
+  const facts_text = $("#facts").value;
+  S.gen = G.generate({
+    templates: D.templates, rulesDoc: D.rules,
+    gapList: S.gapList || S.analysis.gap_list, meta: S.meta || S.analysis.meta,
+    factsText: facts_text, templateOverride: S.tplId,
+  });
+  renderQuestions();
+  renderFill();
+}
+
+function renderQuestions(){
+  const g=S.gen, labels={relative:"對相對人（被害人）",suspect:"對行為人（涉嫌人）",witness:"對證人"};
+  const order=["relative","suspect","witness"];
+  let html=`<div class="muted" style="margin-bottom:8px">共 ${g.meta.question_count} 句；未通過規則校驗者 ${g.meta.rejected_count} 句</div>`;
+  for(const t of order){
+    const list=(g.questions_by_target[t]||[]);
+    html+=`<h3>${esc(labels[t]||t)}（${list.length} 句）</h3>`;
+    if(!list.length){ html+='<div class="muted">（無）</div>'; continue; }
+    html+=list.map(q=>`<div class="qitem"><div class="qh"><span class="tag">${esc(q.id)}</span>`+
+      `<span class="tag">${esc(q.maps_to.join("、"))}</span>`+
+      (q.is_baseline?'<span class="tag ok">必問</span>':'')+`</div>`+
+      `<div class="qt2">${esc(q.question)}</div>`+
+      `<div class="muted">${esc(q.note||"")}</div></div>`).join("");
+  }
+  if(g.rejected_questions.length){
+    html+=`<h3>未納入（未通過規則校驗）</h3>`+g.rejected_questions.map(x=>
+      `<div class="qitem"><div class="qh"><span class="tag todo">${esc(x.gap_id)}</span></div>`+
+      `<div class="qt2">${esc(x.question)}</div><div class="muted">${esc(x.violations.map(v=>v.rule_id+"："+v.msg).join("、"))}</div></div>`).join("");
+  }
+  $("#qBox").innerHTML=html;
+}
+
+function renderFill(){
+  const g=S.gen;
+  $("#fillBox").innerHTML = g.statement_fill.map(r=>{
+    const editable = r.editable!==false && r.type!=="static" && r.type!=="composite";
+    const input = editable
+      ? `<input type="text" data-fill="${esc(r.field_id)}" value="${esc(S.overrides[r.field_id]!=null?S.overrides[r.field_id]:r.value)}">`
+      : `<div class="fixed">${esc(r.value)}</div>`;
+    const tag = r.status==="已填"?"ok":(r.value==="（待補）"||r.value==="（主體待確認）")?"todo":"";
+    return `<div style="margin-bottom:7px"><div class="qh"><span class="tag ${tag}">${esc(r.label)}</span>`+
+      `<span class="muted">${esc(r.field_id)}</span><span class="tag">${esc(r.status)}</span></div>${input}</div>`;
+  }).join("");
+  $("#fillBox").querySelectorAll("[data-fill]").forEach(el=>{
+    el.addEventListener("input",()=>{ S.overrides[el.dataset.fill]=el.value; renderPreview(); });
+  });
+  renderPreview();
+}
+
+function renderPreview(){
+  if(!S.gen) return;
+  const rows = S.gen.statement_fill.map(r=>{
+    const v = (S.overrides[r.field_id]!=null)?S.overrides[r.field_id]:r.value;
+    const o = Object.assign({}, r, {value:v});
+    return o;
+  });
+  const text = G.renderStatement(rows, D.templates.templates.find(t=>t.template_id===S.gen.template_id));
+  $("#preview").textContent = text + "\n\n" + (D.templates.export_rules.footer||[]).join("\n");
+  S.exportText = $("#preview").textContent;
+}
+
+$("#btnAnalyze").addEventListener("click", analyze);
+$("#btnLlm").addEventListener("click", analyzeLLM);
+$("#btnReset").addEventListener("click",()=>{ $("#facts").value=""; S.analysis=null; S.gen=null;
+  $("#warnBox").innerHTML=""; $("#candBox").textContent="尚未分析。"; $("#gapBox").textContent="尚未分析。";
+  $("#qBox").textContent="尚未分析。"; $("#fillBox").textContent="尚未分析。"; $("#preview").textContent=""; });
+$("#btnExample").addEventListener("click",()=>{
+  $("#facts").value = "114年5月1日晚上21時30分，○○市○○區○○路○○號超商前，被害人陳○○下班後正要走回家，行為人王○○持刀從背後靠近並以刀指向被害人，揚言要搶錢，被害人因害怕而不敢抗拒，王○○隨即取走被害人包內現金新臺幣3千元後離去。被害人事後報警，現場附近有超商監視器但尚未調閱。";
+  analyze();
+});
+$("#btnCopy").addEventListener("click", async()=>{
+  try{ await navigator.clipboard.writeText(S.exportText||""); $("#copyStatus").textContent="已複製 ✓";
+    setTimeout(()=>$("#copyStatus").textContent="",1500);}catch(e){ $("#copyStatus").textContent="複製失敗";}
+});
+$("#btnDl").addEventListener("click",()=>{
+  const blob=new Blob(["\ufeff"+(S.exportText||"")],{type:"text/plain;charset=utf-8"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download=(S.gen?S.gen.template_name:"條陳")+".txt"; a.click(); URL.revokeObjectURL(a.href);
+});
+
+loadAll().catch(e=>{ document.querySelectorAll(".muted").forEach(x=>{ if(x.textContent.includes("載入中")) x.innerHTML='<span class="err">載入失敗：'+esc(e.message)+'</span>'; }); });
+</script>
+</body>
+</html>

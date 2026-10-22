@@ -1,0 +1,10 @@
+回歸測試摘要（2026-10-21 16:09）
+validate_templates.py          exit=0 OK=262 FAIL=0
+validate_reasoning_flow.py     exit=0 OK=640 FAIL=0
+validate_questions_rules.py    exit=0 OK=446 FAIL=0
+validate_analyzer.py           exit=0 OK=388 FAIL=0
+validate_generator.py          exit=0 OK=1023 FAIL=0
+prototype_smoke.js             exit=0
+web_e2e.js                     exit=0
+llm_e2e.js                     exit=0
+web_llm_e2e.js                 exit=0

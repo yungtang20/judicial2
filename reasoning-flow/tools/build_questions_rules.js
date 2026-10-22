@@ -1,0 +1,607 @@
+// 產生 questions_rules.json（階段一 4.3 問句規則提取）
+// 素材來源：questions/review-checklist.md、questions/common.md、questions/index.md、
+//           questions/robbery.md、questions/threat.md、rule/interview-page-limit-rule.md、
+//           legal-case-web/data/question_bank.json
+const fs = require("fs");
+const path = require("path");
+
+const OUT = process.env.OUT_FILE || path.join(__dirname, "..", "data", "questions_rules.json");
+
+/* ============================================================
+   1. 規則（每條皆可程式校驗）
+   check_type:
+     required_pattern     — 問句須命中之正則
+     forbidden_word      — 問句不得出現之字串
+     mapping_required    — 問句須對應至少一個 maps_to 目標
+     tag_constraint      — 結構性限制（代號格式、頁數預算、去重鍵等）
+   ============================================================ */
+const rules = [
+  {
+    rule_id: "open_ended",
+    description:
+      "問句必須為開放式：須含開放式問法或可展開回答的請求（說明、描述、依序、指出等），且不得整句僅為是／否命題。",
+    source:
+      "專案規劃書 4.3 驗收標準「問句範本為開放式，無是／否問句」；questions/review-checklist.md 第二節；questions/common.md 第七節「一題只處理一個主要判斷」。",
+    check_type: "required_pattern",
+    applies_to: ["templates"],
+    check_value: {
+      open_markers: [
+        "請說明", "請描述", "請逐", "請依", "請指出", "請補充", "請回答", "請用自己的話", "請先指明",
+        "說明", "描述", "指明",
+        "如何", "怎樣", "怎麼", "什麼", "何時", "何地", "何種", "為何",
+        "哪些", "哪裡", "哪裏", "哪個", "誰", "多少",
+      ],
+      reject_whole_yes_no:
+        "問句含「是否／有無」但完全不含 open_markers 者，視為整句是／否命題，判不合格。",
+      allowed_programmatic: ["是否需要", "有無需要", "是否要", "是否願意"],
+      allowed_programmatic_note:
+        "「是否需要／是否願意」屬受詢問者權益選擇，非事實認定，予以例外。",
+    },
+    severity: "error",
+    scope_note:
+      "本規則為專案規劃書 4.3 對「問句範本」之要求，僅適用於本檔 question_templates。既有 44 個罪章問句檔另依 review-checklist.md 之標準（見 no_leading_answer_presupposition 等規則）檢驗。",
+  },
+  {
+    rule_id: "no_leading_answer_presupposition",
+    description:
+      "不得使用暗示答案的問法（如「你是不是」「對方就是」「是否故意」）；亦不得預設犯罪成立、行為人身分、故意、因果或損害成立。",
+    source: "questions/review-checklist.md 第二節：不使用「你是不是」「對方就是」「是否故意」等暗示答案的問法。",
+    check_type: "forbidden_word",
+    applies_to: ["templates", "existing_bank"],
+    check_value: [
+      "是不是",
+      "對方就是",
+      "是否故意",
+      "你們是不是",
+      "有沒有拿刀",
+      "確實是",
+      "已經交付",
+      "犯罪成立",
+      "構成犯罪",
+    ],
+    severity: "error",
+  },
+  {
+    rule_id: "no_legal_conclusion_in_question",
+    description:
+      "不得要求受詢問者作法律評價；定性用語（如「詐欺」「猥褻」「重傷」「不能抗拒」）由承辦人依事實及證據判斷，不得寫入問句。",
+    source: "questions/review-checklist.md 第二節：不要求受詢問者作法律評價。",
+    check_type: "forbidden_word",
+    applies_to: ["templates", "existing_bank"],
+    check_value: [
+      "是不是強盜",
+      "算不算強盜",
+      "構成強盜",
+      "構成恐嚇",
+      "是不是猥褻",
+      "是不是重傷",
+      "是否已達不能抗拒",
+      "是否構成",
+      "應論以",
+      "罪成立",
+    ],
+    severity: "error",
+  },
+  {
+    rule_id: "no_definitive_labeling",
+    description: "不得使用定性或標籤化稱呼，改用中性用語（如「行為人」「對方」「取走」）。",
+    source: "questions/robbery.md 第六節：未使用「搶匪」「強盜」「嫌犯」等定性用語。",
+    check_type: "forbidden_word",
+    applies_to: ["templates", "existing_bank"],
+    check_value: ["搶匪", "強盜匪", "嫌犯"],
+    severity: "error",
+    note: "「強盜」「恐嚇」作為罪章名稱出現於說明欄位可以；不得出現在問句本文。",
+  },
+  {
+    rule_id: "map_to_gap",
+    description:
+      "每一問句必須對應至少一個缺口（gap_id）或構成要件（element_id），無對應者不得納入問句清單。",
+    source: "專案規劃書 4.3 驗收標準；questions/index.md 第五節。",
+    check_type: "mapping_required",
+    check_value: ["gap_id", "element_id"],
+    severity: "error",
+  },
+  {
+    rule_id: "single_target_only",
+    description: "一題只對應一個受詢問者角色，不得同一句同時向不同角色發問。",
+    source: "專案規劃書 5.2：問句清單分「對相對人」「對行為人」。",
+    check_type: "mapping_required",
+    check_value: ["target"],
+    severity: "error",
+  },
+  {
+    rule_id: "one_fact_per_question",
+    description: "一題以一個主要事實為原則；清單型資料須明示「逐項」。",
+    source: "questions/review-checklist.md 第二節；questions/common.md 第七節。",
+    check_type: "tag_constraint",
+    check_value: {
+      max_question_marks: 1,
+      list_marker_required_for_enumeration: true,
+      list_marker: "逐項",
+    },
+    severity: "warn",
+  },
+  {
+    rule_id: "allow_unknown",
+    description:
+      "問句須容許受詢問者回答不知道、不確定、不理解或不願回答，不得以題目排除該項空間。",
+    source: "questions/review-checklist.md 第二節：允許回答不知道、不確定、不記得、不理解。",
+    check_type: "required_pattern",
+    check_value: {
+      open_markers: ["請說明", "請描述", "請逐", "請依", "如何", "怎樣", "請指出"],
+      note: "軟性規則：檢查問句是否具備可展開回答的空間，而非檢查是否明寫「不知道也可以」。",
+    },
+    severity: "warn",
+  },
+  {
+    rule_id: "perception_before_hearsay",
+    description: "先問親自見聞，再問轉述來源；轉述不得記成親自見聞。",
+    source: "questions/review-checklist.md 第二節：先問親自見聞，再問轉述來源。",
+    check_type: "tag_constraint",
+    check_value: {
+      order_groups: ["perception", "hearsay"],
+      group_field: "fact_categories",
+      hint: "同一 target 內，fact_categories 含知覺類者優先於轉述類者。",
+    },
+    severity: "warn",
+  },
+  {
+    rule_id: "sensitive_minimum",
+    description: "敏感案件採最低必要詢問，不重複要求描述創傷細節。",
+    source: "questions/review-checklist.md 第二節：敏感案件採最低必要詢問。",
+    check_type: "tag_constraint",
+    check_value: {
+      sensitive_tags: ["性侵害", "性影像", "兒少性剝削", "家暴"],
+      max_questions_per_sensitive_tag: 12,
+      no_duplicate_detail_request: true,
+    },
+    severity: "warn",
+  },
+  {
+    rule_id: "page_budget",
+    description:
+      "每一角色之每一份筆錄最多 8 頁；問句總量須依實際缺口裁剪，不得為填滿題庫而全部展開。超出時不得靜默刪除公司必問或法定程序題。",
+    source: "rule/interview-page-limit-rule.md；questions/index.md 第一節第 6 點。",
+    check_type: "tag_constraint",
+    check_value: {
+      max_pages_per_role_record: 8,
+      priority_order: [
+        "法定程序及權利告知",
+        "公司必問題",
+        "候選法律路由必要核心題",
+        "相鄰路由區分題",
+        "證據缺口及補強題",
+        "其他補充題",
+      ],
+      overflow_status: "BLOCKED_PAGE_BUDGET",
+    },
+    severity: "error",
+  },
+  {
+    rule_id: "dedupe_by_meaning",
+    description: "題目應依事實目的去重，不得只依文字完全相同判斷是否重複。",
+    source: "rule/interview-page-limit-rule.md 第 4 節。",
+    check_type: "tag_constraint",
+    check_value: {
+      dedupe_key: ["target", "fact_categories", "maps_to"],
+      note: "同 target、同 fact_categories 且 maps_to 重疊者視為語意重複。",
+    },
+    severity: "warn",
+  },
+  {
+    rule_id: "question_id_format",
+    description: "問句代號須全庫唯一，格式為 <prefix>-<C|S|R|D|A|N|W>-<number>。",
+    source: "questions/index.md 第七節；questions/review-checklist.md 第六節。",
+    check_type: "tag_constraint",
+    check_value: {
+      id_pattern: "^[A-Z]{1,3}-(C|S|R|D|A|N|W)-\\d{2,3}[A-Z]?$",
+      unique_scope: "全庫",
+    },
+    severity: "error",
+  },
+];
+
+/* ============================================================
+   2. 問句範本（開放式，每句標示 maps_to）
+   maps_to 之值為：
+     - element_id：對應 lawbank_reasoning_flow.json 的構成要件
+     - gap_category:值：對應事實缺口面向
+   derived_from：既有問句來源；template 為其開放式改寫
+   ============================================================ */
+const questionTemplates = [
+  /* ---------- 對相對人（被害人）---------- */
+  {
+    template_id: "q_relative_perception",
+    target: "relative",
+    template: "當時（具體情境），你看到／聽到什麼？請依順序說明。",
+    maps_to: ["e_coercion", "gap_category:事"],
+    example: "當時對方站在你多遠的地方？做了什麼動作？",
+    fact_categories: ["事", "行為"],
+    derived_from: "questions/robbery.md B-C-03",
+  },
+  {
+    template_id: "q_relative_coercion_degree",
+    target: "relative",
+    template: "當時對方以何種方式、施加於何處？你的身體或心理感受到什麼樣的狀態？",
+    maps_to: ["e_irresistible", "e_coercion", "gap_category:行為"],
+    example: "當時對方是持何物？離你多遠？你當下能否移動或喊叫？",
+    fact_categories: ["行為", "因果"],
+    derived_from:
+      "lawbank_reasoning_flow.json e_irresistible 判準（依當時具體事實客觀判斷）；問法對應 questions/robbery.md B-C-03、B-C-07",
+  },
+  {
+    template_id: "q_relative_freedom_of_choice",
+    target: "relative",
+    template: "當時你的處境為何？有哪些選項是你當下仍能選擇的？",
+    maps_to: ["e_delivery_by_fear", "e_irresistible", "gap_category:因果"],
+    example: "當時你是否仍能離開、躲避或求助？",
+    fact_categories: ["因果"],
+    derived_from:
+      "lawbank_reasoning_flow.json 最高法院86年度台上字5174號（被害人尚有幾分自由意思之區分）；問法對應 questions/robbery.md B-C-07",
+  },
+  {
+    template_id: "q_relative_threat_content",
+    target: "relative",
+    template: "對方當時說了什麼或做了什麼？請逐項說明其內容、表達方式與發生順序。",
+    maps_to: ["e_threat", "e_coercion", "gap_category:行為"],
+    example: "對方說了哪些話？是以口頭、書信、影像或其他方式表達？",
+    fact_categories: ["事", "行為"],
+    derived_from: "questions/threat.md K-C-03",
+  },
+  {
+    template_id: "q_relative_property",
+    target: "relative",
+    template: "遭取走或被要求交付的財物有哪些？請逐項說明名稱、數量、特徵與價值認定依據。",
+    maps_to: ["e_taking_or_delivery", "e_robbery_intent", "gap_category:物"],
+    example: "現金、財物卡、手機等各有多少？價值如何認定？",
+    fact_categories: ["物"],
+    derived_from: "questions/robbery.md B-C-01、B-C-02",
+  },
+  {
+    template_id: "q_relative_delivery_reason",
+    target: "relative",
+    template: "你當時為何交付（或未交付）？請說明當時的考量與顧慮。",
+    maps_to: ["e_delivery_by_fear", "gap_category:因果"],
+    example: "你當時考量了哪些因素？",
+    fact_categories: ["因果"],
+    derived_from: "questions/threat.md K-C-08",
+  },
+  {
+    template_id: "q_relative_timeline",
+    target: "relative",
+    template: "事件的時間與地點為何？請說明最初、最後及各重要節點。",
+    maps_to: ["gap_category:時", "gap_category:地"],
+    example: "何時、何地發生？發生的順序為何？",
+    fact_categories: ["時", "地"],
+    derived_from: "questions/robbery.md B-C-04",
+  },
+  {
+    template_id: "q_relative_suspect_id",
+    target: "relative",
+    template: "你對行為人的身分或可供辨識的特徵掌握哪些資料？請說明。",
+    maps_to: ["gap_category:人"],
+    example: "若不認識，請說明你所掌握的特徵、衣物、聯絡方式等。",
+    fact_categories: ["人"],
+    derived_from:
+      "questions/robbery.md B-C-05；既有問句庫 V-COM-002A（「你是否知道…」）之開放式改寫",
+  },
+  {
+    template_id: "q_relative_injury",
+    target: "relative",
+    template: "你當時的身體狀況為何？請說明受傷部位、情形與後續處理。",
+    maps_to: ["gap_category:因果"],
+    example: "是否有就醫？診斷或處置情形為何？",
+    fact_categories: ["因果"],
+    derived_from: "questions/robbery.md B-C-09（「你是否因此受傷？」）之開放式改寫",
+  },
+  {
+    template_id: "q_relative_evidence",
+    target: "relative",
+    template: "現場或附近有哪些可佐證之處（如監視器、影像等）？請說明其位置與保存情形。",
+    maps_to: ["gap_category:補強"],
+    example: "是否有行車紀錄器？是否已調閱或保存？",
+    fact_categories: ["事", "地", "時"],
+    derived_from: "questions/robbery.md B-R-01（「是否有監視器…」）之開放式改寫",
+  },
+  {
+    template_id: "q_relative_witness",
+    target: "relative",
+    template: "在場或知情者有哪些？請說明其聯絡方式與所知的具體內容。",
+    maps_to: ["gap_category:補強"],
+    example: "在場者看到什麼？聯絡方式為何？",
+    fact_categories: ["人"],
+    derived_from: "questions/robbery.md B-R-02（「是否有目擊者…」）之開放式改寫",
+  },
+  {
+    template_id: "q_relative_consent",
+    target: "relative",
+    template: "你與對方之間就該財物有何約定或授權？請說明經過與依據。",
+    maps_to: ["e_taking_or_delivery", "gap_category:物"],
+    example: "若曾同意，原因與範圍為何？",
+    fact_categories: ["物", "因果"],
+    derived_from: "questions/robbery.md B-C-10（「是否曾同意或授權…」）之開放式改寫",
+  },
+  {
+    template_id: "q_relative_free_account",
+    target: "relative",
+    template: "請用自己的話說明事情從開始到結束的經過。",
+    maps_to: ["gap_category:事"],
+    example: "（自由敘述，不中途提示）",
+    fact_categories: ["事"],
+    derived_from: "legal-case-web/data/question_bank.json V-COM-001",
+  },
+
+  /* ---------- 對行為人（涉嫌人）---------- */
+  {
+    template_id: "q_suspect_approach",
+    target: "suspect",
+    template: "你於何時、在何處接近對方？請依順序說明。",
+    maps_to: ["e_coercion", "gap_category:時"],
+    example: "你們在哪裡遇見？之後做了什麼？",
+    fact_categories: ["時", "地", "事"],
+    derived_from: "questions/robbery.md B-N-01",
+  },
+  {
+    template_id: "q_suspect_method",
+    target: "suspect",
+    template: "你如何取得該財物？請說明你當時所為的具體動作或言語。",
+    maps_to: ["e_taking_or_delivery", "e_coercion", "gap_category:行為"],
+    example: "你對他說了什麼？做了什麼？",
+    fact_categories: ["事", "行為"],
+    derived_from: "questions/robbery.md B-N-02",
+  },
+  {
+    template_id: "q_suspect_response",
+    target: "suspect",
+    template: "對方當時的反應為何？請說明你觀察到的言語、動作與其結果。",
+    maps_to: ["e_irresistible", "e_delivery_by_fear", "gap_category:因果"],
+    example: "他是否有抗拒或喊叫？之後呢？",
+    fact_categories: ["因果"],
+    derived_from: "questions/robbery.md B-N-03",
+  },
+  {
+    template_id: "q_suspect_intent",
+    target: "suspect",
+    template: "你當時的目的為何？請說明你原本打算如何處置該財物。",
+    maps_to: ["e_robbery_intent", "gap_category:物"],
+    example: "你原本打算怎麼處理？後來如何處置？",
+    fact_categories: ["物", "因果"],
+    derived_from: "questions/robbery.md B-N-04、B-N-08",
+  },
+  {
+    template_id: "q_suspect_others",
+    target: "suspect",
+    template: "參與的人有哪些？請說明其人數、角色與各自的行為。",
+    maps_to: ["e_agg_circumstance", "gap_category:人"],
+    example: "有幾人？各自做了什麼？",
+    fact_categories: ["人"],
+    derived_from:
+      "questions/robbery.md B-N-05；刑法 §321 I 第 4 款（三人以上）",
+  },
+  {
+    template_id: "q_suspect_weapon",
+    target: "suspect",
+    template: "你當時攜帶了哪些工具或物品？請說明其種類、用途與取得方式。",
+    maps_to: ["e_agg_circumstance", "e_coercion", "gap_category:行為"],
+    example: "帶了什麼？在場時如何使用？",
+    fact_categories: ["行為"],
+    derived_from:
+      "questions/robbery.md B-N-06；刑法 §321 I 第 3 款（攜帶兇器）",
+  },
+  {
+    template_id: "q_suspect_escape",
+    target: "suspect",
+    template: "取得財物後，你往何處離開？請說明路線、方向與使用之交通工具。",
+    maps_to: ["gap_category:事"],
+    example: "你往哪個方向走？有搭乘交通工具嗎？",
+    fact_categories: ["事"],
+    derived_from: "questions/robbery.md B-N-07",
+  },
+  {
+    template_id: "q_suspect_sequence",
+    target: "suspect",
+    template: "請依時間順序說明整個過程。",
+    maps_to: ["gap_category:事"],
+    example: "（請自行依序敘述，不中途提示）",
+    fact_categories: ["事"],
+    derived_from: "questions/robbery.md B-N-02（依序說明）",
+  },
+
+  /* ---------- 對證人 ---------- */
+  {
+    template_id: "q_witness_observation",
+    target: "witness",
+    template: "你於何時、何處看到何種情形？請說明你所看到或聽到的內容。",
+    maps_to: ["gap_category:事", "gap_category:時"],
+    example: "你從哪個位置看到？看到什麼動作？",
+    fact_categories: ["時", "地", "事"],
+    derived_from: "questions/robbery.md B-W-01",
+  },
+  {
+    template_id: "q_witness_relationship",
+    target: "witness",
+    template: "你與行為人或被害人之關係為何？請說明。",
+    maps_to: ["gap_category:人"],
+    example: "你認識他們嗎？關係為何？",
+    fact_categories: ["人"],
+    derived_from: "questions/robbery.md B-W-02",
+  },
+];
+
+/* ============================================================
+   3. 受詢問者角色定義
+   ============================================================ */
+const targetDefinitions = {
+  relative: {
+    label: "相對人（被害人）",
+    aliases: ["被害人", "受被害人", "relative", "victim"],
+    definition: "犯罪或準犯罪事實之相對人，即受侵害之人。",
+    question_prefix: "相對人",
+  },
+  suspect: {
+    label: "行為人（涉嫌人）",
+    aliases: ["涉嫌人", "犯罪嫌疑人", "suspect"],
+    definition: "被指為實施相關行為之人。詢問時須併同法定權利告知事項。",
+    question_prefix: "行為人",
+  },
+  witness: {
+    label: "證人",
+    aliases: ["證人", "目擊者", "witness"],
+    definition: "親自見聞或因職務知悉相關事實之人。",
+    question_prefix: "證人",
+  },
+};
+
+/* ============================================================
+   4. 輸出格式
+   ============================================================ */
+const outputFormat = {
+  columns: ["id", "question", "maps_to", "note"],
+  group_by: "target",
+  group_order: ["relative", "suspect", "witness"],
+  column_definitions: {
+    id: "問句代號，全庫唯一，格式 <prefix>-<C|S|R|D|A|N|W>-<number>",
+    question: "問句本文（開放式、無誘導、無定性用語）",
+    maps_to: "對應之 gap_id 或 element_id 陣列，至少一個",
+    note: "承辦人備註：選用理由、觸發條件、敏感度或待補事項",
+  },
+  sort_order:
+    "依 rule.page_budget.priority_order 排序；同群內依 fact_categories 順序（知覺類先於轉述類）",
+  footer_note: "本清單為模擬問句，不含任何罪名成立與否之認定。",
+};
+
+/* ============================================================
+   5. 禁語（系統自撰部分）
+   ============================================================ */
+const prohibitedLanguage = {
+  note: "下列字詞不得出現在系統自撰之問句、說明與輸出。引述法源原文之欄位不在此限。",
+  words: ["成立", "構成", "該當", "應論以"],
+  qualifying_phrases: [
+    "不認定犯罪成立",
+    "不構成",
+    "未構成",
+    "構成要件之判準",
+    "不作任何成立與否之認定",
+    "不含任何罪名成立與否之認定",
+    "成立與否",
+    "罪名成立",
+  ],
+};
+
+/* ============================================================
+   6. 既有問句庫實測稽核
+   以本檔之規則（no_leading_answer_presupposition、
+   no_legal_conclusion_in_question、no_definitive_labeling）
+   實際套用於 questions/*.md 之既有問句本體，量測違規情形。
+   ============================================================ */
+function auditExistingBank() {
+  const questionsDir = path.join(__dirname, "..", "..", "questions");
+  if (!fs.existsSync(questionsDir)) {
+    return { available: false, reason: "questions 目錄不存在" };
+  }
+  const bankRules = rules.filter(
+    (r) => r.check_type === "forbidden_word" && (r.applies_to || []).includes("existing_bank")
+  );
+  const openMarkers = rules.find((r) => r.rule_id === "open_ended").check_value.open_markers;
+  const questionRe =
+    /^\s*-\s*\*\*[A-Z]{1,3}-(?:C|S|R|D|A|N|W)-\d{2,3}[A-Z]?\*\*\s*（[^）]*）：\s*(.+)$/;
+
+  let total = 0;
+  let openEnded = 0;
+  const violations = [];
+  const files = fs
+    .readdirSync(questionsDir)
+    .filter((f) => f.endsWith(".md") && !["index.md", "review-checklist.md"].includes(f));
+
+  for (const f of files) {
+    const text = fs.readFileSync(path.join(questionsDir, f), "utf8");
+    for (const line of text.split(/\r?\n/)) {
+      const m = questionRe.exec(line);
+      if (!m) continue;
+      const q = m[1].trim();
+      total++;
+      if (openMarkers.some((mk) => q.includes(mk))) openEnded++;
+      for (const r of bankRules) {
+        for (const w of r.check_value) {
+          if (q.includes(w)) {
+            violations.push({ file: f, rule_id: r.rule_id, word: w, question: q.slice(0, 60) });
+          }
+        }
+      }
+    }
+  }
+  return {
+    available: true,
+    files_scanned: files.length,
+    questions_parsed: total,
+    open_ended_ratio: total ? Number((openEnded / total).toFixed(4)) : null,
+    hard_violation_count: violations.length,
+    hard_violations: violations.slice(0, 20),
+    audit_scope:
+      "hard_violations 僅計 no_leading_answer_presupposition、no_legal_conclusion_in_question、no_definitive_labeling 三項規則；open_ended_ratio 為量測值（既有問句檔之標準為 review-checklist.md，非本檔對範本之 4.3 標準）。",
+  };
+}
+
+const bankAudit = auditExistingBank();
+
+/* ============================================================
+   7. 產出
+   ============================================================ */
+const out = {
+  schema: "questions_rules_v1",
+  generated_at: new Date().toISOString(),
+  source_note: "extracted_from_existing_assets",
+  source_assets: [
+    "questions/review-checklist.md（每一問的品質門檻、8 頁上限、輸出前機械檢查）",
+    "questions/common.md（通用程序問句、禁止事項）",
+    "questions/index.md（載入順序、代號規則、問句總量裁剪）",
+    "questions/robbery.md、questions/threat.md（要件對照與區分問句範例）",
+    "rule/interview-page-limit-rule.md（8 頁限制、問句排程優先序）",
+    "rule/company-template-role-rule.md（公司原始問句保留原則）",
+    "legal-case-web/data/question_bank.json（既有問句之 id、priority、purpose 欄位慣例）",
+    "專案規劃書 4.3、5.2（問句規則輸出骨架與生成器輸入）",
+  ],
+  rules,
+  question_templates: questionTemplates,
+  target_definitions: targetDefinitions,
+  output_format: outputFormat,
+  existing_library_audit: bankAudit,
+  output_format: outputFormat,
+  prohibited_language: prohibitedLanguage,
+  fact_categories: {
+    note: "既有問句庫之事實面向分類，用於去重與排序。",
+    values: ["人", "事", "時", "地", "物", "行為", "因果"],
+  },
+  gap_categories: {
+    note: "事實缺口之面向，對應分析器（規劃書 5.1）產出之 gap_list.type。",
+    values: ["fact", "evidence"],
+  },
+  extraction_gaps: [
+    {
+      gap_id: "q_company_standard",
+      description:
+        "公司標準筆錄之原始問句（通用被害人／涉嫌人／移送涉嫌人／家暴／跟騷／性騷擾／兒少性剝削／性侵害／性影像）未納入本規則檔之範本；依 rule/company-template-role-rule.md，該類問句須保留原文與原順序，AI 新增問句不得複製其問題。",
+      status: "needs_external",
+    },
+    {
+      gap_id: "q_specific_offense_packs",
+      description:
+        "本規則檔僅提供通用範本與要件對應；各罪章之專屬問句仍以 questions/*.md（44 個罪章檔）為準，應由 L5 依候選罪章載入。",
+      status: "extracted",
+    },
+    {
+      gap_id: "q_existing_bank_open_ended",
+      description:
+        `既有 44 個罪章問句檔之問句本體，經本檔規則實測：共 ${bankAudit.questions_parsed ?? "?"} 句，其中含開放式標記者 ${bankAudit.open_ended_ratio != null ? Math.round(bankAudit.open_ended_ratio * 100) : "?"}%，未含者多為「是否有…？」「你是否…？」等是／否式詢問。此類問句符合 review-checklist.md 之現行標準（僅禁暗示答案之問法），但不符合專案規劃書 4.3 對「問句範本」之開放式要求。本檔之 question_templates 已全數改為開放式；既有檔案之改寫須另行確認，不得由系統自動覆寫。`,
+      status: "needs_external",
+    },
+  ],
+};
+
+fs.mkdirSync(path.dirname(OUT), { recursive: true });
+fs.writeFileSync(OUT, JSON.stringify(out, null, 2), "utf8");
+console.log("WROTE", OUT);
+console.log("rules:", out.rules.length);
+console.log("question_templates:", out.question_templates.length);
+console.log("targets:", Object.keys(out.target_definitions).join(", "));
+console.log("check_types:", [...new Set(out.rules.map((r) => r.check_type))].join(", "));
