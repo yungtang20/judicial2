@@ -184,7 +184,7 @@
 py -3 -X utf8 -m pytest -q
 ```
 
-目前基準：**444 passed**（2026-10-22 單次實測，`py -3 -X utf8 -m pytest -q`）。`-X utf8` 為必要參數，否則中文輸出會亂碼。
+目前基準：**452 passed**（2026-10-22 單次實測，`py -3 -X utf8 -m pytest -q`）。`-X utf8` 為必要參數，否則中文輸出會亂碼。
 
 前端與靜態檢查：
 
@@ -198,7 +198,7 @@ git diff --check
 案例批次：
 
 ```powershell
-py -3 -X utf8 -m pytest -q tests/test_case_batch_c001_c030.py tests/test_case_batch_c031_c060.py tests/test_case_batch_c061_c090.py
+py -3 -X utf8 -m pytest -q tests/test_case_batch_c001_c030.py tests/test_case_batch_c031_c060.py tests/test_case_batch_c061_c090.py tests/test_case_batch_c091_c120.py
 ```
 
 新增規則時，至少同時加入：
@@ -207,6 +207,10 @@ py -3 -X utf8 -m pytest -q tests/test_case_batch_c001_c030.py tests/test_case_ba
 - 缺事實案例。
 - 主體不明案例。
 - 不應誤列該罪名的反向案例。
+
+**四類缺一不可，且每批都要附允許集合（allowed set）反向檢查。** 既有契約只斷言「預期候選有出現」，多餘候選不會讓測試失敗——2026-10-22 之前因此長期漏掉三種誤列。每批另需一項 `test_*_no_unexpected_extra_candidates`：集合外的候選即為誤列，必須讓測試失敗。
+
+允許集合內的項目是**相鄰競爭假設**（供人工區辨），不是誤列，但每次異動都須人工複核。
 
 ### 6.1 證據鏈重算（可重現）
 
@@ -266,7 +270,7 @@ if ($bad -eq 0) { "EVIDENCE CHAIN OK ($($surfaces.Count) surfaces + 2 review lin
 
 ## 9. 交接後建議順序
 
-1. 先執行完整 pytest，確認基準仍為 444 passed（單次 session）。
+1. 先執行完整 pytest，確認基準仍為 452 passed（單次 session）。
 2. 執行 §6.1 證據鏈重算，確認 14 個 surface 與 2 條 review 連結皆一致。
 3. 以 `lawbank-engine.html` 測試 API 與前端顯示。
 4. 修改規則後先跑對應批次，再跑完整測試。
@@ -277,12 +281,15 @@ if ($bad -eq 0) { "EVIDENCE CHAIN OK ($($surfaces.Count) surfaces + 2 review lin
 ## 10. 交接狀態
 
 - 功能測試：通過。
-- 完整測試：444 passed（2026-10-22 單次 session 實測）。
-- 案例批次 C001–C090：通過。
+- 完整測試：452 passed（2026-10-22 單次 session 實測）。
+- 案例批次 C001–C090：通過（已補允許集合反向檢查）。
+- 案例批次 C091–C125：通過（完整事實／缺事實／主體不明／反向安全四類齊備）。
 - 前端錯誤處理測試：26 passed。
 - Python 編譯檢查：通過。
 - 證據鏈重算：14 surfaces（10 frozen + 4 runtime）+ 2 條 review 連結全數一致。
 - 證據檔行尾：已正規化為 LF，與 `.gitattributes` 一致。
 - Human Gate：維持人工審核邊界，未宣稱已核准（HG-LR-01／02／03／04／05 皆 `PENDING`）。
-- 2026-10-22 交接修復：手冊補上 canonical 治理鏈與授權邊界、修正 API 描述、補上可重現的證據重算指令、將未追蹤相依檔案納入版控、對帳 evidence `verification` 基準（V01 289→444、V04 20→26）、evidence 檔正規化為 LF 使乾淨 clone 可重現雜湊鏈。
+- 2026-10-22 交接修復：手冊補上 canonical 治理鏈與授權邊界、修正 API 描述、補上可重現的證據重算指令、將未追蹤相依檔案納入版控、對帳 evidence `verification` 基準（V01 289→444→452、V04 20→26）、evidence 檔正規化為 LF 使乾淨 clone 可重現雜湊鏈。
+- 2026-10-22 規則修正（第四批 C091–C120 複審後）：轉述指控護欄放寬到代稱主體（乙／另一方／被害人等）並補上「散布／謠傳／爆料」謂語、引述區間改為自被指控主體起算（不再把「貼文」本身圈入）、弱關鍵詞護欄（稱呼「騙子」不成立詐欺、被指控的「侵占」不成立侵占、被害人發現「遺失」不成立侵占）、否定窗口補上緊接式否定（「未受傷」「未毆打」不成立傷害且不誤傷未成年人條款）、排序時單字關鍵詞命中不再壓過具體行為命中。
+- 2026-10-22 第四批案例標籤更正：C095 由「強盜」更正為「竊盜」（無對人施暴，與既有 C065 鎖定結論一致）、C096 由「加重強盜」更正為「強盜」（刑法無加重強盜此獨立罪名）、C106–C108 由「公然侮辱／誹謗」對應為題庫的妨害名譽。
 - 未追蹤且刻意不提交：`reasoning-flow/`（獨立專案）、`例子/`（個人截圖）。

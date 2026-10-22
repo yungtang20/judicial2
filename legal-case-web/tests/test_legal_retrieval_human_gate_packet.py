@@ -117,6 +117,6 @@ def test_packet_records_current_bounded_verification_without_approving_gate():
     verification = {item["id"]: item for item in packet["verification"]}
     assert set(verification) == {"V01", "V02", "V03", "V04", "V05"}
     assert all(item["status"] == "PASS" for item in verification.values())
-    assert verification["V01"]["passed"] == 444
+    assert verification["V01"]["passed"] == 452
     assert verification["V04"]["passed"] == 26
     assert packet["decision_status"] == "PENDING_HUMAN_APPROVAL"

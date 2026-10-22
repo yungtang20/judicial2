@@ -43,3 +43,19 @@ def test_c031_c060_candidate_directions_are_retained():
         actual = {item["id"] for item in classify_candidates(summary, BANK)["candidates"]}
         assert expected in actual, f"{case_id}: expected {expected}, actual={sorted(actual)}"
 
+
+# 允許的相鄰競爭假設（2026-10-22 人工複核）：集合外的候選即為誤列。
+# C031 曾因「發現財物遺失」誤列侵占，該誤列已於同日修正。
+ALLOWED_EXTRAS = {
+    "C033": {"aggravated_theft", "residential_trespass"},
+    "C034": {"damage"},
+    "C045": {"stalking"},
+}
+
+
+def test_c031_c060_no_unexpected_extra_candidates():
+    for case_id, summary, expected in CASES:
+        actual = {item["id"] for item in classify_candidates(summary, BANK)["candidates"]}
+        extra = actual - {expected} - ALLOWED_EXTRAS.get(case_id, set())
+        assert not extra, f"{case_id}: unexpected extra candidates {sorted(extra)}"
+

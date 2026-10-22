@@ -1334,6 +1334,10 @@ _NEGATION_MARKERS = (
     "從未", "未曾", "從沒", "從來沒有", "從來不", "從來未",
 )
 
+# 緊接式否定：否定字直接接在關鍵字之前（「未受傷」「未毆打」「沒有
+# 驗傷」）。只作用於緊鄰位置，「未成年人遭受傷害」不受影響。
+_NEGATION_ADJACENT_RE = re.compile(r"(?:未|不|沒|無|非)$")
+
 
 def _keyword_negated(keyword: str, summary: str) -> bool:
     """檢查關鍵字是否只出現在否定語句中（spec §5.1：關鍵字不得為唯一機制）。
@@ -1361,6 +1365,12 @@ def _keyword_negated(keyword: str, summary: str) -> bool:
         clean = context
         for br in sentence_breaks:
             clean = clean.split(br)[-1]
+        # 否定標記直接接續關鍵字（「未受傷」「未毆打」「沒有驗傷」）：
+        # 這是對同一行為的否定，必須成立。標記表只有「沒有／沒／尚未」
+        # 等複合詞時接續的否定會漏判；此處補上緊接式判定，且只作用於
+        # 緊鄰位置，避免「未成年人遭受傷害」這類誤傷。
+        if _NEGATION_ADJACENT_RE.search(clean):
+            continue
         if not any(marker in clean for marker in _NEGATION_MARKERS):
             return False  # 至少有一個非否定命中
     return True  # 全部命中都在否定語句內
@@ -1744,16 +1754,22 @@ def _relation_binding_ok(offense_id: str, summary: str) -> bool:
 
 
 # 轉述指控護欄資料表（依 R-fuzz 探針實測雜訊罪章建立）。
-# attribution + (我|我方) + verbs 命中、且摘要無 independent 事實訊號時，
+# attribution + 被指控主體 + verbs 命中、且摘要無 independent 事實訊號時，
 # 清除該罪章關鍵字命中；被指控的內容由妨害名譽／誣告方向處理。
+# 2026-10-22（批次 C091-C120 複審）：被指控主體由第一人稱放寬到代稱寫法
+# （案情摘要慣用甲／乙），並補上「散布／謠傳／爆料」等散播型謂語。
 ATTRIBUTION_PREDICATE = (
     r"(?:跟別人|跟他人|跟公司|跟主管|向老師|向學校|向警察|跟警察|到處|逢人"
     r"|在群組|在網路上|發文|留言|貼文|指稱|指摘|指控|聲稱|他說"
+    r"|散布|散佈|謠傳|爆料|控訴"
     r"|向[^。；]{0,6}(?:公司|主管|警方|警察|學校|老師)[^。；]{0,10}說"
     # 家屬／長官等特定第三者轉述（探針 B 組：我媽跟訓導主任說我偷同學的錢）
     r"|(?:我(?:媽|爸|母親|父親|老師|主管|老闆|同事|同學|太太|先生|老婆|老公)"
     r"|訓導主任|導師|教官|上司|親友|家人)[^。；]{0,10}說)"
 )
+# 被指控的主體：摘要慣用第一人稱（我／我方）或甲乙代稱（乙／另一方／
+# 被害人／屋主／住戶）。主體放寬後，轉述指控護欄同樣適用於代稱寫法。
+ATTRIBUTION_SUBJECT = r"(?:我|我方|乙|另一方|另一個人|被害人|屋主|住戶)"
 ATTRIBUTED_ALLEGATION_GUARDS: list[dict[str, str]] = [
     {
         "offense_id": "theft",
@@ -1809,6 +1825,20 @@ def _has_independent_outside(rule: dict[str, str], summary: str, attributed: re.
     return False
 
 
+def _attribution_pattern(verbs: str) -> str:
+    """轉述指控的識別式：謂語 + 被指控主體 + 行為詞。
+
+    主體以命名群組標記，供引述區間精確從「被指控主體」起算；謂語本身
+    （例如「貼文」「發文」）可能是另一罪章的關鍵字，不得一併圈入。
+    """
+    return (
+        ATTRIBUTION_PREDICATE
+        + r"[^。；]{0,40}"
+        + r"(?P<subject>" + ATTRIBUTION_SUBJECT + r")"
+        + r"(?:" + verbs + r")"
+    )
+
+
 def _attributed_allegation_guard(offense_id: str, summary: str) -> bool:
     """摘要只是引述他人對本人的指控（且無獨立事實）時回傳 True。"""
     rule = next(
@@ -1817,10 +1847,7 @@ def _attributed_allegation_guard(offense_id: str, summary: str) -> bool:
     )
     if rule is None:
         return False
-    attributed = re.search(
-        ATTRIBUTION_PREDICATE + r"[^。；]{0,40}(?:我|我方)(?:" + rule["verbs"] + r")",
-        summary,
-    )
+    attributed = re.search(_attribution_pattern(rule["verbs"]), summary)
     if not attributed:
         return False
     return not _has_independent_outside(rule, summary, attributed)
@@ -1830,20 +1857,19 @@ def _attribution_spans(summary: str) -> list[tuple[int, int]]:
     """在無獨立事實時，回傳「轉述指控」句段的字元區間。
 
     區間內出現的其他罪章關鍵詞（例如引述句裡的場景名詞「倉庫」）只是
-    被指控內容的一部分，不得作為該罪章的關鍵字命中。
+    被指控內容的一部分，不得作為該罪章的關鍵字命中。區間自「被指控
+    主體」起算：謂語（例如「貼文」「發文」）是散布行為本身，可能正是
+    妨害名譽方向的事實，不得圈入引述區間而遭清除。
     """
     spans: list[tuple[int, int]] = []
     for rule in ATTRIBUTED_ALLEGATION_GUARDS:
-        attributed = re.search(
-            ATTRIBUTION_PREDICATE + r"[^。；]{0,40}(?:我|我方)(?:" + rule["verbs"] + r")",
-            summary,
-        )
+        attributed = re.search(_attribution_pattern(rule["verbs"]), summary)
         if attributed and not _has_independent_outside(rule, summary, attributed):
             # 區間延伸到句末標點：受詞或情境名詞（倉庫、存貨、金錢）也是被
             # 指控內容的一部分，一起納入引述區間。
             tail = re.search(r"[。；！？]", summary[attributed.end():])
             end = attributed.end() + tail.start() if tail else len(summary)
-            spans.append((attributed.start(), end))
+            spans.append((attributed.start("subject"), end))
     return spans
 
 
@@ -2018,12 +2044,48 @@ def candidate_offenses(
         if offense["id"] == "defamation" and hits:
             if not re.search(r"名譽|侮辱|誹謗|不實|貶損|公然|公開場合|辱罵|散布", summary):
                 hits = []
-        # 公開貼文中的「侵占」可能只是被指摘的內容，不等於摘要已描述
-        # 行為人實際持有或處分他人財物。此時不得把侵占罪章帶入正式候選。
+        # 公開貼文、散布謠傳或被指控語境中的「侵占」可能只是被指摘的
+        # 內容，不等於摘要已描述行為人實際持有或處分他人財物。此時不得
+        # 把侵占罪章帶入正式候選。2026-10-22 補充「散布不實訊息指…」
+        # 句型與代稱寫法（指乙侵占）。
         if offense["id"] == "embezzlement" and hits:
-            allegation_context = re.search(r"(?:公開貼文|貼文|發文|指稱|指摘)[^。；]{0,60}侵占", summary)
+            allegation_context = re.search(
+                r"(?:公開貼文|貼文|發文|散布|散佈|謠傳|爆料|指稱|指摘|指控|聲稱)"
+                r"[^。；]{0,60}侵占",
+                summary,
+            )
             possession_context = re.search(r"(?:保管|持有|代收|受託|業務上)[^。；]{0,60}(?:占為己有|拒不返還|侵占)", summary)
             if allegation_context and not possession_context:
+                hits = []
+        # 「侵占」單獨出現時，摘要並未描述因合法原因持有他人之物的前提
+        # 關係（刑法第 335 條之前提）。只憑「侵占」一詞不得建立候選方向。
+        if offense["id"] == "embezzlement" and hits and all(hit == "侵占" for hit in hits):
+            if not re.search(
+                r"保管|代管|代收|受託|經手|持有|業務上|占有|占為己有|拒不返還"
+                r"|拒絕返還|自行處分|花用|侵吞|變賣|逾期未還",
+                summary,
+            ):
+                hits = []
+        # 「財物遺失」「發現失物」是被害人發現失竊的結果描述，不是拾得
+        # 無人占有之物而非法占有之行為（刑法第 337 條之前提是拾得）。
+        # 缺少拾得情境時不得只憑「遺失」建立侵占候選（2026-10-22 複審
+        # 發現：批次 C031「取走後被害人發現財物遺失」誤列侵占）。
+        if offense["id"] == "embezzlement" and hits and all(
+            hit in {"遺失", "遺失物"} for hit in hits
+        ):
+            if not re.search(
+                r"拾得|拾獲|撿到|撿起|撿走|無人占有|無主|不知何人|不知屬於何人",
+                summary,
+            ):
+                hits = []
+        # 「騙子」「騙徒」是對某人的貶抑稱呼，不是詐騙行為的描述。單憑
+        # 此類稱呼不得建立詐欺候選（2026-10-22 批次 C091-C120 複審發現：
+        # 「辱罵乙『騙子』」曾使詐欺排在使用者看到的第一位候選）。
+        if offense["id"] == "fraud" and hits and all(hit == "騙" for hit in hits):
+            occurrences = list(re.finditer("騙", summary))
+            if occurrences and all(
+                summary[match.end():match.end() + 1] in {"子", "徒"} for match in occurrences
+            ):
                 hits = []
         # E3→E4 輪（人工複審 2026-10-20）：構成要件最小錨點閘門。
         # keyword／結構式 fallback 建立的候選若缺對應構成要件區辨事實
@@ -2196,6 +2258,16 @@ def candidate_offenses(
     return sorted(matches, key=lambda item: (-len(item["matched_terms"]), item["name"]))
 
 
+def _candidate_hit_is_single_char_only(candidate: dict[str, Any]) -> bool:
+    """候選是否只以單字關鍵詞命中。
+
+    單字關鍵詞的具體度低（同一個字可能只是貶抑稱呼、動作片段或引述
+    內容的一部分）。此處只用於排序，不影響候選是否成立。
+    """
+    terms = [term for term in candidate.get("matched_terms", []) if term]
+    return bool(terms) and all(len(term) == 1 for term in terms)
+
+
 def classify_candidates(
     summary: str,
     bank: dict[str, Any],
@@ -2282,7 +2354,15 @@ def classify_candidates(
     for candidate in candidates:
         candidate["missing"] = list(dict.fromkeys(global_missing + list(candidate.get("missing", []))))
         candidate["classification_missing"] = list(candidate["missing"])
-    candidates.sort(key=lambda item: (-priority.get(item["id"], 0), -len(item.get("matched_terms", [])), item["name"]))
+    # 排序不是成立與否的判斷，只是候選方向的使用順序。單字關鍵詞命中
+    # （例如「砸」「騙」）的具體度低於具體行為詞或情境錨點，不得因為
+    # 罪章優先序而排在使用者看到的第一位（2026-10-22 批次 C091-C120）。
+    candidates.sort(key=lambda item: (
+        1 if _candidate_hit_is_single_char_only(item) else 0,
+        -priority.get(item["id"], 0),
+        -len(item.get("matched_terms", [])),
+        item["name"],
+    ))
     return {"candidates": candidates[:max_candidates], "status": status, "source": "rules"}
 
 

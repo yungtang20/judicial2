@@ -75,3 +75,18 @@ def test_residential_trespass_is_explicit_model_supplement():
     supplement = next(item for item in result["candidates"] if item["id"] == "residential_trespass")
     assert supplement["name"].endswith("（模型補充）")
     assert supplement["source"]["status"] == "NOT_FOUND"
+
+
+# 允許的相鄰競爭假設（2026-10-22 人工複核）：集合外的候選即為誤列。
+ALLOWED_EXTRAS = {
+    "C001": {"residential_trespass", "theft"},
+    "C002": {"residential_trespass"},
+    "C004": {"intimidation", "theft"},
+}
+
+
+def test_c001_c030_no_unexpected_extra_candidates():
+    for case_id, summary, expected in CASES:
+        actual = {item["id"] for item in classify_candidates(summary, BANK)["candidates"]}
+        extra = actual - {expected} - ALLOWED_EXTRAS.get(case_id, set())
+        assert not extra, f"{case_id}: unexpected extra candidates {sorted(extra)}"

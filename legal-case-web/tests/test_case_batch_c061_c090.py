@@ -50,3 +50,20 @@ def test_vehicle_window_taking_is_not_promoted_to_robbery_without_person_force()
     assert "theft" in actual
     assert "robbery" not in actual
 
+
+# 允許的相鄰競爭假設（2026-10-22 人工複核）：集合外的候選即為誤列。
+ALLOWED_EXTRAS = {
+    "C061": {"theft"},
+    "C062": {"theft"},
+    "C064": {"intimidation", "theft"},
+    "C065": {"damage"},
+    "C066": {"intimidation", "residential_trespass"},
+}
+
+
+def test_c061_c090_no_unexpected_extra_candidates():
+    for case_id, summary, expected in CASES:
+        actual = {item["id"] for item in classify_candidates(summary, BANK)["candidates"]}
+        extra = actual - {expected} - ALLOWED_EXTRAS.get(case_id, set())
+        assert not extra, f"{case_id}: unexpected extra candidates {sorted(extra)}"
+
