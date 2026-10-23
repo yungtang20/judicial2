@@ -329,7 +329,7 @@ py -3 -X utf8 scripts\capture_law_amendment_history.py
 
 ## 9. 交接後建議順序
 
-1. 先執行完整 pytest，確認基準仍為 572 passed（單次 session）。
+1. 先執行完整 pytest，確認基準仍為 573 passed（單次 session）。
 2. 執行 §6.1 證據鏈重算，確認 17 個 surface（13 frozen + 4 runtime）與 2 條 review 連結皆一致。
 3. 以 `lawbank-engine.html` 測試 API 與前端顯示。
 4. 修改規則後先跑對應批次，再跑完整測試。
@@ -340,7 +340,7 @@ py -3 -X utf8 scripts\capture_law_amendment_history.py
 ## 10. 交接狀態
 
 - 功能測試：通過。
-- 完整測試：572 passed（2026-10-23 單次 session 實測）。
+- 完整測試：573 passed（2026-10-23 單次 session 實測）。
 - 案例批次 C001–C090：通過（已補允許集合反向檢查）。
 - 案例批次 C091–C125：通過（完整事實／缺事實／主體不明／反向安全四類齊備）。
 - 案例批次 C126–C155：通過（10 個方向 × 完整事實／缺事實／主體不明；另含侵入住宅 HINT_ONLY 限制與 §321Ⅰ① 白天侵入的反向鎖定）。

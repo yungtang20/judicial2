@@ -5,7 +5,8 @@
 
 編號說明：原始需求以 C121-C150 標示，但 C121-C125 已由第四批
 （`tests/test_case_batch_c091_c120.py`）使用且內容不同。為維持 `case_id`
-唯一，本批順延為 C126-C155（原始 C121→C126、C122→C127 … C150→C155）。
+唯一，本批順延為 C126-C155；原始編號保留在 `ORIGINAL_CASE_IDS`，兩者
+一對一，並由 `test_original_case_ids_are_mapped_one_to_one` 鎖定。
 
 原則：候選方向不等於法律結論；缺事實與主體不明案例仍由 v3 狀態與人工
 審核處理。本批案例全部為虛構文字，不含真實個資。
@@ -58,6 +59,41 @@ UNKNOWN_SUBJECT_CASES = [
     ("C152", "有人因為糾紛把另一個人的交通工具弄得不能用。", "damage"),
     ("C155", "有人長時間在另一個人附近出現並送東西，對方不喜歡但對方沒停。", "stalking"),
 ]
+
+# 需求端原始編號 → 倉庫編號。保留原始編號是為了讓需求、審查紀錄與測試輸出
+# 能互相對照；`case_id` 本身仍必須唯一。
+ORIGINAL_CASE_IDS = {
+    "C126": "C121",
+    "C127": "C122",
+    "C128": "C123",
+    "C129": "C124",
+    "C130": "C125",
+    "C131": "C126",
+    "C132": "C127",
+    "C133": "C128",
+    "C134": "C129",
+    "C135": "C130",
+    "C136": "C131",
+    "C137": "C132",
+    "C138": "C133",
+    "C139": "C134",
+    "C140": "C135",
+    "C141": "C136",
+    "C142": "C137",
+    "C143": "C138",
+    "C144": "C139",
+    "C145": "C140",
+    "C146": "C141",
+    "C147": "C142",
+    "C148": "C143",
+    "C149": "C144",
+    "C150": "C145",
+    "C151": "C146",
+    "C152": "C147",
+    "C153": "C148",
+    "C154": "C149",
+    "C155": "C150",
+}
 
 # 完整事實案例的允許候選集合：預期方向之外的相鄰競爭假設須經人工區辨，
 # 不視為誤列；集合外的候選即為誤列。
@@ -204,3 +240,14 @@ def test_night_entry_with_permission_is_not_aggravated_theft():
     actual = _ids(summary)
     assert "theft" in actual
     assert "aggravated_theft" not in actual
+
+
+def test_original_case_ids_are_mapped_one_to_one():
+    """需求端 C121-C150 與倉庫端 C126-C155 必須一對一，避免對照失真。"""
+
+    case_ids = {case[0] for case in CASES}
+    case_ids |= {case[0] for case in INCOMPLETE_CASES}
+    case_ids |= {case[0] for case in UNKNOWN_SUBJECT_CASES}
+    assert set(ORIGINAL_CASE_IDS) == case_ids
+    assert sorted(ORIGINAL_CASE_IDS.values()) == [f"C{n}" for n in range(121, 151)]
+    assert len(set(ORIGINAL_CASE_IDS.values())) == len(ORIGINAL_CASE_IDS)

@@ -37,11 +37,11 @@
 ## Packet integrity
 
 - Machine-readable packet：`docs/evidence/legal_retrieval_human_gate_packet.json`
-- Packet SHA-256：`77790711bd77a72082d13ab683976b42af1fb4e62291f5b542a26c441301369f`
+- Packet SHA-256：`46d709fe6c545abb5e4188fde65fdf04087351465d883ec3ab3334a616ba93ba`
 - HG-LR-01 review：`docs/evidence/hg_lr_01_provider_contract_review.json`
-- HG-LR-01 review SHA-256：`477b0e361835af91b4694991d33c076bbf824cc8eb0731d6ddae50dd5cf23f0d`
+- HG-LR-01 review SHA-256：`1ae3b243a3d89fcab5fe9b61040c43bc5bbbe4192d819820438699d14b9b90c4`
 - HG-LR-02 review：`docs/evidence/hg_lr_02_privacy_security_review.json`
-- HG-LR-02 review SHA-256：`63d44782d7c8f2fe3c3e91ec45568f25753c1dd1a4f78678a6ae7f8cfa17e984`
+- HG-LR-02 review SHA-256：`a32dab4e0cdeef2ac8cc74069ec4914aaf07eba4f26d3c1a9734a7cb03ec6e0f`
 - Corpus canonical SHA-256：`ad8e787338e35be3b72badf7588be437cb30a4636fabe8aee5f7e0e2ee6808ed`
 - Golden suite evidence SHA-256：`eb7638295f9b9265ade2c9a35791894d9aeafcd49d0a7f7cf02f5db996a50b9b`
 
@@ -93,7 +93,7 @@
 
 - 四個 runtime surface 的 `expected_references` 仍為 `0`，`runtime_enabled` 仍為 `false`，`gate2_connected` 仍為 `false`。
 - `HG-LR-01`、`HG-LR-02` 的 `decision_status` 與阻擋項均未改變，`approvals_required` 五項仍全為 `PENDING`。
-- `V01` 通過數 563 → 572（新增第五批 9 個測試：完整／缺事實／主體不明、侵入住宅 `HINT_ONLY` 限制、白天侵入召回、裸「進屋取物」與「夜間經同意入內」反向鎖定）；`V04` 維持 29。
+- `V01` 通過數 563 → 573（新增第五批 10 個測試：完整／缺事實／主體不明、侵入住宅 `HINT_ONLY` 限制、白天侵入召回、裸「進屋取物」與「夜間經同意入內」反向鎖定）；`V04` 維持 29。
 - 依序重新綁定：packet → `HG-LR-01`（`packet_sha256`）→ `HG-LR-02`（`packet_sha256`、`provider_review_sha256`）。
 
 此節同樣只記錄雜湊同步，**不是核准紀錄**；五個 Gate 仍為 `PENDING`。

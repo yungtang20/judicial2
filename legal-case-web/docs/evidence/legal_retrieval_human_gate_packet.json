@@ -117,10 +117,10 @@
       "id": "V01",
       "command": "py -3 -X utf8 -m pytest -q",
       "status": "PASS",
-      "result": "572 passed",
-      "passed": 572,
+      "result": "573 passed",
+      "passed": 573,
       "verified_on": "2026-10-23",
-      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15. Re-verified again the same day after the C091-C120 rule corrections (transcribed-allegation guard, weak keyword guards, negation window) and the fourth case batch: 444 -> 452, after the competition-hypothesis demotion and defamation recall corrections: 452 -> 455, and after extending the negation window to the scenario-hint layer: 455 -> 456. Re-verified on 2026-10-23 after the multi-article law cache coverage fix and backfill: 456 -> 469; after the TLR pack bundle contract: 469 -> 487; after the self-host provider endpoint policy: 487 -> 501; after the behavior-time (amendment history) resolver: 501 -> 541; after two sub-numbered range parser cases: 541 -> 543.；行為時法接入 set_offenses 並於 UI 逐條顯示：543 -> 563。；第五批案例（C126-C155）與 §321Ⅰ① 白天侵入住宅召回修正：563 -> 572。"
+      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15. Re-verified again the same day after the C091-C120 rule corrections (transcribed-allegation guard, weak keyword guards, negation window) and the fourth case batch: 444 -> 452, after the competition-hypothesis demotion and defamation recall corrections: 452 -> 455, and after extending the negation window to the scenario-hint layer: 455 -> 456. Re-verified on 2026-10-23 after the multi-article law cache coverage fix and backfill: 456 -> 469; after the TLR pack bundle contract: 469 -> 487; after the self-host provider endpoint policy: 487 -> 501; after the behavior-time (amendment history) resolver: 501 -> 541; after two sub-numbered range parser cases: 541 -> 543.；行為時法接入 set_offenses 並於 UI 逐條顯示：543 -> 563。；第五批案例（C126-C155）與 §321Ⅰ① 白天侵入住宅召回修正：563 -> 573。"
     },
     {
       "id": "V02",
