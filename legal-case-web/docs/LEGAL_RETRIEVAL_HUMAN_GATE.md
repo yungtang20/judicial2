@@ -37,11 +37,11 @@
 ## Packet integrity
 
 - Machine-readable packet：`docs/evidence/legal_retrieval_human_gate_packet.json`
-- Packet SHA-256：`6d8a74c99c942bdcfb0c23b3be4a5e0c1bfb65da4781eb687e19fd7a014df553`
+- Packet SHA-256：`77790711bd77a72082d13ab683976b42af1fb4e62291f5b542a26c441301369f`
 - HG-LR-01 review：`docs/evidence/hg_lr_01_provider_contract_review.json`
-- HG-LR-01 review SHA-256：`fa6941d1f7a45d508172cb78884a391cbf9479f2d6004b6da1ff8580bb4eb89f`
+- HG-LR-01 review SHA-256：`477b0e361835af91b4694991d33c076bbf824cc8eb0731d6ddae50dd5cf23f0d`
 - HG-LR-02 review：`docs/evidence/hg_lr_02_privacy_security_review.json`
-- HG-LR-02 review SHA-256：`30573c1b1518b97fa3c7dbe106c08e33edb8a03c4940c2e3eb0624218c0f128c`
+- HG-LR-02 review SHA-256：`63d44782d7c8f2fe3c3e91ec45568f25753c1dd1a4f78678a6ae7f8cfa17e984`
 - Corpus canonical SHA-256：`ad8e787338e35be3b72badf7588be437cb30a4636fabe8aee5f7e0e2ee6808ed`
 - Golden suite evidence SHA-256：`eb7638295f9b9265ade2c9a35791894d9aeafcd49d0a7f7cf02f5db996a50b9b`
 
@@ -82,3 +82,18 @@
 - 依序重新綁定：packet → `HG-LR-01`（`packet_sha256`）→ `HG-LR-02`（`packet_sha256`、`provider_review_sha256`）。
 
 此節只記錄雜湊同步，**不是核准紀錄**；`HG-LR-05`（產品負責人核准 runtime／UI／稽核／失敗回復）仍為 `PENDING`。
+
+## 2026-10-23 第三輪重新凍結（檢索結論未變）
+
+本輪只修正**離線規則**（`app/rules.py` 的刑法 §321Ⅰ① 侵入住宅竊盜情境），並新增第五批回歸案例：
+
+| Surface | 變更 | 對檢索的影響 |
+| --- | --- | --- |
+| `app/rules.py` | 補上「侵入訊號＋進入住宅＋取財」的 §321Ⅰ① 情境（白天自後門侵入不再只給 §320） | 無；純規則字串，未引用任何檢索模組 |
+
+- 四個 runtime surface 的 `expected_references` 仍為 `0`，`runtime_enabled` 仍為 `false`，`gate2_connected` 仍為 `false`。
+- `HG-LR-01`、`HG-LR-02` 的 `decision_status` 與阻擋項均未改變，`approvals_required` 五項仍全為 `PENDING`。
+- `V01` 通過數 563 → 572（新增第五批 9 個測試：完整／缺事實／主體不明、侵入住宅 `HINT_ONLY` 限制、白天侵入召回、裸「進屋取物」與「夜間經同意入內」反向鎖定）；`V04` 維持 29。
+- 依序重新綁定：packet → `HG-LR-01`（`packet_sha256`）→ `HG-LR-02`（`packet_sha256`、`provider_review_sha256`）。
+
+此節同樣只記錄雜湊同步，**不是核准紀錄**；五個 Gate 仍為 `PENDING`。

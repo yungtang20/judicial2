@@ -329,7 +329,7 @@ py -3 -X utf8 scripts\capture_law_amendment_history.py
 
 ## 9. 交接後建議順序
 
-1. 先執行完整 pytest，確認基準仍為 563 passed（單次 session）。
+1. 先執行完整 pytest，確認基準仍為 572 passed（單次 session）。
 2. 執行 §6.1 證據鏈重算，確認 17 個 surface（13 frozen + 4 runtime）與 2 條 review 連結皆一致。
 3. 以 `lawbank-engine.html` 測試 API 與前端顯示。
 4. 修改規則後先跑對應批次，再跑完整測試。
@@ -340,9 +340,10 @@ py -3 -X utf8 scripts\capture_law_amendment_history.py
 ## 10. 交接狀態
 
 - 功能測試：通過。
-- 完整測試：563 passed（2026-10-23 單次 session 實測）。
+- 完整測試：572 passed（2026-10-23 單次 session 實測）。
 - 案例批次 C001–C090：通過（已補允許集合反向檢查）。
 - 案例批次 C091–C125：通過（完整事實／缺事實／主體不明／反向安全四類齊備）。
+- 案例批次 C126–C155：通過（10 個方向 × 完整事實／缺事實／主體不明；另含侵入住宅 HINT_ONLY 限制與 §321Ⅰ① 白天侵入的反向鎖定）。
 - 前端錯誤處理測試：29 passed。
 - Python 編譯檢查：通過。
 - 證據鏈重算：17 surfaces（13 frozen + 4 runtime）+ 2 條 review 連結全數一致。
@@ -356,3 +357,4 @@ py -3 -X utf8 scripts\capture_law_amendment_history.py
 - 2026-10-23 缺口補齊（四項；當時皆未接線）：① 法源快取多條號解析（`第100條至第119條` 這類 spec 過去被當成單一條號，導致 14 個條目永遠 `NOT_FOUND`）＋ 88 筆回填，快取 105→193 筆；② `twlegalrag pack` 的 `twlegalrag.bundle/v1` 離線契約（綁定去識別查詢、只輸出 citation metadata 與摘錄 hash、截斷全文不得引用、live 客戶端受證據包 `decision_status` 約束）；③ Taiwan Law MCP 自架端點政策（僅 loopback 可選，hosted 端點記錄為不可選，`runtime_ready()` 恆 false）；④ 行為時法判定（官方沿革頁快照、中文數字與條號範圍解析、分段施行留 `null` 不以推測補值）。測試 456 → 469 → 487 → 501 → 543；證據鏈重新凍結（packet → HG-LR-01 → HG-LR-02），三個新檔案列入 `frozen_files`。
 - 未追蹤且刻意不提交：`reasoning-flow/`（獨立專案）、`例子/`（個人截圖）。
 - 2026-10-23 行為時法接入（第二輪）：`set_offenses` 逐條寫入 `law_version_audits`／`law_version_summary`，前端警示區逐條顯示並提示人工調閱；沿革資料不可用時寫 `AUDIT_UNAVAILABLE`（不靜默、不中斷分析）；`update_gate1` 清除舊判定。`HINT_ONLY` 罪章在選單改標「待區辨・非認定成立」，候選區改用引擎提供的相鄰競爭假設說明。測試 543 → 563、前端 26 → 29；證據鏈再次重新綁定（packet → HG-LR-01 → HG-LR-02），檢索 runtime 仍不可達、五個 Gate 仍 `PENDING`。
+- 2026-10-23 第五批案例與召回修正（第三輪）：新增 `tests/test_case_batch_c126_c155.py`（原始需求編號 C121–C150，因 C121–C125 已由第四批使用，順延為 C126–C155）。修正刑法 §321Ⅰ①「侵入住宅」漏接：舊情境把侵入與夜間／工具綁在一起，清晨自未上鎖後門侵入行竊只得到 §320；新分支要求「侵入訊號＋進入住宅＋取財」三者同時成立，避免經同意進入後臨時起意行竊被誤升。侵入住宅（§306）因題庫無獨立項目，仍只以 `HINT_ONLY` 呈現並附保留說明。測試 563 → 572；證據鏈第三輪重新綁定，檢索 runtime 仍不可達、五個 Gate 仍 `PENDING`。

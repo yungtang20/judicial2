@@ -95,7 +95,7 @@
     },
     {
       "path": "app/rules.py",
-      "sha256": "ababd93c8b387afaa20d5fe4943809cbc29b99a0a13bdcd7a52876f847a2b6d1",
+      "sha256": "ffd22c88640a8d6829ea822aa46cb58bd498c8c27c6173ba564fa18799ce64a7",
       "expected_references": 0
     },
     {
@@ -117,10 +117,10 @@
       "id": "V01",
       "command": "py -3 -X utf8 -m pytest -q",
       "status": "PASS",
-      "result": "563 passed",
-      "passed": 563,
+      "result": "572 passed",
+      "passed": 572,
       "verified_on": "2026-10-23",
-      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15. Re-verified again the same day after the C091-C120 rule corrections (transcribed-allegation guard, weak keyword guards, negation window) and the fourth case batch: 444 -> 452, after the competition-hypothesis demotion and defamation recall corrections: 452 -> 455, and after extending the negation window to the scenario-hint layer: 455 -> 456. Re-verified on 2026-10-23 after the multi-article law cache coverage fix and backfill: 456 -> 469; after the TLR pack bundle contract: 469 -> 487; after the self-host provider endpoint policy: 487 -> 501; after the behavior-time (amendment history) resolver: 501 -> 541; after two sub-numbered range parser cases: 541 -> 543.；行為時法接入 set_offenses 並於 UI 逐條顯示：543 -> 563。"
+      "note": "Single-run baseline re-verified 2026-10-22 after the case-batch and v3-contract suites were added; supersedes the 289-passed baseline recorded on 2026-10-15. Re-verified again the same day after the C091-C120 rule corrections (transcribed-allegation guard, weak keyword guards, negation window) and the fourth case batch: 444 -> 452, after the competition-hypothesis demotion and defamation recall corrections: 452 -> 455, and after extending the negation window to the scenario-hint layer: 455 -> 456. Re-verified on 2026-10-23 after the multi-article law cache coverage fix and backfill: 456 -> 469; after the TLR pack bundle contract: 469 -> 487; after the self-host provider endpoint policy: 487 -> 501; after the behavior-time (amendment history) resolver: 501 -> 541; after two sub-numbered range parser cases: 541 -> 543.；行為時法接入 set_offenses 並於 UI 逐條顯示：543 -> 563。；第五批案例（C126-C155）與 §321Ⅰ① 白天侵入住宅召回修正：563 -> 572。"
     },
     {
       "id": "V02",
